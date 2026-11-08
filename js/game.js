@@ -19,7 +19,7 @@ const T=[
 {id:'thunder',tech:'thunder',n:'천둥 번개',c:320,d:60,r:3.5,cd:1.8,stun:1,ic:'⚡',col:0xfacc15,x:'기절'},
 {id:'storm',tech:'thunder',n:'뇌운',c:440,d:61,r:3.6,cd:1.6,chain:5,stun:.5,ic:'🌩️',col:0x818cf8,x:'5연쇄+기절'},
 {id:'breeze',tech:'wind',n:'산들 풍차',c:150,d:14,r:2.8,cd:1.1,kb:1,ic:'🎐',col:0x5eead4,x:'넉백'},
-{id:'wind',tech:'wind',n:'폭풍 바람',c:330,d:21,r:3.4,cd:1.6,kb:1,splash:1.2,ic:'🌪️',col:0x2dd4bf,x:'광역 넉백'},
+{id:'wind',tech:'wind',n:'비눗방울 기계',c:330,d:30,r:3.4,cd:1.4,bubble:1.4,ic:'🧼',col:0x7dd3fc,x:'비눗방울에 가둬 1.4초 둥실 · 갇힌 새는 멈추고 공중으로 떠서 대공 타워에도 맞아요 · 터질 때 공격력 2배 피해 · 넉백 면역 새는 안 갇혀요'},
 {id:'twister',tech:'wind',n:'회오리 대공',c:300,d:135,r:4.5,cd:.8,t:'A',kb:1,ic:'🌀',col:0x0ea5e9,x:'강력 대공+넉백'},
 {id:'bat',tech:'dark',n:'박쥐 둥지',c:180,d:28,r:3,cd:.7,ic:'🦇',col:0x9f1239,x:'흡혈박쥐새 해금'},
 {id:'flu',tech:'dark',n:'독감 물약',c:240,d:16,r:3.2,cd:1.6,splash:1.4,poison:8,ic:'🧪',col:0x22c55e,x:'광역 독'},
@@ -122,7 +122,7 @@ U.push(
  {id:'mosscrane',race:'grove',n:'이끼 두루미',c:400,hp:538,sp:1.3,t:'G',dm:2,inc:25,heal:1,imm:['poison'],ic:'🍃',col:0x4d7c0f,x:'주변 치유 · 독 면역',fl:'“이끼가 끼면 어떠한가. 건강하면 그만이지.”'});
 U.sort((a,b)=>a.c-b.c);
 const TECH={fire:{n:'화염',ic:'🔥',col:0xf97316,t:['ember','lava','sun'],u:'phoenix',d:'화상 지속 피해'},ice:{n:'빙결',ic:'❄️',col:0x67e8f9,t:['ice','frost','bliz'],u:'penguin',d:'감속·빙결'},
- thunder:{n:'뇌전',ic:'⚡',col:0xfacc15,t:['static','thunder','storm'],u:'thunderbird',d:'연쇄 번개·기절'},wind:{n:'폭풍',ic:'🌪️',col:0x2dd4bf,t:['breeze','wind','twister'],u:'albatross',d:'넉백·대공'},
+ thunder:{n:'뇌전',ic:'⚡',col:0xfacc15,t:['static','thunder','storm'],u:'thunderbird',d:'연쇄 번개·기절'},wind:{n:'폭풍',ic:'🌪️',col:0x2dd4bf,t:['breeze','wind','twister'],u:'albatross',d:'넉백·방울·대공'},
  dark:{n:'독',ic:'☠️',col:0x84cc16,t:['bat','flu','acid'],u:'vampire',d:'독·약화·흡혈'}},TK=Object.keys(TECH),TECH2C=300;
 const BAL=/*BAL*/{upk:1.05,upg:.2,rh:.15,rs:0.5,hcr:2,hmx:0.03,pk:0.35,pmax:5,pdur:4,bk:1.1,bdur:3,bsp:.7,cl:2.5,mode:{normal:{uh:0.95,td:0.84,as:1.02},race:{uh:1,td:0.85,as:0.97}},cap:44,need:1,uhp:2.4,incS:805,late1:420,lm1:2,late2:540,lm2:3,py:{ar:.85,am:2.4,gr:1.1,gm:.8,lr:1.1,la:1.2,lg:.4}}/*BALEND*/;T.forEach(b=>{if(!b.d||b.pylon||b.snack||b.cctv)return;const tr=[];if(b.cd<=.8){b.rapid=1;tr.push('⚡연사 가속: 계속 쏘면 공속 최대 +50%')}else if(b.cd>=1.5){b.heavy=1;tr.push('💥강타: 3번째 공격마다 치명타 ×2 + 대상 최대체력 3% 추가 피해')}if(b.poison)tr.push('☠️독 중첩(최대 5)'+((b.splash||b.self)?' · 독연기 2.5초 잔류':''));if(b.burn)tr.push('🔥화상 번짐: 불탄 채 쓰러지면 옆으로 옮겨붙음');if(tr.length)b.x=(b.x?b.x+' · ':'')+tr.join(' · ')});U.forEach(u=>{u.inc=Math.round(u.inc*1.4);u.hp=Math.round(u.hp*BAL.uhp);if(u.shield)u.shield*=BAL.uhp});const TICK=4;
 const COMBO=T.filter(t=>t.combo).map(t=>({k:t.combo,t:t.id,u:U.find(u=>u.combo&&u.combo.join()===t.combo.join()).id,n:t.combo.map(k=>TECH[k].n).join('+'),ic:t.combo.map(k=>TECH[k].ic).join('')}));
@@ -181,7 +181,7 @@ static:['겨울 니트 깃털','문고리 잡을 때의 그 찌릿함을 3마리
 thunder:['찌릿찌릿 피뢰침','맞으면 1초간 멍해져요. 머리도 뽀글뽀글.'],
 storm:['월요병 먹구름','월요일 아침의 기운을 5마리에게 연쇄 전파해요.'],
 breeze:['미풍 선풍기','미풍인데 왜 밀려나는지 아무도 몰라요.'],
-wind:['강풍 선풍기','"강" 버튼이 고장 나서 계속 강이에요.'],
+wind:['비눗방울 막대','목욕 싫어하는 새들의 천적. 후~ 불면 방울에 갇혀 둥실둥실, 터질 땐 따끔!'],
 twister:['회오리 감자','휴게소 회오리 감자의 원조. 하늘을 나는 새 전문.'],
 bat:['박쥐 고시원','월 180G, 창문 없음. 드라큘라 박쥐가 여기서 공부해요.'],
 flu:['조류독감 AI','AI는 Avian Influenza(조류 인플루엔자)의 줄임말이에요. 인공지능 아님 주의!'],
@@ -217,7 +217,7 @@ const eggHas=k=>{const m=EGGM.find(m=>m.k===k);return !!m&&EGG.n>=m.n},eggNext=(
 const sfx=(n,a)=>{try{if(S&&S.sim)return;if(typeof SFX!=='undefined'&&SFX.play)SFX.play(n,a||{})}catch(e){}};
 const artFx=(n,a)=>{try{if(S&&S.sim)return;if(typeof ART!=='undefined'&&ART[n])return ART[n](a||{})}catch(e){}};
 // 🧬 타워 진화 이름: 강화 Lv.1~4마다 이름이 바뀌어요(작가팀). 없으면 Ⅱ·Ⅲ·Ⅳ
-const EVO=/*EVO*/{"wall":["월세 둥지","월세 둥지","월세 둥지","월세 둥지"],"egg":["알까기 새총","새권총","새개틀링건","알마게돈 새대포"],"air":["깃털 미사일","간질간질 유도탄","깃털 다연장포","대륙간 간지럼탄"],"acorn":["다람쥐 대포","볼빵빵 곡사포","다람쥐 자주포","도토리묵 요새포"],"snack":["과자 뿌리개","과자 분사기","과자 스프링클러","무한리필 과자탑"],"pylon":["참새 전봇대","참새 변압기","참새 송전탑","만볼트 참새철탑"],"cctv":["부엉이 CCTV","4K 부엉이캠","야간투시 부엉이","부엉이 첩보위성"],"net":["잠자리채 그물포","왕잠자리채","꽁치잡이 투망포","곤충채집 끝판왕"],"ember":["바베큐 둥지","숯불구이 둥지","통닭 회전 둥지","전설의 치킨집"],"lava":["찜질방 분화구","불가마 분화구","황토 불가마 화산","용암 찜질 궁전"],"sun":["자외선 등대","땡볕 등대","돋보기 등대","폭염 태양신전"],"ice":["냉동 달걀","꽁꽁 언 달걀","냉동실 계란판","만년설 황금알"],"frost":["얼음땡 결정","얼음땡 고드름","얼음땡 술래탑","땡 없는 빙하"],"bliz":["에어컨 18도 탑","에어컨 16도 탑","냉장고 4도 탑","남극 영하40도 탑"],"static":["겨울 니트 깃털","털스웨터 깃털","수면바지 깃털","문고리 대마왕"],"thunder":["찌릿찌릿 피뢰침","뽀글뽀글 피뢰침","번개 파마 탑","전설의 벼락파마"],"storm":["월요병 먹구름","출근길 먹구름","야근 먹구름","월요일 무한반복"],"breeze":["미풍 선풍기","미풍 회전 선풍기","미풍이라던 선풍기","미풍 탈 쓴 태풍"],"wind":["강풍 선풍기","터보 강풍기","공업용 선풍기","선풍기 제트엔진"],"twister":["회오리 감자","치즈 회오리 감자","왕꼬치 회오리","휴게소의 전설"],"bat":["박쥐 고시원","박쥐 원룸","박쥐 오피스텔","박쥐 펜트하우스"],"flu":["조류독감 AI","조류독감 AI2.0","조류독감 AI 프로","조류독감 초지능"],"acid":["식초 늪","사과식초 늪","피클 절임 늪","전설의 초절임 늪"],"steam":["불한증막 사우나","냉온탕 사우나","때밀이 사우나","목욕탕 대왕궁"],"plasma":["전자레인지 포","해동모드 레인지포","땡땡땡 레인지포","우주 전자레인지"],"firestorm":["불맛 회오리","웍질 회오리","불쇼 대회오리","중화요리 신의 웍"],"pyre":["마라탕 화로","맵기 5단계 화로","맵기 10단계 화로","맵기 측정불가"],"aurora":["냉동 전기장판","배신의 전기장판","북극 전기장판","오로라 대장판"],"whiteout":["빙수 블렌더","팥빙수 블렌더","눈꽃빙수 믹서","전설의 빙수장인"],"frostbane":["유통기한 아이스크림","세기말 아이스크림","빙하기산 아이스크림","공룡시대 아이스크림"],"tempest":["태풍경보 탑","재난문자 송신탑","슈퍼태풍 경보탑","태풍의 눈 관제탑"],"venomvolt":["문어발 콘센트","대왕문어발 콘센트","멀티탭의 멀티탭","전설의 문어발왕"],"miasma":["방귀 선풍기","고구마 방귀 선풍기","청국장 방귀 선풍기","범인 없는 방귀폭풍"]}/*EVOEND*/;
+const EVO=/*EVO*/{"wall":["월세 둥지","월세 둥지","월세 둥지","월세 둥지"],"egg":["알까기 새총","새권총","새개틀링건","알마게돈 새대포"],"air":["깃털 미사일","간질간질 유도탄","깃털 다연장포","대륙간 간지럼탄"],"acorn":["다람쥐 대포","볼빵빵 곡사포","다람쥐 자주포","도토리묵 요새포"],"snack":["과자 뿌리개","과자 분사기","과자 스프링클러","무한리필 과자탑"],"pylon":["참새 전봇대","참새 변압기","참새 송전탑","만볼트 참새철탑"],"cctv":["부엉이 CCTV","4K 부엉이캠","야간투시 부엉이","부엉이 첩보위성"],"net":["잠자리채 그물포","왕잠자리채","꽁치잡이 투망포","곤충채집 끝판왕"],"ember":["바베큐 둥지","숯불구이 둥지","통닭 회전 둥지","전설의 치킨집"],"lava":["찜질방 분화구","불가마 분화구","황토 불가마 화산","용암 찜질 궁전"],"sun":["자외선 등대","땡볕 등대","돋보기 등대","폭염 태양신전"],"ice":["냉동 달걀","꽁꽁 언 달걀","냉동실 계란판","만년설 황금알"],"frost":["얼음땡 결정","얼음땡 고드름","얼음땡 술래탑","땡 없는 빙하"],"bliz":["에어컨 18도 탑","에어컨 16도 탑","냉장고 4도 탑","남극 영하40도 탑"],"static":["겨울 니트 깃털","털스웨터 깃털","수면바지 깃털","문고리 대마왕"],"thunder":["찌릿찌릿 피뢰침","뽀글뽀글 피뢰침","번개 파마 탑","전설의 벼락파마"],"storm":["월요병 먹구름","출근길 먹구름","야근 먹구름","월요일 무한반복"],"breeze":["미풍 선풍기","미풍 회전 선풍기","미풍이라던 선풍기","미풍 탈 쓴 태풍"],"wind":["비눗방울 막대","비눗방울 기계","비눗방울 대포","거품 목욕탕 대왕"],"twister":["회오리 감자","치즈 회오리 감자","왕꼬치 회오리","휴게소의 전설"],"bat":["박쥐 고시원","박쥐 원룸","박쥐 오피스텔","박쥐 펜트하우스"],"flu":["조류독감 AI","조류독감 AI2.0","조류독감 AI 프로","조류독감 초지능"],"acid":["식초 늪","사과식초 늪","피클 절임 늪","전설의 초절임 늪"],"steam":["불한증막 사우나","냉온탕 사우나","때밀이 사우나","목욕탕 대왕궁"],"plasma":["전자레인지 포","해동모드 레인지포","땡땡땡 레인지포","우주 전자레인지"],"firestorm":["불맛 회오리","웍질 회오리","불쇼 대회오리","중화요리 신의 웍"],"pyre":["마라탕 화로","맵기 5단계 화로","맵기 10단계 화로","맵기 측정불가"],"aurora":["냉동 전기장판","배신의 전기장판","북극 전기장판","오로라 대장판"],"whiteout":["빙수 블렌더","팥빙수 블렌더","눈꽃빙수 믹서","전설의 빙수장인"],"frostbane":["유통기한 아이스크림","세기말 아이스크림","빙하기산 아이스크림","공룡시대 아이스크림"],"tempest":["태풍경보 탑","재난문자 송신탑","슈퍼태풍 경보탑","태풍의 눈 관제탑"],"venomvolt":["문어발 콘센트","대왕문어발 콘센트","멀티탭의 멀티탭","전설의 문어발왕"],"miasma":["방귀 선풍기","고구마 방귀 선풍기","청국장 방귀 선풍기","범인 없는 방귀폭풍"]}/*EVOEND*/;
 const CBM=/*CBM*/{}/*CBMEND*/;T.forEach(t=>{if(CBM[t.id])t.d=Math.round(t.d*CBM[t.id])});
 Object.assign(EVO,{keep:["수호 망루","경비실 초소","아파트 경비 요새","입주민 대표 철옹성"],bell:["경보 종탑","새벽 종탑","재난 경보 종탑","새해맞이 보신각"],
  ballista:["투창 노포","쌍발 노포","연발 노포","창던지기 금메달 노포"],spikes:["가시 참호","못판 참호","지압 발판 참호","고행자의 이불"],
@@ -332,7 +332,7 @@ const GK={tw0:[3,14],twRate:[0,4],inc0:[30,140],incRate:[0,60],uShare:[.2,1],uAi
 function randG(){const g={};for(const k in GK)g[k]=GK[k][0]+Math.random()*(GK[k][1]-GK[k][0]);return g}
 function mutG(g,s){const o={};for(const k in GK){const[a,b]=GK[k];o[k]=Math.max(a,Math.min(b,(g[k]??(a+b)/2)+(Math.random()+Math.random()+Math.random()-1.5)*2*s*(b-a)))}return o}
 function crossG(a,b){const o={};for(const k in GK)o[k]=Math.random()<.5?a[k]:b[k];return o}
-const fx2=b=>(b.rapid?1.25:1)*(b.heavy?1.15:1)+(b.poison?.8:0)+(b.burn?.8:0)+(b.stun?.5:0)+(b.slow?.5:0)+(b.chain?b.chain*.25:0)+(b.freeze?.4:0)+(b.amp?.6:0)+(b.self?1:0)+(b.splash?.4:0);
+const fx2=b=>(b.rapid?1.25:1)*(b.heavy?1.15:1)+(b.poison?.8:0)+(b.burn?.8:0)+(b.stun?.5:0)+(b.slow?.5:0)+(b.chain?b.chain*.25:0)+(b.freeze?.4:0)+(b.amp?.6:0)+(b.self?1:0)+(b.splash?.4:0)+(b.bubble?.6:0);
 function defPow(p){const ps=[0,2,COLS-1].map(x=>bfs(p.grid,x,0)).filter(Boolean);if(!ps.length)return 0;let tot=0;
  p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(!t||!t.d||t.bp.t==='A')return;const tx=cellX(x,y),ty=cellY(y);let n=0;
   ps.forEach(pa=>pa.forEach(q=>{if(Math.hypot(cellX(q.x,q.y)-tx,cellY(q.y)-ty)<=t.r)n++}));n/=ps.length;
@@ -412,6 +412,8 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
    if(u.bn>0){u.bn-=dt;const d=dmgU(u,u.bv*dt);if(S.st)S.st.td[u.bsrc]=(S.st.td[u.bsrc]||0)+d}
    if(u.amp>0)u.amp-=dt;
    if(u.kbt>0)u.kbt-=dt;
+   if(u.bbt>0)u.bbt-=dt;
+   if(u.fl>0){u.fl-=dt;if(u.fl<=0){u.fl=0;const d=dmgU(u,u.fpop||0);if(S.st)S.st.td[u.fsrc]=(S.st.td[u.fsrc]||0)+d;if(p.id===view){sfx('pop');artFx('pop',{u})}}}
    if(u.hp<=0){
     if(u.bn>0&&!u.rv){for(const o of p.units)if(o!==u&&o.hp>0&&!im(o,'burn')&&Math.hypot(o.x-u.x,o.y-u.y)<1.3&&(o.bn||0)<1){o.bn=2;o.bv=Math.max(o.bv||0,u.bv*BAL.bsp);o.bsrc=u.bsrc}if(p.id===view)artFx('ignite',{u})}
     if(u.rv){u.rv=0;u.hp=b.hp*.5;u.pois=0;u.ps=0;u.pst=0;u.bn=0;u.stun=0;if(p.id===view){sfx('revive');artFx('revive',{u})}if(p.id===0&&!S.sim)toast('🔥 불사조가 되살아났어요!');return true}
@@ -429,7 +431,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
      if(near)near.dis=2;u.pk=b.peck?3:2.5}}
    if(b.t==='A'&&!(u.gr>0)&&(u.eatN||0)<5&&p.snacks&&p.snacks.length){for(const s of p.snacks)if(!s.e&&Math.hypot(s.x-u.x,s.y-u.y)<.75){s.e=1;u.gr=1;u.eatN=(u.eatN||0)+1;if(p.id===view)sfx('eat');break}}
    if(u.gr>0){u.gr-=dt;if(u.gr<=0){u.gr=0;if(u.eatN<5&&p.snacks){const s=p.snacks.find(s=>!s.e&&Math.hypot(s.x-u.x,s.y-u.y)<1.3);if(s){s.e=1;u.x=s.x;u.y=s.y;u.gr=1;u.eatN++;if(p.id===view)sfx('eat')}}}}
-   else if(u.stun>0)u.stun-=dt;else{let sp=b.sp*(u.spm||1);if(u.slow>0){u.slow-=dt;sp*=.55}
+   else if(u.fl>0){}else if(u.stun>0)u.stun-=dt;else{let sp=b.sp*(u.spm||1);if(u.slow>0){u.slow-=dt;sp*=.55}
     if(b.t==='A')u.y+=sp*dt*.9;
     else if(u.path&&u.pi<u.path.length){const n=u.path[u.pi],tx=cellX(n.x,n.y),ty=cellY(n.y),d=Math.hypot(tx-u.x,ty-u.y),s=sp*dt;
      if(d<=s){u.x=tx;u.y=ty;u.pi++}else{u.x+=(tx-u.x)/d*s;u.y+=(ty-u.y)/d*s}}}
@@ -441,7 +443,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
   if(p.clouds&&p.clouds.length){p.clouds=p.clouds.filter(c=>(c.life-=dt)>0);for(const c of p.clouds){c.tk-=dt;if(c.tk>0)continue;c.tk=.5;for(const u of p.units)if(!im(u,'poison')&&Math.hypot(u.x-c.x,u.y-c.y)<=c.r)addPois(u,c.pv,c.src)}}
   p.pyT=(p.pyT||0)+dt;if(p.pyT>=.25){const dtp=p.pyT;p.pyT=0;const W=pyWires(p);let zapped=0,mx=1;
    p.grid.forEach(r=>r.forEach(t=>{if(t&&t.bp&&t.bp.pylon&&t.dis>0)t.dis-=dtp}));
-   const hid=u=>u.bp.stealth&&u.y<BH*u.bp.stealth&&!(p.reveal>0)&&!u.seen,air=u=>u.bp.t==='A'&&!(u.gr>0),PY=BAL.py;
+   const hid=u=>u.bp.stealth&&u.y<BH*u.bp.stealth&&!(p.reveal>0)&&!u.seen,air=u=>(u.bp.t==='A'||u.fl>0)&&!(u.gr>0),PY=BAL.py;
    for(const w of W){if(w.a.dis>0||w.b.dis>0)continue;const dps=(w.a.d+w.b.d)/2*w.m;
     for(const u of p.units){if(hid(u))continue;const d=segD(u.x,u.y,w),A=air(u);if(d<(A?PY.ar:PY.gr)){const ef=dmgU(u,dps*(A?PY.am:PY.gm)*dtp);if(S.st)S.st.td.pylon=(S.st.td.pylon||0)+ef;zapped++;mx=Math.max(mx,w.m)}}}
    // 이웃 없는 외톨이 전봇대: 약한 방전
@@ -457,7 +459,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
    if(!t.bp.d||t.bp.pylon)continue;
    if(t.dis>0){t.dis-=dt;continue}
    if(t.cd>0){t.cd-=dt;continue}
-   const b=t.bp,cx=cellX(x,y),cy=cellY(y),vis=o=>(!b.t||b.t===(o.gr>0?'G':o.bp.t))&&(p.reveal>0||o.seen||!(o.bp.stealth&&o.y<BH*o.bp.stealth));
+   const b=t.bp,cx=cellX(x,y),cy=cellY(y),vis=o=>(!b.t||b.t===(o.gr>0?'G':o.fl>0?'A':o.bp.t))&&(p.reveal>0||o.seen||!(o.bp.stealth&&o.y<BH*o.bp.stealth));
    let tg=null,my=-1;for(const u of p.units){if(vis(u)&&Math.hypot(u.x-cx,u.y-cy)<=t.r&&u.y>my){my=u.y;tg=u}}
    if(!tg){if(t.heat)t.heat=Math.max(0,t.heat-dt*.6);continue}
    let crit=1;if(b.rapid)t.heat=Math.min(1,(t.heat||0)+BAL.rh);if(b.heavy){t.hc=(t.hc||0)+1;if(t.hc%3===0)crit=BAL.hcr}
@@ -475,6 +477,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
     if(b.amp)h.amp=4;
     if(b.kb)kbU(h,1)});
    if(b.stun&&!im(tg,'stun'))tg.stun=Math.max(tg.stun,b.stun);
+   if(b.bubble&&!im(tg,'kb')&&!(tg.fl>0)&&!(tg.bbt>0)&&tg.hp>0){tg.fl=b.bubble;tg.bbt=b.bubble+2;tg.fpop=t.d*2*crit;tg.fsrc=b.id}
    if(b.freeze&&!im(tg,'stun')&&!im(tg,'slow')&&Math.random()<b.freeze)tg.stun=Math.max(tg.stun,1.2)}});
  S.pl.forEach(p=>{if(p.alive&&p.life<=0){p.alive=false;p.dieT=S.t;if(p.id!==0)sfx('elim',{id:p.id});const n=nextAlive(p.id);
   if(n!==null)p.units.forEach(u=>spawn(S.pl[n],u.bp,u.owner,u.hp,{sh:u.sh,rv:u.rv,hatch:u.hatch,hd:u.hd,gold:u.gold,col:u.col}));
@@ -528,10 +531,8 @@ function towerMesh2(b){const g=new THREE.Group(),sp=[],id=b.id,cl=b.col,wd=0x713
   [[1,1],[1,-1],[-1,1],[-1,-1]].forEach(e=>{at(CY(.025,.025,.6,0x9ca3af,mt),e[0]*.32,e[1]*.32,.4);at(SP(.055,0xfef08a,GL(0xfacc15)),e[0]*.32,e[1]*.32,.72)});
   let r=rot(.95,2.6);at(TR(.4,.03,0xfacc15,GL(0xfacc15)),0,0,0,r);[0,1,2,3].forEach(i=>at(SP(.06,0xffffff,GL(0xfde047)),Math.cos(i*PI/2)*.4,Math.sin(i*PI/2)*.4,0,r));
   r=rot(1.5,-1.6);[[.06,.2],[-.06,0],[.06,-.2]].forEach((e,i)=>{const s=BX(.07,.05,.24,0xfde047,GL(0xfacc15));s.rotation.y=i%2?.6:-.6;at(s,e[0],0,e[1],r)})}
- else if(id==='wind'){at(CY(.05,.08,1.1,0x475569),0,0,.6);
-  [0,1,2,3].forEach(i=>{const r=rot(.35+i*.2,(i%2?-1:1)*(2+i*.6)),R=.14+i*.075;at(TR(R,.03,0x5eead4,Object.assign({},TP,GL(0x14b8a6))),0,0,0,r);[0,1].forEach(j=>at(SP(.05,0xffffff,TP),Math.cos(j*PI)*R,Math.sin(j*PI)*R,0,r))});
-  [[.3,0],[-.25,.2],[-.05,-.3]].forEach(e=>at(SP(.17,0xf1f5f9,{transparent:true,opacity:.92}),e[0],e[1],1));
-  const ro=rot(1.25,9);at(SP(.07,0x0f766e),0,0,0,ro);[0,1,2,3].forEach(i=>{const q=new THREE.Group();q.rotation.z=i*PI/2;at(BX(.3,.09,.02,cl),.2,0,0,q);ro.add(q)})}
+ else if(id==='wind'){at(CY(.03,.03,.7,0xf472b6),0,0,.38);at(TR(.16,.03,0xf472b6),0,0,.82).rotation.x=PI/2;
+  const r=rot(.9,1.2);[[.35,0,.18],[-.3,.15,.13],[0,-.32,.1]].forEach(e=>at(SP(e[2],0xbae6fd,{transparent:true,opacity:.45}),e[0],e[1],0,r))}
  return g}
 function birdMesh2(b,oc){const g=new THREE.Group(),id=b.id,A=b.t==='A',c=b.col,w=[],tall=id==='ostrich',z0=tall?.6:.26;g.userData.w=w;
  const at=(m,x,y,z,s)=>{m.position.set(x,y,z);if(s)m.scale.set(s[0],s[1],s[2]);g.add(m);return m};
@@ -667,7 +668,7 @@ function sync3(dt){const p=S.pl[view],seen=new Set();
  tm.forEach((m,k)=>{if(!seen.has(k)){rmM(m);tm.delete(k)}});
  const us=new Set();
  p.units.forEach(u=>{us.add(u.id);let m=um.get(u.id);if(m&&m.userData.bp!==u.bp){rmM(m);um.delete(u.id);m=null}if(!m){m=birdMesh3(u.bp,parseInt(PC[u.owner].slice(1),16));artFx('bird',{m,b:u.bp,u});m.userData.bp=u.bp;Sc.add(m);um.set(u.id,m)}
-  m.position.set(u.x,BH-u.y,u.bp.t==='A'?(u.gr>0?.35:1.4):.05);m.scale.x=m.scale.y/XK;
+  m.position.set(u.x,BH-u.y,u.bp.t==='A'?(u.gr>0?.35:1.4):u.fl>0?.75+Math.sin(S.t*5)*.06:.05);{let bb=m.userData.bub;if(u.fl>0&&!bb){bb=m.userData.bub=new THREE.Mesh(new THREE.SphereGeometry(.42,16,12),new THREE.MeshStandardMaterial({color:0xbae6fd,emissive:0x7dd3fc,emissiveIntensity:.5,transparent:true,opacity:.42,roughness:.1,depthWrite:false}));bb.position.z=.28;const hl=new THREE.Mesh(new THREE.SphereGeometry(.07,8,6),new THREE.MeshBasicMaterial({color:0xffffff}));hl.position.set(-.18,-.2,.2);bb.add(hl);m.add(bb)}if(bb)bb.visible=u.fl>0}m.scale.x=m.scale.y/XK;
   if(u.bp.stealth){const st=u.y<BH*u.bp.stealth&&!u.seen;if(m.userData.st!==st){m.userData.st=st;m.traverse(o=>{if(o.material&&o.name!=='f'&&!(o.name||'').startsWith('art')){if(o.userData.op0===undefined)o.userData.op0=o.material.opacity;o.material.transparent=true;o.material.opacity=st?.3*o.userData.op0:o.userData.op0}})}}
   const sh=m.getObjectByName('shd');if(sh)sh.visible=u.sh>0;
   (m.userData.w||[]).forEach((q,i)=>q.rotation.y=(i?-1:1)*Math.sin(S.t*14+u.id)*.5);if(m.userData.an)m.userData.an(S.t+u.id*.37,m);const body=m.children[0];body.rotation.z=Math.sin(S.t*10+u.x*5)*.18;
@@ -957,6 +958,7 @@ const FX={
   arp(t+9*e,[96,100,103,108,103,108],e/2,{type:'triangle',dur:.12,v:.04});noise(t+9*e,{ft:'highpass',f:6000,dur:.6,v:.05});
   [0,4,8,9].forEach(s=>tone(t+s*e,{type:'sine',f:150,f2:45,dur:.12,v:.25}))},
  // ---- 스프린트 2: 과자·전깃줄 ----
+ pop(t){if(!gate('pop',90)||!rate('pop',6))return;tone(t,{type:'sine',f:500,f2:1500,dur:.07,v:.14});noise(t+.02,{ft:'highpass',f:5000,dur:.04,v:.08})},
  eat(t){if(!gate('eat',110)||!rate('eat',5))return; // 바삭! 오독오독 + 냠
   noise(t,{ft:'highpass',f:3000,dur:.03,v:.16});tone(t,{type:'triangle',f:900,f2:500,dur:.03,v:.05});
   [.07,.13,.19].forEach((d,i)=>noise(t+d+rnd(0,.01),{ft:'bandpass',f:rnd(2000,3200),q:2.5,dur:.025,v:.11-i*.02}));
@@ -1729,15 +1731,25 @@ const ART=(()=>{
   if(lv===3){fanBase(c,bc,.3);c.s('C',0,0,.45,.045,.045,.62,WHC);fanHead(c,{z:.84,el:.75,r:.32,nb:5,col:0x2dd4bf,v:12});const w=c.spin(0,-.1,.95,4,fwd(.75));[.38,.44].forEach((r,i)=>w.a('A.03,2',0,0,.08+i*.06,r,r,r,0xb8fff0,0,0,i*2));return}
   const t=c.spin(0,0,.1,3.5);[[.08,.05],[.13,.18],[.18,.33],[.24,.5],[.3,.68]].forEach(([r,z],i)=>t.t('T.3',0,0,z,r,r,r*.8,i%2?0x99f6e4:0x5eead4));t.a('A.06,4',0,0,.85,.35,.35,.35,0xb8fff0);
   fanHead(c,{z:.62,el:.7,r:.22,nb:3,col:GD,v:9,y:-.12,bl:GD});const m=c.sub(0,-.2,.73,fwd(.7));eyes(m,0,0,.08,.04,.07);return [0,-.05,.95,.06]};
- // 🌪️ 강풍 선풍기 → 터보 강풍기 → 공업용 선풍기 → 선풍기 제트엔진
- TD.wind=(c,lv,b)=>{const bc=b.col||0x2dd4bf;base(c,lv);
-  if(lv===1){fanBase(c,bc,.29);c.s('B',.0,-.22,.16,.09,.04,.04,0xdc2626,.3);c.s('C',0,0,.45,.04,.04,.62,WHC);fanHead(c,{z:.82,el:.8,r:.3,nb:4,col:bc,v:12});return}
-  if(lv===2){c.s('B',0,.04,.25,.3,.3,.28,0x334155);[-1,1].forEach(k=>c.s('B',k*.155,.04,.25,.01,.31,.06,0xdc2626));const h=fanHead(c,{z:.7,el:.7,r:.3,nb:6,col:bc,v:16});h.s('T.35',0,0,0,.31,.31,.31,0x475569);h.s('C',0,0,-.08,.31,.31,.12,0x334155);return}
-  if(lv===3){[-1,1].forEach(k=>{c.s('B',k*.3,0,.38,.05,.12,.64,0x3f3f46);c.s('B',k*.3,0,.12,.08,.3,.04,0x3f3f46)});c.s('B',0,0,.16,.6,.06,.05,0xfacc15);
-   const e=.65,h=c.sub(0,0,.7,fwd(e));[[0,.33,.66,.04],[0,-.33,.66,.04],[.33,0,.04,.66],[-.33,0,.04,.66]].forEach(([x,y,w,hh])=>h.s('B',x,y,.0,w,hh,.06,0xfacc15));[-.22,0,.22].forEach(x=>h.s('B',x,.33,.035,.06,.045,.01,BLK));
-   for(let i=0;i<5;i++)h.t('B',0,0,.04,.62,.012,.012,0xd4d4d8,0,0,i*PI/5);const s=c.spin(0,0,.7,18,fwd(e));for(let i=0;i<3;i++){const a=i*2.094;s.s('S',Math.cos(a)*.15,Math.sin(a)*.15,0,.16,.075,.012,0x9ca3af,0,0,a)}s.s('C',0,0,.01,.05,.05,.04,0xfacc15);return}
-  const e=.7,j=c.sub(0,.06,.62,fwd(e));c.s('B',0,.08,.3,.08,.18,.42,0x6b7280);j.s('C',0,0,0,.2,.2,.42,0xd4d4d8);j.s('T.18',0,0,.21,.2,.2,.2,0x52525b);j.s('T.1',0,0,.15,.205,.205,.205,GD);j.s('T.12',0,0,-.05,.205,.205,.205,GD);j.s('F.55',0,0,-.27,.18,.18,.12,0x52525b);j.a('F0',0,0,-.4,.1,.1,.22,0x7dd3fc,PI);
-  [-1,1].forEach(k=>j.s('B',k*.28,0,-.06,.18,.02,.14,0x9ca3af,0,0,0));const s=c.spin(0,.06,.62,22,fwd(e));s.s('C',0,0,.2,.19,.19,.01,0x18181b);for(let i=0;i<6;i++){const a=i*PI/3;s.sub(0,0,.21,0,0,a).s('B',.09,0,0,.16,.045,.01,0x6b7280,.4)}s.s('F0',0,0,.24,.05,.05,.08,GD);return [0,.18,.86,.06]};
+ // 🧼 비눗방울 막대 → 비눗방울 기계 → 비눗방울 대포 → 거품 목욕탕 대왕
+ const BU=0xbfe9ff,BU2=0xf5c6ff;
+ const bub=(c,x,y,z,r,col)=>{c.t('S',x,y,z,r,r,r,col||BU);c.g('s',x-r*.38,y-r*.38,z+r*.42,r*.18,r*.18,r*.18,0xffffff)};
+ const wand=(c,x,y,z,s,col)=>{const q=c.sub(x,y,z,0,0,0,s);q.s('C',0,0,-.25,.022,.022,.5,col);q.s('T.16',0,0,.12,.13,.13,.13,col,PI/2);q.t('Q',0,.005,.12,.12,.12,.12,BU,PI/2);return q};
+ const sbottle=(c,x,y,z,s,col)=>{const q=c.sub(x,y,z,0,0,0,s);q.t('C',0,0,.14,.11,.11,.28,col||0x7dd3fc);q.s('C',0,0,.08,.105,.105,.12,0x38bdf8);q.s('C',0,0,.31,.06,.06,.06,0xf472b6);return q};
+ const orbit=(c,z,R,n,v,r)=>{const o=c.spin(0,0,z,v);for(let i=0;i<n;i++){const a=i*PI*2/n;bub(o,Math.cos(a)*R,Math.sin(a)*R,(i%2)*.12,r*(i%2?.8:1),i%3===2?BU2:BU)}return o};
+ TD.wind=(c,lv,b)=>{base(c,lv);
+  if(lv===1){sbottle(c,.15,.1,.1,1);wand(c,-.06,-.04,.55,1,0xf472b6);bub(c,-.12,-.18,.95,.12);bub(c,.08,-.3,1.12,.08,BU2);bub(c,-.25,-.05,1.2,.06);return}
+  if(lv===2){c.s('B',0,.03,.3,.46,.36,.38,0xfda4af);c.s('B',0,.03,.5,.48,.38,.04,0xf472b6);c.s('C',0,-.16,.3,.12,.12,.04,0xfff1f2,PI/2);c.s('T.2',0,-.17,.3,.12,.12,.12,0xf472b6,PI/2);
+   const s=c.spin(0,-.19,.3,10,PI/2);for(let i=0;i<4;i++){const a=i*PI/2;s.s('B',Math.cos(a)*.05,Math.sin(a)*.05,0,.08,.03,.01,0xffffff,0,0,a)}
+   sbottle(c,.16,.12,.52,.7);eyes(c,0,-.15,.42,.035,.1);orbit(c,.85,.34,4,1.2,.11);bub(c,0,-.45,.55,.14);return}
+  if(lv===3){c.s('B',0,.05,.22,.42,.42,.18,0x64748b);[-1,1].forEach(k=>c.s('C',k*.25,.05,.2,.11,.11,.06,0x334155,0,PI/2));
+   const h=c.sub(0,0,.48,fwd(.45));h.s('C',0,0,0,.17,.17,.5,0x7dd3fc);h.s('T.25',0,0,.25,.17,.17,.17,0xf472b6);h.s('C',0,0,-.2,.2,.2,.1,0x38bdf8);h.t('Q',0,0,.26,.15,.15,.15,BU);
+   sbottle(c,-.2,.2,.32,.8,0xf9a8d4);bub(c,0,-.5,.85,.17);bub(c,.2,-.35,1.05,.1,BU2);orbit(c,1,.4,5,1.5,.1);return}
+  c.s('C',0,0,.28,.38,.38,.3,0xf8fafc);c.s('T.18',0,0,.43,.38,.38,.38,0xe2e8f0);c.t('C',0,0,.42,.33,.33,.03,0x7dd3fc);
+  [[0,0,.48,.16],[-.18,.1,.5,.13],[.17,.12,.49,.12],[-.1,-.18,.47,.11],[.16,-.15,.47,.1]].forEach(([x,y,z,r])=>c.s('S',x,y,z,r,r,r*.7,0xffffff));
+  const d=c.sub(.05,-.02,.62,0,0,0,1);d.s('S',0,0,0,.12,.14,.1,0xfde047);d.s('S',0,-.1,.1,.08,.08,.08,0xfde047);d.s('F0',0,-.19,.09,.03,.025,.06,0xf97316,PI/2);eyes(d,0,-.16,.13,.02,.035);
+  [-1,1].forEach(k=>c.s('C',k*.3,.25,.62,.02,.02,.3,0xcbd5e1));c.s('B',0,.25,.77,.62,.025,.025,0xcbd5e1);
+  orbit(c,1.05,.45,6,1,.12);bub(c,0,0,1.25,.2,BU2);return [0,.05,.75,.06]};
  // 🌀 회오리 감자 → 치즈 회오리 감자 → 왕꼬치 회오리 → 휴게소의 전설
  const spiral=(c,x,y,z0,z1,r,n,col,v,cheese)=>{const s=c.spin(x,y,0,v);n=Math.round(n*1.9);for(let i=0;i<n;i++){const t=i/(n-1),a=i*.5,z=z0+(z1-z0)*t,rr2=r*(1-.3*Math.abs(t-.5)*2);s.sub(0,0,z,0,0,a).s('B',rr2*.55,0,0,rr2,r*.55,.03,i%2?col:dkn(col,.88),.3);
    if(cheese&&i%4===1)s.s('S',Math.cos(a)*rr2*.9,Math.sin(a)*rr2*.9,z-.02,.03,.03,.045,0xffe066)}return s};
@@ -2032,6 +2044,7 @@ const ART=(()=>{
   for(let i=0;i<3;i++){const a=rnd()*6.28;E(PA,0,x+Math.cos(a)*r*.4,y+Math.sin(a)*r*.4,.2,0,0,.35,rr(.8,1.2),.12,.04,0xbef264,.6,0,1,0,0)}
   ring(x,y,.08,.2,r,.6,0x84cc16,.35)};
  A.crit=({u})=>{if(!PA||!u)return;const x=u.x,y=BH-u.y,z=u.bp.t==='A'?1.4:.4;ring(x,y,z,.1,.9,.35,0xfde047,.9);for(let i=0;i<6;i++){const a=i*1.047;E(PA,1,x,y,z+.1,Math.cos(a)*2,Math.sin(a)*2,.6,.3,.22,.05,0xfff3b0,1,0,2,0,0)}E(PA,7,x,y,z+.25,0,0,.6,.5,.15,.4,0xfacc15,.95,0,1,0,0)};
+ A.pop=({u})=>{if(!PA||!u)return;const x=u.x,y=BH-u.y,z=1;ring(x,y,z,.1,.8,.3,0xbae6fd,.9);for(let i=0;i<8;i++){const a=i*.785+rnd()*.3;E(PA,0,x,y,z,Math.cos(a)*1.8,Math.sin(a)*1.8,rr(.3,1),rr(.25,.4),.1,.03,i&1?0xffffff:0xbae6fd,.9,1,1.5,0,0)}};
  A.ignite=({u})=>{if(!PA||!u)return;const x=u.x,y=BH-u.y;ring(x,y,.1,.1,1.3,.5,0xf97316,.7);for(let i=0;i<8;i++){const a=rnd()*6.28,v=rr(.8,1.6);E(PA,0,x,y,.3,Math.cos(a)*v,Math.sin(a)*v,rr(.8,1.6),rr(.4,.7),.22,.06,i&1?0xfb923c:0xfde047,.9,1.5,1.5,0,0)}};
  A.leak=({u})=>{if(!PA||!u)return;const x=u.x,y=BH-u.y;
   ring(x,y,.1,.1,1.4,.5,0xff3b3b,.9);ring(x,y,.12,.1,2.4,.7,0xff8a8a,.5,.08);
