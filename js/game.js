@@ -281,7 +281,7 @@ function dmgU(u,d){if(u.amp>0)d*=1.35;const h0=Math.max(0,u.hp)+Math.max(0,u.sh|
 function refreshPaths(p){p.units.forEach(u=>{if(u.bp.t!=='G')return;const c=nearCell(u.x,u.y),np=bfs(p.grid,c.x,c.y);if(np){u.path=np;u.pi=0}})}
 function toast(m){const e=$('toast');e.textContent=m;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2400)}
 
-function send(b){const me=S.pl[0];
+function send(b){const me=S.pl[0];if(!me.alive)return toast('👀 관전 중이에요');
  if(!techOK(me,b))return toast(b.race?`${RACE[b.race].ic} ${RACE[b.race].n} 전용 새예요`:b.tech?`${TECH[b.tech].ic} ${TECH[b.tech].n} 테크 전용 새예요`:'이 종족은 쓸 수 없는 새예요');
  if(S.cdn>0)return toast('⏱ 카운트다운 중엔 속성만 고를 수 있어요');
  if(!me.alive)return;const bc=ucost(me,b);if(me.gold<bc)return toast(`💰 골드가 부족해요 (${bc}G 필요)`);
@@ -296,7 +296,7 @@ function hatchOf(u){if(u.gold)return UB.hatch_gold;if(eggHas('dino')&&Math.rando
  return ks.length?UB['hatch_'+ks[Math.floor(Math.random()*ks.length)]]:UB.hatch_chick}
 
 function cell(x,y){
- if(view!==0)return toast('관전 중에는 건설할 수 없어요');
+ if(view!==0||!S.pl[0].alive)return toast('관전 중에는 건설할 수 없어요');
  const me=S.pl[0],t=me.grid[y][x];
  if(t){insp={x,y,t};sel=null;return ui()}
  if(!sel){insp=null;return ui()}
@@ -395,7 +395,7 @@ function start(gs,p0h){const D=DIFF[diff];const cf=[...AIS].sort(()=>Math.random
   const ai=gs?gs[i]:(i?{...mutG(cf[i-1].g,.07),tech:cf[i-1].g.tech,tech2:cf[i-1].g.tech2}:null),tech=ai?TK[Math.min(4,Math.floor(ai.tech??Math.random()*5))]:null;
   let t2=ai?TK[Math.min(4,Math.floor(ai.tech2??Math.random()*5))]:null;if(t2&&t2===tech)t2=TK[(TK.indexOf(tech)+1+Math.floor(Math.random()*4))%5];
   S.pl.push({id:i,name:gs?`G${i}`:(i?`${(i+S.off)%8+1}번 ${RK[i]?RACE[RK[i]].ic:''}${TECH[tech].ic}${TECH[t2].ic}${cf[i-1].n}`:`${S.off+1}번 ${heroTag()}`),tech,tech2:null,tech2plan:t2,race:RK[i],skU:0,skCD:0,boost:0,reveal:0,color:PC[i],gold:(i||(gs&&!p0h))?D.g:500,income:(i||(gs&&!p0h))?D.i:30,ai:!!(i||(gs&&!p0h)),life:100,alive:true,grid:g,units:[],cfg:ai,dealt:0,pi:0,aiT:Math.random()*1.5})}
- sel=null;insp=null;view=0;paused=false;over=false;spd=1;$('pz').textContent='⏸';$('sp').textContent='1x';$('end').style.display='none';
+ sel=null;insp=null;view=0;paused=false;over=false;spd=1;document.querySelector('footer').style.opacity='';$('pz').textContent='⏸';$('sp').textContent='1x';$('end').style.display='none';
  $('title').style.display='none';$('game').style.display='flex';
  if(!R)init3();resize();ui();lanePick=null;try{laneFit()}catch(e){}if(!gs){try{$('t1').onclick&&$('t1').onclick()}catch(e){}S.cdl=6;cdnUI();sfx('start');toast((RK[0]?`${RACE[RK[0]].ic} ${RACE[RK[0]].n} · `:'')+'🔮 카운트다운 동안 타워 탭에서 속성을 골라요')}}
 function escape(p,u){const o=S.pl[u.owner];if(u.owner===0&&p.id!==0){S.esc=S.esc||{};S.esc[p.id]=(S.esc[p.id]||0)+1}if(u.owner!==p.id){if(p.id===0)sfx('leak',{dm:u.bp.dm*lateMul()});if(p.id===view)artFx('leak',{u})}
@@ -486,10 +486,15 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
  S.pl.forEach(p=>{if(p.alive&&p.life<=0){p.alive=false;p.dieT=S.t;if(p.id!==0)sfx('elim',{id:p.id});const n=nextAlive(p.id);
   if(n!==null)p.units.forEach(u=>spawn(S.pl[n],u.bp,u.owner,u.hp,{sh:u.sh,rv:u.rv,hatch:u.hatch,hd:u.hd,gold:u.gold,col:u.col}));
   p.units=[];p.grid=Array.from({length:ROWS},()=>Array(COLS).fill(null))}});
- const al=S.pl.filter(p=>p.alive);
- if(S.sim){if(al.length<=1)finish(false)}else if(!S.pl[0].alive)finish(false);else if(al.length===1)finish(true)}
+ const al=S.pl.filter(p=>p.alive);if(S.spec&&!S.pl[view].alive&&al.length){const n=nextAlive(view);if(n!==null){view=n;sel=null;insp=null}}
+ if(S.sim){if(al.length<=1)finish(false)}else if(S.spec){if(al.length<=1)specEnd(al[0])}else if(!S.pl[0].alive)finish(false);else if(al.length===1)finish(true)}
 function finish(win){over=true;sfx(win?'win':'lose');sfx('bgm_stop');$('eT').textContent=win?'🏆':'💀';$('eH').textContent=win?'최종 우승!':'탈락…';
- $('eP').textContent=`생존 시간 ${fmt(S.t)} · 처치 ${S.kills} · 가한 피해 ${S.dealt}`;try{rewardUI(win)}catch(e){}$('end').style.display='flex'}
+ $('eP').textContent=`생존 시간 ${fmt(S.t)} · 처치 ${S.kills} · 가한 피해 ${S.dealt}`;try{rewardUI(win)}catch(e){}
+ $('spec').style.display=!win&&!S.sim&&S.pl.filter(p=>p.alive).length>=2?'block':'none';$('end').style.display='flex'}
+// 👀 탈락 후 관전: AI끼리 끝날 때까지 이어서 보기
+function specGo(){if(!S)return;S.spec=1;over=false;$('end').style.display='none';$('spx').style.display='';document.querySelector('footer').style.opacity=.4;const i=S.pl.findIndex(p=>p.alive);if(i>=0)view=i;sel=null;insp=null;sfx('bgm_start');toast('👀 관전 중 · 미니맵을 눌러 다른 진영을 볼 수 있어요');ui()}
+function specEnd(w){over=true;sfx('bgm_stop');sfx('win');$('spx').style.display='none';$('eT').textContent='👀';$('eH').textContent=w?`${w.name} 우승!`:'관전 종료';
+ $('eP').textContent=`게임 시간 ${fmt(S.t)} · 내 생존 ${fmt(S.pl[0].dieT||S.t)} · 처치 ${S.kills}`;$('ew').innerHTML='';$('spec').style.display='none';$('end').style.display='flex'}
 const fmt=t=>String(Math.floor(t/60)).padStart(2,'0')+':'+String(Math.floor(t%60)).padStart(2,'0');
 
 // ---------- 3D ----------
@@ -747,12 +752,12 @@ function build(){T.forEach(t=>{const e=document.createElement('button');e.innerH
  U.forEach(u=>{const e=document.createElement('button');e.innerHTML=`<i>${u.ic}</i><span>${u.sn||u.n}</span><u>${u.c}G</u><s>+${u.inc}</s>`;
   e.onclick=()=>{send(u);ui()};$('shU').append(e);u.el=e})}
 build();
-$('t1').onclick=()=>{view=0;ui();$('t1').className='on';$('t2').className='';$('shB').style.display='grid';$('shU').style.display='none'};
+$('t1').onclick=()=>{if(S&&S.pl[0].alive)view=0;ui();$('t1').className='on';$('t2').className='';$('shB').style.display='grid';$('shU').style.display='none'};
 $('t2').onclick=()=>{$('t2').className='on';$('t1').className='';$('shU').style.display='grid';$('shB').style.display='none'};
 $('pz').onclick=()=>{paused=!paused;$('pz').textContent=paused?'▶️':'⏸'};
 $('sp').onclick=()=>{spd=spd===1?2:1;$('sp').textContent=spd+'x'};
-$('go').onclick=()=>tryStart();$('again').onclick=()=>start();
-$('home').onclick=()=>{$('end').style.display='none';$('game').style.display='none';$('title').style.display='flex';S=null;renderTitle()};
+$('go').onclick=()=>tryStart();$('again').onclick=()=>{$('spx').style.display='none';start()};$('spec').onclick=specGo;$('spx').onclick=()=>{if(confirm('관전을 그만두고 메인 화면으로 나갈까요?'))$('home').onclick()};
+$('home').onclick=()=>{$('end').style.display='none';$('spx').style.display='none';over=true;$('game').style.display='none';$('title').style.display='flex';S=null;renderTitle()};
 // 🔊 짹짹 스튜디오 사운드 모듈 (SFX) — 모든 소리를 Web Audio로 실시간 합성(오리지널, 음원 파일 0개)
 // 사용: SFX.play(name,args) · SFX.toggle() → true=음소거 · SFX.muted
 // 규칙: 로드 시점엔 AudioContext/DOM을 건드리지 않음(헤드리스 시뮬레이션 안전). 첫 play/터치 때 지연 생성.
@@ -2138,7 +2143,7 @@ $('cv').addEventListener('pointerdown',e=>{if(!S||over||!Cam)return;const r=$('c
  ray.setFromCamera({x:(e.clientX-r.left)/r.width*2-1,y:-((e.clientY-r.top)/r.height)*2+1},Cam);
  const p=new THREE.Vector3();if(!ray.ray.intersectPlane(pln,p))return;
  const c=nearCell(p.x/XK,BH-p.y);if(c.d<.62)cell(c.x,c.y)});
-function useSkill0(){const me=S.pl[0],s=skillOf(me);if(S.cdn>0)return;if(!s)return toast('✨ 속성 2개를 고르면 조합 스킬을 해금할 수 있어요');
+function useSkill0(){const me=S.pl[0],s=skillOf(me);if(S.cdn>0||!me.alive)return;if(!s)return toast('✨ 속성 2개를 고르면 조합 스킬을 해금할 수 있어요');
  if(!me.skU){if(me.gold<SKC)return toast(`해금에 ${SKC}G가 필요해요`);me.gold-=SKC;me.skU=1;toast(`${s.c.ic} ${s.n} 해금! ${s.d} (재사용 ${s.cd}초)`);return ui()}
  if(me.skCD>0)return toast(`재사용까지 ${Math.ceil(me.skCD)}초`);useSkill(me);ui()}
 $('skb').onclick=useSkill0;
@@ -2148,7 +2153,7 @@ addEventListener('resize',()=>setTimeout(laneFit,50));
 document.addEventListener('pointerdown',e=>{if(e.target.closest&&e.target.closest('button'))sfx('tap')},true);
 $('snd').onclick=()=>{if(typeof SFX!=='undefined'&&SFX.toggle)$('snd').textContent=SFX.toggle()?'🔇':'🔊'};
 try{if(typeof SFX!=='undefined'&&SFX.muted)$('snd').textContent='🔇'}catch(e){}
-function pickTech(k){const me=S.pl[0];if(has(me,k)||me.tech2)return;const cost=me.tech?TECH2C:0,cb=me.tech?comboOf(me.tech,k):null;
+function pickTech(k){const me=S.pl[0];if(!me.alive||has(me,k)||me.tech2)return;const cost=me.tech?TECH2C:0,cb=me.tech?comboOf(me.tech,k):null;
  if(techPend!==k){techPend=k;ui();return toast(`${TECH[k].ic} ${TECH[k].n}: ${TECH[k].d}${cost?' · '+cost+'G':''}${cb?` · 조합 ${TB[cb.t].n}·${UB[cb.u].n} 해금`:''} · 한 번 더 누르면 확정`)}
  if(me.gold<cost){techPend=null;ui();return toast('골드가 부족해요')}
  me.gold-=cost;if(!me.tech)me.tech=k;else me.tech2=k;techPend=null;sfx('tech',{k,combo:!!cb});
@@ -2202,7 +2207,7 @@ $('dext').onclick=e=>{const p=e.target.dataset&&e.target.dataset.p;if(p){dxPage=
 $('dexx').onclick=dxClose;$('dxo').onclick=dxOpen;$('dxb').onclick=dxOpen;
 
 $('mm').addEventListener('pointerdown',e=>{if(!S)return;const r=$('mm').getBoundingClientRect(),dx=e.clientX-r.left-r.width/2,dy=e.clientY-r.top-r.height/2;
- if(Math.hypot(dx,dy)<8){view=0;ui();return}let a=Math.atan2(dy,dx)+Math.PI/2;while(a<0)a+=Math.PI*2;{const v=(Math.floor(a/(Math.PI/4))%8-S.off+8)%8;if(!S.pl[v].alive)return toast('💀 탈락한 진영이에요');view=v}sel=null;insp=null;ui()});
+ if(Math.hypot(dx,dy)<8){if(!S.pl[0].alive)return toast('💀 내 진영은 탈락했어요');view=0;ui();return}let a=Math.atan2(dy,dx)+Math.PI/2;while(a<0)a+=Math.PI*2;{const v=(Math.floor(a/(Math.PI/4))%8-S.off+8)%8;if(!S.pl[v].alive)return toast('💀 탈락한 진영이에요');view=v}sel=null;insp=null;ui()});
 $('dif').innerHTML=Object.keys(DIFF).map(k=>`<button data-k="${k}">${DIFF[k].n.replace(' ','<br>')}</button>`).join('');
 function setDiff(k){diff=k;[...$('dif').children].forEach(b=>b.className=b.dataset.k===k?'on':'');$('dd').textContent='💡 '+DIFF[k].d;lobUI()}
 $('dif').onclick=e=>{if(e.target.dataset.k)setDiff(e.target.dataset.k)};setDiff('N');
