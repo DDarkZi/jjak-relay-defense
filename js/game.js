@@ -40,7 +40,7 @@ const U=[
 {id:'egg_legs',n:'다리 알',c:60,hp:80,sp:1.4,t:'G',dm:1,inc:3,ic:'🥚',col:0xfef08a},
 {id:'kiwi',n:'키위새',c:80,hp:110,sp:1.3,t:'G',dm:1,inc:4,ic:'🥝',col:0x92400e},
 {id:'chick',n:'병아리',c:100,hp:130,sp:1.6,t:'G',dm:1,inc:5,ic:'🐥',col:0xfde047},
-{id:'turkey',n:'칠면조',c:140,hp:180,sp:1.2,t:'G',dm:1,inc:8,ic:'🦃',col:0x78350f},
+{id:'turkey',n:'칠면조',c:140,hp:180,sp:1.2,t:'G',dm:1,inc:8,ic:'🦃',col:0x5b3a29},
 {id:'rooster',n:'수탉',c:180,hp:218,sp:2.2,t:'G',dm:1,inc:9,ic:'🐔',col:0xf8fafc},
 {id:'pigeon',n:'비둘기',c:200,hp:182,sp:2.4,t:'A',dm:1,inc:10,ic:'🕊️',col:0x94a3b8},
 {id:'goose',n:'거위',c:220,hp:377,sp:1.2,t:'G',dm:1,inc:11,split:2,ic:'🪿',col:0xf5f5f4,x:'쓰러지면 다리 알 2개로 분열'},
@@ -112,7 +112,7 @@ T.push(
  {id:'moonbow',race:'grove',n:'달빛 활',c:300,d:220,r:5,cd:1.3,t:'A',ic:'🌛',col:0xc4b5fd,x:'초장거리 대공',fl:'“보름달이 뜨면 명중률이 두 배. (기분 탓)”'},
  {id:'thorn',race:'grove',n:'가시 덩굴',c:200,d:10,r:2.8,cd:.8,splash:1.2,slow:1,ic:'🌿',col:0x22c55e,x:'광역 감속',fl:'“발에 감기면 풀리지 않아요. 풀인데도요.”'});
 U.push(
- {id:'knight',race:'nest',n:'근위 황새',c:420,hp:494,sp:1.2,t:'G',dm:2,inc:21,shield:390,ic:'🛡️',col:0x93c5fd,x:'보호막(체력 300 추가)',fl:'“방패는 들었는데 아기는 어디 갔지?”'},
+ {id:'knight',race:'nest',n:'근위 황새',c:420,hp:494,sp:1.2,t:'G',dm:2,inc:21,shield:390,over:1,ic:'🛡️',col:0xf1f5f9,x:'긴 다리로 타워를 성큼 넘어 직진(지상 판정) · 보호막(체력 300 추가)',fl:'“방패는 들었는데 아기는 어디 갔지?”'},
  {id:'priest',race:'nest',n:'치유 사제새',c:360,hp:384,sp:1.3,t:'G',dm:1,inc:18,heal:1,ic:'⛑️',col:0xfef9c3,x:'주변 아군 치유',fl:'“아프면 부리 벌려요. 아~ 하고.”'},
  {id:'berserk',race:'raptor',n:'광전사 독수리',c:520,hp:598,sp:2.7,t:'A',dm:3,inc:33,ic:'🪓',col:0xdc2626,x:'빠른 공중 돌격',fl:'“화나면 눈이 빨개져요. 원래 빨간 거였어요.”'},
  {id:'warturkey',race:'raptor',n:'전투 칠면조',c:430,hp:855,sp:1.45,t:'G',dm:3,inc:27,ic:'🍗',col:0xb45309,x:'단단한 지상 돌격대',fl:'“추수감사절을 피해 군대에 입대했어요.”'},
@@ -124,7 +124,7 @@ U.sort((a,b)=>a.c-b.c);
 const TECH={fire:{n:'화염',ic:'🔥',col:0xf97316,t:['ember','lava','sun'],u:'phoenix',d:'화상 지속 피해'},ice:{n:'빙결',ic:'❄️',col:0x67e8f9,t:['ice','frost','bliz'],u:'penguin',d:'감속·빙결'},
  thunder:{n:'뇌전',ic:'⚡',col:0xfacc15,t:['static','thunder','storm'],u:'thunderbird',d:'연쇄 번개·기절'},wind:{n:'폭풍',ic:'🌪️',col:0x2dd4bf,t:['breeze','wind','twister'],u:'albatross',d:'넉백·방울·대공'},
  dark:{n:'독',ic:'☠️',col:0x84cc16,t:['bat','flu','acid'],u:'vampire',d:'독·약화·흡혈'}},TK=Object.keys(TECH),TECH2C=300;
-const BAL=/*BAL*/{upk:1.05,upg:.2,rh:.15,rs:0.5,hcr:2,hmx:0.03,pk:0.35,pmax:5,pdur:4,bk:1.1,bdur:3,bsp:.7,cl:2.5,mode:{normal:{uh:0.95,td:0.84,as:1.02},race:{uh:1,td:0.85,as:0.97}},cap:44,need:1,uhp:2.4,incS:805,late1:420,lm1:2,late2:540,lm2:3,py:{ar:.85,am:2.4,gr:1.1,gm:.8,lr:1.1,la:1.2,lg:.4}}/*BALEND*/;T.forEach(b=>{if(!b.d||b.pylon||b.snack||b.cctv)return;const tr=[];if(b.cd<=.8){b.rapid=1;tr.push('⚡연사 가속: 계속 쏘면 공속 최대 +50%')}else if(b.cd>=1.5){b.heavy=1;tr.push('💥강타: 3번째 공격마다 치명타 ×2 + 대상 최대체력 3% 추가 피해')}if(b.poison)tr.push('☠️독 중첩(최대 5)'+((b.splash||b.self)?' · 독연기 2.5초 잔류':''));if(b.burn)tr.push('🔥화상 번짐: 불탄 채 쓰러지면 옆으로 옮겨붙음');if(tr.length)b.x=(b.x?b.x+' · ':'')+tr.join(' · ')});U.forEach(u=>{u.inc=Math.round(u.inc*1.4);u.hp=Math.round(u.hp*BAL.uhp);if(u.shield)u.shield*=BAL.uhp});const TICK=4;
+const BAL=/*BAL*/{upk:1.05,upg:.2,rh:.15,rs:0.5,hcr:2,hmx:0.03,pk:0.35,pmax:5,pdur:4,bk:1.1,bdur:3,bsp:.7,cl:2.5,mode:{normal:{uh:0.95,td:0.84,as:1.02},race:{uh:1,td:0.85,as:0.97}},cap:44,ovs:.9,need:1,uhp:2.4,incS:805,late1:420,lm1:2,late2:540,lm2:3,py:{ar:.85,am:2.4,gr:1.1,gm:.8,lr:1.1,la:1.2,lg:.4}}/*BALEND*/;T.forEach(b=>{if(!b.d||b.pylon||b.snack||b.cctv)return;const tr=[];if(b.cd<=.8){b.rapid=1;tr.push('⚡연사 가속: 계속 쏘면 공속 최대 +50%')}else if(b.cd>=1.5){b.heavy=1;tr.push('💥강타: 3번째 공격마다 치명타 ×2 + 대상 최대체력 3% 추가 피해')}if(b.poison)tr.push('☠️독 중첩(최대 5)'+((b.splash||b.self)?' · 독연기 2.5초 잔류':''));if(b.burn)tr.push('🔥화상 번짐: 불탄 채 쓰러지면 옆으로 옮겨붙음');if(tr.length)b.x=(b.x?b.x+' · ':'')+tr.join(' · ')});U.forEach(u=>{u.inc=Math.round(u.inc*1.4);u.hp=Math.round(u.hp*BAL.uhp);if(u.shield)u.shield*=BAL.uhp});const TICK=4;
 const COMBO=T.filter(t=>t.combo).map(t=>({k:t.combo,t:t.id,u:U.find(u=>u.combo&&u.combo.join()===t.combo.join()).id,n:t.combo.map(k=>TECH[k].n).join('+'),ic:t.combo.map(k=>TECH[k].ic).join('')}));
 // 🎭 웃긴 이름 + 한 줄 설명 (도감용)
 const NM={
@@ -211,6 +211,10 @@ const EGGM=[{n:10,k:'hatch',ic:'🐣',t:'부화 해금',d:'보낸 알이 진영 
  {n:100,k:'chief',ic:'💪',t:'전설의 새: 알통 대장닭',d:'상점에 알통 대장닭이 나타나요. 걸으며 수상한 알을 낳아요.',u:'eggchief'},
  {n:150,k:'dino',ic:'🦖',t:'고대 유전자',d:'부화할 때 3% 확률로 티라노 병아리가 태어나요.',u:'hatch_dino'}];
 const eggHas=k=>{const m=EGGM.find(m=>m.k===k);return !!m&&EGG.n>=m.n},eggNext=()=>EGGM.find(m=>EGG.n<m.n);
+Object.assign(NM,{priest:['아~ 해봐요 사제새','아프면 부리 벌려요. 아~ 하고.'],knight:['육아휴직 황새','방패는 들었는데 아기는 어디 갔지? 다리가 길어서 타워쯤은 성큼 넘어가요.'],
+ warturkey:['추수감사절 탈영… 아니 입대 칠면조','추수감사절을 피해 군대에 입대했어요.'],berserk:['버럭 독수리','화나면 눈이 빨개져요. 원래 빨간 거였어요.'],
+ bonecrow:['뼈다귀 까악이','뼈만 남았는데 아직도 까악 소리는 크네요.'],lich:['영혼출근 올빼미','밤샘 근무가 너무 길어서 영혼이 먼저 출근했어요.'],
+ mosscrane:['이끼 건강왕 두루미','이끼가 끼면 어떠한가. 건강하면 그만이지.'],shadowowl:['계속 있었던 부엉이','없는 줄 알았죠? 계속 있었어요.']});
 [...T,...U].forEach(x=>{const v=NM[x.id];if(v){x.n=v[0];x.fl=v[1];if(v[2])x.sn=v[2]}});
 
 // 🔌 스튜디오 모듈 연결 지점: 사운드팀은 sfx.js에서 SFX를, 아트팀은 art.js에서 ART를 구현해요. 없으면 조용히 넘어가요.
@@ -432,7 +436,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
    if(b.t==='A'&&!(u.gr>0)&&(u.eatN||0)<5&&p.snacks&&p.snacks.length){for(const s of p.snacks)if(!s.e&&Math.hypot(s.x-u.x,s.y-u.y)<.75){s.e=1;u.gr=1;u.eatN=(u.eatN||0)+1;if(p.id===view)sfx('eat');break}}
    if(u.gr>0){u.gr-=dt;if(u.gr<=0){u.gr=0;if(u.eatN<5&&p.snacks){const s=p.snacks.find(s=>!s.e&&Math.hypot(s.x-u.x,s.y-u.y)<1.3);if(s){s.e=1;u.x=s.x;u.y=s.y;u.gr=1;u.eatN++;if(p.id===view)sfx('eat')}}}}
    else if(u.fl>0){}else if(u.stun>0)u.stun-=dt;else{let sp=b.sp*(u.spm||1);if(u.slow>0){u.slow-=dt;sp*=.55}
-    if(b.t==='A')u.y+=sp*dt*.9;
+    if(b.t==='A'||b.over)u.y+=sp*dt*(b.over?BAL.ovs:.9);
     else if(u.path&&u.pi<u.path.length){const n=u.path[u.pi],tx=cellX(n.x,n.y),ty=cellY(n.y),d=Math.hypot(tx-u.x,ty-u.y),s=sp*dt;
      if(d<=s){u.x=tx;u.y=ty;u.pi++}else{u.x+=(tx-u.x)/d*s;u.y+=(ty-u.y)/d*s}}}
    if(u.y>=EY){escape(p,u);return false}return true});
@@ -534,32 +538,32 @@ function towerMesh2(b){const g=new THREE.Group(),sp=[],id=b.id,cl=b.col,wd=0x713
  else if(id==='wind'){at(CY(.03,.03,.7,0xf472b6),0,0,.38);at(TR(.16,.03,0xf472b6),0,0,.82).rotation.x=PI/2;
   const r=rot(.9,1.2);[[.35,0,.18],[-.3,.15,.13],[0,-.32,.1]].forEach(e=>at(SP(e[2],0xbae6fd,{transparent:true,opacity:.45}),e[0],e[1],0,r))}
  return g}
-const HEADX={penguin:{hz:.74,hy:-.08,hr:.15},swan:{hz:.86,hy:-.3,hr:.13},goose:{hz:.66,hy:-.36,hr:.14}};
+const LIFT={knight:.3,egg_legs:.2};
+const HEADX={chick:{hz:.56,hy:-.15,hr:.18},penguin:{hz:.74,hy:-.08,hr:.15},swan:{hz:.86,hy:-.3,hr:.13},goose:{hz:.66,hy:-.36,hr:.14}};
 // 긴 목: [시작, 조절점, 끝(y,z)], 굵기 시작→끝, 색(없으면 몸 색)
 const NECK={swan:[[-.2,.4],[-.04,.62],[-.27,.78],.07,.055],goose:[[-.22,.36],[-.3,.5],[-.35,.56],.07,.06],ostrich:[[-.18,.78],[-.08,1.06],[-.27,1.2],.07,.045,0xf0b9a8]};
 // 나는 새 날개 색(없으면 몸 색을 살짝 어둡게)
-const WINGC={seagull:0x94a3b8,albatross:0xf1f5f9,eagle:0x5b4030,falcon:0x57534e,owl:0x8a5a14,crow:0x2e2a40,parrot:0x0f9f6e,pigeon:0x7c8aa0,swan:0xffffff,phoenix:0xf97316,vampire:0x450a0a,thunderbird:0x3730a3};
+const WINGC={knight:0x1f2937,seagull:0x94a3b8,albatross:0xf1f5f9,eagle:0x5b4030,falcon:0x57534e,owl:0x8a5a14,crow:0x2e2a40,parrot:0x0f9f6e,pigeon:0x7c8aa0,swan:0xffffff,phoenix:0xf97316,vampire:0x450a0a,thunderbird:0x3730a3};
 const ltn3=c=>{const m=v=>Math.round(v+(255-v)*.3);return(m((c>>16)&255)<<16)|(m((c>>8)&255)<<8)|m(c&255)},dkn3=(c,f)=>((Math.round(((c>>16)&255)*f)<<16)|(Math.round(((c>>8)&255)*f)<<8)|Math.round((c&255)*f));
-function birdMesh2(b,oc){const g=new THREE.Group(),id=b.id,A=b.t==='A',c=b.col,w=[],tall=id==='ostrich',z0=tall?.6:.26;g.userData.w=w;
+function birdMesh2(b,oc){const g=new THREE.Group(),id=b.id,A=b.t==='A',c=b.col,w=[],tall=id==='ostrich',LF=LIFT[id]||0,z0=tall?.6:.26+LF;g.userData.w=w;
  const at=(m,x,y,z,s)=>{m.position.set(x,y,z);if(s)m.scale.set(s[0],s[1],s[2]);g.add(m);return m};
- if(id==='penguin')at(SP(.26,c),0,0,.34,[.95,.85,1.25]);else if(tall)at(SP(.26,c),0,0,z0,[1.15,1.3,.95]);else at(SP(.26,c),0,0,z0,[1,1.25,.95]);
- const hx=HEADX[id],hc={eagle:0xf8fafc,turkey:0xef4444,phoenix:0xfde047,duck:0x166534,pigeon:0x64748b,dodo:0x7385a8,woodpecker:0xf8fafc,ostrich:0xe9cfc4}[id]||c,hz=hx?hx.hz:tall?1.3:z0+.2,hy=hx?hx.hy:tall?-.28:-.3,hr=hx?hx.hr:id==='owl'?.2:id==='chick'?.17:.15;
+ if(id==='penguin')at(SP(.26,c),0,0,.34,[.95,.85,1.25]);else if(id==='chick')at(SP(.26,c),0,.02,.3,[1,1,1.05]);else if(tall)at(SP(.26,c),0,0,z0,[1.15,1.3,.95]);else at(SP(.26,c),0,0,z0,[1,1.25,.95]);
+ const hx=HEADX[id],hc={eagle:0xf8fafc,turkey:0xd9606a,phoenix:0xfde047,duck:0x166534,pigeon:0x64748b,dodo:0x7385a8,woodpecker:0xf8fafc,ostrich:0xe9cfc4}[id]||c,hz=hx?hx.hz:tall?1.3:z0+.2,hy=hx?hx.hy:tall?-.28:-.3,hr=hx?hx.hr:id==='owl'?.2:id==='chick'?.17:.15;
  if(id==='egg_legs'){[-1,1].forEach(s=>at(SP(.035,0x111111),s*.08,-.2,z0+.14));const k=KO(.05,.12,0xf59e0b);k.rotation.z=PI;at(k,0,-.3,z0+.08)}
  else{const nk=NECK[id];if(nk){const[a,m,e,r0,r1,nc]=nk,n=tall?18:12;for(let i=0;i<n;i++){const t=i/(n-1),q=1-t;at(SP(r0+(r1-r0)*t,nc||c),0,q*q*a[0]+2*q*t*m[0]+t*t*e[0],q*q*a[1]+2*q*t*m[1]+t*t*e[1])}}
   at(SP(hr,hc),0,hy,hz);const ec=id==='owl'?0xfde047:id==='vampire'?0xff2020:0x111111;
   [-1,1].forEach(s=>at(SP(id==='owl'?.065:.035,ec,id==='vampire'?GL(0xff0000):{}),s*.08,hy-.09,hz+.06));
-  const bk={kiwi:[.025,.42,0xd97706],duck:[.08,.2,0xfacc15],dodo:[.1,.32,0xf4a259],swan:[.045,.14,0xf97316],penguin:[.035,.13,0x1f2937],eagle:[.07,.22,0xfacc15],parrot:[.07,.16,0xfacc15],owl:[.04,.1,0xca8a04],ostrich:[.06,.17,0xe0a088],woodpecker:[.035,.3,0x57534e],turkey:[.05,.14,0xf59e0b]}[id]||[.055,.16,0xf59e0b];
+  const bk={kiwi:[.025,.42,0xd97706],duck:[.08,.2,0xfacc15],dodo:[.1,.32,0xf4a259],swan:[.045,.14,0xf97316],penguin:[.035,.13,0x1f2937],eagle:[.07,.22,0xfacc15],parrot:[.07,.16,0xfacc15],owl:[.04,.1,0xca8a04],ostrich:[.06,.17,0xe0a088],knight:[.04,.34,0xef4444],woodpecker:[.035,.3,0x57534e],turkey:[.05,.14,0xf59e0b]}[id]||[.055,.16,0xf59e0b];
   const k=KO(bk[0],bk[1],bk[2]);k.rotation.z=PI;at(k,0,hy-hr-bk[1]/2+.04,hz-.03,id==='duck'?[1.8,1,.5]:tall?[1.6,1,.55]:null)}
  if(id!=='kiwi'&&id!=='egg_legs'&&id!=='penguin'&&!tall){const big=['eagle','phoenix','owl','vampire'].includes(id),wl=A?(big?.46:.34):.15,wc=WINGC[id]??(A?dkn3(c,.85):c);
-  [-1,1].forEach(s=>{const P=new THREE.Group();P.position.set(s*.2,0,z0+.06);g.add(P);const W=SP(1,wc,id==='phoenix'?GL(0xf97316):{});W.scale.set(wl,A?.25:.17,.045);W.position.set(s*wl*.95,A?.04:0,0);if(A)W.rotation.z=s*.2;if(id==='swan'){W.rotation.y=-s*.4;W.position.set(s*wl*.9,.04,wl*.39)}P.add(W);
+  [-1,1].forEach(s=>{const P=new THREE.Group();P.position.set(s*.2,0,z0+.06);g.add(P);const W=SP(1,A?wc:(WINGC[id]??dkn3(c,.88)),id==='phoenix'?GL(0xf97316):{});if(A){W.scale.set(wl,.25,.045);W.position.set(s*wl*.95,.04,0)}else{W.scale.set(.06,.19,.12);W.position.set(s*.05,.03,-.02);W.rotation.y=s*.25}if(A)W.rotation.z=s*.2;if(id==='swan'){W.rotation.y=-s*.4;W.position.set(s*wl*.9,.04,wl*.39)}P.add(W);
    if(A&&id!=='vampire'){const cv=SP(1,ltn3(wc));cv.scale.set(wl*.55,.16,.05);cv.position.set(s*wl*.55,-.03,id==='swan'?wl*.22+.012:.012);if(id==='swan')cv.rotation.y=-s*.4;P.add(cv)}
    if(A){const tp=SP(1,oc);tp.scale.set(wl*.5,.15,.035);tp.rotation.z=s*.45;tp.position.set(s*wl*1.6,.16,id==='swan'?wl*.72:0);if(id==='swan')tp.rotation.y=-s*.4;P.add(tp);w.push(P)}})}
- if(id==='penguin')at(TR(.22,.025,oc),0,0,.5);else if(id==='swan')at(TR(.085,.025,oc),0,-.12,.6);else if(!A&&id!=='egg_legs')at(TR(.15,.03,oc),0,hy+.05,hz-.1);
+ if(id==='penguin')at(TR(.22,.025,oc),0,0,.5);else if(id==='chick')at(TR(.2,.028,oc),0,-.02,.44);else if(id==='swan')at(TR(.085,.025,oc),0,-.12,.6);else if(!A&&id!=='egg_legs')at(TR(.15,.03,oc),0,hy+.05,hz-.1);
  const tc=(n,len,col,sp,o)=>{for(let i=0;i<n;i++){const a=(i-(n-1)/2)*sp,t=KO(.07,len,col[i%col.length],o);t.rotation.z=a;at(t,-Math.sin(a)*len/2,.3+Math.cos(a)*len/2,z0+.1)}};
- if(id==='turkey')tc(7,.55,[0x78350f,0xd97706,0x15803d],.28);else if(id==='phoenix')tc(5,.8,[0xf97316,0xfde047,0xef4444],.3,GL(0xf97316));else if(id==='parrot')tc(2,.6,[0xef4444,0x2563eb],.18);else if(id==='rooster')tc(3,.5,[0x16a34a,0x111827],.3);else if(id!=='kiwi'&&id!=='egg_legs'&&id!=='penguin')tc(1,.3,[A?oc:c],0);
+ if(id==='turkey');else if(id==='phoenix')tc(5,.8,[0xf97316,0xfde047,0xef4444],.3,GL(0xf97316));else if(id==='parrot')tc(2,.6,[0xef4444,0x2563eb],.18);else if(id==='rooster')tc(3,.5,[0x16a34a,0x111827],.3);else if(id!=='kiwi'&&id!=='egg_legs'&&id!=='penguin')tc(1,.3,[A?oc:c],0);
  const up=(r,h,col,x,y,z,o)=>{const e=KO(r,h,col,o);e.rotation.x=PI/2;at(e,x,y,z)};
  if(id==='rooster'){[0,1,2].forEach(i=>at(SP(.05,0xef4444),0,hy-.02+i*.06,hz+.15-i*.02));at(SP(.04,0xef4444),0,hy-.15,hz-.1)}
- if(id==='turkey')at(SP(.05,0xdc2626),0,hy-.14,hz-.1);
  if(id==='owl')[-1,1].forEach(s=>up(.04,.14,c,s*.1,hy,hz+.2));
  if(id==='pirate'){at(SP(.2,0x111827),0,hy+.02,hz+.14,[1.2,1.2,.3]);at(SP(.035,0xffffff),0,hy-.15,hz+.2)}
  if(id==='parrot')up(.04,.18,0xef4444,0,hy+.03,hz+.2);
@@ -567,8 +571,8 @@ function birdMesh2(b,oc){const g=new THREE.Group(),id=b.id,A=b.t==='A',c=b.col,w
  if(id==='eagle')at(BX(.2,.04,.03,0x451a03),0,hy-.08,hz+.1);
  if(id==='vampire')[-1,1].forEach(s=>{const f=KO(.02,.07,0xffffff);f.rotation.z=PI;at(f,s*.03,hy-.22,hz-.1)});
  if(id==='duck')at(TR(.14,.025,0xffffff),0,hy+.1,hz-.1);
- if(!A&&!tall)[-1,1].forEach(s=>at(BX(.045,.045,z0,0xf97316),s*.1,-.02,z0/2-.04));
- const bz=tall?1.7:.85,bg=new THREE.Mesh(new THREE.PlaneGeometry(.6,.09),new THREE.MeshBasicMaterial({color:0}));bg.position.set(0,.45,bz);
+ if(!A&&!tall&&id!=='egg_legs')[-1,1].forEach(s=>at(BX(LF?.03:.045,LF?.03:.045,z0,id==='knight'?0xef4444:0xf97316),s*.1,-.02,z0/2-.04));
+ const bz=tall?1.7:.85+LF,bg=new THREE.Mesh(new THREE.PlaneGeometry(.6,.09),new THREE.MeshBasicMaterial({color:0}));bg.position.set(0,.45,bz);
  const f=new THREE.Mesh(new THREE.PlaneGeometry(.56,.06),new THREE.MeshBasicMaterial({color:0x22c55e}));f.position.set(0,.45,bz+.01);f.name='f';g.add(bg,f);
  g.scale.setScalar(.7+Math.min(.9,b.hp/3500));return g}
 function rmM(m){Sc.remove(m);m.traverse(o=>{if(o.material)o.material.dispose();if(o.geometry&&!o.geometry.userData.cached)o.geometry.dispose()})}
@@ -613,8 +617,8 @@ function raceTowerMesh(b){const g=new THREE.Group(),sp=[];g.userData.sp=sp;const
  else{at(KO(.28,.6,c),0,0,.45)}
  return g}
 function raceBird(b,g,at,up){const rc=RACE[b.race].c3,c=b.col,id=b.id;
- at(TR(.4,.03,rc,Object.assign({},TP,GL(rc))),0,0,.2);
- if(id==='knight')at(KO(.13,.22,0x60a5fa,GL(0x3b82f6)),0,-.3,.64);
+ const LF=LIFT[id]||0;at(TR(.4,.03,rc,Object.assign({},TP,GL(rc))),0,0,.2+LF);
+ if(id==='knight'){at(KO(.13,.22,0x60a5fa,GL(0x3b82f6)),0,-.3,.64+LF);at(SP(1,0x60a5fa,GL(0x3b82f6)),.3,-.05,.3+LF,[.03,.17,.2])}
  else if(id==='priest'){at(BX(.05,.05,.24,0xffffff,GL(0xffffff)),0,0,.72);at(BX(.17,.05,.05,0xffffff,GL(0xffffff)),0,0,.74)}
  else if(id==='berserk'){[-1,1].forEach(s=>{const h=KO(.04,.2,0xfef3c7);h.rotation.z=s*.5;at(h,s*.1,-.3,.62)})}
  else if(id==='warturkey'){[-.12,0,.12].forEach(y=>at(KO(.05,.2,0xfef3c7),0,y,.56))}
@@ -650,7 +654,7 @@ function birdMesh3(b,oc){const g=birdMesh2(b,oc),id=b.id,at=(m,x,y,z,s)=>{m.posi
  if(b.race){raceBird(b,g,at,up);return g}
  if(b.combo){const c1=TECH[b.combo[0]].col,c2=TECH[b.combo[1]].col;at(TR(.46,.035,c2,Object.assign({},TP,GL(c2))),0,0,.3);[-1,0,1].forEach(s=>at(up(KO(.035,.2,c1,GL(c1))),s*.07,-.28,.66));
   if(b.t==='A')(g.userData.w||[]).forEach((P,i)=>{const W=P.children[0];W.material.color.setHex(i?c2:c1);W.material.emissive.setHex(i?c2:c1);W.material.emissiveIntensity=.35});return g}
- if(id==='egg_legs'){for(let i=0;i<4;i++){const k=BX(.1,.02,.02,0x78350f);k.rotation.y=i%2?.7:-.7;at(k,-.1+i*.07,-.24,.42+(i%2?.03:-.03))}at(BX(.11,.02,.02,0x111111),-.09,-.2,.5).rotation.y=.4;at(SP(.05,0x111111),.08,-.21,.4)}
+ if(id==='egg_legs'){const L=LIFT[id];for(let i=0;i<4;i++){const k=BX(.1,.02,.02,0x78350f);k.rotation.y=i%2?.7:-.7;at(k,-.1+i*.07,-.24,.42+L+(i%2?.03:-.03))}at(BX(.11,.02,.02,0x111111),-.09,-.2,.5+L).rotation.y=.4;at(SP(.05,0x111111),.08,-.21,.4+L)}
  else if(id==='eggchief'){[-1,1].forEach(s=>{at(SP(.13,0xfde68a),s*.34,-.05,.42,[1,1,.8]);at(SP(.09,0xfde68a),s*.42,-.02,.3)});[0,1,2].forEach(i=>at(SP(.06,0xef4444),0,-.3+i*.06,.68-i*.02))}
  else if(id==='hatch_dino'){[0,1,2,3].forEach(i=>at(up(KO(.05,.14,0x166534)),0,-.05+i*.1,.5-i*.03));at(SP(.12,0xfffbeb),0,.1,.18,[1.3,1.1,.6])}
  else if(id.startsWith('hatch_')){at(SP(.13,0xfffbeb),0,.06,.16,[1.4,1.2,.55]);if(id==='hatch_wind')at(SP(.09,0xf43f5e,{transparent:true,opacity:.85}),0,.15,.95)}
@@ -1257,7 +1261,7 @@ const ART=(()=>{
  // 지오메트리는 (새 종류+눈 배치) 별로 1번만 만들어 캐시 → 유닛이 수백 마리 생겨도 지오메트리 수 고정
  const V3=(x,y,z)=>new THREE.Vector3(x,y,z),SG=()=>new THREE.SphereGeometry(1,12,9),CG=()=>new THREE.CircleGeometry(1,20),KG=()=>new THREE.ConeGeometry(1,1,12),BG=()=>new THREE.BoxGeometry(1,1,1),YG=()=>new THREE.CylinderGeometry(1,1,1,14);
  const FV={};const isDark=c=>c.r<.2&&c.g<.2&&c.b<.2;
- function headOf(id){const tall=id==='ostrich',z0=tall?.6:.26,egg=id==='egg_legs',x=HEADX[id];if(x)return{tall,z0,egg,hz:x.hz,hy:x.hy,hr:x.hr};return{tall,z0,egg,hz:tall?1.3:z0+.2,hy:tall?-.28:-.3,hr:id==='owl'?.2:id==='chick'?.17:.15}}
+ function headOf(id){const tall=id==='ostrich',z0=tall?.6:.26+(LIFT[id]||0),egg=id==='egg_legs',x=HEADX[id];if(x)return{tall,z0,egg,hz:x.hz,hy:x.hy,hr:x.hr};return{tall,z0,egg,hz:tall?1.3:z0+.2,hy:tall?-.28:-.3,hr:id==='owl'?.2:id==='chick'?.17:.15}}
  // 실제 눈 메시 찾기(다른 팀이 눈 모양을 바꿔도 따라감): 앞쪽의 작은 구, 어두운 색 또는 부엉이/흡혈 눈
  function findEyes(m,id){const out=[];m.children.forEach(o=>{if(!o.isMesh||!o.geometry||o.geometry.type!=='SphereGeometry')return;const r=o.geometry.parameters.radius*Math.max(o.scale.x,o.scale.y,o.scale.z);
   if(r>.09||r<.015||o.position.y>-.12||Math.abs(o.position.x)<.03||Math.abs(o.position.x)>.2)return;const c=o.material&&o.material.color;if(!c)return;
@@ -1299,9 +1303,12 @@ const ART=(()=>{
     [[.12,.1],[-.13,.05],[.02,.22],[-.08,.2],[.15,-.05]].forEach(([x,y])=>{const z=z0+.247*Math.sqrt(Math.max(0,1-(x/.26)**2-(y/.325)**2));S(x,y,z-.005,.055,.045,.04,mxc(c,0x2a1708,.5))});
     sides(s=>Bx(s*.08,-.46,hz,.11,.012,.012,[0,0,s*.35],0x3b2a1a))},
    // 삐약이: 삐죽 머리카락 + 솜털 배
-   chick(){belly(0xfef9c3);[[-.035,.35],[0,0],[.035,-.35]].forEach(([x,l])=>K(x,hy+.02,zt+.015,.02,.1,[PI/2,0,l],c))},
+   chick(){belly(0xfef9c3,.8);[[-.035,.35],[0,0],[.035,-.35]].forEach(([x,l])=>K(x,hy+.02,zt+.015,.02,.1,[PI/2,0,l],c))},
    // 탈주 칠면조: 청교도 모자 + 식은땀
-   turkey(){Y(0,hy,zt-.035,.17,.018,UP,0x111827);Y(0,hy,zt+.02,.1,.12,UP,0x1f2937);Y(0,hy,zt-.005,.104,.03,UP,0xfacc15);Bx(0,hy-.106,zt-.005,.045,.012,.045,O,0xfde68a);
+   turkey(){const BK=0x18181b;Hm(0,hy,zt-.06,.12,UP,BK);Y(0,hy,zt-.03,.175,.016,UP,BK);Y(0,hy,zt-.012,.119,.028,UP,0x7c2d12);
+    S(0,hy-.16,hz-.12,.035,.035,.07,0xdc2626);S(.018,hy-.19,hz-.02,.016,.02,.055,0xdc2626);S(0,-.2,z0+.05,.17,.12,.16,0x7a4a30);
+    const th=-.65,sn=Math.sin(th),cs=Math.cos(th),cy=.24,cz=z0+.02;for(let i=0;i<11;i++){const a=(i-5)*.25,f=(R,a2,b2,d,col)=>{const x=Math.sin(a)*R,z=Math.cos(a)*R;S(x,cy-z*sn,cz+z*cs,a2,b2,d,col,0,[th,a,0])};
+     f(.25,.078,.022,.25,i%2?0x6b4226:0x4a2c1a);f(.38,.07,.024,.03,0x2b1a10);f(.46,.068,.026,.05,0xe8c9a0)}
     sides(s=>S(s*.19,hy+.03,hz+.06,.022,.032,.022,0x7dd3fc,1));Su(.2,hy+.1,hz-.02,.018,0x7dd3fc,1)},
    // 새벽5시 수탉: 알람시계 + 부스스한 목털
    rooster(){T(0,-.34,z0,.078,.018,[PI/2,0,0],0xef4444);Y(0,-.332,z0,.07,.02,O,0xffffff);Bx(0,-.345,z0+.018,.01,.006,.045,O,0x111827);Bx(.014,-.345,z0,.034,.006,.01,O,0x111827);
@@ -1434,6 +1441,9 @@ const ART=(()=>{
    L.push({pos:[0,.22,z0+.04],rot:[-.45,0,0],P,G,k:'fan',kk:'fan'})}
   else if(id==='swan'){const P=[[CYL(),0,0,-.1,.014,.2,.014,PI/2,0,0,0xf97316],[SPH(),0,-.045,-.215,.055,.085,.014,0,0,0,0xf97316],[SPH(),0,-.05,-.208,.036,.06,.01,0,0,0,0xfdba74]];
    [-1,1].forEach(s=>L.push({pos:[s*.09,.06,z0-.17],rot:[0,0,0],P,G:[],k:'leg'+s,kk:'leg'}))}
+  else if(id==='egg_legs'){const OR=0xfb923c,P=[[CYL(),0,0,-.11,.022,.22,.022,PI/2,0,0,OR],[CYL(),0,0,-.065,.032,.07,.032,PI/2,0,0,0xffffff],[CYL(),0,0,-.085,.033,.014,.033,PI/2,0,0,0xef4444],[CYL(),0,0,-.055,.033,.012,.033,PI/2,0,0,0x3b82f6],
+    [SPH(),0,-.035,-.23,.058,.078,.034,0,0,0,OR],[SPH(),.032,-.095,-.235,.024,.024,.022,0,0,0,OR],[SPH(),-.032,-.095,-.235,.024,.024,.022,0,0,0,OR],[SPH(),0,-.105,-.235,.024,.024,.022,0,0,0,OR],[SPH(),0,0,0,.034,.034,.034,0,0,0,0xffffff]];
+   [-1,1].forEach(s=>L.push({pos:[s*.085,.0,z0-.21],rot:[0,0,0],P,G:[],k:'wk'+s,kk:'eleg'}))}
   else if(id==='dodo'){const G=[],pz=z0+.02,py=.2;
    for(let i=-3;i<=3;i++){const a=Math.abs(i),th=i*.42,h=.52-a*.08,x=Math.sin(th)*.27,y=.06-Math.cos(th)*.06-a*.02,z=-a*.05,rz=-i*.16,w=.09-a*.01;
     G.push([CON(),x,y,z+h/2,w,h,w,PI/2,0,rz,a===3?0xef4444:a===2?0xf97316:0xfb923c]);G.push([CON(),x,y-.02,z+h*.34,w*.6,h*.62,w*.6,PI/2,0,rz,0xfde047])}
@@ -1450,6 +1460,7 @@ const ART=(()=>{
    for(const q of gs){const k=q.userData.k;
     if(k==='fan'){const s=1+.07*Math.sin(t*3.2);q.scale.set(s,1,s);q.rotation.y=Math.sin(t*1.7)*.07}
     else if(k==='fire')q.scale.set(1+.05*Math.sin(t*17),1,1+.2*Math.sin(t*13)+.08*Math.sin(t*31));
+    else if(k[0]==='w'){q.rotation.x=Math.sin(t*11+(k==='wk1'?PI:0))*.5;q.position.z=H.z0-.21+Math.max(0,Math.sin(t*11+(k==='wk1'?PI:0)))*.025}
     else q.rotation.x=Math.sin(t*26+(k==='leg1'?PI:0))*.8}}}
 
  const ACG={};function accGeo(b,H){let r=ACG[b.id];if(!r){const[P,G]=accParts(b,H),mk=(k,L)=>L.length?gk(k+b.id,()=>merge(L)):null;r=ACG[b.id]={p:mk('acc_',P),g:mk('accG_',G)}}return r}
@@ -2242,7 +2253,7 @@ const heroPool=()=>U.filter(u=>!u.hidden&&u.id!=='egg_legs'&&!u.race);
 if(!SV.hero||!UB[SV.hero.id])SV.hero={id:'chick',col:null,hat:'crown',face:'none',name:'짹짹이'};
 function heroTag(){try{return UB[SV.hero.id].ic+SV.hero.name}catch(e){return '나'}}
 const hexS=c=>'#'+c.toString(16).padStart(6,'0');
-function headPos(id){const tall=id==='ostrich',z0=tall?.6:.26;if(HEADX[id])return HEADX[id];return{hz:tall?1.3:z0+.2,hy:tall?-.28:-.3,hr:id==='owl'?.2:id==='chick'?.17:.15}}
+function headPos(id){const tall=id==='ostrich',z0=tall?.6:.26+(LIFT[id]||0);if(HEADX[id])return HEADX[id];return{hz:tall?1.3:z0+.2,hy:tall?-.28:-.3,hr:id==='owl'?.2:id==='chick'?.17:.15}}
 function heroDeco(m,b,cfg){const{hz,hy,hr}=headPos(b.id),top=hz+hr,g=new THREE.Group();g.name='heroDeco';g.position.y=hy;m.add(g);
  const put=(o,x,y,z,rx,ry,rz,s)=>{o.position.set(x,y,z);o.rotation.set(rx||0,ry||0,rz||0);if(s)o.scale.set(s[0],s[1],s[2]);g.add(o);return o};
  const dome=(r,c)=>M(GC('hdome'+r,()=>new THREE.SphereGeometry(r,22,10,0,PI*2,0,PI/2)),c),GLD={metalness:.55,roughness:.3};
