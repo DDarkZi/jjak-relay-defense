@@ -111,3 +111,48 @@ footer{background:#0f172a;border-top:1px solid #1e293b;width:100%;max-width:480p
 .nsl{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}.nslot{display:flex;align-items:center;gap:6px;background:#0b0a24;border:2px solid #0006;border-radius:10px;padding:6px 8px;min-width:0}
 .nslot i{font-style:normal;font-weight:800;color:#94a3b8;width:14px}.nslot b{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;color:#cbd5e1}.nslot small{font-size:10px;color:#fde047}
 .nslot.on{border-color:#34d399;background:#064e3b}.nslot.on b{color:#fff}.nslot.me{outline:2px solid #fde047}
+
+/* ===== 🎨 v10.9 디자인 다듬기: 로비와 같은 만화풍(굵은 검은 테두리 + 아래 그림자)으로 통일 ===== */
+#game{background:#0b1020}
+header{background:linear-gradient(#25216a,#14123a);border-bottom:2px solid #000;box-shadow:0 2px 0 #000;padding:5px 8px;position:relative;z-index:4}
+header>span:first-child{display:flex;align-items:center;gap:6px}
+#tm{background:#0b0a24;border:2px solid #000;border-radius:10px;padding:1px 9px;color:#fde047;font:400 17px "Black Han Sans",ui-monospace,monospace;letter-spacing:1px}
+header button{background:#2e2a6b;border:2px solid #000;border-radius:10px;box-shadow:0 2px 0 #000}
+header button:active,.sh button:active,.tabs button:active{transform:translateY(2px);box-shadow:0 1px 0 #000}
+footer{background:linear-gradient(#1b1846,#0b0a24);border-top:2px solid #000}
+.bar{gap:5px;padding:6px 8px 4px;flex-wrap:nowrap}
+.bar>span{background:#0b0a24;border:1.5px solid #ffffff1f;border-radius:99px;padding:2px 8px;white-space:nowrap;font-size:12px;font-weight:700}
+.tabs{gap:6px;padding:2px 8px 4px}
+.tabs button{border:2px solid #000;border-radius:12px;background:#2e2a6b;box-shadow:0 3px 0 #000;font-weight:800;padding:7px 4px;color:#e2e8f0}
+.tabs .on{background:linear-gradient(#fde047,#f59e0b);color:#1c1917;border-color:#000}
+.sh{gap:5px;padding:6px 8px 8px;height:162px}
+.sh button{background:linear-gradient(#34307a,#1e1b4b);border:2px solid #000;border-radius:12px;box-shadow:0 3px 0 #000;padding:4px 1px 3px;font-size:10px;line-height:1.2;gap:2px}
+.sh i{font-size:22px;filter:drop-shadow(0 2px 0 #0008)}
+.sh span{color:#f8fafc;font-weight:700;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:100%}
+.sh u{background:#0b0a24;border-radius:99px;padding:0 6px;font-size:10px}
+.sh s{font-size:9.5px}
+.sh .sel{background:linear-gradient(#059669,#064e3b);border-color:#000;box-shadow:0 0 0 2px #34d399,0 3px 0 #000}
+.sh .off{opacity:.4;filter:grayscale(.7)}
+.sh .tch{background:linear-gradient(#7c3aed,#3b0764);border-color:#000}
+#ib{background:#1b1846;border-top:1.5px solid #ffffff14;border-bottom:1.5px solid #ffffff14}
+.st,#mm,.lane{border:2px solid #000!important;box-shadow:0 3px 0 #000;background:#14123ae6!important}
+.st{border-radius:10px}.skb{border:2px solid #000;box-shadow:0 3px 0 #000}
+#toast{border:2px solid #000;box-shadow:0 3px 0 #000;font-size:12.5px;padding:5px 12px}
+.ban{border:2px solid #000;box-shadow:0 3px 0 #000;background:#1e1b4bee}
+#cdn b{font-family:"Black Han Sans",system-ui;font-weight:400;text-shadow:0 6px 0 #000,0 0 30px #f59e0b}
+#cdn small{background:#0b0a24cc;border:2px solid #000;border-radius:99px;padding:4px 14px}
+#end>div{background:linear-gradient(#34307a,#14123a);border:3px solid #000;border-radius:22px;box-shadow:0 6px 0 #000,0 0 40px #7c3aed66;width:min(320px,90vw)}
+#eH{font-family:"Black Han Sans",system-ui;font-weight:400;font-size:30px;color:#fde047;text-shadow:0 3px 0 #000}
+#eT{filter:drop-shadow(0 4px 0 #000)}
+#end .big{border:3px solid #000;border-radius:14px;box-shadow:0 4px 0 #000;font-family:"Black Han Sans",system-ui;font-weight:400;font-size:21px;letter-spacing:1px}
+#again{background:linear-gradient(#34d399,#059669)!important}
+#home{border:2px solid #000!important;border-radius:12px!important;background:#2e2a6b!important;box-shadow:0 3px 0 #000}
+/* 도감·설명 */
+.dexm{background:radial-gradient(ellipse at 50% 0,#2a2370,#0b0a24 65%)}
+.dexh b{font-family:"Black Han Sans",system-ui;font-weight:400;font-size:21px;color:#fde047;text-shadow:0 2px 0 #000}
+.dexh button{border:2px solid #000;border-radius:10px;box-shadow:0 2px 0 #000;background:#2e2a6b}
+.dext button{border:2px solid #000;border-bottom:0}
+.cd{border-width:2.5px;box-shadow:0 4px 0 #000}
+.tipb .card{background:#14123acc;border:2px solid #000;border-radius:16px;box-shadow:0 4px 0 #000}
+.tipb h3{font-family:"Black Han Sans",system-ui;font-weight:400;color:#fde047;text-shadow:0 2px 0 #000;font-size:19px}
+.tipb details summary{cursor:pointer}
