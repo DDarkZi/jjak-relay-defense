@@ -283,17 +283,22 @@ function dmgU(u,d){if(u.amp>0)d*=1.35;const h0=Math.max(0,u.hp)+Math.max(0,u.sh|
 function refreshPaths(p){p.units.forEach(u=>{if(u.bp.t!=='G')return;const c=nearCell(u.x,u.y),np=bfs(p.grid,c.x,c.y);if(np){u.path=np;u.pi=0}})}
 function toast(m){const e=$('toast');e.textContent=m;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2400)}
 
-function send(b){const me=S.pl[0];if(!me.alive)return toast('👀 관전 중이에요');
- if(!techOK(me,b))return toast(b.race?`${RACE[b.race].ic} ${RACE[b.race].n} 전용 새예요`:b.tech?`${TECH[b.tech].ic} ${TECH[b.tech].n} 테크 전용 새예요`:'이 종족은 쓸 수 없는 새예요');
- if(S.cdn>0)return toast('⏱ 카운트다운 중엔 속성만 고를 수 있어요');
- if(!me.alive)return;const bc=ucost(me,b);if(me.gold<bc)return toast(`💰 골드가 부족해요 (${bc}G 필요)`);
- const gi=gainInc(me,b);me.gold-=bc;me.income+=gi;const n=nextAlive(0);
- if(b.id==='egg_legs'){if(n!==null){const tw=eggHas('twin')&&Math.random()<.25;for(let k=0;k<(tw?2:1);k++){const g=eggHas('gold')&&Math.random()<.1;spawn(S.pl[n],b,0,undefined,{hatch:eggHas('hatch')?1:0,gold:g?1:0,col:g?0xfacc15:0})}}
+// 🌐 행동은 '누가(pid)' 하는지 받아요: 0번은 이 기기, 그 밖은 온라인 손님(방장이 대신 처리)
+const netG=()=>!!(S&&S.net==='guest'),say=(pid,m)=>{if(pid===0)toast(m);else if(typeof NET!=='undefined')NET.tell(pid,m)};
+function send(b){if(netG()){if(!S.pl[0].alive)return toast('👀 관전 중이에요');if(S.cdn>0)return toast('⏱ 카운트다운 중엔 속성만 고를 수 있어요');sfx('send',{unit:b.id});return NET.cmd({a:'send',b:b.id})}actSend(0,b.id)}
+function actSend(pid,bid){const me=S.pl[pid],b=UB[bid],loc=pid===0;if(!me||!b)return;if(!me.alive)return say(pid,'👀 관전 중이에요');
+ if(b.hidden||(b.secret&&!(loc&&eggHas(b.secret))))return;
+ if(!techOK(me,b))return say(pid,b.race?`${RACE[b.race].ic} ${RACE[b.race].n} 전용 새예요`:b.tech?`${TECH[b.tech].ic} ${TECH[b.tech].n} 테크 전용 새예요`:'이 종족은 쓸 수 없는 새예요');
+ if(S.cdn>0)return say(pid,'⏱ 카운트다운 중엔 속성만 고를 수 있어요');
+ const bc=ucost(me,b);if(me.gold<bc)return say(pid,`💰 골드가 부족해요 (${bc}G 필요)`);
+ const gi=gainInc(me,b);me.gold-=bc;me.income+=gi;const n=nextAlive(pid);
+ if(b.id==='egg_legs'){if(n!==null){const tw=loc&&eggHas('twin')&&Math.random()<.25;for(let k=0;k<(tw?2:1);k++){const g=loc&&eggHas('gold')&&Math.random()<.1;spawn(S.pl[n],b,pid,undefined,{hatch:loc&&eggHas('hatch')?1:0,gold:g?1:0,col:g?0xfacc15:0})}}
+  if(!loc)return say(pid,`🥚 수상한 알 소환! (인컴 +${gi})`);
   EGG.n++;const m=EGGM.find(m=>m.n===EGG.n);
   if(m){sfx('unlock',{k:m.k});artFx('unlock',{k:m.k});toast(`${m.ic} 해금! ${m.t} — ${m.d}`);ui();return}
   sfx('send',{unit:b.id});const nx=eggNext();return toast(nx?`🥚 수상한 알 ${EGG.n}/${nx.n} · 다음: ${nx.ic}${nx.t}`:`🥚 수상한 알 ${EGG.n}개 · 연구소 완전 해금!`)}
- if(n!==null)for(let k=0;k<(b.count||1);k++)spawn(S.pl[n],b,0);
- sfx('send',{unit:b.id});toast(`🕊️ ${b.n} 소환! (인컴 +${gi})${b.x?' · '+b.x:''}`)}
+ if(n!==null)for(let k=0;k<(b.count||1);k++)spawn(S.pl[n],b,pid);
+ if(loc)sfx('send',{unit:b.id});say(pid,`🕊️ ${b.n} 소환! (인컴 +${gi})${b.x?' · '+b.x:''}`)}
 function hatchOf(u){if(u.gold)return UB.hatch_gold;if(eggHas('dino')&&Math.random()<.03)return UB.hatch_dino;const o=S.pl[u.owner],ks=[o.tech,o.tech2].filter(Boolean);
  return ks.length?UB['hatch_'+ks[Math.floor(Math.random()*ks.length)]]:UB.hatch_chick}
 
@@ -307,14 +312,19 @@ function cell(x,y){
  if(sel.cctv&&!cctvOK(me)){const m=cctvN(me)>=2?'부엉이 CCTV는 최대 2개까지예요':'🔒 은신 새를 한 번 목격하거나 4분이 지나야 지을 수 있어요';sel=null;ui();return toast(m)}
  if(y===0||y===ROWS-1)return toast('⚠️ 첫 줄과 마지막 줄에는 건설할 수 없어요');
  if(me.gold<tcost(me,sel)){sel=null;ui();return toast('골드가 부족해요')}
- me.grid[y][x]=mkR(sel,me);
- if(!allOK(me.grid)){me.grid[y][x]=null;return toast('⚠️ 길이 막혀서 건설할 수 없어요')}
- me.gold-=tcost(me,sel);sfx('build',{tower:sel.id});sel=null;refreshPaths(me);ui()}
-function upg0(){const me=S.pl[0],t=insp.t,c=upc(t,me);
- if(t.lv>=4)return toast('최대 레벨이에요');if(me.gold<c)return toast('골드가 부족해요');
- const old=tName(t);me.gold-=c;t.lv++;t.d=Math.floor(t.d*1.6);t.r+=.25;t.inv+=c;sfx('upgrade',{tower:t.bp.id,lv:t.lv});
- const nw=tName(t);toast(nw!==old?`🧬 ${old} → ${nw} 진화!`:`⬆️ ${nw} Lv.${t.lv}`);artFx('evolve',{x:cellX(insp.x,insp.y),y:BH-cellY(insp.y),lv:t.lv,b:t.bp});ui()}
-function dem0(){const me=S.pl[0];sfx('sell');me.gold+=Math.floor(insp.t.inv*refR(me));me.grid[insp.y][insp.x]=null;insp=null;refreshPaths(me);ui()}
+ if(netG()){me.grid[y][x]=mkR(sel,me);const ok=allOK(me.grid);me.grid[y][x]=null;if(!ok)return toast('⚠️ 길이 막혀서 건설할 수 없어요');NET.cmd({a:'build',x,y,t:sel.id});sfx('build',{tower:sel.id});sel=null;return ui()}
+ actBuild(0,x,y,sel.id);sel=null;ui()}
+function actBuild(pid,x,y,tid){const me=S.pl[pid],b=TB[tid];if(!me||!me.alive||!b||S.cdn>0||y<=0||y>=ROWS-1||x<0||x>=COLS||me.grid[y][x])return;
+ if(!techOK(me,b))return say(pid,'선택한 테크의 타워만 지을 수 있어요');if(b.cctv&&!cctvOK(me))return say(pid,'부엉이 CCTV는 아직 지을 수 없어요');if(me.gold<tcost(me,b))return say(pid,'골드가 부족해요');
+ me.grid[y][x]=mkR(b,me);if(!allOK(me.grid)){me.grid[y][x]=null;return say(pid,'⚠️ 길이 막혀서 건설할 수 없어요')}
+ me.gold-=tcost(me,b);if(pid===0)sfx('build',{tower:b.id});refreshPaths(me)}
+function upg0(){if(netG()){NET.cmd({a:'upg',x:insp.x,y:insp.y});return sfx('upgrade',{tower:insp.t.bp.id,lv:insp.t.lv+1})}actUpg(0,insp.x,insp.y);ui()}
+function actUpg(pid,x,y){const me=S.pl[pid],t=me&&me.grid[y]&&me.grid[y][x];if(!t||!me.alive)return;const c=upc(t,me);
+ if(t.lv>=4)return say(pid,'최대 레벨이에요');if(me.gold<c)return say(pid,'골드가 부족해요');
+ const old=tName(t);me.gold-=c;t.lv++;t.d=Math.floor(t.d*1.6);t.r+=.25;t.inv+=c;if(pid===0)sfx('upgrade',{tower:t.bp.id,lv:t.lv});
+ const nw=tName(t);say(pid,nw!==old?`🧬 ${old} → ${nw} 진화!`:`⬆️ ${nw} Lv.${t.lv}`);if(pid===view)artFx('evolve',{x:cellX(x,y),y:BH-cellY(y),lv:t.lv,b:t.bp})}
+function dem0(){sfx('sell');if(netG())NET.cmd({a:'dem',x:insp.x,y:insp.y});else actDem(0,insp.x,insp.y);insp=null;ui()}
+function actDem(pid,x,y){const me=S.pl[pid],t=me&&me.grid[y]&&me.grid[y][x];if(!t||!me.alive)return;me.gold+=Math.floor(t.inv*refR(me));me.grid[y][x]=null;refreshPaths(me)}
 
 // ---------- 조합 스킬 (속성 2개 필요, 해금 SKC골드) ----------
 const SKC=1500,SKILL={
@@ -490,7 +500,9 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
   if(n!==null)p.units.forEach(u=>spawn(S.pl[n],u.bp,u.owner,u.hp,{sh:u.sh,rv:u.rv,hatch:u.hatch,hd:u.hd,gold:u.gold,col:u.col}));
   p.units=[];p.grid=Array.from({length:ROWS},()=>Array(COLS).fill(null))}});
  const al=S.pl.filter(p=>p.alive);if(S.spec&&!S.pl[view].alive&&al.length){const n=nextAlive(view);if(n!==null){view=n;sel=null;insp=null}}
- if(S.sim){if(al.length<=1)finish(false)}else if(S.spec){if(al.length<=1)specEnd(al[0])}else if(!S.pl[0].alive)finish(false);else if(al.length===1)finish(true)}
+ if(S.net==='host'&&!S.spec&&!S.pl[0].alive&&al.length>1){S.spec=1;$('spx').style.display='';document.querySelector('footer').style.opacity=.4;view=al[0].id;toast('💀 탈락! 방장은 끝까지 게임을 이어서 돌려요 · 관전 중')}
+ if(S.sim){if(al.length<=1)finish(false)}else if(S.spec){if(al.length<=1)specEnd(al[0])}else if(!S.pl[0].alive)finish(false);else if(al.length===1)finish(true)
+ if(over&&S.net==='host'&&typeof NET!=='undefined')NET.over(al[0]?al[0].id:-1)}
 function finish(win){over=true;sfx(win?'win':'lose');sfx('bgm_stop');$('eT').textContent=win?'🏆':'💀';$('eH').textContent=win?'최종 우승!':'탈락…';
  $('eP').textContent=`생존 시간 ${fmt(S.t)} · 처치 ${S.kills} · 가한 피해 ${S.dealt}`;try{rewardUI(win)}catch(e){}
  $('spec').style.display=!win&&!S.sim&&S.pl.filter(p=>p.alive).length>=2?'block':'none';$('end').style.display='flex'}
@@ -768,10 +780,10 @@ function build(){T.forEach(t=>{const e=document.createElement('button');e.innerH
 build();
 $('t1').onclick=()=>{if(S&&S.pl[0].alive)view=0;ui();$('t1').className='on';$('t2').className='';$('shB').style.display='grid';$('shU').style.display='none'};
 $('t2').onclick=()=>{$('t2').className='on';$('t1').className='';$('shU').style.display='grid';$('shB').style.display='none'};
-$('pz').onclick=()=>{paused=!paused;$('pz').textContent=paused?'▶️':'⏸'};
-$('sp').onclick=()=>{spd=spd===1?2:1;$('sp').textContent=spd+'x'};
-$('go').onclick=()=>tryStart();$('again').onclick=()=>{$('spx').style.display='none';start()};$('spec').onclick=specGo;$('spx').onclick=()=>{if(confirm('관전을 그만두고 메인 화면으로 나갈까요?'))$('home').onclick()};
-$('home').onclick=()=>{$('end').style.display='none';$('spx').style.display='none';over=true;$('game').style.display='none';$('title').style.display='flex';S=null;renderTitle()};
+$('pz').onclick=()=>{if(S&&S.net)return toast('🌐 온라인 대전에서는 일시정지할 수 없어요');paused=!paused;$('pz').textContent=paused?'▶️':'⏸'};
+$('sp').onclick=()=>{if(S&&S.net)return toast('🌐 온라인 대전에서는 배속을 바꿀 수 없어요');spd=spd===1?2:1;$('sp').textContent=spd+'x'};
+$('go').onclick=()=>tryStart();$('again').onclick=()=>{$('spx').style.display='none';if(S&&S.net&&typeof NET!=='undefined'){NET.leave();return $('home').onclick()}start()};$('spec').onclick=specGo;$('spx').onclick=()=>{if(confirm('관전을 그만두고 메인 화면으로 나갈까요?'))$('home').onclick()};
+$('home').onclick=()=>{if(S&&S.net&&typeof NET!=='undefined')NET.leave();$('end').style.display='none';$('spx').style.display='none';over=true;$('game').style.display='none';$('title').style.display='flex';S=null;renderTitle()};
 // 🔊 짹짹 스튜디오 사운드 모듈 (SFX) — 모든 소리를 Web Audio로 실시간 합성(오리지널, 음원 파일 0개)
 // 사용: SFX.play(name,args) · SFX.toggle() → true=음소거 · SFX.muted
 // 규칙: 로드 시점엔 AudioContext/DOM을 건드리지 않음(헤드리스 시뮬레이션 안전). 첫 play/터치 때 지연 생성.
@@ -2197,8 +2209,10 @@ $('cv').addEventListener('pointerdown',e=>{if(!S||over||!Cam)return;const r=$('c
  const p=new THREE.Vector3();if(!ray.ray.intersectPlane(pln,p))return;
  const c=nearCell(p.x/XK,BH-p.y);if(c.d<.62)cell(c.x,c.y)});
 function useSkill0(){const me=S.pl[0],s=skillOf(me);if(S.cdn>0||!me.alive)return;if(!s)return toast('✨ 속성 2개를 고르면 조합 스킬을 해금할 수 있어요');
- if(!me.skU){if(me.gold<SKC)return toast(`해금에 ${SKC}G가 필요해요`);me.gold-=SKC;me.skU=1;toast(`${s.c.ic} ${s.n} 해금! ${s.d} (재사용 ${s.cd}초)`);return ui()}
- if(me.skCD>0)return toast(`재사용까지 ${Math.ceil(me.skCD)}초`);useSkill(me);ui()}
+ if(netG()){if(me.skU&&me.skCD>0)return toast(`재사용까지 ${Math.ceil(me.skCD)}초`);return NET.cmd({a:'skill'})}actSkill(0);ui()}
+function actSkill(pid){const me=S.pl[pid],s=me&&skillOf(me);if(!s||S.cdn>0||!me.alive)return;
+ if(!me.skU){if(me.gold<SKC)return say(pid,`해금에 ${SKC}G가 필요해요`);me.gold-=SKC;me.skU=1;return say(pid,`${s.c.ic} ${s.n} 해금! ${s.d} (재사용 ${s.cd}초)`)}
+ if(me.skCD>0)return say(pid,`재사용까지 ${Math.ceil(me.skCD)}초`);useSkill(me)}
 $('skb').onclick=useSkill0;
 $('lanet').onclick=e=>{e.stopPropagation();const ids=Object.keys(laneTargets()).map(Number);if(!ids.length)return;const cur=+$('lane').dataset.id,i=ids.indexOf(cur);lanePick=ids[(i+1)%ids.length];laneT=1;lanePanel(0)};
 $('lanec').onclick=()=>{const v=+$('lane').dataset.id;if(!isNaN(v)&&S.pl[v].alive){view=v;sel=null;insp=null;ui()}};
@@ -2209,8 +2223,11 @@ try{if(typeof SFX!=='undefined'&&SFX.muted)$('snd').textContent='🔇'}catch(e){
 function pickTech(k){const me=S.pl[0];if(!me.alive||has(me,k)||me.tech2)return;const cost=me.tech?TECH2C:0,cb=me.tech?comboOf(me.tech,k):null;
  if(techPend!==k){techPend=k;ui();return toast(`${TECH[k].ic} ${TECH[k].n}: ${TECH[k].d}${cost?' · '+cost+'G':''}${cb?` · 조합 ${TB[cb.t].n}·${UB[cb.u].n} 해금`:''} · 한 번 더 누르면 확정`)}
  if(me.gold<cost){techPend=null;ui();return toast('골드가 부족해요')}
- me.gold-=cost;if(!me.tech)me.tech=k;else me.tech2=k;techPend=null;sfx('tech',{k,combo:!!cb});
- toast(cb?`✨ ${cb.ic} ${cb.n} 조합! ${TB[cb.t].ic}${TB[cb.t].n} · ${UB[cb.u].ic}${UB[cb.u].n} 해금`:`${TECH[k].ic} ${TECH[k].n} 확정! 전용 새 ${UB[TECH[k].u].ic}${UB[TECH[k].u].n} 해금 · 두 번째 속성은 ${TECH2C}G`);ui()}
+ techPend=null;if(netG()){NET.cmd({a:'tech',k});sfx('tech',{k,combo:!!cb});if(!me.tech)me.tech=k;else me.tech2=k;ui();return}
+ actTech(0,k);ui()}
+function actTech(pid,k){const me=S.pl[pid];if(!me||!me.alive||!TECH[k]||has(me,k)||me.tech2)return;const cost=me.tech?TECH2C:0,cb=me.tech?comboOf(me.tech,k):null;if(me.gold<cost)return say(pid,'골드가 부족해요');
+ me.gold-=cost;if(!me.tech)me.tech=k;else me.tech2=k;if(pid===0)sfx('tech',{k,combo:!!cb});
+ say(pid,cb?`✨ ${cb.ic} ${cb.n} 조합! ${TB[cb.t].ic}${TB[cb.t].n} · ${UB[cb.u].ic}${UB[cb.u].n} 해금`:`${TECH[k].ic} ${TECH[k].n} 확정! 전용 새 ${UB[TECH[k].u].ic}${UB[TECH[k].u].n} 해금 · 두 번째 속성은 ${TECH2C}G`)}
 TK.forEach(k=>{const t=TECH[k],e=document.createElement('button');e.className='tch';e.innerHTML=`<i>${t.ic}</i><span>${t.n}</span><s>${t.d}</s><u>무료</u>`;e.onclick=()=>pickTech(k);$('shB').append(e);t.el=e});
 U.filter(u=>u.hidden).forEach(u=>{if(u.el&&u.el.style)u.el.style.display='none'});
 U.forEach(u=>{const s=u.el.children&&u.el.children[1];if(s&&s.textContent!==undefined)s.textContent=(u.race?RACE[u.race].ic:u.tech?TECH[u.tech].ic:u.combo?u.combo.map(k=>TECH[k].ic).join(''):'')+(u.sn||u.n)+(u.x&&!u.tech&&!u.combo?'★':'')});
@@ -2415,6 +2432,8 @@ function raceDex(){let h='<h3>🏰 종족 도감 <small>시작 화면에서 종�
 
 let last=performance.now(),acc=0,pfT=0,pfN=0,pfS=0;function perfAdapt(dt){if(!R||pfS>1)return;pfT+=dt;pfN++;if(pfT>=3){const avg=pfT/pfN;pfT=0;pfN=0;if(avg>.024){pfS++;R.setPixelRatio(pfS===1?1.25:1);resize()}}}
 function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-last)/1000,.1);last=now;if(!S||!R)return;
- perfAdapt(dt);if(S.cdn>0){if(!paused){S.cdn-=dt;if(S.cdn<=0)S.cdn=0}cdnUI()}else if(!paused&&!over){const d=dt*spd;for(let i=0;i<spd;i++)step(dt);acc+=d;if(acc>.25){acc=0;ui()}}
+ perfAdapt(dt);if(S.net==='guest'){NET.gtick(dt);if(S.cdn>0||S.cdl>0)cdnUI();acc+=dt;if(acc>.25){acc=0;ui()}}
+ else if(S.cdn>0){if(!paused){S.cdn-=dt;if(S.cdn<=0)S.cdn=0}cdnUI()}else if(!paused&&!over){const d=dt*spd;for(let i=0;i<spd;i++)step(dt);acc+=d;if(acc>.25){acc=0;ui()}}
+ if(S.net==='host')NET.htick(dt);
  hud();sync3(dt);minimap()}
 requestAnimationFrame(frame);

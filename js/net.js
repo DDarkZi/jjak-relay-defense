@@ -1,0 +1,126 @@
+// 🌐 8인 온라인 대전 (베타)
+// 방식: 방장(호스트) 기기 하나가 게임 전체를 계산하고, 손님은 명령만 보내고 화면 상태를 받아 그려요.
+// 연결: PeerJS(무료 공개 중개 서버로 서로 찾은 뒤 기기끼리 직접 연결). 서버 비용·가입 없음.
+// 테스트: 주소에 ?net=local 을 붙이면 같은 브라우저의 탭끼리 BroadcastChannel로 연결돼요.
+// 자리 번호: 손님 화면에선 항상 자기가 0번이 되도록 돌려서(회전) 기존 1인용 화면 코드를 그대로 써요.
+const NET=(()=>{
+ const CODE_CH='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',HZ=.1;
+ const st={role:null,code:'',tr:null,slots:[],me:-1,started:false,gview:{},cid2slot:{},slot2cid:{},acc:0,ended:false,lost:false,lastView:0,nameT:0};
+ const UIX={};U.forEach((u,i)=>UIX[u.id]=i);const TIX={};T.forEach((t,i)=>TIX[t.id]=i);
+ const myHello=()=>{let ic='🐥',n='짹짹이';try{ic=UB[SV.hero.id].ic;n=SV.hero.name||n}catch(e){}return{nick:String(n).slice(0,10),ic}};
+ const rot=(i,k)=>((i-k)%8+8)%8;// 방장 번호 i → 손님 k 화면의 번호
+
+ // ---------- 연결(트랜스포트) ----------
+ function loadPeer(cb,err){if(window.Peer)return cb();const src=['https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js','https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js'];let i=0;
+  const tryOne=()=>{if(i>=src.length)return err('연결 도구를 불러오지 못했어요. 인터넷을 확인해 주세요');const s=document.createElement('script');s.src=src[i++];s.onload=()=>window.Peer?cb():tryOne();s.onerror=tryOne;document.head.appendChild(s)};tryOne()}
+ const local=/[?&]net=local/.test(location.search);
+ function hostT(code,h){
+  if(local){const bc=new BroadcastChannel('jjak-'+code);bc.onmessage=e=>{const m=e.data;if(m.to!=='H')return;if(m.k==='open')h.join(m.from);else if(m.k==='close')h.leave(m.from);else h.msg(m.from,m.d)};setTimeout(h.ready,0);
+   return{send:(cid,d)=>bc.postMessage({to:cid,from:'H',k:'d',d}),close:()=>{try{bc.postMessage({to:'*',from:'H',k:'close'});bc.close()}catch(e){}}}}
+  const conns={};let peer=null;const o={send:(cid,d)=>{const c=conns[cid];if(c&&c.open)try{c.send(d)}catch(e){}},close:()=>{try{peer&&peer.destroy()}catch(e){}}};
+  loadPeer(()=>{peer=new Peer('jjak-'+code,{debug:0});peer.on('open',()=>h.ready());peer.on('error',e=>h.err(e&&e.type==='unavailable-id'?'taken':(e&&e.type)||'error'));
+   peer.on('connection',c=>{c.on('open',()=>{conns[c.peer]=c;h.join(c.peer)});c.on('data',d=>h.msg(c.peer,d));c.on('close',()=>{delete conns[c.peer];h.leave(c.peer)});c.on('error',()=>{})})},m=>h.err(m));
+  return o}
+ function guestT(code,h){
+  if(local){const id='G'+Math.random().toString(36).slice(2,8),bc=new BroadcastChannel('jjak-'+code);bc.onmessage=e=>{const m=e.data;if(m.to===id)h.msg(m.d);else if(m.to==='*'&&m.k==='close')h.close()};
+   addEventListener('pagehide',()=>{try{bc.postMessage({to:'H',from:id,k:'close'})}catch(e){}});
+   setTimeout(()=>{bc.postMessage({to:'H',from:id,k:'open'});h.ready()},50);return{send:d=>bc.postMessage({to:'H',from:id,k:'d',d}),close:()=>{try{bc.postMessage({to:'H',from:id,k:'close'});bc.close()}catch(e){}}}}
+  let peer=null,c=null;const o={send:d=>{if(c&&c.open)try{c.send(d)}catch(e){}},close:()=>{try{peer&&peer.destroy()}catch(e){}}};
+  addEventListener('pagehide',()=>{try{peer&&peer.destroy()}catch(e){}});
+  loadPeer(()=>{peer=new Peer({debug:0});peer.on('error',e=>h.err(e&&e.type==='peer-unavailable'?'noroom':(e&&e.type)||'error'));
+   peer.on('open',()=>{c=peer.connect('jjak-'+code,{reliable:true,serialization:'json'});c.on('open',()=>h.ready());c.on('data',d=>h.msg(d));c.on('close',()=>h.close());c.on('error',()=>{})})},m=>h.err(m));
+  return o}
+
+ // ---------- 로비 화면 ----------
+ const $n=id=>document.getElementById(id);
+ function panel(which){$n('netA').style.display=which==='a'?'':'none';$n('netR').style.display=which==='r'?'':'none'}
+ function status(m){$n('nst').textContent=m||''}
+ function renderSlots(){const box=$n('nsl');if(!box)return;box.innerHTML='';for(let i=0;i<8;i++){const s=st.slots[i],d=document.createElement('div');d.className='nslot'+(s&&s.kind!=='ai'?' on':'')+(i===st.me?' me':'');
+   d.innerHTML=`<i>${i+1}</i><b></b><small></small>`;d.querySelector('b').textContent=s&&s.kind!=='ai'?`${s.ic} ${s.nick}`:'🤖 AI';d.querySelector('small').textContent=s&&s.kind==='host'?'👑 방장':i===st.me?'나':'';box.append(d)}
+  const n=st.slots.filter(s=>s&&s.kind!=='ai').length;$n('ngo').style.display=st.role==='host'?'':'none';$n('ngo').textContent=`▶ 게임 시작 (${n}명 + AI ${8-n})`;
+  if(st.role==='guest')status('방장이 게임을 시작하기를 기다리는 중…')}
+ function open(){ovl('netm',1);panel('a');status('');const q=new URLSearchParams(location.search).get('room');if(q&&!st.role){$n('ncode').value=q.toUpperCase();}
+  const h=myHello();$n('nme').textContent=`${h.ic} ${h.nick}`}
+ function close(){leave();ovl('netm',0)}
+ function inviteURL(){const u=new URL(location.href);u.searchParams.set('room',st.code);return u.toString()}
+
+ // ---------- 방장 ----------
+ function host(){if(st.role)return;st.role='host';st.code=Array.from({length:5},()=>CODE_CH[Math.floor(Math.random()*CODE_CH.length)]).join('');
+  st.slots=Array(8).fill(null);st.slots[0]=Object.assign({kind:'host'},myHello());st.me=0;st.started=false;st.ended=false;
+  panel('r');$n('ncd').textContent=st.code;status('방을 여는 중…');renderSlots();
+  st.tr=hostT(st.code,{ready:()=>status('친구에게 방 코드나 초대 링크를 보내 주세요!'),err:e=>{if(e==='taken'){leave();return host()}status('⚠️ 연결 오류: '+e+' (잠시 후 다시 시도해 주세요)')},
+   join:cid=>{},leave:cid=>hLeave(cid),msg:(cid,d)=>hMsg(cid,d)})}
+ function hBroadcastLobby(){Object.keys(st.cid2slot).forEach(cid=>st.tr.send(cid,{t:'lobby',slots:st.slots,you:st.cid2slot[cid],code:st.code}));renderSlots()}
+ function hMsg(cid,d){if(!d||!d.t)return;
+  if(d.t==='hello'){if(st.started){st.tr.send(cid,{t:'full',m:'이미 시작한 방이에요'});return}if(st.cid2slot[cid]!=null)return;let i=st.slots.findIndex((s,j)=>j>0&&!s);if(i<0){st.tr.send(cid,{t:'full',m:'방이 꽉 찼어요 (8명)'});return}
+   st.slots[i]={kind:'guest',nick:String(d.nick||'손님').slice(0,10),ic:String(d.ic||'🐦').slice(0,4)};st.cid2slot[cid]=i;st.slot2cid[i]=cid;hBroadcastLobby();if(!S)toast(`👋 ${st.slots[i].nick} 님이 들어왔어요`);return}
+  const pid=st.cid2slot[cid];if(pid==null||!S||S.net!=='host')return;
+  if(d.t==='view'){if(d.v>=0&&d.v<8)st.gview[pid]=d.v;return}
+  if(d.t==='cmd'&&d.c){const c=d.c;try{if(c.a==='send')actSend(pid,String(c.b));else if(c.a==='build')actBuild(pid,c.x|0,c.y|0,String(c.t));else if(c.a==='upg')actUpg(pid,c.x|0,c.y|0);
+   else if(c.a==='dem')actDem(pid,c.x|0,c.y|0);else if(c.a==='tech')actTech(pid,String(c.k));else if(c.a==='skill')actSkill(pid)}catch(e){console.log(e)}}}
+ function hLeave(cid){const i=st.cid2slot[cid];if(i==null)return;delete st.cid2slot[cid];delete st.slot2cid[i];
+  if(!st.started){st.slots[i]=null;hBroadcastLobby();return}
+  const p=S&&S.pl[i];if(p&&p.alive){const a=AIS[Math.floor(Math.random()*AIS.length)];p.cfg=Object.assign({},a.g);p.ai=true;p.aiT=0;if(!p.tech)p.tech=TK[Math.floor(Math.random()*5)];if(!p.tech2plan)p.tech2plan=TK[(TK.indexOf(p.tech)+1)%5];p.name+=' 🤖';toast(`📴 ${st.slots[i].nick} 님 연결이 끊겨 AI가 대신해요`)}}
+ function hStart(){if(st.role!=='host'||st.started)return;st.started=true;ovl('netm',0);gameMode='normal';start();S.net='host';
+  for(let i=1;i<8;i++){const s=st.slots[i];if(!s||s.kind!=='guest')continue;const p=S.pl[i];p.cfg=null;p.ai=false;p.gold=500;p.income=30;p.tech=null;p.tech2=null;p.tech2plan=null;p.name=`${(i+S.off)%8+1}번 ${s.ic}${s.nick}`;st.gview[i]=i}
+  ui();Object.keys(st.cid2slot).forEach(cid=>{const k=st.cid2slot[cid];st.tr.send(cid,{t:'start',k,hoff:S.off,names:S.pl.map(p=>p.name),diff})})}
+ const gridEnc=p=>{const o=[];p.grid.forEach((r,y)=>r.forEach((t,x)=>{if(t)o.push([y*COLS+x,TIX[t.bp.id],t.lv,t.d,Math.round(t.r*100),t.dis>0?1:0,t.inv])}));return o};
+ function snap(k){const pl=Array(8);S.pl.forEach(p=>{pl[rot(p.id,k)]=[Math.floor(p.gold),p.income,Math.round(p.life),p.alive?1:0,p.tech||'',p.tech2||'',p.skU?1:0,Math.ceil(p.skCD||0),p.boost>0?1:0,p.reveal>0?1:0,p.dieT?Math.round(p.dieT):0]});
+  const vb=st.gview[k]??k,v=S.pl[vb],hid=u=>u.bp.stealth&&u.y<BH*u.bp.stealth&&!(v.reveal>0)&&!u.seen;
+  const us=v.units.map(u=>[u.id,UIX[u.bp.id],Math.round(u.x*100),Math.round(u.y*100),Math.round(Math.max(0,u.hp)/u.bp.hp*1000),rot(u.owner,k),(u.sh>0?1:0)|(u.fl>0?2:0)|(u.gr>0?4:0)|(u.stun>0?8:0)|(u.slow>0?16:0)|(u.bn>0?32:0)|((u.pois>0||u.ps>0)?64:0)|(u.hit>0?128:0)|(hid(u)?0:256)|(u.amp>0?512:0),u.col||0]);
+  const g={};g[rot(vb,k)]=gridEnc(v);if(vb!==k)g[0]=gridEnc(S.pl[k]);
+  const o={t:'s',T:Math.round(S.t*10)/10,c:Math.round(S.cdn*10)/10,i:Math.round(S.inc*10)/10,v:rot(vb,k),pl,g,u:us};if(st.nameT<=0)o.n=S.pl.map((p,i)=>S.pl[(i+k)%8].name);return o}
+ function htick(dt){if(!st.tr||!st.started)return;st.acc+=dt;if(st.acc<HZ)return;st.acc=0;st.nameT-=HZ;Object.keys(st.cid2slot).forEach(cid=>{const k=st.cid2slot[cid];try{st.tr.send(cid,snap(k))}catch(e){}});if(st.nameT<=0)st.nameT=2}
+ function hOver(w){if(st.ended||st.role!=='host')return;st.ended=true;Object.keys(st.cid2slot).forEach(cid=>st.tr.send(cid,{t:'end',w:w<0?-1:rot(w,st.cid2slot[cid])}))}
+ function tell(pid,m){const cid=st.slot2cid[pid];if(cid&&st.tr)st.tr.send(cid,{t:'msg',m})}
+
+ // ---------- 손님 ----------
+ function join(){if(st.role)return;const code=String($n('ncode').value||'').trim().toUpperCase().replace(/[^A-Z0-9]/g,'');if(code.length!==5)return status('방 코드 5자리를 입력해 주세요');
+  st.role='guest';st.code=code;st.ended=false;st.lost=false;panel('r');$n('ncd').textContent=code;status('방에 연결하는 중…');st.slots=Array(8).fill(null);renderSlots();
+  st.tr=guestT(code,{ready:()=>{status('들어가는 중…');st.tr.send(Object.assign({t:'hello'},myHello()))},msg:d=>gMsg(d),
+   close:()=>{if(S&&S.net==='guest'&&!st.ended){st.ended=true;toast('📴 방장 연결이 끊겼어요');endLocal('📴','방장 연결이 끊겼어요')}else if(!S){status('📴 방이 닫혔어요');}},
+   err:e=>{status(e==='noroom'?'⚠️ 그런 방이 없어요. 코드를 확인해 주세요':'⚠️ 연결 오류: '+e);st.role=null;try{st.tr&&st.tr.close()}catch(x){}st.tr=null}})}
+ function endLocal(ic,h){over=true;$n('eT').textContent=ic;$n('eH').textContent=h;$n('eP').textContent='';$n('ew').innerHTML='';$n('spec').style.display='none';$n('end').style.display='flex'}
+ function gMsg(d){if(!d||!d.t)return;
+  if(d.t==='lobby'){st.slots=d.slots;st.me=d.you;renderSlots();return}
+  if(d.t==='full'){status('⚠️ '+d.m);try{st.tr.close()}catch(e){}st.tr=null;st.role=null;return}
+  if(d.t==='start')return gStart(d);
+  if(!S||S.net!=='guest')return;
+  if(d.t==='s')return gApply(d);
+  if(d.t==='msg')return toast(d.m);
+  if(d.t==='end'){st.ended=true;const w=d.w;if(w===0)return finish(true);if(w>=0&&(S.spec||st.lost))return specEnd(S.pl[w]);if(w>=0){endLocal('👀',`${S.pl[w].name} 우승!`)}else endLocal('🏁','게임 종료')}}
+ function gStart(d){st.k=d.k;diff=d.diff||'N';gameMode='normal';applyModeBal('normal');EGG.n=0;ovl('netm',0);
+  S={t:0,inc:0,kills:0,dealt:0,off:(d.hoff+d.k)%8,sim:false,cdn:5,lm:1,pl:[],net:'guest'};techPend=null;
+  for(let i=0;i<8;i++)S.pl.push({id:i,name:d.names[(i+d.k)%8],tech:null,tech2:null,race:null,skU:0,skCD:0,boost:0,reveal:0,color:PC[i],gold:500,income:30,ai:i>0,life:100,alive:true,grid:Array.from({length:ROWS},()=>Array(COLS).fill(null)),units:[],cfg:null,dealt:0});
+  sel=null;insp=null;view=0;st.lastView=0;paused=false;over=false;spd=1;document.querySelector('footer').style.opacity='';$n('pz').textContent='⏸';$n('sp').textContent='1x';$n('end').style.display='none';
+  $n('title').style.display='none';$n('game').style.display='flex';if(!R)init3();resize();ui();lanePick=null;try{laneFit()}catch(e){}try{$n('t1').onclick&&$n('t1').onclick()}catch(e){}S.cdl=6;cdnUI();sfx('start');toast('🌐 온라인 대전 시작! 카운트다운 동안 속성을 골라요')}
+ function gGrid(p,arr){const seen=new Set();arr.forEach(([ci,ti,lv,dd,r,dis,inv])=>{const x=ci%COLS,y=(ci/COLS)|0,b=T[ti];seen.add(ci);let t=p.grid[y][x];if(!t||t.bp!==b){t=mkR(b,p);p.grid[y][x]=t}t.lv=lv;t.d=dd;t.r=r/100;t.dis=dis?1:0;t.inv=inv});
+  p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t&&!seen.has(y*COLS+x))row[x]=null}))}
+ function gApply(d){S.t=d.T;S.cdn=d.c;S.inc=d.i;if(d.n)d.n.forEach((n,i)=>S.pl[i].name=n);
+  d.pl.forEach((a,i)=>{const p=S.pl[i];[p.gold,p.income,p.life]=a;p.alive=!!a[3];p.tech=a[4]||null;p.tech2=a[5]||null;p.skU=a[6];p.skCD=a[7];p.boost=a[8]?1:0;p.reveal=a[9]?1:0;if(a[10])p.dieT=a[10]});
+  Object.keys(d.g).forEach(i=>gGrid(S.pl[+i],d.g[i]));
+  const v=d.v,p=S.pl[v],old=new Map(p.units.map(u=>[u.id,u])),nu=[];
+  d.u.forEach(([id,bi,x,y,hp,ow,f,col])=>{const b=U[bi];let u=old.get(id);if(!u){u={id,bp:b,x:x/100,y:y/100,owner:ow,col:col||0};}else old.delete(id);
+   u.bp=b;u.tx=x/100;u.ty=y/100;u.hp=hp/1000*b.hp;u.owner=ow;u.sh=f&1?1:0;u.fl=f&2?1:0;u.gr=f&4?1:0;u.stun=f&8?1:0;u.slow=f&16?1:0;u.bn=f&32?1:0;u.pois=f&64?1:0;u.ps=0;u.hit=f&128?.05:0;u.seen=!!(f&256);u.amp=f&512?1:0;u.col=col||0;nu.push(u)});
+  if(v===view)old.forEach(u=>{if(u.hp/u.bp.hp<.3&&u.ty<EY-.6){artFx('die',{u,col:u.bp.col,air:u.bp.t==='A'});sfx('die',{unit:u.bp.id})}});
+  S.pl.forEach((q,i)=>{if(i!==v)q.units=[]});p.units=nu;
+  if(!S.pl[0].alive&&!st.lost&&!st.ended){st.lost=true;finish(false)}}
+ function gtick(dt){if(!S)return;if(view!==st.lastView){st.lastView=view;st.tr&&st.tr.send({t:'view',v:(view+st.k)%8})}
+  const p=S.pl[view],k=Math.min(1,dt*10);p.units.forEach(u=>{if(u.tx==null)return;u.x+=(u.tx-u.x)*k;u.y+=(u.ty-u.y)*k});
+  // 손님 화면용 연출: 사거리 안의 새를 향해 타워가 쏘는 모습(실제 피해 계산은 방장이 해요)
+  p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(!t||!t.d||t.bp.pylon||t.bp.snack||t.dis>0)return;t.gc=(t.gc||Math.random()*t.bp.cd)-dt;if(t.gc>0)return;const cx=cellX(x,y),cy=cellY(y);let tg=null,my=-1;
+   for(const u of p.units){const ty=u.gr>0?'G':u.fl>0?'A':u.bp.t;if((t.bp.t&&t.bp.t!==ty)||!u.seen)continue;if(Math.hypot(u.x-cx,u.y-cy)<=t.r&&u.y>my){my=u.y;tg=u}}
+   if(!tg){t.gc=.2;return}t.gc=t.bp.cd;beam(cx,BH-cy,tg,t.bp.col);sfx('shoot',{tower:t.bp.id});artFx('shoot',{tower:t.bp.id,x:cx,y:BH-cy,tx:tg.x,ty:BH-tg.y,air:tg.bp.t==='A',col:t.bp.col,b:t.bp})}))}
+ function cmd(c){if(st.tr)st.tr.send({t:'cmd',c})}
+
+ // ---------- 공통 ----------
+ function leave(){try{if(st.role==='guest'&&st.tr)st.tr.close();if(st.role==='host'&&st.tr)st.tr.close()}catch(e){}
+  Object.assign(st,{role:null,code:'',tr:null,slots:[],me:-1,started:false,gview:{},cid2slot:{},slot2cid:{},acc:0,ended:false,lost:false});if($n('netm'))panel('a')}
+ function bind(){if(!$n('netm'))return;$n('nmk').onclick=host;$n('njoin').onclick=join;$n('ngo').onclick=hStart;$n('nx').onclick=close;
+  $n('ncode').addEventListener('keydown',e=>{if(e.key==='Enter')join()});
+  $n('ncopy').onclick=async()=>{const url=inviteURL(),txt=`🐦 짹짹 릴레이 디펜스 같이 해요! 방 코드: ${st.code}\n${url}`;try{if(navigator.share){await navigator.share({title:'짹짹 릴레이 디펜스',text:txt,url});return}}catch(e){}
+   try{await navigator.clipboard.writeText(txt);toast('📋 초대 링크를 복사했어요')}catch(e){prompt('초대 링크를 복사해 주세요',url)}};
+  const nb=$n('netb');if(nb)nb.onclick=e=>{e.stopPropagation();ovl('modem',0);open()};
+  if(new URLSearchParams(location.search).get('room'))setTimeout(open,400)}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+ return{open,cmd,tell,htick,gtick,over:hOver,leave,get role(){return st.role},_st:st}})();
