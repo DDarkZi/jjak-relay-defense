@@ -613,7 +613,7 @@ function birdMesh2(b,oc){const g=new THREE.Group(),id=b.id,A=b.t==='A',c=b.col,w
   const bk={kiwi:[.025,.42,0xd97706],duck:[.08,.2,0xfacc15],dodo:[.1,.32,0xf4a259],swan:[.045,.14,0xf97316],penguin:[.035,.13,0x1f2937],frostpeng:[.035,.13,0x312e81],crane:[.035,.28,0xd6d3a0],blizgull:[.04,.22,0xf97316],stormeagle:[.07,.22,0xfacc15],comet:[.05,.14,0xfacc15],eagle:[.07,.22,0xfacc15],parrot:[.07,.16,0xfacc15],owl:[.04,.1,0xca8a04],ostrich:[.06,.17,0xe0a088],knight:[.04,.34,0xef4444],humbee:[.016,.3,0x111827],pelican:[.07,.5,0xf59e0b],crocbird:[.035,.15,0x1f2937],woodpecker:[.035,.3,0x57534e],turkey:[.05,.14,0xf59e0b]}[id]||[.055,.16,0xf59e0b];
   const k=KO(bk[0],bk[1],bk[2]);k.rotation.z=PI;at(k,0,hy-hr-bk[1]/2+.04,hz-.03,id==='duck'?[1.8,1,.5]:tall?[1.6,1,.55]:null)}
  if(id!=='kiwi'&&id!=='egg_legs'&&!PENG[id]&&!tall){const big=['eagle','phoenix','owl','vampire','stormeagle','auroraowl','pelican'].includes(id),wl=A?(big?.46:id==='hatch_wind'?.17:.34):.15,wc=WINGC[id]??(A?dkn3(c,.85):c);
-  [-1,1].forEach(s=>{const P=new THREE.Group();P.position.set(s*.2,0,z0+.06);g.add(P);const W=SP(1,A?wc:(WINGC[id]??dkn3(c,.88)),id==='phoenix'?GL(0xf97316):{});if(A){W.scale.set(wl,.25,.045);W.position.set(s*wl*.95,.04,0)}else{W.scale.set(.06,.19,.12);W.position.set(s*.05,.03,-.02);W.rotation.y=s*.25}if(A)W.rotation.z=s*.2;if(id==='swan'){W.rotation.y=-s*.4;W.position.set(s*wl*.9,.04,wl*.39)}if(id==='parrot')[[0xe53935,1.75,.07],[0x1e88e5,1.5,-.02]].forEach(([q,k,y])=>{const t=SP(1,q);t.scale.set(wl*.3,.13,.04);t.position.set(s*wl*k,y,0);t.rotation.z=s*.2;P.add(t)});P.add(W);
+  [-1,1].forEach(s=>{const P=new THREE.Group();P.position.set(s*.2,0,z0+.06);g.add(P);const W=SP(1,A?wc:(WINGC[id]??dkn3(c,.88)),id==='phoenix'?GL(0xf97316):{});if(A){W.scale.set(wl,.25,.045);W.position.set(s*wl*.95,.04,0)}else{W.scale.set(.06,.19,.12);W.position.set(s*.05,.03,-.02);W.rotation.y=s*.25}if(A)W.rotation.z=s*.2;if(id==='swan'){W.rotation.y=-s*.4;W.position.set(s*wl*.9,.04,wl*.39)}if(id==='parrot'&&A)[[0xe53935,1.75,.07],[0x1e88e5,1.5,-.02]].forEach(([q,k,y])=>{const t=SP(1,q);t.scale.set(wl*.3,.13,.04);t.position.set(s*wl*k,y,0);t.rotation.z=s*.2;P.add(t)});P.add(W);
    if(A&&id!=='vampire'){const cv=SP(1,ltn3(wc));cv.scale.set(wl*.55,.16,.05);cv.position.set(s*wl*.55,-.03,id==='swan'?wl*.22+.012:.012);if(id==='swan')cv.rotation.y=-s*.4;P.add(cv)}
    if(A){const tp=SP(1,oc);tp.scale.set(wl*.5,.15,.035);tp.rotation.z=s*.45;tp.position.set(s*wl*1.6,.16,id==='swan'?wl*.72:0);if(id==='swan')tp.rotation.y=-s*.4;P.add(tp);w.push(P)}})}
  if(PENG[id])at(TR(.22,.025,oc),0,0,.5);else if(CHICKY[id])at(TR(.2,.028,oc),0,-.02,.44);else if(id==='crocbird')at(TR(.12,.025,oc),0,-.13,.6);else if(id==='swan')at(TR(.085,.025,oc),0,-.12,.6);else if(!A&&id!=='egg_legs')at(TR(.15,.03,oc),0,hy+.05,hz-.1);
@@ -2339,9 +2339,7 @@ const dxQ=f=>/^["“]/.test(f||'')?f:'“'+f+'”';const tier=c=>c>=1000?'lg':c>
 const dxBadge=x=>x.race?`<em>${RACE[x.race].ic} ${RACE[x.race].n} 전용</em>`:x.tech?`<em>${TECH[x.tech].ic} ${TECH[x.tech].n} 전용</em>`:x.combo?`<em>${x.combo.map(k=>TECH[k].ic).join('')} 조합</em>`:'';
 const DXTH={humbee:'meadow',pelican:'sky',crocbird:'water',penguin:'ice',frostpeng:'ice',blizgull:'ice',auroraowl:'aurora',dodo:'stage',phoenix:'fire',plasmabird:'fire',comet:'sky',swan:'water',duck:'water',seagull:'water',pirate:'ice',albatross:'sky',peacock:'stage',parrot:'stage',rooster:'stage',owl:'night',crow:'night',ghostcrow:'night',vampire:'night',plague:'night',voltbat:'storm',thunderbird:'storm',stormeagle:'storm',crane:'spa',falcon:'sky',eagle:'sky'};
 const dxTh=u=>DXTH[u.id]||(u.hidden||u.id==='egg_legs'?'lab':u.tech==='fire'?'fire':u.tech==='ice'?'ice':u.tech==='thunder'?'storm':u.tech==='wind'?'sky':u.tech==='dark'?'night':u.race?'stage':u.t==='A'?'sky':'meadow');
-// 도감 일러스트(assets/units/*.webp, 256px): 있으면 큰 그림 + 3D 모습은 작은 창으로. 도감을 열 때만 불러와요(lazy)
-const ILL=new Set('chick,egg_legs,turkey,woodpecker,swan,penguin,dodo,parrot,ostrich,eggchief,pelican,crocbird,humbee,duck,crow,owl,hatch_chick,hatch_fire,hatch_ice,hatch_thunder,hatch_wind,hatch_dark,hatch_gold,hatch_dino'.split(','));
-const dxImg=k=>{const d3=DXC[k]?`<img src="${DXC[k]}" alt="">`:'<i class="noimg">🐦</i>';if(k.startsWith('u_')&&ILL.has(k.slice(2)))return `<img class="ill" src="assets/units/${k.slice(2)}.webp" loading="lazy" decoding="async" alt="">${DXC[k]?`<img class="d3" src="${DXC[k]}" alt="">`:''}`;return d3};
+const dxImg=k=>DXC[k]?`<img src="${DXC[k]}" alt="">`:'<i class="noimg">🐦</i>';
 function cardU(u){const k=tier(u.c);return `<div class="cd ${k}"><div class="ci" data-th="${dxTh(u)}">${dxImg('u_'+u.id)}<span class="tr ${k}">${TIERN[k]}</span>${dxBadge(u)}</div><div class="cn">${u.ic} ${u.n}</div><div class="cf">${dxQ(u.fl)}</div>
  <div class="cs"><span>💰${u.c}G</span><span>❤️${u.hp}</span><span>${u.t==='A'?'🪶공중':'🦶지상'}</span><span>💨${u.sp}</span><span>📈인컴+${u.inc}</span><span>💥피해${u.dm}</span></div>${u.x?`<div class="cx">✨ ${u.x}</div>`:''}</div>`}
 function cardT(t){const k=t.combo?'lg':t.race?'ep':t.tech?(t.c>=380?'ep':'rr'):'cm',tg=t.t==='A'?'공중만':t.t==='G'?'지상만':'공중+지상';
@@ -2424,10 +2422,11 @@ if(!SV.hero||!UB[SV.hero.id])SV.hero={id:'chick',col:null,hat:'crown',face:'none
 function heroTag(){try{return UB[SV.hero.id].ic+SV.hero.name}catch(e){return '나'}}
 const hexS=c=>'#'+c.toString(16).padStart(6,'0');
 function headPos(id){const tall=id==='ostrich',z0=tall?.6:.26+(LIFT[id]||0);if(HEADX[id])return HEADX[id];return{hz:tall?1.3:z0+.2,hy:tall?-.28:-.3,hr:id==='owl'?.2:id==='chick'?.17:.15}}
+const HOWN=new Set(['turkey','pirate','duck','eggchief','comet','thunderbird','ghostcrow','seagull','stormeagle','pelican','blizgull']);
 function heroDeco(m,b,cfg){const{hz,hy,hr}=headPos(b.id),top=hz+hr,g=new THREE.Group();g.name='heroDeco';g.position.y=hy;m.add(g);
  const put=(o,x,y,z,rx,ry,rz,s)=>{o.position.set(x,y,z);o.rotation.set(rx||0,ry||0,rz||0);if(s)o.scale.set(s[0],s[1],s[2]);g.add(o);return o};
  const dome=(r,c)=>M(GC('hdome'+r,()=>new THREE.SphereGeometry(r,22,10,0,PI*2,0,PI/2)),c),GLD={metalness:.55,roughness:.3};
- const h=cfg.hat,f=cfg.face,s1=hr/.15;
+ const h=HOWN.has(b.id)?'none':cfg.hat,f=cfg.face,s1=hr/.15;// 전용 모자가 있는 새는 겹치지 않게 영웅 모자를 안 씌워요
  if(h==='crown'){put(TR(.1*s1,.022,0xfacc15,GLD),0,0,top-.015);for(let i=0;i<5;i++){const a=i*PI*2/5;put(KO(.032,.1,0xfacc15,GLD),Math.cos(a)*.1*s1,Math.sin(a)*.1*s1,top+.035,PI/2)}put(SP(.026,0xef4444),0,-.1*s1,top+.01)}
  else if(h==='beanie'){put(dome(hr*1.06,0xef4444),0,0,hz+hr*.22,PI/2);put(TR(hr*1.0,.032,0xf8fafc),0,0,hz+hr*.25);put(SP(.045,0xf8fafc),0,0,hz+hr*1.3)}
  else if(h==='cap'){put(dome(hr*1.05,0x2563eb),0,0,hz+hr*.25,PI/2);put(BX(.17*s1,.16*s1,.018,0x1d4ed8),0,-hr*.9,hz+hr*.32,-.18);put(SP(.018,0xfde047),0,0,hz+hr*1.3)}
@@ -2441,9 +2440,10 @@ function heroDeco(m,b,cfg){const{hz,hy,hr}=headPos(b.id),top=hz+hr,g=new THREE.G
  else if(f==='pink'){[-1,1].forEach(s=>put(SP(.045,0xf43f5e,{transparent:true,opacity:.8}),s*.08,ey,ez,0,0,0,[1,.3,.85]));put(BX(.06,.015,.012,0xbe123c),0,ey,ez+.01)}
  else if(f==='mono')put(TR(.04,.009,0xfacc15,GLD),.08,ey,ez,PI/2);
  return g}
-function heroMesh(cfg){const b=UB[cfg.id]||UB.chick,m=birdMesh3(b,0x60a5fa);artFx('bird',{m,b,dex:true});
+function heroMesh(cfg){const b0=UB[cfg.id]||UB.chick,b=b0.t==='A'?Object.assign({},b0,{t:'G'}):b0,m=birdMesh3(b,0x60a5fa);artFx('bird',{m,b,dex:true});// 영웅은 받침대 위에 서 있으니 공중 새도 날개 접고 발로 서게
+ m.traverse(o=>{if(o.name==='artOutl'||(o.geometry&&o.geometry.type==='TorusGeometry'&&o.material&&o.material.color&&o.material.color.getHex()===0x60a5fa))o.visible=false;});// 영웅은 가까이 보니까 게임판용 외곽선·팀 고리는 숨겨요
  m.traverse(o=>{if(o.geometry&&o.geometry.type==='PlaneGeometry')o.visible=false;else if(cfg.col!=null&&o.material&&o.material.color&&!(o.name||'').startsWith('art')&&o.material.color.getHex()===b.col)o.material.color.setHex(cfg.col)});
- heroDeco(m,b,cfg);m.userData.b=b;return m}
+ heroDeco(m,b,cfg);m.userData.b=b0;return m}
 const birdAnim=(m,t,walk)=>{(m.userData.w||[]).forEach((q,i)=>q.rotation.y=(i?-1:1)*Math.sin(t*14)*.5);const bd=m.children[0];if(bd)bd.rotation.z=walk?Math.sin(t*12)*.16:Math.sin(t*2)*.04;if(m.userData.an)m.userData.an(t,m)};
 // 공용 렌더러(로비·꾸미기·광장이 돌려 씀)
 let LR=null,LS=null,LC=null,LH=null,LHK='',lobMode='lobby',lobT=0;
@@ -2532,6 +2532,8 @@ function tutOpen(){if(!S||S.net||S.sim||$('tut'))return;const pv=paused;paused=t
  const draw=()=>{const[ic,t,d,h]=TUT[i];hl(h);o.className=h==='lane'?'':'top';o.innerHTML=`<div class="tutc"><div class="tuti">${ic}</div><b>${t}</b><p>${d}</p><div class="tutd">${TUT.map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div><div class="tutb"><button class="tsk">건너뛰기</button><button class="tnx">${i<TUT.length-1?'다음 ▶':'시작! 🎉'}</button></div></div>`;
   o.querySelector('.tsk').onclick=end;o.querySelector('.tnx').onclick=()=>{if(++i>=TUT.length)end();else draw()}};draw()}
 {const st0=start;start=function(gs,p0h){const r=st0.apply(this,arguments);if(!gs&&!SV.tut)setTimeout(tutOpen,400);return r}}
+{const b=document.createElement('button');b.textContent='🗑 처음부터 다시 (저장 초기화)';b.className='tutre tutrs';b.onclick=()=>{if(!confirm('코인·승리·해금한 종족·영웅 꾸미기가 모두 지워지고 처음 상태로 돌아가요. 정말 초기화할까요?'))return;try{localStorage.removeItem(SAVE_KEY)}catch(e){}location.reload()};const tb=document.querySelector('#tipm .tipb');if(tb)tb.prepend(b)}
+if(/[?&]reset=1/.test(location.search)){try{localStorage.removeItem(SAVE_KEY)}catch(e){}location.replace(location.pathname)}
 {const b=document.createElement('button');b.textContent='📘 튜토리얼 다시 보기';b.className='tutre';b.onclick=()=>{SV.tut=0;svSave();toast('📘 다음 판을 시작할 때 튜토리얼이 다시 나와요')};const tb=document.querySelector('#tipm .tipb');if(tb)tb.prepend(b)}
 
 renderTitle();
