@@ -906,6 +906,16 @@ const crackles=(t,n,span,v)=>{for(let i=0;i<n;i++)noise(t+rnd(0,span),{ft:'highp
 
 // ---------- 스로틀 ----------
 let last={},wins={};
+// 🔊 Kenney 효과음(CC0, assets/sfx): 녹음된 소리를 먼저 쓰고, 아직 못 불러왔거나 실패하면 기존 합성음으로 대신해요
+const SMP={tap:['click_001','click_002','click_003'],build:['impactWood_medium_000','impactWood_medium_001'],upgrade:['maximize_006'],sell:['handleCoins','handleCoins2'],
+ send:['drop_002','drop_003'],tech:['jingles_NES03'],unlock:['jingles_NES12'],skill:['maximize_009'],die:['impactSoft_medium_000','impactSoft_medium_001','impactSoft_medium_002'],
+ leak:['impactPunch_heavy_000','impactPunch_heavy_001'],elim:['impactBell_heavy_000'],alarm:['impactBell_heavy_001'],win:['jingles_STEEL02'],lose:['jingles_STEEL06'],start:['jingles_NES08'],go:['jingles_NES05'],
+ tick:['tick_001'],hatch:['impactGlass_light_000','impactGlass_light_001'],lay:['drop_004'],pop:['glass_001','glass_002'],revive:['maximize_003']};
+const SVOL={tap:.3,die:.28,send:.4,build:.5,tick:.4,hatch:.4,pop:.35,lay:.35},SGAP={tap:60,die:70,hatch:120,pop:90,leak:120,send:80},SLAYER={die:1};// SLAYER: 녹음 소리 + 기존 새 울음 합성음을 같이
+const SBUF={};let sLoad=false;
+function smpLoad(){if(sLoad||!ac||offline)return;sLoad=true;[...new Set(Object.values(SMP).flat())].forEach(f=>fetch('assets/sfx/'+f+'.ogg').then(r=>r.ok?r.arrayBuffer():Promise.reject()).then(b=>new Promise((ok,no)=>ac.decodeAudioData(b,ok,no))).then(buf=>{SBUF[f]=buf}).catch(()=>{}))}
+function smpPlay(n,t){const L=SMP[n];if(!L||offline)return false;const f=L[Math.floor(Math.random()*L.length)],buf=SBUF[f];if(!buf)return false;if(!gate('smp_'+n,SGAP[n]||40))return !SLAYER[n];
+ const s=ac.createBufferSource();s.buffer=buf;s.playbackRate.value=.94+Math.random()*.12;const g=ac.createGain();g.gain.value=SVOL[n]||.55;s.connect(g);g.connect(sfxBus||master);s.start(t);return !SLAYER[n]}
 const gate=(k,ms)=>{const n=now();if(last[k]&&n-last[k]<ms)return false;last[k]=n;return true};
 const rate=(k,max)=>{const n=now(),a=wins[k]||(wins[k]=[]);while(a.length&&n-a[0]>1000)a.shift();if(a.length>=max)return false;a.push(n);return true};
 
@@ -1126,7 +1136,7 @@ return {
   if(n==='bgm_start'){bgmStart();return}
   if(muted&&!offline)return;
   if(!offline&&ac.state!=='running'){resume();if(!KEEP[n])return}
-  FX[n](ac.currentTime+.01,a);
+  smpLoad();if(!smpPlay(n,ac.currentTime+.01))FX[n](ac.currentTime+.01,a);
  }catch(e){}},
  toggle(){muted=!muted;try{localStorage.setItem(KEY,muted?'1':'0')}catch(e){}
   try{if(ac&&!offline){const ct=ac.currentTime;master.gain.cancelScheduledValues(ct);master.gain.setValueAtTime(master.gain.value,ct);
