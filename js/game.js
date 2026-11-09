@@ -2423,7 +2423,7 @@ function heroTag(){try{return UB[SV.hero.id].ic+SV.hero.name}catch(e){return '�
 const hexS=c=>'#'+c.toString(16).padStart(6,'0');
 function headPos(id){const tall=id==='ostrich',z0=tall?.6:.26+(LIFT[id]||0);if(HEADX[id])return HEADX[id];return{hz:tall?1.3:z0+.2,hy:tall?-.28:-.3,hr:id==='owl'?.2:id==='chick'?.17:.15}}
 const HOWN=new Set(['turkey','pirate','duck','eggchief','comet','thunderbird','ghostcrow','seagull','stormeagle','pelican','blizgull']);
-function heroDeco(m,b,cfg){const{hz,hy,hr}=headPos(b.id),top=hz+hr,g=new THREE.Group();g.name='heroDeco';g.position.y=hy;m.add(g);
+function heroDeco(m,b,cfg,hp){const{hz,hy,hr}=hp||headPos(b.id),top=hz+hr,g=new THREE.Group();g.name='heroDeco';g.position.y=hy;m.add(g);
  const put=(o,x,y,z,rx,ry,rz,s)=>{o.position.set(x,y,z);o.rotation.set(rx||0,ry||0,rz||0);if(s)o.scale.set(s[0],s[1],s[2]);g.add(o);return o};
  const dome=(r,c)=>M(GC('hdome'+r,()=>new THREE.SphereGeometry(r,22,10,0,PI*2,0,PI/2)),c),GLD={metalness:.55,roughness:.3};
  const h=HOWN.has(b.id)?'none':cfg.hat,f=cfg.face,s1=hr/.15;// 전용 모자가 있는 새는 겹치지 않게 영웅 모자를 안 씌워요
@@ -2435,12 +2435,22 @@ function heroDeco(m,b,cfg){const{hz,hy,hr}=headPos(b.id),top=hz+hr,g=new THREE.G
  else if(h==='flower'){const cx=hr*.5;for(let i=0;i<5;i++){const a=i*PI*2/5;put(SP(.032,0xf9a8d4),cx+Math.cos(a)*.042,Math.sin(a)*.042,top-.02,0,0,0,[1,1,.5])}put(SP(.026,0xfde047),cx,0,top-.005)}
  else if(h==='halo')put(TR(.11*s1,.017,0xfde047,{emissive:0xfacc15,emissiveIntensity:.9}),0,0,top+.13);
  else if(h==='horns')[-1,1].forEach(s=>put(KO(.032,.12,0xdc2626),s*hr*.5,0,top-.01,PI/2,0,-s*.45));
- const ey=-.09-.055,ez=hz+.06;
- if(f==='shades'){[-1,1].forEach(s=>put(BX(.08,.02,.055,0x111827,{metalness:.5,roughness:.2}),s*.08,ey,ez));put(BX(.06,.015,.012,0x111827),0,ey-.004,ez+.012)}
- else if(f==='pink'){[-1,1].forEach(s=>put(SP(.045,0xf43f5e,{transparent:true,opacity:.8}),s*.08,ey,ez,0,0,0,[1,.3,.85]));put(BX(.06,.015,.012,0xbe123c),0,ey,ez+.01)}
- else if(f==='mono')put(TR(.04,.009,0xfacc15,GLD),.08,ey,ez,PI/2);
+ const ey=hp?hp.ey:-.09-.055,ez=hp?hp.ez:hz+.06,ex=hp?hp.ex:.08;
+ if(f==='shades'){[-1,1].forEach(s=>put(BX(.08,.02,.055,0x111827,{metalness:.5,roughness:.2}),s*ex,ey,ez));put(BX(.06,.015,.012,0x111827),0,ey-.004,ez+.012)}
+ else if(f==='pink'){[-1,1].forEach(s=>put(SP(.045,0xf43f5e,{transparent:true,opacity:.8}),s*ex,ey,ez,0,0,0,[1,.3,.85]));put(BX(.06,.015,.012,0xbe123c),0,ey,ez+.01)}
+ else if(f==='mono')put(TR(.04,.009,0xfacc15,GLD),ex,ey,ez,PI/2);
  return g}
-function heroMesh(cfg){const b0=UB[cfg.id]||UB.chick,b=b0.t==='A'?Object.assign({},b0,{t:'G'}):b0,m=birdMesh3(b,0x60a5fa);artFx('bird',{m,b,dex:true});// 영웅은 받침대 위에 서 있으니 공중 새도 날개 접고 발로 서게
+// 🧸 AI 3D 영웅 모델(Hyper3D Rodin → assets/models/*.glb, 1.2만 면·512 텍스처). 로비·꾸미기·광장에서만 써요(게임판은 가벼운 기존 모델)
+// h: 키, hp: 모자·안경 위치(머리 높이 hz·앞뒤 hy·반지름 hr, 눈 ey·ez·간격 ex)
+const HGLB={chick:{f:'assets/models/chick.glb',h:.75,hp:{hz:.45,hy:-.02,hr:.2,ey:-.21,ez:.38,ex:.1}}},HG={};
+function hglbGet(id){const d=HGLB[id];if(!d||!THREE.GLTFLoader)return null;const c=HG[id];if(c)return c.st==='ok'?c.s:null;HG[id]={st:'load'};
+ new THREE.GLTFLoader().load(d.f,g=>{const sc=g.scene,w=new THREE.Group();sc.rotation.x=PI/2;w.add(sc);sc.updateMatrixWorld(true);const bx=new THREE.Box3().setFromObject(sc),k=d.h/Math.max(.01,bx.max.z-bx.min.z);sc.scale.setScalar(k);sc.position.z=-bx.min.z*k;
+  sc.traverse(o=>{if(o.isMesh){const t=o.material.map||o.material.emissiveMap;if(t)t.encoding=THREE.LinearEncoding;o.material=new THREE.MeshBasicMaterial({map:t});o.geometry.userData.cached=true}});
+  HG[id]={st:'ok',s:w};LHK=''},null,()=>{HG[id]={st:'fail'}});return null}
+function heroMeshAI(cfg,b0){const src=hglbGet(cfg.id);if(!src)return null;const m=new THREE.Group(),c=src.clone(true);m.add(c);
+ if(cfg.col!=null)c.traverse(o=>{if(o.isMesh){o.material=o.material.clone();o.material.color.setHex(cfg.col).lerp(new THREE.Color(0xffffff),.45)}});
+ m.userData.w=[];heroDeco(m,b0,cfg,HGLB[cfg.id].hp);m.userData.b=b0;m.userData.ai=1;return m}
+function heroMesh(cfg){const b0=UB[cfg.id]||UB.chick,ai=heroMeshAI(cfg,b0);if(ai)return ai;const b=b0.t==='A'?Object.assign({},b0,{t:'G'}):b0,m=birdMesh3(b,0x60a5fa);artFx('bird',{m,b,dex:true});// 영웅은 받침대 위에 서 있으니 공중 새도 날개 접고 발로 서게
  m.traverse(o=>{if(o.name==='artOutl'||(o.geometry&&o.geometry.type==='TorusGeometry'&&o.material&&o.material.color&&o.material.color.getHex()===0x60a5fa))o.visible=false;});// 영웅은 가까이 보니까 게임판용 외곽선·팀 고리는 숨겨요
  m.traverse(o=>{if(o.geometry&&o.geometry.type==='PlaneGeometry')o.visible=false;else if(cfg.col!=null&&o.material&&o.material.color&&!(o.name||'').startsWith('art')&&o.material.color.getHex()===b.col)o.material.color.setHex(cfg.col)});
  heroDeco(m,b,cfg);m.userData.b=b0;return m}
