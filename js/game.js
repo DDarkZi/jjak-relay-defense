@@ -2519,6 +2519,21 @@ $('pemo').innerHTML=EMO.map(e=>`<button>${e}</button>`).join('');$('pemo').oncli
 $('psend').onclick=()=>{pzChat($('pin').value);$('pin').value=''};$('pin').onkeydown=e=>{if(e.key==='Enter'){pzChat($('pin').value);$('pin').value=''}};
 window.addEventListener('load',()=>{lobAttach($('lstage'));lobUI();requestAnimationFrame(lobLoop)});
 
+
+// ---------- 📘 첫 판 튜토리얼 (4장 카드, 게임은 멈춘 채로) ----------
+const TUT=[
+ ['🐦','내 판을 지켜요','화면의 육각 판이 내 진영이에요. 새들이 위에서 내려와 아래로 빠져나가면 ❤️ 라이프가 줄어요.',null],
+ ['🏹','타워 세우기','<b>타워</b> 탭에서 타워를 고르고 빈 칸을 눌러 세워요. 시작할 때 아래에서 <b>속성</b>(🔥❄️⚡🌪️☠️)을 하나 고르면 전용 타워가 열려요. 타워로 길을 구불구불하게 만들면 새가 더 오래 맞아요.','t1'],
+ ['🪶','새 보내기','<b>유닛 전송</b> 탭에서 새를 사면 다음 사람 진영으로 달려가요. 보낼 때마다 📈 인컴이 올라서 4초마다 돈이 더 들어와요.','t2'],
+ ['🏆','이기는 법','라이프가 0이 되면 탈락! 8명 중 마지막까지 버틴 1명이 우승해요. 오른쪽 위 작은 지도를 누르면 다른 진영을 볼 수 있어요.','lane']];
+function tutOpen(){if(!S||S.net||S.sim||$('tut'))return;const pv=paused;paused=true;let i=0;const o=document.createElement('div');o.id='tut';document.body.appendChild(o);
+ const hl=id=>{document.querySelectorAll('.tuthl').forEach(e=>e.classList.remove('tuthl'));const e=id&&$(id);if(e)e.classList.add('tuthl')};
+ const end=()=>{hl(null);o.remove();paused=pv;SV.tut=1;svSave()};
+ const draw=()=>{const[ic,t,d,h]=TUT[i];hl(h);o.className=h==='lane'?'':'top';o.innerHTML=`<div class="tutc"><div class="tuti">${ic}</div><b>${t}</b><p>${d}</p><div class="tutd">${TUT.map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div><div class="tutb"><button class="tsk">건너뛰기</button><button class="tnx">${i<TUT.length-1?'다음 ▶':'시작! 🎉'}</button></div></div>`;
+  o.querySelector('.tsk').onclick=end;o.querySelector('.tnx').onclick=()=>{if(++i>=TUT.length)end();else draw()}};draw()}
+{const st0=start;start=function(gs,p0h){const r=st0.apply(this,arguments);if(!gs&&!SV.tut)setTimeout(tutOpen,400);return r}}
+{const b=document.createElement('button');b.textContent='📘 튜토리얼 다시 보기';b.className='tutre';b.onclick=()=>{SV.tut=0;svSave();toast('📘 다음 판을 시작할 때 튜토리얼이 다시 나와요')};const tb=document.querySelector('#tipm .tipb');if(tb)tb.prepend(b)}
+
 renderTitle();
 function raceDex(){let h='<h3>🏰 종족 도감 <small>시작 화면에서 종족을 골라요</small></h3>';
  RK_KEYS.forEach(k=>{const r=RACE[k];h+=`<div class="cd wide ep"><div class="cn cbig" style="color:${r.col}">${r.ic} ${r.n} <small style="color:#94a3b8;font-weight:500">${r.tag}</small></div><div class="cf">${dxQ(r.fl)}</div><div class="cx">✨ ${r.p}</div><div class="cs"><span>🚫 못 쓰는 것: ${r.ban.map(id=>(TB[id]||UB[id]).n).join(', ')}</span></div></div>`;
