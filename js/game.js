@@ -2377,7 +2377,7 @@ $('dif').innerHTML=Object.keys(DIFF).map(k=>`<button data-k="${k}">${DIFF[k].n.r
 function setDiff(k){diff=k;[...$('dif').children].forEach(b=>b.className=b.dataset.k===k?'on':'');$('dd').textContent='💡 '+DIFF[k].d;lobUI()}
 $('dif').onclick=e=>{if(e.target.dataset.k)setDiff(e.target.dataset.k)};setDiff('N');
 // ---------- 🪶 깃털 코인 · 모드 선택 · 종족 해금 ----------
-const SAVE_KEY='jjj_save_v1',MODE_COST=0,RACE_COST=0,COIN_WIN={E:2,N:3,M:4,H:6,X:8};
+const SAVE_KEY='jjj_save_v1',MODE_COST=0,RACE_COST=30,COIN_WIN={E:2,N:3,M:4,H:6,X:8};
 let SV={coins:0,modeOK:0,races:[],wins:0},gameMode='normal',raceView=null;
 try{const sv=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(sv&&typeof sv==='object')SV=Object.assign(SV,sv)}catch(e){}
 if(!Array.isArray(SV.races))SV.races=[];
