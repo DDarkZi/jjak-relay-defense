@@ -177,3 +177,13 @@ footer{background:linear-gradient(#1b1846,#0b0a24);border-top:2px solid #000}
 #killb small{margin-top:4px;background:#0b0a24e6;border:2px solid #000;border-radius:99px;padding:3px 12px;font-weight:800;font-size:13px;color:#fff}
 #killb.go{animation:killf 1.6s ease-out forwards}
 @keyframes killf{0%{opacity:0;transform:translate(-50%,-50%) scale(2.2)}12%{opacity:1;transform:translate(-50%,-50%) scale(.92)}20%{transform:translate(-50%,-50%) scale(1.05)}75%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-80%) scale(1)}}
+/* 움직임·등급 다듬기 */
+.sh button{position:relative}
+.sh button.pic i img{animation:picin .35s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes picin{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+.sh button.sel i img{animation:selbob .9s ease-in-out infinite}
+@keyframes selbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px) scale(1.06)}}
+.sh button.tr-ep::after,.sh button.tr-lg::after{position:absolute;top:-6px;left:-4px;font:400 9px "Black Han Sans",system-ui;color:#fff;padding:1px 5px;border:1.5px solid #000;border-radius:6px;transform:rotate(-8deg);box-shadow:0 2px 0 #000;pointer-events:none}
+.sh button.tr-ep::after{content:"영웅";background:#9333ea}
+.sh button.tr-lg::after{content:"전설";background:linear-gradient(#fbbf24,#d97706)}
+.sh{padding-top:9px}

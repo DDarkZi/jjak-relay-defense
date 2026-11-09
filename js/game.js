@@ -2269,11 +2269,12 @@ function thumbOne(key){if(!SHR){const r=new THREE.WebGLRenderer({antialias:true,
  m.traverse(o=>{if(o.isMesh&&o.visible){if(!o.geometry.boundingBox)o.geometry.computeBoundingBox();bx.union(o.geometry.boundingBox.clone().applyMatrix4(o.matrixWorld))}});
  const c=bx.getCenter(new THREE.Vector3()),sz=bx.getSize(new THREE.Vector3()),d=Math.max(sz.x,sz.y,sz.z*1.2)*2.2+.2;SHR.cam.position.set(c.x+d*.3,c.y-d*.82,c.z+d*.5);SHR.cam.lookAt(c);
  SHR.r.render(SHR.sc,SHR.cam);DXC['s_'+key]=SHR.r.domElement.toDataURL();SHR.sc.remove(m);m.traverse(o=>{if(o.material)o.material.dispose()})}
-function shopThumbTick(){if(!SHQd){SHQd=1;T.forEach(t=>SHQ.push('t_'+t.id));U.forEach(u=>{if(!u.hidden)SHQ.push('u_'+u.id)})}if(!SHQ.length)return;const key=SHQ.shift();
+function shopThumbTick(){shopThumbTick.f=(shopThumbTick.f||0)+1;if(shopThumbTick.f%2)return;// 두 프레임에 하나씩만 그려 게임이 버벅이지 않게
+ if(!SHQd){SHQd=1;T.forEach(t=>SHQ.push('t_'+t.id));U.forEach(u=>{if(!u.hidden)SHQ.push('u_'+u.id)})}if(!SHQ.length)return;const key=SHQ.shift();
  try{if(!DXC['s_'+key])thumbOne(key)}catch(e){return}const x=key[0]==='u'?UB[key.slice(2)]:TB[key.slice(2)];if(x&&x.el&&DXC['s_'+key]){const i=x.el.querySelector('i');if(i){i.innerHTML=`<img src="${DXC['s_'+key]}" alt="">`;x.el.classList.add('pic')}}}
 // 💥 피해 숫자(내가 보는 진영만, 너무 많으면 건너뜀) + 큰 새 격추 배너
 const DMGP={pool:[],i:0,t:0};
-function dmgPop(u,v,crit){if(!S||S.sim||!R||!Cam||v<1)return;const now=performance.now();if(now-DMGP.t<30&&!crit)return;DMGP.t=now;
+function dmgPop(u,v,crit){if(!S||S.sim||!R||!Cam||v<1||pfS>=2)return;// 휴대폰이 느려 화질을 두 번 낮췄으면 피해 숫자도 꺼요const now=performance.now();if(now-DMGP.t<30&&!crit)return;DMGP.t=now;
  if(!DMGP.pool.length){const L=document.createElement('div');L.id='dmgl';$('cv').parentNode.appendChild(L);for(let i=0;i<28;i++){const d=document.createElement('b');L.appendChild(d);DMGP.pool.push(d)}}
  const z=u.bp.t==='A'&&!(u.gr>0)?1.7:1,v3=new THREE.Vector3(u.x,BH-u.y,z).applyMatrix4(Sc.matrixWorld).project(Cam);if(v3.z>1)return;const el=R.domElement,w=el.clientWidth,h=el.clientHeight;
  const d=DMGP.pool[DMGP.i++%DMGP.pool.length];d.style.left=((v3.x*.5+.5)*w+(Math.random()-.5)*16)+'px';d.style.top=((-v3.y*.5+.5)*h)+'px';d.textContent=Math.round(v);d.className=crit?'c':'';void d.offsetWidth;d.className=(crit?'c ':'')+'go'}
