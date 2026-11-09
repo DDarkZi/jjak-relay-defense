@@ -1296,7 +1296,21 @@ const ART=(()=>{
     P.push(...p0,...p1,...p2,...p0,...p2,...p3);[0,1,1,0,1,0].forEach(e=>S.push(sh,e))}}
   const g=gk('rims',()=>{const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(P,3));g.setAttribute('aS',new THREE.Float32BufferAttribute(S,2));return g});
   const m=new THREE.Mesh(g,mat('rim',()=>new THREE.ShaderMaterial({transparent:true,depthWrite:false,vertexShader:'attribute vec2 aS;varying vec2 vS;void main(){vS=aS;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
-   fragmentShader:'varying vec2 vS;void main(){float s=vS.x,e=vS.y;float a=e*e;gl_FragColor=s>0.?vec4(1.,1.,.9,s*.42*a):vec4(0.,.05,0.,-s*.5*a);}'})));m.renderOrder=1;root.add(m)}
+   fragmentShader:'varying vec2 vS;void main(){float s=vS.x,e=vS.y;float a=e*e;gl_FragColor=s>0.?vec4(1.,1.,.9,s*.42*a):vec4(0.,.05,0.,-s*.5*a);}'})));m.renderOrder=1;root.add(m);HX3.rims=m}
+ // 🏝️ Kenney Hexagon Kit 3D 타일(CC0, assets/hex3d): 좌석마다 지형 테마, 보드 밖 3칸 둘레는 숲·언덕·산·바다 장식 타일.
+ //   모델이 로드되기 전에는 기존 젤리 타일을 보여주고, 로드되면 교체해요. 같은 모델은 InstancedMesh 하나로 그려요.
+ const HX3={ok:false,geo:{},mat:null,meshes:[],theme:-1,rims:null};
+ const HX3_TH=[{n:'풀밭',b:'grass',m:['grass-forest','grass-hill','grass','grass-forest']},{n:'사막',b:'sand',m:['sand-desert','sand-rocks','sand','sand-desert']},
+  {n:'바위산',b:'stone',m:['stone-rocks','stone-hill','stone-mountain','stone']},{n:'흙',b:'dirt',m:['dirt-lumber','grass-forest','dirt','dirt']},{n:'바닷가 섬',b:'grass',m:['water','water-island','water-rocks','water']}];
+ function loadHex3(){if(!THREE.GLTFLoader)return;const L=new THREE.GLTFLoader(),names=[...new Set(HX3_TH.flatMap(t=>[t.b,...t.m]))];let n=names.length;const done=()=>{if(--n===0)hex3Ready()};
+  names.forEach(nm=>L.load('assets/hex3d/'+nm+'.glb',g=>{g.scene.traverse(o=>{if(o.isMesh&&!HX3.geo[nm]){const geo=o.geometry.clone();geo.applyMatrix4(new THREE.Matrix4().makeRotationX(PI/2));{const pa=geo.attributes.position;let top=0;for(let i=0;i<pa.count;i++){const x=pa.getX(i),y=pa.getY(i),z=pa.getZ(i);if(Math.hypot(x,y)>.45&&z<.3)top=Math.max(top,z)}geo.translate(0,0,-top)}geo.userData.cached=1;HX3.geo[nm]=geo;if(!HX3.mat)HX3.mat=o.material}});done()},undefined,done))}
+ function hex3Ready(){if(!HX3.mat||!HX3.geo.grass)return;HX3.ok=true;sc.children.forEach(o=>{if(o.userData&&o.userData.tile)o.visible=false});if(HX3.rims)HX3.rims.visible=false;HX3.theme=-1}
+ function hex3Theme(th){if(!HX3.ok||HX3.theme===th)return;HX3.theme=th;HX3.meshes.forEach(m=>root.remove(m));HX3.meshes=[];const T=HX3_TH[th],G={};
+  for(let r=-3;r<ROWS+3;r++)for(let c=-3;c<COLS+3;c++){const inB=r>=0&&r<ROWS&&c>=0&&c<COLS,hh=(((c+5)*73856093)^((r+5)*19349663))>>>0,nm=inB?T.b:T.m[hh%4];if(!HX3.geo[nm])continue;
+   const col=!inB?[.8,.8,.82]:r===0?[.7,.95,.72]:r===ROWS-1?[1,.55,.5]:((r+c)%2?[.8,.82,.8]:[.88,.88,.88]);(G[nm]=G[nm]||[]).push([cellX(c,r),BH-cellY(r),inB?.97:1,col,inB?0:(hh%6)*PI/3])}
+  const mx=new THREE.Matrix4(),q=new THREE.Quaternion(),Z=new THREE.Vector3(0,0,1),cc=new THREE.Color();
+  Object.keys(G).forEach(nm=>{const L=G[nm],m=new THREE.InstancedMesh(HX3.geo[nm],HX3.mat,L.length);L.forEach(([x,y,s,col,rot],i)=>{q.setFromAxisAngle(Z,rot);mx.compose(new THREE.Vector3(x,y,0),q,new THREE.Vector3(s,s,1));m.setMatrixAt(i,mx);m.setColorAt(i,cc.setRGB(...col))});
+   m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;m.frustumCulled=false;m.renderOrder=-1;root.add(m);HX3.meshes.push(m)})}
  // 입구/출구 강조: 빛 띠 + 화살표
  const GATE={};
  function buildGates(){const W=COLS+.5,pl=gk('plane1',()=>new THREE.PlaneGeometry(1,1));
@@ -1320,7 +1334,7 @@ const ART=(()=>{
  A.init=({scene,renderer,camera})=>{if(root||!scene)return;sc=scene;ren=renderer;cam=camera;
   root=new THREE.Group();root.name='art';sc.add(root);
   sc.background=sky();PU.uT.value=atlas();
-  buildGround();buildRims();buildGates();buildDecor();buildFireflies();mkPools();
+  buildGround();buildRims();buildGates();loadHex3();buildDecor();buildFireflies();mkPools();
   PA=mkSys(170,THREE.AdditiveBlending,11);PN=mkSys(170,THREE.NormalBlending,10);root.add(PN.o,PA.o);lastXK=XK;
   const pre=new THREE.Group();'sgtwax'.split('').forEach(k=>pre.add(new THREE.Mesh(tpr('B'),TMAT(k))));pre.position.z=-50;root.add(pre);
   try{ren.compile(sc,cam)}catch(e){}root.remove(pre)};// 셰이더 미리 컴파일 → 첫 이펙트 때 멈칫 방지
@@ -2237,7 +2251,7 @@ const ART=(()=>{
   if(gold){flash(0xffc93c,.28,.7);ring(x,y,.1,.2,2.6,.8,0xffe680,.8,.2);E(PA,1,x,y,1.2,0,0,0,.6,1.6,.5,0xfff3b0,1,0,0,0,0);
    for(let i=0;i<22;i++){const a=rnd()*6.28,v=rr(2,4);E(PA,i%3?1:5,x,y,.9,Math.cos(a)*v,Math.sin(a)*v,rr(1,4),rr(.6,1),rr(.18,.32),.06,i&1?0xffd700:0xfff3b0,1,3,1.4,0,0)}
    emitter(1,40,()=>E(PA,1,x+rr(-.7,.7),y+rr(-.7,.7),rr(1.2,2.4),0,0,-.4,rr(.6,1),rr(.12,.22),.03,rnd()<.5?0xffd700:0xffffff,1,.4,.2,0,0))}};
- A.update=({dt,view:v,t})=>{if(!root)return;clock+=dt;U.t.value=clock;
+ A.update=({dt,view:v,t})=>{if(!root)return;clock+=dt;U.t.value=clock;if(typeof S!=='undefined'&&S&&S.pl&&S.pl[v])hex3Theme(((v+(S.off||0))%8)%5);
   if(v!==lastView||t<lastT-1){clearAll();lastView=v}lastT=t;
   if(XK!==lastXK){lastXK=XK;layDecor()}
   PU.uS.value=2.2*ren.domElement.height/(2*Math.tan(cam.fov*Math.PI/360));// 2.2: 아틀라스 칸 여백 보정
