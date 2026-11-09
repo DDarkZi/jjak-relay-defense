@@ -53,7 +53,7 @@
 ## 그래픽 파일
 - 아이콘 512×512: icons/icon-512.png
 - 그래픽 이미지 1024×500: assets/store/feature-graphic-1024x500.png
-- 휴대전화 스크린샷 1080×1920: assets/store/screenshots/01~05
+- 휴대전화 스크린샷 1080×1920: assets/store/screenshots/01~06
 
 ## 개인정보처리방침 URL
 (GitHub Pages 주소)/privacy.html
