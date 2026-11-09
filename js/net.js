@@ -65,7 +65,7 @@ const NET=(()=>{
   for(let i=1;i<8;i++){const s=st.slots[i];if(!s||s.kind!=='guest')continue;const p=S.pl[i];p.cfg=null;p.ai=false;p.gold=500;p.income=30;p.tech=null;p.tech2=null;p.tech2plan=null;p.name=`${(i+S.off)%8+1}번 ${s.ic}${s.nick}`;st.gview[i]=i}
   ui();Object.keys(st.cid2slot).forEach(cid=>{const k=st.cid2slot[cid];st.tr.send(cid,{t:'start',k,hoff:S.off,names:S.pl.map(p=>p.name),diff})})}
  const gridEnc=p=>{const o=[];p.grid.forEach((r,y)=>r.forEach((t,x)=>{if(t)o.push([y*COLS+x,TIX[t.bp.id],t.lv,t.d,Math.round(t.r*100),t.dis>0?1:0,t.inv])}));return o};
- function snap(k){const pl=Array(8);S.pl.forEach(p=>{pl[rot(p.id,k)]=[Math.floor(p.gold),p.income,Math.round(p.life),p.alive?1:0,p.tech||'',p.tech2||'',p.skU?1:0,Math.ceil(p.skCD||0),p.boost>0?1:0,p.reveal>0?1:0,p.dieT?Math.round(p.dieT):0]});
+ function snap(k){const pl=Array(8);S.pl.forEach(p=>{pl[rot(p.id,k)]=[Math.floor(p.gold),p.income,Math.round(p.life),p.alive?1:0,p.tech||'',p.tech2||'',p.skU?1:0,Math.ceil(p.skCD||0),p.boost>0?1:0,p.reveal>0?1:0,p.dieT?Math.round(p.dieT):0,Math.round(p.dealt||0),p.kills||0]});
   const vb=st.gview[k]??k,v=S.pl[vb],hid=u=>u.bp.stealth&&u.y<BH*u.bp.stealth&&!(v.reveal>0)&&!u.seen;
   const us=v.units.map(u=>[u.id,UIX[u.bp.id],Math.round(u.x*100),Math.round(u.y*100),Math.round(Math.max(0,u.hp)/u.bp.hp*1000),rot(u.owner,k),(u.sh>0?1:0)|(u.fl>0?2:0)|(u.gr>0?4:0)|(u.stun>0?8:0)|(u.slow>0?16:0)|(u.bn>0?32:0)|((u.pois>0||u.ps>0)?64:0)|(u.hit>0?128:0)|(hid(u)?0:256)|(u.amp>0?512:0),u.col||0]);
   const g={};g[rot(vb,k)]=gridEnc(v);if(vb!==k)g[0]=gridEnc(S.pl[k]);
@@ -97,7 +97,7 @@ const NET=(()=>{
  function gGrid(p,arr){const seen=new Set();arr.forEach(([ci,ti,lv,dd,r,dis,inv])=>{const x=ci%COLS,y=(ci/COLS)|0,b=T[ti];seen.add(ci);let t=p.grid[y][x];if(!t||t.bp!==b){t=mkR(b,p);p.grid[y][x]=t}t.lv=lv;t.d=dd;t.r=r/100;t.dis=dis?1:0;t.inv=inv});
   p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t&&!seen.has(y*COLS+x))row[x]=null}))}
  function gApply(d){S.t=d.T;S.cdn=d.c;S.inc=d.i;if(d.n)d.n.forEach((n,i)=>S.pl[i].name=n);
-  d.pl.forEach((a,i)=>{const p=S.pl[i];[p.gold,p.income,p.life]=a;p.alive=!!a[3];p.tech=a[4]||null;p.tech2=a[5]||null;p.skU=a[6];p.skCD=a[7];p.boost=a[8]?1:0;p.reveal=a[9]?1:0;if(a[10])p.dieT=a[10]});
+  d.pl.forEach((a,i)=>{const p=S.pl[i];[p.gold,p.income,p.life]=a;p.alive=!!a[3];p.tech=a[4]||null;p.tech2=a[5]||null;p.skU=a[6];p.skCD=a[7];p.boost=a[8]?1:0;p.reveal=a[9]?1:0;if(a[10])p.dieT=a[10];p.dealt=a[11]||0;p.kills=a[12]||0});
   Object.keys(d.g).forEach(i=>gGrid(S.pl[+i],d.g[i]));
   const v=d.v,p=S.pl[v],old=new Map(p.units.map(u=>[u.id,u])),nu=[];
   d.u.forEach(([id,bi,x,y,hp,ow,f,col])=>{const b=U[bi];let u=old.get(id);if(!u){u={id,bp:b,x:x/100,y:y/100,owner:ow,col:col||0};}else old.delete(id);
