@@ -10,9 +10,10 @@
 - 로드맵: 유저별 커스텀 새 영웅 · 새 종류 계속 확장 · 광장(대화·이모티콘) · 나중에 유저 8인 온라인 대전 · 구글 플레이 출시.
 
 ## 파일 구조
-- `index.html` — 화면 마크업(로비, 모드 선택, 영웅 꾸미기, 광장, 게임, 도감, 설명, 결과)
+- `index.html` — 3D 버전 화면 마크업 / `2d.html` — 2D 버전(같은 마크업 + `js/r2d.js`, `manifest-2d.webmanifest`)
+  - 마크업 구성(로비, 모드 선택, 영웅 꾸미기, 광장, 게임, 도감, 설명, 결과)
 - `css/style.css` — 전체 스타일 (로비·모드 카드·광장은 파일 뒤쪽)
-- `js/r2d.js` — 🖼 2D 화면(비스듬한 쿼터뷰 캔버스). game.js 다음에 로드. 2D 모드일 때만 `init3/resize/sync3/beam/beamU/skFx`를 바꿔치기하고, `ART`의 게임용 이펙트(shoot·die·crit…)를 2D로 돌려요. 로직은 3D와 공유. 켜기: 로비 오른쪽 위 [3D/2D] 버튼 또는 `?v=2d`(localStorage `jjj_view`). 새 모양 표 `F`, 타워 분류 `TCAT`. 그림 파일은 `img/2d/`(README 참고, `sprites.json`에 id 등록).
+- `js/r2d.js` — 🖼 2D 화면(비스듬한 쿼터뷰 캔버스). game.js 다음에 로드. 2D 모드일 때만 `init3/resize/sync3/beam/beamU/skFx`를 바꿔치기하고, `ART`의 게임용 이펙트(shoot·die·crit…)를 2D로 돌려요. 로직은 3D와 공유. **2D 전용 주소 `2d.html`에서만 로드**(index.html은 3D 전용). 2d.html은 index.html 복사본 + r2d.js 한 줄이라 index.html 마크업을 바꾸면 2d.html도 같이 바꿔야 해요. 세이브는 둘이 공유. 새 모양 표 `F`, 타워 분류 `TCAT`. 그림 파일은 `img/2d/`(README 참고, `sprites.json`에 id 등록).
 - `js/net.js` — 8인 온라인 대전(베타). game.js 다음에 로드되는 클래식 스크립트, 전역 `NET`.
 - `js/game.js` — 모든 로직이 하나의 클래식 스크립트 (전역 공유). 대략 순서:
   1. 데이터: `T`(타워), `U`(새), `RACE`(종족 4개), 이름표 `NM`, `BAL`(밸런스 상수, `/*BAL*/…/*BALEND*/` 사이), `DIFF`(난이도), `AIS`(AI 7성향 유전자, `/*AIS_BEGIN*/`)

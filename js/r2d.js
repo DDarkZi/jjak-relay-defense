@@ -1,20 +1,8 @@
 // 🎨 짹짹 릴레이 디펜스 — 2D 화면 (비스듬한 쿼터뷰 캔버스)
 // game.js 다음에 로드돼요. 게임 로직(step·AI·밸런스·온라인)은 그대로 쓰고, 게임 화면 그리기만 2D 캔버스로 바꿔요.
-// 켜고 끄기: 로비 위쪽 [2D/3D] 버튼, 또는 주소 뒤 ?v=2d / ?v=3d. 설정은 localStorage 'jjj_view'에 저장돼요.
+// 2D 전용 주소 2d.html 에서만 로드돼요 (index.html 은 3D 그대로).
 // 그림 파일 넣기: img/2d/sprites.json 에 id를 적고 img/2d/u/<새id>.png · img/2d/t/<타워id>.png 를 넣으면 코드 그림 대신 그 그림을 써요.
 (()=>{
-const KEY='jjj_view';
-let mode='3d';try{mode=localStorage.getItem(KEY)||'3d'}catch(e){}
-{const m=/[?&]v=(2d|3d)/.exec(location.search);if(m){mode=m[1];try{localStorage.setItem(KEY,mode)}catch(e){}}}
-const ON=mode==='2d';
-
-// ---------- 로비에 2D/3D 전환 버튼 ----------
-function addToggle(){const top=document.querySelector('.ltop');if(!top||$('v2d'))return;const b=document.createElement('button');b.id='v2d';b.className='lchip';b.style.cssText='padding:5px 7px;margin-left:auto;flex:none';
- b.innerHTML=`<b>${ON?'2D':'3D'}</b>`;b.title='화면 2D/3D 바꾸기';
- b.onclick=()=>{const nx=ON?'3d':'2d';if(!confirm(nx==='2d'?'2D 화면으로 바꿀까요? (가볍고 빨라요)':'3D 화면으로 바꿀까요?'))return;try{localStorage.setItem(KEY,nx)}catch(e){}
-  location.href=location.pathname+location.search.replace(/[?&]v=(2d|3d)/,'').replace(/^&/,'?')+location.hash};top.append(b)}
-addToggle();
-if(!ON)return;
 document.documentElement.classList.add('v2d');
 
 // ---------- 공통 도구 ----------
