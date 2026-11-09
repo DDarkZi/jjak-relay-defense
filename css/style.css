@@ -156,3 +156,24 @@ footer{background:linear-gradient(#1b1846,#0b0a24);border-top:2px solid #000}
 .tipb .card{background:#14123acc;border:2px solid #000;border-radius:16px;box-shadow:0 4px 0 #000}
 .tipb h3{font-family:"Black Han Sans",system-ui;font-weight:400;color:#fde047;text-shadow:0 2px 0 #000;font-size:19px}
 .tipb details summary{cursor:pointer}
+
+/* ===== 🧪 만화풍 샘플: 초상화 카드 상점 · 피해 숫자 · 격추 배너 ===== */
+.sh button.pic i img{width:44px;height:44px;object-fit:contain;display:block;margin:-4px auto -3px;filter:drop-shadow(0 2px 0 #0007)}
+.sh button.tr-cm{background:linear-gradient(#475569,#1e293b)}
+.sh button.tr-rr{background:linear-gradient(#2563eb,#1e3a8a);box-shadow:inset 0 0 0 2px #93c5fd,0 3px 0 #000}
+.sh button.tr-ep{background:linear-gradient(#9333ea,#4c1d95);box-shadow:inset 0 0 0 2px #e9d5ff,0 3px 0 #000}
+.sh button.tr-lg{background:linear-gradient(#f59e0b,#9a3412);box-shadow:inset 0 0 0 2px #fde68a,0 3px 0 #000,0 0 10px #f59e0b88}
+.sh button.tch{background:linear-gradient(#7c3aed,#3b0764)!important}
+.sh button.sel{background:linear-gradient(#059669,#064e3b)!important;box-shadow:0 0 0 3px #34d399,0 3px 0 #000!important}
+#dmgl{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+#dmgl b{position:absolute;opacity:0;font:400 15px "Black Han Sans",system-ui;color:#fff;letter-spacing:.5px;transform:translate(-50%,-50%);
+ text-shadow:-2px 0 #000,2px 0 #000,0 2px #000,0 -2px #000,0 3px 0 #000;white-space:nowrap}
+#dmgl b.c{color:#fde047;font-size:22px}
+#dmgl b.go{animation:dmgf .8s ease-out forwards}
+@keyframes dmgf{0%{opacity:1;transform:translate(-50%,-50%) scale(.5)}18%{opacity:1;transform:translate(-50%,-90%) scale(1.2)}100%{opacity:0;transform:translate(-50%,-230%) scale(1)}}
+#killb{position:absolute;left:50%;top:22%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none;z-index:5;opacity:0}
+#killb i{font-style:normal;font-size:40px;filter:drop-shadow(0 3px 0 #000)}
+#killb b{font:400 44px "Black Han Sans",system-ui;color:#fde047;text-shadow:-3px 0 #000,3px 0 #000,0 3px #000,0 -3px #000,0 6px 0 #000,0 0 24px #f59e0b}
+#killb small{margin-top:4px;background:#0b0a24e6;border:2px solid #000;border-radius:99px;padding:3px 12px;font-weight:800;font-size:13px;color:#fff}
+#killb.go{animation:killf 1.6s ease-out forwards}
+@keyframes killf{0%{opacity:0;transform:translate(-50%,-50%) scale(2.2)}12%{opacity:1;transform:translate(-50%,-50%) scale(.92)}20%{transform:translate(-50%,-50%) scale(1.05)}75%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-80%) scale(1)}}
