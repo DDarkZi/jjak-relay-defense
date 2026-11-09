@@ -1300,13 +1300,13 @@ const ART=(()=>{
  // 🏝️ Kenney Hexagon Kit 3D 타일(CC0, assets/hex3d): 좌석마다 지형 테마, 보드 밖 3칸 둘레는 숲·언덕·산·바다 장식 타일.
  //   모델이 로드되기 전에는 기존 젤리 타일을 보여주고, 로드되면 교체해요. 같은 모델은 InstancedMesh 하나로 그려요.
  const HX3={ok:false,geo:{},mat:null,meshes:[],theme:-1,rims:null};
- const HX3_TH=[{n:'풀밭',b:'grass',m:['grass-forest','grass-hill','grass','grass-forest']},{n:'사막',b:'sand',m:['sand-desert','sand-rocks','sand','sand-desert']},
-  {n:'바위산',b:'stone',m:['stone-rocks','stone-hill','stone-mountain','stone']},{n:'흙',b:'dirt',m:['dirt-lumber','grass-forest','dirt','dirt']},{n:'바닷가 섬',b:'grass',m:['water','water-island','water-rocks','water']}];
+ const HX3_TH=[{n:'풀밭',b:'grass',m:['grass-forest','grass-hill','grass','grass']},{n:'사막',b:'sand',m:['sand-desert','sand-rocks','sand','sand']},
+  {n:'바위산',b:'stone',m:['stone-rocks','stone-hill','stone-mountain','stone']},{n:'흙',b:'dirt',m:['dirt-lumber','grass-hill','dirt','dirt']},{n:'바닷가 섬',b:'grass',m:['water','water-island','water-rocks','water']}];
  function loadHex3(){if(!THREE.GLTFLoader)return;const L=new THREE.GLTFLoader(),names=[...new Set(HX3_TH.flatMap(t=>[t.b,...t.m]))];let n=names.length;const done=()=>{if(--n===0)hex3Ready()};
   names.forEach(nm=>L.load('assets/hex3d/'+nm+'.glb',g=>{g.scene.traverse(o=>{if(o.isMesh&&!HX3.geo[nm]){const geo=o.geometry.clone();geo.applyMatrix4(new THREE.Matrix4().makeRotationX(PI/2));{const pa=geo.attributes.position;let top=0;for(let i=0;i<pa.count;i++){const x=pa.getX(i),y=pa.getY(i),z=pa.getZ(i);if(Math.hypot(x,y)>.45&&z<.3)top=Math.max(top,z)}geo.translate(0,0,-top)}geo.userData.cached=1;HX3.geo[nm]=geo;if(!HX3.mat)HX3.mat=o.material}});done()},undefined,done))}
  function hex3Ready(){if(!HX3.mat||!HX3.geo.grass)return;HX3.ok=true;sc.children.forEach(o=>{if(o.userData&&o.userData.tile)o.visible=false});if(HX3.rims)HX3.rims.visible=false;HX3.theme=-1}
  function hex3Theme(th){if(!HX3.ok||HX3.theme===th)return;HX3.theme=th;HX3.meshes.forEach(m=>root.remove(m));HX3.meshes=[];const T=HX3_TH[th],G={};
-  for(let r=-3;r<ROWS+3;r++)for(let c=-3;c<COLS+3;c++){const inB=r>=0&&r<ROWS&&c>=0&&c<COLS,hh=(((c+5)*73856093)^((r+5)*19349663))>>>0,nm=inB?T.b:T.m[hh%4];if(!HX3.geo[nm])continue;
+  for(let r=-2;r<ROWS+2;r++)for(let c=-1;c<COLS+1;c++){const inB=r>=0&&r<ROWS&&c>=0&&c<COLS,hh=(((c+5)*73856093)^((r+5)*19349663))>>>0,nm=inB?T.b:T.m[hh%4];if(!HX3.geo[nm])continue;
    const col=!inB?[.8,.8,.82]:r===0?[.7,.95,.72]:r===ROWS-1?[1,.55,.5]:((r+c)%2?[.8,.82,.8]:[.88,.88,.88]);(G[nm]=G[nm]||[]).push([cellX(c,r),BH-cellY(r),inB?.97:1,col,inB?0:(hh%6)*PI/3])}
   const mx=new THREE.Matrix4(),q=new THREE.Quaternion(),Z=new THREE.Vector3(0,0,1),cc=new THREE.Color();
   Object.keys(G).forEach(nm=>{const L=G[nm],m=new THREE.InstancedMesh(HX3.geo[nm],HX3.mat,L.length);L.forEach(([x,y,s,col,rot],i)=>{q.setFromAxisAngle(Z,rot);mx.compose(new THREE.Vector3(x,y,0),q,new THREE.Vector3(s,s,1));m.setMatrixAt(i,mx);m.setColorAt(i,cc.setRGB(...col))});
