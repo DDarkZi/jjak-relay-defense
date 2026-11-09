@@ -232,7 +232,7 @@ Object.assign(EVO,{keep:["수호 망루","경비실 초소","아파트 경비 �
 T.forEach(t=>{t.lvn=(EVO[t.id]&&EVO[t.id].length===4)?EVO[t.id]:[t.n,t.n+' Ⅱ',t.n+' Ⅲ',t.n+' Ⅳ'];t.lvn[0]=t.n});const tName=t=>t.bp.lvn[t.lv-1]||t.bp.n;
 const TB=Object.fromEntries(T.map(t=>[t.id,t])),UB=Object.fromEntries(U.map(u=>[u.id,u]));
 const PC=['#ef4444','#3b82f6','#10b981','#eab308','#a855f7','#f97316','#06b6d4','#ec4899'];
-const DIFF=/*DIFF*/{E:{n:'🐣 쉬움',g:450,i:25,tick:2,im:.92,d:'AI가 느긋하게 생각하고 돈도 덜 벌어요. 처음 해보는 분께 추천!'},N:{n:'🐥 일반',g:500,i:30,tick:1.6,d:'AI가 차분하게 판단하는 균형 모드예요.'},M:{n:'🐓 숙련',g:575,i:37,tick:1.25,d:'일반보다 AI가 한 박자 빠르고 자금도 넉넉해요. 어려움 전 단계!'},H:{n:'🦅 어려움',g:650,i:45,tick:.9,maze:1,d:'AI가 더 많은 자금으로 빠르게 판단하고, 🐍 뱀 모양 미로로 길을 길게 막아요.'},X:{n:'🔥 헬',g:800,i:58,tick:.7,im:1.12,uh:1.06,maze:1,d:'AI가 번개처럼 판단하고, 돈을 12% 더 벌고, 새 체력도 6% 높아요. 🐍 뱀 미로까지 짜는 진짜 극악!'}}/*DIFFEND*/;
+const DIFF=/*DIFF*/{E:{n:'🐣 쉬움',g:450,i:25,tick:2,im:.92,d:'AI가 느긋하게 생각하고 돈도 덜 벌어요. 처음 해보는 분께 추천!'},N:{n:'🐥 일반',g:500,i:30,tick:1.6,d:'AI가 차분하게 판단하는 균형 모드예요.'},M:{n:'🐓 숙련',g:575,i:37,tick:1.25,d:'일반보다 AI가 한 박자 빠르고 자금도 넉넉해요. 🐍 넓은 가로 미로로 길을 1.9배 늘려요. 어려움 전 단계!'},H:{n:'🦅 어려움',g:650,i:45,tick:.9,d:'AI가 더 많은 자금으로 빠르게 판단하고, 🐍 세로·대각선·빗살 미로 중 하나로 길을 2.2~2.6배 늘려요.'},X:{n:'🔥 헬',g:800,i:58,tick:.7,im:1.12,uh:1.06,d:'AI가 번개처럼 판단하고, 돈을 12% 더 벌고, 새 체력도 6% 높아요. 🐍 가로 뱀·혼합 미로로 길을 최대 3배 늘리고, 필요하면 알 타워도 철거해요. 진짜 극악!'}}/*DIFFEND*/;
 /*AIS_BEGIN*/const AIS=[
 {n:"수익 스노우볼",s:{"n":8,"win":25,"pts":64,"inc5":1585,"lost":86,"surv":25},g:{"tw0":3.181,"twRate":1.679,"inc0":54.144,"incRate":29.531,"uShare":0.305,"uAir":0.163,"uHeavy":0.634,"uTier":0.572,"uSpec":0.491,"wall":0.496,"upAgg":0.062,"upMax":3.822,"def8":0.327,"crisis":57.023,"rush":283.005,"keep":547.247,"tech2":0.5,"m_cx":0.8,"tech":4.5,"m_egg":0.64,"m_air":0.385,"m_acorn":0.885,"m_t1":0.54,"m_t2":0,"m_t3":0.648}},
 {n:"철벽 수비",s:{"n":29,"win":55,"pts":82,"inc5":239,"lost":51,"surv":66},g:{"tw0":3.719,"twRate":1.932,"inc0":98.972,"incRate":49.86,"uShare":0.732,"uAir":0.168,"uHeavy":0.904,"uTier":0.968,"uSpec":0.752,"wall":0.228,"upAgg":0.941,"upMax":3.683,"def8":1.285,"crisis":22.466,"rush":791.507,"keep":404.873,"tech2":1.5,"m_cx":0.8,"tech":3.5,"m_egg":0.497,"m_air":0.042,"m_acorn":0.935,"m_t1":0.454,"m_t2":0.982,"m_t3":0.021}},
@@ -366,11 +366,30 @@ const need8=t=>Math.max(0,Math.min(1,(t-90)/390))*27000*BAL.need;
 function pickTower(p,g){const l=T.filter(b=>b.id!=='wall'&&techOK(p,b)&&tcost(p,b)<=p.gold&&(!b.cctv||(p.sawSt&&cctvOK(p))));if(!l.length)return null;
  let tot=0;const w=l.map(b=>{const v=(b.combo?(g.m_cx??.8):b.tech?g['m_t'+(TECH[b.tech].t.indexOf(b.id)+1)]:(g['m_'+b.id]??(b.pylon?.25:b.cctv?.9:.3)))+.02;tot+=v;return v});let r=Math.random()*tot;
  for(let i=0;i<l.length;i++){r-=w[i];if(r<=0)return l[i]}return l[l.length-1]}
-// 🐍 뱀 미로(어려움·헬 AI): 가로 줄을 한 줄 걸러 쌓고 끝 칸을 왼쪽/오른쪽 번갈아 비워 길을 최대로 늘려요. AI마다 줄 위치·방향이 달라요
-function mazeOrder(p){if(p.mzo)return p.mzo;const sh=1,mr=Math.random()<.5,o=[];// 8번 줄 가운데 기본 알 타워가 벽의 일부가 되도록 짝수 줄에 쌓아요
- for(let r=0;r<7;r++){const y=1+sh+r*2,gap=(r%2===0)!==mr?COLS-1:0,xs=[...Array(COLS).keys()].filter(x=>x!==gap);if(gap===0)xs.reverse();xs.forEach(x=>o.push([x,y]))}return p.mzo=o}
+// 🐍 AI 미로 설계도(숙련 이상): 칸 목록을 위에서부터 순서대로 지어요. 길이 막히는 칸은 건너뛰어요.
+//   길이(7개 입구 평균, 빈 판 16칸): 가로 뱀 48 · 혼합 44 · 넓은 세로 42 · 세로 40 · 대각선 36 · 빗살 35 · 넓은 가로 30
+const MZ=(()=>{const C=COLS,Y=ROWS,rng=(a,b)=>{const o=[];for(let i=a;i<=b;i++)o.push(i);return o},row=(y,xs)=>xs.map(x=>[x,y]),col=(x,ys)=>ys.map(y=>[x,y]);
+ const hs=ys=>{const o=[];ys.forEach((y,r)=>{const g=r%2?0:C-1;rng(0,C-1).forEach(x=>{if(x!==g)o.push([x,y])})});return o};
+ return{
+  hsnake:{n:'가로 뱀',f:()=>hs([2,4,6,8,10,12,14])},
+  hsnake2:{n:'홀수 줄 가로 뱀',f:()=>hs([1,3,5,7,9,11,13])},// 8번 줄 가운데 알 타워를 철거해야 완성돼요
+  mix:{n:'혼합 미로',f:()=>[...hs([2,4,6]),...row(8,rng(1,6)),...col(1,rng(9,12)),...col(3,rng(10,13)),...col(5,rng(9,12)),...row(14,rng(0,5))]},
+  vsnake:{n:'세로 뱀',f:()=>[...row(1,rng(1,6)),...col(1,rng(2,11)),...col(3,rng(3,13)),...col(5,rng(2,11)),...row(14,rng(0,5))]},
+  wvsnake:{n:'넓은 세로 뱀',f:()=>[...row(1,rng(1,6)),...col(1,rng(2,12)),...col(4,rng(3,13)),...row(14,rng(0,4))]},
+  diag:{n:'대각선 뱀',f:()=>{const o=[];[1,4,7,10].forEach((y0,k)=>{const ch=[];let x=0,y=y0;ch.push([x,y]);while(true){x++;if(x>=C)break;ch.push([x,y]);const nx=y%2?x+1:x;y++;if(nx>=C||y>Y-2)break;x=nx;ch.push([x,y])}(k%2?ch.slice(1):ch.slice(0,-1)).forEach(c=>o.push(c))});return o}},
+  comb:{n:'빗살 미로',f:()=>{const o=[];for(let r=0;r<7;r++){const y=2+r*2;(r%2?rng(2,6):rng(0,4)).forEach(x=>o.push([x,y]))}return o}},
+  whsnake:{n:'넓은 가로 뱀',f:()=>hs([2,5,8,11])}}})();
+const MZ_TIER={M:['whsnake'],H:['wvsnake','diag','comb'],X:['hsnake','hsnake2','mix','vsnake']};
+// 완성했을 때의 평균 길 길이(기본 알 타워를 남길 때/철거할 때)를 미리 계산해서, 더 길어지는 쪽을 골라요
+function mzLen(cells,keepEgg){const g=Array.from({length:ROWS},()=>Array(COLS).fill(null));let n=0;if(keepEgg){g[8][3]=1;n=1}
+ for(const [x,y] of cells){if(n>=BAL.cap)break;if(x<0||x>=COLS||y<1||y>=ROWS-1||g[y][x])continue;g[y][x]=1;if(!allOK(g)){g[y][x]=null;continue}n++}
+ let s=0;for(let x=0;x<COLS;x++){const pa=bfs(g,x,0);s+=pa?pa.length:0}return s/COLS}
+function mazeOrder(p){if(p.mzo)return p.mzo;const L=MZ_TIER[diff];if(!L)return null;const k=L[Math.floor(Math.random()*L.length)],mr=Math.random()<.5;
+ let cells=MZ[k].f();if(mr)cells=cells.map(([x,y])=>[COLS-1-x,y]);
+ const a=mzLen(cells,true),b=mzLen(cells,false);p.mzDem=b>a+1;p.mzName=MZ[k].n+(p.mzDem?' (알 타워 철거)':'');return p.mzo=cells}
 function buildT(p,g,wall){const b=wall?TB.wall:pickTower(p,g);if(!b||p.gold<tcost(p,b))return false;
- if(DIFF[diff].maze){for(const [x,y] of mazeOrder(p)){if(p.grid[y][x])continue;p.grid[y][x]=mkR(b,p);if(allOK(p.grid)){p.gold-=tcost(p,b);if(S.st){S.st.ti[b.id]=(S.st.ti[b.id]||0)+tcost(p,b);S.st.tn[b.id]=(S.st.tn[b.id]||0)+1}refreshPaths(p);return true}p.grid[y][x]=null}return false}
+ const mo=MZ_TIER[diff]&&mazeOrder(p);if(mo){if(p.mzDem){const e=p.grid[8][3];if(e&&e.bp.id==='egg'){p.gold+=Math.floor(e.inv*refR(p));p.grid[8][3]=null;refreshPaths(p)}}
+  for(const [x,y] of mo){if(p.grid[y][x])continue;p.grid[y][x]=mkR(b,p);if(allOK(p.grid)){p.gold-=tcost(p,b);if(S.st){S.st.ti[b.id]=(S.st.ti[b.id]||0)+tcost(p,b);S.st.tn[b.id]=(S.st.tn[b.id]||0)+1}refreshPaths(p);return true}p.grid[y][x]=null}return false}
  let best=null,bs=-1e9;
  for(let k=0;k<24;k++){const x=Math.floor(Math.random()*COLS),y=1+Math.floor(Math.random()*(ROWS-2));
   if(p.grid[y][x])continue;p.grid[y][x]=1;let s=-1e9;const L=allOK(p.grid);
