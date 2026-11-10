@@ -34,8 +34,8 @@
 ## 3단계. 주소창 없애기(assetlinks) — 앱 안 위쪽 주소창 숨김
 - 구글은 `https://ddarkzi.github.io/.well-known/assetlinks.json`(사이트 **맨 꼭대기**)만 확인해요.
   지금 게임은 `/jjak-relay-defense/` 아래라서 **새 저장소가 하나 더 필요**해요.
-1. GitHub에서 공개 저장소 **`DDarkZi.github.io`** 만들기 (이름 정확히)
-2. Claude에게 "저장소 만들었어 + assetlinks.json 내용"을 주면 `.well-known/assetlinks.json`과 `.nojekyll`을 올려 줌
+1. ✅ 공개 저장소 **`DDarkZi.github.io`** 만듦 (2026-11-10) — 첫 페이지(게임으로 이동)·`.nojekyll`·빈 `assetlinks.json`(`[]`) 올림
+2. PWABuilder의 `assetlinks.json` 내용을 Claude에게 주면 그 저장소의 `.well-known/assetlinks.json`에 넣어 줌
 3. 플레이 콘솔에 앱을 올린 뒤 **설정 → 앱 무결성 → 앱 서명 키 인증서 SHA-256** 값도 추가해야 해요(지문 2개).
 - 이걸 안 해도 앱은 돌아가요. 다만 맨 위에 주소창이 보여요. 테스트 중에 고쳐도 돼요.
 
