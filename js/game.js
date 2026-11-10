@@ -793,7 +793,8 @@ function birdMesh3(b,oc){const g=birdMesh2(b,oc),id=b.id,at=(m,x,y,z,s)=>{m.posi
 let talkN=0;function sync3(dt){sync3.talkOn=talkN;talkN=0;if(typeof PFX!=='undefined')PFX.update(dt);if(typeof newsUpd==='function')newsUpd(dt);const p=S.pl[view],seen=new Set();
  p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(!t)return;const k=y*8+x;seen.add(k);let m=tm.get(k);
   if(!m||m.userData.t!==t||m.userData.lv0!==t.lv){if(m)rmM(m);m=mkTowerMesh(t.bp,t.lv);m.userData.t=t;m.userData.lv0=t.lv;Sc.add(m);tm.set(k,m)}
-  m.position.set(cellX(x,y),BH-cellY(y),0);const s=1+(t.lv-1)*.15;m.scale.set(s/XK,s,s);if(t.kick>0){t.kick=Math.max(0,t.kick-dt*7);const k=t.kick*t.kick;m.scale.set(s/XK*(1+.1*k),s*(1+.1*k),s*(1-.16*k))}// 쏠 때 움찔 반동m.rotation.z=t.dis>0?Math.sin(S.t*30)*.2:0;
+  m.position.set(cellX(x,y),BH-cellY(y),0);const s=1+(t.lv-1)*.15;m.scale.set(s/XK,s,s);if(t.kick>0){t.kick=Math.max(0,t.kick-dt*7);const k=t.kick*t.kick;m.scale.set(s/XK*(1+.1*k),s*(1+.1*k),s*(1-.16*k))}/* 쏠 때 움찔 반동 */
+  m.rotation.z=t.dis>0?Math.sin(S.t*30)*.2:0;
   if(t.bp.cctv){const r=t.r/s,a=m.getObjectByName('scan'),w=m.getObjectByName('scanw');if(a){a.scale.set(r,r,1);w.scale.set(r,r,1);w.rotation.z=S.t*1.6}}
   if(t.bp.id!=='wall'&&m.userData.lv!==t.lv){const old=m.getObjectByName('lvE');if(old){m.remove(old);old.traverse(o=>{if(o.material)o.material.dispose()})}const eg=new THREE.Group();eg.name='lvE';
    if(t.lv>=2){const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:starTex(t.lv),transparent:true,depthWrite:false}));sp.geometry.userData.cached=1;sp.scale.set(.5,.5,1);sp.position.set(.32,-.25,1.25);sp.renderOrder=6;eg.add(sp)}m.add(eg);m.userData.lv=t.lv}

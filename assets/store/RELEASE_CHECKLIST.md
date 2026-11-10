@@ -1,0 +1,71 @@
+# 📲 구글 플레이 비공개 테스트 올리기 — 단계별 체크리스트
+
+게임 주소: https://ddarkzi.github.io/jjak-relay-defense/
+개인정보처리방침: https://ddarkzi.github.io/jjak-relay-defense/privacy.html
+
+## ✅ 이미 준비된 것
+- 스토어 글: `assets/store/listing.md` (이름·짧은 설명·자세한 설명·등급 설문 참고)
+- 아이콘 512×512: `assets/store/icon-512-store.png` (새 후보: `icon-candidate-AI-512.png`)
+- 그래픽 이미지 1024×500: `assets/store/feature-graphic-1024x500.png`
+- 휴대전화 스크린샷 6장(1080×1920): `assets/store/screenshots/`
+- 홍보 영상: 가로 `trailer_16x9.mp4` / 세로 `trailer_vertical_9x16.mp4` (유튜브에 올려 링크 사용)
+- PWA: manifest(이름·아이콘·id·스크린샷), 서비스 워커, 세로 고정
+
+---
+
+## 1단계. 개발자 계정 (아직 없다면 가장 먼저!)
+1. https://play.google.com/console 접속 → 개인 계정으로 가입, 등록비 25달러
+2. 신원 확인(신분증) + 전화번호 확인 + 안드로이드 폰에 "Play Console" 앱 설치해 기기 확인
+3. ⚠️ 신원 확인은 하루~며칠 걸릴 수 있어요. 승인 전에는 앱을 못 만들 수도 있어요.
+
+## 2단계. PWABuilder로 앱 파일(.aab) 만들기
+1. https://www.pwabuilder.com 에 게임 주소 넣고 Start
+2. Package For Stores → **Android** → Generate Package → Options에서:
+   - **Package ID**: `io.github.ddarkzi.jjakdefense` 추천 → ⚠️ **한 번 정하면 영원히 못 바꿔요**
+   - App name: `새떼 주의보: 짹짹 디펜스` / Launcher name: `새떼 주의보`
+   - Version code `1`, Version name `1.0.0`
+   - Display: standalone, 방향: portrait
+   - Signing key: **Create new** (비밀번호는 따로 적어 두기)
+3. 받은 zip 안의 파일:
+   - `*.aab` → 플레이 콘솔에 올릴 파일
+   - `signing.keystore` + `signing-key-info.txt` → ⚠️ **절대 잃어버리면 안 됨** (구글 드라이브 등 두 군데에 백업)
+   - `assetlinks.json` → 3단계에서 사용
+
+## 3단계. 주소창 없애기(assetlinks) — 앱 안 위쪽 주소창 숨김
+- 구글은 `https://ddarkzi.github.io/.well-known/assetlinks.json`(사이트 **맨 꼭대기**)만 확인해요.
+  지금 게임은 `/jjak-relay-defense/` 아래라서 **새 저장소가 하나 더 필요**해요.
+1. GitHub에서 공개 저장소 **`DDarkZi.github.io`** 만들기 (이름 정확히)
+2. Claude에게 "저장소 만들었어 + assetlinks.json 내용"을 주면 `.well-known/assetlinks.json`과 `.nojekyll`을 올려 줌
+3. 플레이 콘솔에 앱을 올린 뒤 **설정 → 앱 무결성 → 앱 서명 키 인증서 SHA-256** 값도 추가해야 해요(지문 2개).
+- 이걸 안 해도 앱은 돌아가요. 다만 맨 위에 주소창이 보여요. 테스트 중에 고쳐도 돼요.
+
+## 4단계. 플레이 콘솔에서 앱 만들기
+- 앱 이름 `새떼 주의보: 짹짹 디펜스`, 기본 언어 한국어, **게임**, **무료**
+- 앱 콘텐츠(정책) 답변:
+  | 항목 | 답 |
+  |---|---|
+  | 개인정보처리방침 | 위 privacy.html 주소 |
+  | 광고 | 없음 |
+  | 앱 액세스 | 모든 기능 제한 없이 이용 가능(로그인 없음) |
+  | 콘텐츠 등급(IARC) | 카테고리: 게임 / 폭력: 만화풍 가벼운 폭력(피 없음) / 욕설: 없음 / 사용자 상호작용: 있음(온라인 대전, 채팅 없음) / 위치 공유·디지털 구매: 없음 |
+  | 타겟 연령 | **13세 이상** 추천 (13세 미만을 고르면 가족 정책 심사가 추가돼요) |
+  | 데이터 보안 | 수집·공유하는 데이터 **없음** (게임 기록은 기기에만 저장) |
+  | 뉴스·건강·금융·정부 앱 | 아니요 |
+- 데이터 보안 메모: 온라인 대전은 PeerJS 공개 중계 서버로 기기끼리 연결해요(IP가 상대·중계 서버에 보일 수 있음, 개인정보처리방침 3번에 적어 둠). 개발자 서버에 아무것도 저장하지 않으니 "수집 없음"으로 답하는 게 일반적이에요.
+
+## 5단계. 스토어 등록정보
+- `listing.md`의 이름 / 간단한 설명 / 자세한 설명 붙여넣기
+- 앱 아이콘, 그래픽 이미지, 휴대전화 스크린샷(2~8장) 올리기
+- 동영상: 유튜브 링크(가로 영상, 광고 끄기, 공개 또는 일부 공개)
+- 카테고리: 게임 › 전략 / 연락처 이메일
+
+## 6단계. 비공개 테스트 시작
+1. 테스트 → 비공개 테스트 → 트랙 만들기 → **.aab 올리기**
+2. 국가: 대한민국(+원하는 곳)
+3. 테스터: 구글 계정 이메일 **12명 이상** 목록 만들기
+4. 검토 보내기 → 승인(보통 며칠) → 테스터에게 참여 링크 보내기
+5. ⚠️ 테스터 12명이 **14일 연속** 설치를 유지해야 프로덕션(정식 출시) 신청이 열려요.
+
+## 업데이트할 때
+- 게임 코드는 GitHub에 올리면 앱에도 바로 반영돼요(웹을 보여 주는 앱이라서).
+- 앱 이름·아이콘·주소를 바꿀 때만 PWABuilder로 새 .aab를 만들어요(version code는 +1, **같은 keystore** 사용).

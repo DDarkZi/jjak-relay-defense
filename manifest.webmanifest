@@ -1,4 +1,5 @@
 {
+  "id": "/jjak-relay-defense/index.html",
   "name": "새떼 주의보: 짹짹 디펜스",
   "short_name": "새떼 주의보",
   "description": "새떼 주의보 발령! 8명이 이어 달리는 3D 타워 디펜스. 웃긴 새를 보내고 타워로 막아라!",
@@ -9,10 +10,58 @@
   "orientation": "portrait",
   "background_color": "#120f33",
   "theme_color": "#2a2370",
-  "categories": ["games"],
+  "categories": [
+    "games"
+  ],
   "icons": [
-    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
-    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
-    {"src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "prefer_related_applications": false,
+  "screenshots": [
+    {
+      "src": "assets/store/screenshots/01_s2_battle.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "타워를 세워 막아라"
+    },
+    {
+      "src": "assets/store/screenshots/02_s3_kill.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "웃긴 새 55종"
+    },
+    {
+      "src": "assets/store/screenshots/03_s4_units.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "새를 보내 공격"
+    },
+    {
+      "src": "assets/store/screenshots/05_s1_lobby.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "나만의 영웅 새"
+    }
   ]
 }
