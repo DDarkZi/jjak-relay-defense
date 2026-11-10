@@ -13,7 +13,7 @@
 - 홍보 영상은 나중에 Remotion(또는 HyperFrames)으로 게임 녹화 + 자막 트레일러를 만들기로 함. 지금은 보류.
 
 ## 📝 나중에 할 일 (사용자와 합의해 미뤄 둔 것)
-- 🐣 마스코트 'AI'(드론 메카 병아리) 등장 늘리기: 튜토리얼 안내원, 첫 승리·조합 스킬 해금 축하, 로비에 둥실 떠 있기, 광장 NPC. 정식 3D 모델은 이미 있음(`assets/models/ai_mascot.glb`).
+- 🐣 마스코트 AI 등장(v12.3 완료): 로비(`aiLobby`·`#aib` 말풍선, 첫 방문 자기소개 `SV.aiIntro`, 누르면 한마디)·튜토리얼(첫 카드 자기소개 + 얼굴 `assets/ui/ai.png`)·게임 속보(조합 스킬 해금·탈락 `newsBird`)·광장(`aiPlazaAdd`, 내 영웅 근처를 따라다니며 생중계, 채팅에 'AI' 넣으면 대답)·결과 화면(`aiEnd`, 첫 우승 특별 대사). 대사는 `AIL`. 이름 개그: AI = 인공지능 아니고 **Avian Influencer**(조류 인플루언서), 짹튜브 「짹짹 뉴스」 구독자 800만 새. 개발자 계정 이름도 Avian Influencer.
 - 🎬 홍보 영상: 초안 완성(2026-11-10, 약 30초, 가로·세로). 만드는 법 `tools/trailer/README.md`(가상 시계 프레임 녹화 + 자막 PNG + ffmpeg + 칩튠). 다듬기는 나중에.
 - 💰 수익 구조(단계별 안): v1.0 무료·광고 없음 → 사람이 모이면 보상형 광고(코인 2배) → 꾸미기 상점·광고 제거·후원 팩. 페이투윈·랜덤 뽑기는 안 함. 광고 넣으면 개인정보처리방침·데이터 보안 설문 수정.
 - 📲 구글 플레이 출시: 단계별 안내 `assets/store/RELEASE_CHECKLIST.md`. ⚠️ assetlinks.json은 도메인 맨 위(`ddarkzi.github.io/.well-known/`)여야 해서 사용자 사이트 저장소 `DDarkZi.github.io`(만듦, `/home/user/ddarkzi.github.io`, 첫 페이지는 게임으로 이동, assetlinks에 업로드 키 지문 넣음(패키지 io.github.ddarkzi.jjakdefense), Play 앱 서명 키 지문은 아직). Play 앱 서명 키 SHA-256도 함께 넣기. 앱 아이콘 = 마스코트 AI(2026-11-10 교체, 원본 렌더는 ai_mascot.glb + 경고 빛줄기·새떼 실루엣 배경).

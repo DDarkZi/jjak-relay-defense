@@ -569,7 +569,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
    if(b.stun&&!im(tg,'stun'))tg.stun=Math.max(tg.stun,b.stun);
    if(b.bubble&&!im(tg,'kb')&&!(tg.fl>0)&&!(tg.bbt>0)&&tg.hp>0){tg.fl=b.bubble;tg.bbt=b.bubble+2;tg.fpop=t.d*2*crit;tg.fsrc=b.id}
    if(b.freeze&&!im(tg,'stun')&&!im(tg,'slow')&&Math.random()<b.freeze)tg.stun=Math.max(tg.stun,1.2)}});
- S.pl.forEach(p=>{if(p.alive&&p.life<=0){p.alive=false;p.dieT=S.t;if(p.id!==0)sfx('elim',{id:p.id});const n=nextAlive(p.id);
+ S.pl.forEach(p=>{if(p.alive&&p.life<=0){p.alive=false;p.dieT=S.t;if(p.id!==0)sfx('elim',{id:p.id});if(p.id!==0&&!S.sim&&typeof NEWS!=='undefined'&&!NEWS){const k=S.pl.filter(q=>q.alive).length;if(k>=2)try{newsBird(`📢 속보! ${(p.id+S.off)%8+1}번 진영 탈락 · 남은 ${k}명`)}catch(e){}}const n=nextAlive(p.id);
   if(n!==null)p.units.forEach(u=>spawn(S.pl[n],u.bp,u.owner,u.hp,{sh:u.sh,rv:u.rv,hatch:u.hatch,hd:u.hd,gold:u.gold,col:u.col}));
   p.units=[];p.grid=Array.from({length:ROWS},()=>Array(COLS).fill(null))}});
  const al=S.pl.filter(p=>p.alive);if(S.spec&&!S.pl[view].alive&&al.length){const n=nextAlive(view);if(n!==null){view=n;sel=null;insp=null}}
@@ -582,12 +582,12 @@ function resultUI(){const e=$('eres');if(!e||!S||S.sim)return;const L=S.pl.slice
  L.forEach((p,i)=>{const n=document.createElement('span');n.textContent=nm(p);h+=`<tr class="${p.id===0?'me':''}${p.alive?' win':''}"><td>${md[i]||i+1}</td><td class="nm">${n.innerHTML}</td><td>+${p.income}</td><td>${Math.round(p.dealt||0)}</td><td>${p.kills||0}</td><td>${p.alive?'끝까지':fmt(p.dieT||S.t)}</td></tr>`});
  e.innerHTML=h+'</table>'}
 function finish(win){over=true;sfx(win?'win':'lose');sfx('bgm_stop');$('eT').textContent=win?'🏆':'💀';$('eH').textContent=win?'최종 우승!':'탈락…';
- $('eP').textContent=`생존 시간 ${fmt(S.t)} · 처치 ${S.kills} · 가한 피해 ${S.dealt}`;try{rewardUI(win)}catch(e){}try{resultUI()}catch(e){}
+ $('eP').textContent=`생존 시간 ${fmt(S.t)} · 처치 ${S.kills} · 가한 피해 ${S.dealt}`;try{rewardUI(win)}catch(e){}try{resultUI()}catch(e){}try{aiEnd(win)}catch(e){}
  $('spec').style.display=!win&&!S.sim&&S.pl.filter(p=>p.alive).length>=2?'block':'none';$('end').style.display='flex'}
 // 👀 탈락 후 관전: AI끼리 끝날 때까지 이어서 보기
 function specGo(){if(!S)return;S.spec=1;over=false;$('end').style.display='none';$('spx').style.display='';document.querySelector('footer').style.opacity=.4;const i=S.pl.findIndex(p=>p.alive);if(i>=0)view=i;sel=null;insp=null;sfx('bgm_start');toast('👀 관전 중 · 미니맵을 눌러 다른 진영을 볼 수 있어요');ui()}
 function specEnd(w){over=true;sfx('bgm_stop');sfx('win');$('spx').style.display='none';$('eT').textContent='👀';$('eH').textContent=w?`${w.name} 우승!`:'관전 종료';
- $('eP').textContent=`게임 시간 ${fmt(S.t)} · 내 생존 ${fmt(S.pl[0].dieT||S.t)} · 처치 ${S.kills}`;$('ew').innerHTML='';try{resultUI()}catch(e){}$('spec').style.display='none';$('end').style.display='flex'}
+ $('eP').textContent=`게임 시간 ${fmt(S.t)} · 내 생존 ${fmt(S.pl[0].dieT||S.t)} · 처치 ${S.kills}`;$('ew').innerHTML='';try{resultUI()}catch(e){}try{aiEnd(null)}catch(e){}$('spec').style.display='none';$('end').style.display='flex'}
 const fmt=t=>String(Math.floor(t/60)).padStart(2,'0')+':'+String(Math.floor(t%60)).padStart(2,'0');
 
 // ---------- 3D ----------
@@ -2422,7 +2422,7 @@ $('cv').addEventListener('pointerdown',e=>{if(!S||over||!Cam)return;const r=$('c
 function useSkill0(){const me=S.pl[0],s=skillOf(me);if(S.cdn>0||!me.alive)return;if(!s)return toast('✨ 속성 2개를 고르면 조합 스킬을 해금할 수 있어요');
  if(netG()){if(me.skU&&me.skCD>0)return toast(`재사용까지 ${Math.ceil(me.skCD)}초`);return NET.cmd({a:'skill'})}actSkill(0);ui()}
 function actSkill(pid){const me=S.pl[pid],s=me&&skillOf(me);if(!s||S.cdn>0||!me.alive)return;
- if(!me.skU){if(me.gold<SKC)return say(pid,`해금에 ${SKC}G가 필요해요`);me.gold-=SKC;me.skU=1;return say(pid,`${s.c.ic} ${s.n} 해금! ${s.d} (재사용 ${s.cd}초)`)}
+ if(!me.skU){if(me.gold<SKC)return say(pid,`해금에 ${SKC}G가 필요해요`);me.gold-=SKC;me.skU=1;if(pid===0&&!S.sim&&!S.net)try{newsBird(`🎉 특종! 조합 스킬 '${s.n}' 해금!`)}catch(e){}return say(pid,`${s.c.ic} ${s.n} 해금! ${s.d} (재사용 ${s.cd}초)`)}
  if(me.skCD>0)return say(pid,`재사용까지 ${Math.ceil(me.skCD)}초`);useSkill(me)}
 $('skb').onclick=useSkill0;
 $('lanet').onclick=e=>{e.stopPropagation();const ids=Object.keys(laneTargets()).map(Number);if(!ids.length)return;const cur=+$('lane').dataset.id,i=ids.indexOf(cur);lanePick=ids[(i+1)%ids.length];laneT=1;lanePanel(0)};
@@ -2623,7 +2623,7 @@ function lobbyScene(){if(LS)return;LS=new THREE.Scene();lobLights(LS);
 function lobbyFrame(t){lobbyScene();const k=JSON.stringify(SV.hero);if(k!==LHK){if(LH){LS.remove(LH);LH.traverse(o=>{if(o.material)o.material.dispose();if(o.geometry&&!o.geometry.userData.cached)o.geometry.dispose()})}LH=heroMesh(SV.hero);LH.scale.setScalar(SV.hero.id==='ostrich'?.75:1.15);LS.add(LH);LHK=k}
  const tall=SV.hero.id==='ostrich';LH.rotation.z=Math.sin(t*.7)*.55;LH.position.z=.02+Math.abs(Math.sin(t*2.2))*.04;birdAnim(LH,t,false);
  const hero=lobMode==='hero';LS.getObjectByName('glass').visible=!hero;
- const cz=hero?.55:.85;LC.position.set(0,hero?-4.2:-6.4,hero?1.6:2.3);LC.lookAt(0,0,cz);lobFit(LC);LR.render(LS,LC)}
+ const cz=hero?.55:.85;LC.position.set(0,hero?-4.2:-6.4,hero?1.6:2.3);LC.lookAt(0,0,cz);lobFit(LC);try{aiLobby(t,hero)}catch(e){}LR.render(LS,LC)}
 // 광장(지금은 AI 친구들 · 온라인 연결은 이 구조에 그대로 붙일 예정)
 let PZ=null;const EMO=['😀','😂','😍','🥳','😡','😭','👍','❤️','💤','❓'];
 const PZL=['안녕하세요~','8인전 같이 하실 분!','펭귄 삼형제 너무 귀여워요','공작 부채 예쁘다…','과자 타워 어디 있어요?','종족전 해금했어요!','ㅋㅋㅋㅋ','도도는 왜 안 죽어요?','갈매기 똥 조심!','릴레이 가즈아!','오늘 3연승 했어요','다들 영웅 뭐 쓰세요?'];
@@ -2641,21 +2641,22 @@ function pzBuild(){const sc=new THREE.Scene();lobLights(sc);PZ={sc,b:[],t:0,nt:2
  PZ.cam=new THREE.PerspectiveCamera(42,1,.1,100);PZ.cam.up.set(0,0,1);
  PZ.me=pzBird(SV.hero,SV.hero.name,1);PZ.b.push(PZ.me);
  const pool=heroPool();for(let i=0;i<7;i++){const u=pool[Math.floor(Math.random()*pool.length)];PZ.b.push(pzBird({id:u.id,col:Math.random()<.35?HCOL[1+Math.floor(Math.random()*12)]:null,hat:HATS[Math.floor(Math.random()*HATS.length)][0],face:Math.random()<.3?FACES[1+Math.floor(Math.random()*3)][0]:'none'},NICKS[(i*5+Math.floor(Math.random()*12))%12]+'_'+(100+Math.floor(Math.random()*900)),0))}
+ try{aiPlazaAdd()}catch(e){}
  $('pzn').textContent=`👥 ${PZ.b.length}명 · 지금은 AI 친구들 (온라인 준비 중)`;
  const ray=new THREE.Raycaster(),pl=new THREE.Plane(new THREE.Vector3(0,0,1),0),v=new THREE.Vector3();
  LR.domElement.addEventListener('pointerdown',e=>{if(lobMode!=='plaza')return;const r=LR.domElement.getBoundingClientRect();ray.setFromCamera({x:(e.clientX-r.left)/r.width*2-1,y:-(e.clientY-r.top)/r.height*2+1},PZ.cam);if(ray.ray.intersectPlane(pl,v)){const d=Math.hypot(v.x,v.y),k=d>7.4?7.4/d:1;PZ.me.tx=v.x*k;PZ.me.ty=v.y*k;PZ.me.go=1}})}
 function pzSay(b,txt,emo){b.bb.textContent=txt;b.bb.className='bb'+(emo?' em':'');b.bb.style.display='block';b.say=emo?2.6:4.2;if(!emo){PZ.log.push([b.name,txt]);if(PZ.log.length>5)PZ.log.shift();$('plog').innerHTML=PZ.log.map(([n,t])=>`<div><b>${n.replace(/</g,'&lt;')}</b> ${t.replace(/</g,'&lt;')}</div>`).join('')}}
-function pzNpc(){const n=PZ.b.filter(b=>!b.me);return n[Math.floor(Math.random()*n.length)]}
-function pzChat(txt){txt=(txt||'').trim();if(!txt||!PZ)return;pzSay(PZ.me,txt);
+function pzNpc(){const n=PZ.b.filter(b=>!b.me&&!b.ai);return n[Math.floor(Math.random()*n.length)]}
+function pzChat(txt){txt=(txt||'').trim();if(!txt||!PZ)return;pzSay(PZ.me,txt);if(PZ.ai&&/AI|ai|에이아이|뉴스|속보/.test(txt)){setTimeout(()=>{if(PZ&&PZ.ai)pzSay(PZ.ai,aiPick('chat'))},800);return}
  setTimeout(()=>{if(!PZ)return;const b=pzNpc();if(/안녕|하이|ㅎㅇ/.test(txt))pzSay(b,['안녕하세요!','ㅎㅇㅎㅇ','반가워요 '+SV.hero.name+'님!'][Math.floor(Math.random()*3)]);else if(/8인|같이|대전|ㄱㄱ/.test(txt))pzSay(b,'저요! 온라인 열리면 바로 갈게요');else if(Math.random()<.6)pzSay(b,EMO[Math.floor(Math.random()*EMO.length)],1)},900+Math.random()*900)}
-function plazaFrame(t,dt){if(!PZ)pzBuild();PZ.t+=dt;PZ.nt-=dt;
+function plazaFrame(t,dt){if(!PZ)pzBuild();PZ.t+=dt;PZ.nt-=dt;if(PZ.ai){PZ.ai.nt-=dt;if(PZ.ai.nt<=0){PZ.ai.nt=8+Math.random()*6;pzSay(PZ.ai,aiPick('plaza'))}}
  if(PZ.nt<=0){PZ.nt=2.5+Math.random()*3;const b=pzNpc();Math.random()<.55?pzSay(b,PZL[Math.floor(Math.random()*PZL.length)]):pzSay(b,EMO[Math.floor(Math.random()*EMO.length)],1)}
  const cam=PZ.cam,me=PZ.me,v=new THREE.Vector3(),W=LR._w||1,H=LR._h||1;
- for(const b of PZ.b){if(!b.me){b.wait-=dt;if(b.wait<=0&&!b.go){const a=Math.random()*PI*2,r=2+Math.random()*5;b.tx=Math.cos(a)*r;b.ty=Math.sin(a)*r;b.go=1;b.wait=3+Math.random()*5}}
+ for(const b of PZ.b){if(b.ai){b.tx=me.x+1.6+Math.sin(t*.5)*.9;b.ty=me.y+1.3+Math.cos(t*.4)*.5;b.go=1}else if(!b.me){b.wait-=dt;if(b.wait<=0&&!b.go){const a=Math.random()*PI*2,r=2+Math.random()*5;b.tx=Math.cos(a)*r;b.ty=Math.sin(a)*r;b.go=1;b.wait=3+Math.random()*5}}
   let walk=false;if(b.go){const dx=b.tx-b.x,dy=b.ty-b.y,d=Math.hypot(dx,dy);if(d<.06)b.go=0;else{const sp=(b.me?2.6:1.3)*dt,k=Math.min(1,sp/d);b.x+=dx*k;b.y+=dy*k;walk=true;let to=Math.atan2(dx,-dy),cr=b.m.rotation.z,df=((to-cr+PI*3)%(PI*2))-PI;b.m.rotation.z=cr+df*Math.min(1,dt*10)}}
-  const zb=b.air?.55+Math.sin(t*2+b.ph)*.08:(walk?Math.abs(Math.sin(t*12+b.ph))*.06:0);b.m.position.set(b.x,b.y,zb);birdAnim(b.m,t+b.ph,walk);
-  if(b.say>0){b.say-=dt;if(b.say<=0)b.bb.style.display='none'}
-  v.set(b.x,b.y,zb+(b.m.userData.b.id==='ostrich'?1.55:1.0)).project(cam);b.el.style.left=((v.x+1)/2*W)+'px';b.el.style.top=((1-v.y)/2*H)+'px';b.el.style.display=v.z<1?'flex':'none'}
+  const zb=b.ai?1.25+Math.sin(t*1.6)*.12:b.air?.55+Math.sin(t*2+b.ph)*.08:(walk?Math.abs(Math.sin(t*12+b.ph))*.06:0);b.m.position.set(b.x,b.y,zb);birdAnim(b.m,t+b.ph,walk);
+  if(b.ai)aiSpin(b.m.children[0],t);if(b.say>0){b.say-=dt;if(b.say<=0)b.bb.style.display='none'}
+  v.set(b.x,b.y,zb+(b.ai?.75:b.m.userData.b.id==='ostrich'?1.55:1.0)).project(cam);b.el.style.left=((v.x+1)/2*W)+'px';b.el.style.top=((1-v.y)/2*H)+'px';b.el.style.display=v.z<1?'flex':'none'}
  cam.position.set(me.x*.85,me.y*.85-7.2,7.4);cam.lookAt(me.x*.85,me.y*.85,0);lobFit(cam);LR.render(PZ.sc,cam)}
 function lobLoop(now){requestAnimationFrame(lobLoop);const vis=$('title').style.display!=='none';if(!vis||!LR)return;const t=now/1000,dt=Math.min(.05,t-(lobT||t));lobT=t;
  try{lobMode==='plaza'?plazaFrame(t,dt):lobbyFrame(t)}catch(e){console.log(e)}}
@@ -2686,6 +2687,7 @@ window.addEventListener('load',()=>{lobAttach($('lstage'));lobUI();requestAnimat
 
 // ---------- 📘 첫 판 튜토리얼 (4장 카드, 게임은 멈춘 채로) ----------
 const TUT=[
+ ['🚨','안녕! 난 AI야','인공지능 아니고… <b>A</b>vian <b>I</b>nfluencer, <b>조류 인플루언서</b>의 줄임말! 짹튜브 \'짹짹 뉴스\' 구독자 800만 새를 거느린 드론 병아리 기자야. 머리 사이렌은 장식 아니고 진짜 울려 🚨 지금부터 내가 딱 4가지만 알려 줄게!',null],
  ['🐦','내 판을 지켜요','화면의 육각 판이 내 진영이에요. 새들이 위에서 내려와 아래로 빠져나가면 ❤️ 라이프가 줄어요.',null],
  ['🏹','타워 세우기','<b>타워</b> 탭에서 타워를 고르고 빈 칸을 눌러 세워요. 시작할 때 아래에서 <b>속성</b>(🔥❄️⚡🌪️☠️)을 하나 고르면 전용 타워가 열려요. 타워로 길을 구불구불하게 만들면 새가 더 오래 맞아요.','t1'],
  ['🪶','새 보내기','<b>유닛 전송</b> 탭에서 새를 사면 다음 사람 진영으로 달려가요. 보낼 때마다 📈 인컴이 올라서 4초마다 돈이 더 들어와요.','t2'],
@@ -2693,10 +2695,40 @@ const TUT=[
 function tutOpen(){if(!S||S.net||S.sim||$('tut'))return;const pv=paused;paused=true;let i=0;const o=document.createElement('div');o.id='tut';document.body.appendChild(o);
  const hl=id=>{document.querySelectorAll('.tuthl').forEach(e=>e.classList.remove('tuthl'));const e=id&&$(id);if(e)e.classList.add('tuthl')};
  const end=()=>{hl(null);o.remove();paused=pv;SV.tut=1;svSave()};
- const draw=()=>{const[ic,t,d,h]=TUT[i];hl(h);o.className=h==='lane'?'':'top';o.innerHTML=`<div class="tutc"><div class="tuti">${ic}</div><b>${t}</b><p>${d}</p><div class="tutd">${TUT.map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div><div class="tutb"><button class="tsk">건너뛰기</button><button class="tnx">${i<TUT.length-1?'다음 ▶':'시작! 🎉'}</button></div></div>`;
+ const draw=()=>{const[ic,t,d,h]=TUT[i];hl(h);o.className=h==='lane'?'':'top';o.innerHTML=`<div class="tutc"><div class="tuti"><img class="tuai" src="assets/ui/ai.png" alt="AI"><i>${ic}</i></div><small class="tusp">📢 AI의 꿀팁</small><b>${t}</b><p>${d}</p><div class="tutd">${TUT.map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div><div class="tutb"><button class="tsk">건너뛰기</button><button class="tnx">${i<TUT.length-1?'다음 ▶':'시작! 🎉'}</button></div></div>`;
   o.querySelector('.tsk').onclick=end;o.querySelector('.tnx').onclick=()=>{if(++i>=TUT.length)end();else draw()}};draw()}
 {const st0=start;start=function(gs,p0h){const r=st0.apply(this,arguments);if(!gs&&!SV.tut)setTimeout(tutOpen,400);return r}}
 {const b=document.createElement('button');b.textContent='🗑 처음부터 다시 (저장 초기화)';b.className='tutre tutrs';b.onclick=()=>{if(!confirm('코인·승리·해금한 종족·영웅 꾸미기가 모두 지워지고 처음 상태로 돌아가요. 정말 초기화할까요?'))return;try{localStorage.removeItem(SAVE_KEY)}catch(e){}location.reload()};const tb=document.querySelector('#tipm .tipb');if(tb)tb.prepend(b)}
+// ---------- 📢 마스코트 AI(Avian Influencer) 출연: 로비 · 튜토리얼 · 게임 속보 · 광장 · 결과 화면 ----------
+const AIL={
+ intro:['안녕! 난 AI야 📢','인공지능 아니고 Avian Influencer, 조류 인플루언서의 줄임말!','짹튜브 「짹짹 뉴스」 구독자 800만 새! 나를 누르면 또 말해 줄게 🚨'],
+ lobby:['📢 속보: 도도새 또 살아 돌아옴. 아무도 안 놀람','꿀팁! 새를 막으면 그 새 값의 20%가 내 돈이야 💰','프로펠러가 4개인데 날개는 왜 있냐고? …패션이야','7분이 되면 피해 2배! 그 전에 수비를 튼튼히 🛡','옆 사람이 무너지면 그 새들이 나한테 와. 릴레이니까!','타조 발레 공연, 이번 주도 매진이래 🩰','영웅을 눌러서 꾸며 봐. 왕관 강추 👑','구독·좋아요·알림 설정! …여긴 버튼이 없구나','광장에 자주 놀러 가. 거기서도 생방송 중이야 🎥','미로를 길게 만들수록 새가 오래 맞아. 이건 과학이야','속성 2개를 고르면 조합 스킬이 열려! 해금하면 내가 특종 낼게','오늘의 운세: 깡패 거위 조심 🪿'],
+ plaza:['📢 광장 생중계 중! 다들 손 흔들어 👋','방금 들어온 제보: 펭귄 삼형제 또 줄 서서 다님','누가 내 사진 찍었어? 초상권 있다!','오늘의 인기 검색어 1위: 「도도새 안 죽는 법」','짹짹 뉴스 AI였습니다~ 다음 소식!','여기 분수대 물 마시지 마세요. 갈매기가 씻었어요','8인 온라인 대전이 열리면 제일 먼저 중계할게!'],
+ chat:['불렀어? 📢 조류 인플루언서 AI 등장!','구독자 800만 새, 오늘도 생방송 중이야','AI는 인공지능 아니고 Avian Influencer라니까~','제보는 언제나 환영! 특종이면 1면에 실어 줄게'],
+ win:['🎉 특종! {n} 우승! 내일 아침 1면이야','구독자 800만 새가 박수 치는 중 👏👏','오늘의 MVP 인터뷰 잡아 놨어. 한마디 해 줘!'],
+ first:['🎉 역사적인 첫 우승! 짹짹 뉴스 단독 보도 📸 {n}, 소감 한마디!'],
+ lose:['괜찮아, 다음 판은 내가 응원 생중계 해 줄게 📢','속보: {n}, 더 강해져서 돌아올 예정','새떼가 너무 셌어. 수비 타워를 조금 더 빨리!'],
+ spec:['관전 끝! 오늘 경기 하이라이트는 내가 편집해 둘게 🎬']};
+const aiPick=k=>{const L=AIL[k];return L[Math.floor(Math.random()*L.length)].replace('{n}',(SV&&SV.hero&&SV.hero.name)||'짹짹이')};
+/* 프로펠러 잔상 돌리기 + 사이렌 깜빡이 */
+function aiSpin(m,t){const u=m&&m.userData;if(!u||!u.rot)return;u.rot.forEach((r,i)=>r.rotation.z=t*(i%2?-38:38));const on=Math.floor(t*4)%2;if(u.glow){u.glow.material.color.setHex(on?0xff4d4d:0x4d8bff);u.glow.scale.setScalar(.45+.2*Math.abs(Math.sin(t*9)))}}
+/* 로비: 영웅 오른쪽 위에 둥실 떠서 가끔 한마디, 누르면 바로 한마디 */
+let LAI=null;const AIB={t:0,q:[],next:3};
+function aiLobbyEl(){let b=$('aib');if(b)return b;b=document.createElement('div');b.id='aib';b.innerHTML='<button class="aibtn" aria-label="AI"></button><div class="aisp" style="display:none"></div>';$('title').append(b);
+ b.firstChild.onclick=e=>{e.stopPropagation();aiLobbySay(AIB.q.length?AIB.q.shift():aiPick('lobby'))};return b}
+function aiLobbySay(txt){const b=aiLobbyEl(),sp=b.lastChild;sp.textContent=txt;sp.style.display='block';sp.classList.remove('pop');void sp.offsetWidth;sp.classList.add('pop');AIB.t=Math.max(3.4,txt.length*.09)}
+function aiLobby(t,hero){const b=aiLobbyEl();if(!LAI&&aiMascotGet()){const w=new THREE.Group(),m=aiMascotMesh();m.rotation.x=-.18;w.add(m);w.scale.setScalar(.42);LS.add(w);LAI=w;
+  if(!SV.aiIntro){AIB.q=AIL.intro.slice();SV.aiIntro=1;svSave();AIB.next=1.2}}
+ if(!LAI||hero){if(LAI)LAI.visible=false;b.style.display='none';return}
+ LAI.visible=true;b.style.display='';const x=.66,z=1.3+Math.sin(t*1.7)*.07;LAI.position.set(x,-.55,z);LAI.rotation.z=Math.sin(t*.9)*.25;aiSpin(LAI.children[0],t);
+ const dt=Math.min(.05,t-(AIB.lt||t));AIB.lt=t;if(AIB.t>0){AIB.t-=dt;if(AIB.t<=0)b.lastChild.style.display='none'}else{AIB.next-=dt;if(AIB.next<=0){AIB.next=AIB.q.length?.5:13+Math.random()*7;aiLobbySay(AIB.q.length?AIB.q.shift():aiPick('lobby'))}}
+ const v=new THREE.Vector3(x,-.55,z+.1).project(LC);b.style.left=((v.x+1)/2*100)+'%';b.style.top=((1-v.y)/2*100)+'%'}
+/* 광장: AI가 하늘에 떠서 돌아다니며 생중계 */
+function aiPlazaAdd(){if(!PZ||PZ.ai||!aiMascotGet())return;const w=new THREE.Group(),m=aiMascotMesh();m.rotation.x=-.55;w.add(m);w.scale.setScalar(.75);PZ.sc.add(w);w.userData.b={id:'ai'};
+ const el=document.createElement('div');el.className='pb';el.innerHTML='<div class="bb" style="display:none"></div><div class="pn ai">📢 AI 기자</div>';$('plo').append(el);
+ const b={m:w,el,bb:el.firstChild,name:'📢 AI',me:0,ai:1,air:1,x:2.5,y:1.5,tx:0,ty:0,wait:2,say:0,ph:0,nt:2.5};PZ.b.push(b);PZ.ai=b}
+/* 결과 화면: AI 기자의 한마디 */
+function aiEnd(win){const e=$('ew');if(!e||!S||S.sim)return;const k=win===null?'spec':win?(SV.wins===1?'first':'win'):'lose';const d=document.createElement('div');d.className='aiend';d.innerHTML='<img src="assets/ui/ai.png" alt="AI"><p></p>';d.lastChild.textContent=aiPick(k);e.prepend(d)}
 if(/[?&]reset=1/.test(location.search)){try{localStorage.removeItem(SAVE_KEY)}catch(e){}location.replace(location.pathname)}
 {const b=document.createElement('button');b.textContent='📘 튜토리얼 다시 보기';b.className='tutre';b.onclick=()=>{SV.tut=0;svSave();toast('📘 다음 판을 시작할 때 튜토리얼이 다시 나와요')};const tb=document.querySelector('#tipm .tipb');if(tb)tb.prepend(b)}
 
