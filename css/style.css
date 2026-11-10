@@ -224,3 +224,9 @@ html{-webkit-tap-highlight-color:transparent}
 #md{color:#ede9fe}
 #eP,.rw small{color:#cbd5e1}
 .mcard small{white-space:normal;line-height:1.35}
+/* 🛒 v11.8 상점 아이콘 작게: 한 줄 7칸, 초상화 34px */
+.sh{grid-template-columns:repeat(7,1fr);gap:4px;padding:6px 6px 8px}
+.sh button{padding:3px 1px 3px;border-radius:10px;font-size:9.5px}
+.sh button.pic i img{width:34px;height:34px;margin:-2px auto -2px}
+.sh i{font-size:18px}
+.sh u{font-size:9.5px;padding:0 4px}
