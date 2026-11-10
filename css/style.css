@@ -218,7 +218,7 @@ html{-webkit-tap-highlight-color:transparent}
 ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:#1e1b4b}::-webkit-scrollbar-thumb{background:#7c3aed;border-radius:99px}
 #lmodet{display:flex;flex-direction:column;align-items:flex-start;line-height:1.1;white-space:nowrap}
 #lmodet .lmd{font:12px Jua,system-ui,sans-serif;color:#fde68a;margin-top:2px}
-.lname{top:21%}.lhint{top:calc(21% + 30px)}
+.lname{top:calc(21% + 24px)}.lhint{top:calc(21% + 54px)}
 #again{color:#052e16!important;text-shadow:0 1px 0 #a7f3d0}
 .sh .tch s{color:#f5f3ff;font-size:10.5px}
 #md{color:#ede9fe}
