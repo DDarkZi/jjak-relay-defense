@@ -17,7 +17,7 @@
 - 🎬 홍보 영상: 초안 완성(2026-11-10, 약 30초, 가로·세로). 만드는 법 `tools/trailer/README.md`(가상 시계 프레임 녹화 + 자막 PNG + ffmpeg + 칩튠). 다듬기는 나중에.
 - 💰 수익 구조(단계별 안): v1.0 무료·광고 없음 → 사람이 모이면 보상형 광고(코인 2배) → 꾸미기 상점·광고 제거·후원 팩. 페이투윈·랜덤 뽑기는 안 함. 광고 넣으면 개인정보처리방침·데이터 보안 설문 수정.
 - 📲 구글 플레이 출시: 단계별 안내 `assets/store/RELEASE_CHECKLIST.md`. ⚠️ assetlinks.json은 도메인 맨 위(`ddarkzi.github.io/.well-known/`)여야 해서 사용자 사이트 저장소 `DDarkZi.github.io`(만듦, `/home/user/ddarkzi.github.io`, 첫 페이지는 게임으로 이동, assetlinks에 업로드 키 지문 넣음(패키지 io.github.ddarkzi.jjakdefense), Play 앱 서명 키 지문은 아직). Play 앱 서명 키 SHA-256도 함께 넣기. 앱 아이콘 = 마스코트 AI(2026-11-10 교체, 원본 렌더는 ai_mascot.glb + 경고 빛줄기·새떼 실루엣 배경).
-- 🧠 AI: 안정형이 아직 약간 약함(8%), 평균 게임 시간 약 15분(사용자: 일단 그대로).
+- 🧠 AI 밸런스 v12.2(2026-11-10) 끝: 스타일별 승률 고르게 맞춤(아래 '경제 밸런스' 참고). 새 성향을 넣으면 같은 방식으로 다시 시뮬.
 - 🦤 Tripo로 만든 도도새 3D: 약관 확인함(2026-11-10, 2025-07-11판). **무료 사용자 결과물은 Tripo가 모든 권리를 가짐(5.2.1)** → 게임에 쓰지 않기로. 유료 사용자는 권리를 가짐(5.2.2). 쓰려면 유료 기간에 다시 생성하거나, 제한 없는 Hyper3D Rodin으로 만들기.
 
 ## 파일 구조
@@ -41,6 +41,10 @@
 - 3D 게임판 타일: `assets/hex3d/*.glb`(Kenney Hexagon Kit CC0, 지형 16종 + `Textures/colormap.png`, 라이선스 사본 포함), 로더 `js/vendor/GLTFLoader.js`(three r128 examples). ART `loadHex3`/`hex3Ready`/`hex3Theme`: 모델 로드 후 기존 젤리 타일·림 숨김, 모델별 InstancedMesh, 타일 두께만큼 내려 윗면=0. 테마 = 좌석 `((view+S.off)%8)%5` → `HX3_TH`(풀밭·사막·바위산·흙·바닷가 섬).
 - 효과음: `assets/sfx/*.ogg`(Kenney Interface/Impact/RPG Audio/Music Jingles, CC0, 31개 400KB, 라이선스 사본 포함). SFX의 `SMP`(이벤트→파일 목록)·`SVOL`(볼륨)·`SGAP`(최소 간격)·`SLAYER`(합성음과 같이)로 매핑, 첫 소리 때 `smpLoad`, 못 불러오면 기존 합성음. 타워 발사음·배경음악은 합성음 유지.
 - 공중 새 인컴은 `BAL.airInc`(0.8)배(데이터 로드 때 `u.inc`에 반영). 결과 표 `resultUI()`(#eres): 진영별 `p.kills`(막은 새)·`p.dealt`(준 피해)·`p.income`·`p.dieT`.
+- 💰 경제 밸런스(v12.2): 처치 보상 `BAL.kr`(0.2 = 새 가격의 20%), 새 전송 인컴 배율 `BAL.ui`(0.9, `gainInc` 안에서 곱함 — u.inc에 곱하고 반올림하면 싼 새가 안 깎여서 결과가 달라짐). 안정형 `upAgg` 0.8→0.65(업그레이드 과소비가 약한 원인이었음).
+  - 시뮬(일반, 160판씩, 기대 12.5%): 이전 이자형 18·안정형 7·밸런스 14·특수 10% → 지금 3회 평균 이자형 12·안정형 12·밸런스 14·특수 11%, 평균 15분. 종족 모드 11.6분.
+  - 시도했지만 버린 것: 처치 보상만 올리기(모두 부자 → 게임만 짧아짐), 완벽 수비 보너스(8인전에선 거의 못 받음), 안정형 위기 기준 낮추기(효과 없음).
+  - 실험 도구: 스크래치의 aisim3.js(4개 병렬, 패치 JS를 인자로) + aian2.py(스타일별 승률·생존·처치·인컴).
 - 업그레이드 비용: `upc = c × BAL.upk × lv × (1 + BAL.upg × (lv-1))` × 종족 배율.
 - `S.sim`일 때는 사운드·이펙트를 건너뛴다. 통계 훅은 `S.st`가 있을 때만 동작.
 - 🦴 병아리 영웅은 Blender로 뼈대·애니메이션(idle·walk·flap)을 넣은 `assets/models/chick_anim.glb`(사용자 컴퓨터의 Claude Code+Blender 5.x에서 제작). 복제는 `skinClone`(그냥 clone하면 뼈 공유), 크기는 `skinBox`, 재생은 `heroClip`(걸으면 walk·서 있으면 idle·5~9초마다 flap). ⚠️ 뼈대 GLB는 위치·가중치를 quantize하지 말 것(크기 계산이 깨짐) — `--pattern "{NORMAL,TEXCOORD_0}"`만. 클라우드 세션에서 컴퓨터 폴더 연결은 이 계정에서 아직 안 됨(2026-11-10).

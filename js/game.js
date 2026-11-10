@@ -128,7 +128,7 @@ U.sort((a,b)=>a.c-b.c);
 const TECH={fire:{n:'화염',ic:'🔥',col:0xf97316,t:['ember','lava','sun'],u:'phoenix',d:'화상 지속 피해'},ice:{n:'빙결',ic:'❄️',col:0x67e8f9,t:['ice','frost','bliz'],u:'penguin',d:'감속·빙결'},
  thunder:{n:'뇌전',ic:'⚡',col:0xfacc15,t:['static','thunder','storm'],u:'thunderbird',d:'연쇄 번개·기절'},wind:{n:'폭풍',ic:'🌪️',col:0x2dd4bf,t:['breeze','wind','twister'],u:'albatross',d:'넉백·방울·대공'},
  dark:{n:'독',ic:'☠️',col:0x84cc16,t:['flu','acid','flytrap'],u:'vampire',d:'독·약화·흡혈'}},TK=Object.keys(TECH),TECH2C=300;
-const BAL=/*BAL*/{upk:1.05,upg:.2,rh:.15,rs:0.5,hcr:2,hmx:0.03,pk:0.35,pmax:5,pdur:4,bk:1.1,bdur:3,bsp:.7,cl:2.5,mode:{normal:{uh:0.95,td:0.84,as:1.02},race:{uh:1,td:0.85,as:0.97}},cap:44,ovs:.9,airInc:.8,kr:.1,ui:1,need:1,uhp:2.4,incS:805,late1:420,lm1:2,late2:540,lm2:3,py:{ar:.85,am:2.4,gr:1.1,gm:.8,lr:1.1,la:1.2,lg:.4}}/*BALEND*/;T.forEach(b=>{if(!b.d||b.pylon||b.snack||b.cctv)return;const tr=[];if(b.cd<=.8){b.rapid=1;tr.push('⚡연사 가속: 계속 쏘면 공속 최대 +50%')}else if(b.cd>=1.5){b.heavy=1;tr.push('💥강타: 3번째 공격마다 치명타 ×2 + 대상 최대체력 3% 추가 피해')}if(b.poison)tr.push('☠️독 중첩(최대 5)'+((b.splash||b.self)?' · 독연기 2.5초 잔류':''));if(b.burn)tr.push('🔥화상 번짐: 불탄 채 쓰러지면 옆으로 옮겨붙음');if(tr.length)b.x=(b.x?b.x+' · ':'')+tr.join(' · ')});U.forEach(u=>{u.inc=Math.round(u.inc*1.4*BAL.ui*(u.t==='A'?BAL.airInc:1));u.hp=Math.round(u.hp*BAL.uhp);if(u.shield)u.shield*=BAL.uhp});const TICK=4;
+const BAL=/*BAL*/{upk:1.05,upg:.2,rh:.15,rs:0.5,hcr:2,hmx:0.03,pk:0.35,pmax:5,pdur:4,bk:1.1,bdur:3,bsp:.7,cl:2.5,mode:{normal:{uh:0.95,td:0.84,as:1.02},race:{uh:1,td:0.85,as:0.97}},cap:44,ovs:.9,airInc:.8,kr:.2,ui:.9,need:1,uhp:2.4,incS:805,late1:420,lm1:2,late2:540,lm2:3,py:{ar:.85,am:2.4,gr:1.1,gm:.8,lr:1.1,la:1.2,lg:.4}}/*BALEND*/;T.forEach(b=>{if(!b.d||b.pylon||b.snack||b.cctv)return;const tr=[];if(b.cd<=.8){b.rapid=1;tr.push('⚡연사 가속: 계속 쏘면 공속 최대 +50%')}else if(b.cd>=1.5){b.heavy=1;tr.push('💥강타: 3번째 공격마다 치명타 ×2 + 대상 최대체력 3% 추가 피해')}if(b.poison)tr.push('☠️독 중첩(최대 5)'+((b.splash||b.self)?' · 독연기 2.5초 잔류':''));if(b.burn)tr.push('🔥화상 번짐: 불탄 채 쓰러지면 옆으로 옮겨붙음');if(tr.length)b.x=(b.x?b.x+' · ':'')+tr.join(' · ')});U.forEach(u=>{u.inc=Math.round(u.inc*1.4*(u.t==='A'?BAL.airInc:1));u.hp=Math.round(u.hp*BAL.uhp);if(u.shield)u.shield*=BAL.uhp});const TICK=4;
 const COMBO=T.filter(t=>t.combo).map(t=>({k:t.combo,t:t.id,u:U.find(u=>u.combo&&u.combo.join()===t.combo.join()).id,n:t.combo.map(k=>TECH[k].n).join('+'),ic:t.combo.map(k=>TECH[k].ic).join('')}));
 // 🎭 웃긴 이름 + 한 줄 설명 (도감용)
 const NM={
@@ -250,7 +250,7 @@ const DIFF=/*DIFF*/{E:{n:'🐣 쉬움',g:450,i:25,tick:2,im:.92,d:'AI가 느긋�
 const AIP=(()=>{const by=n=>AIS.find(a=>a.n===n).g,B={...by('폭풍 전략가'),def8:.95,rush:430,keep:380},L=[];
  // 스타일은 밸런스형(폭풍 전략가)을 바탕으로 적당히만 기울여요(극단값은 AI끼리 싸울 때 한쪽이 독식해서)
  const ST=[['이자형',{...B,inc0:66,incRate:48,uShare:.64,uTier:.72,uHeavy:.6,def8:.9,upAgg:.45,rush:390,keep:320}],
-  ['안정형',{...B,tw0:5.5,twRate:1.9,def8:1.0,upAgg:.8,inc0:66,incRate:56,uShare:.72,crisis:34,rush:450,keep:400}],
+  ['안정형',{...B,tw0:5.5,twRate:1.9,def8:1.0,upAgg:.65,inc0:66,incRate:56,uShare:.72,crisis:34,rush:450,keep:400}],
   ['밸런스형',{...B}]];
  const SN={steam:'증기',plasma:'플라즈마',firestorm:'화염폭풍',pyre:'역병',aurora:'절대영도',whiteout:'눈사태',frostbane:'빙독',tempest:'폭풍',venomvolt:'신경독',miasma:'독안개'};
  COMBO.forEach(c=>ST.forEach(([sn,g])=>L.push({n:`${SN[c.t]||c.n} ${sn}`,g:{...g,tech:TK.indexOf(c.k[0])+.5,tech2:TK.indexOf(c.k[1])+.5}})));
@@ -299,7 +299,7 @@ function spawn(t,b,owner,hp,ex){const x=Math.floor(Math.random()*COLS),first=hp=
  {const rm=rOf(S.pl[owner]);ex=Object.assign({},ex);if(rm){if(first&&rm.uhp)hp=(hp===undefined?b.hp:hp)*rm.uhp;if(rm.spd)ex.spm=rm.spd;if(rm.rv&&b.c>=rm.rv&&ex.rv===undefined)ex.rv=1}}
  if(t.id===0&&owner!==0&&b.c>=280&&!S.sim&&S.t-(S.la||-9)>4){S.la=S.t;toast(`🚨 ${S.pl[owner].name}의 ${b.n} 접근!`)}
  return spawnAt(t,b,owner,hp,cellX(x,0),cellY(0),ex)}
-const gainInc=(p,b)=>Math.max(1,Math.round(b.inc*BAL.incS/(BAL.incS+p.income))),lateMul=()=>S.t>=BAL.late2?BAL.lm2:S.t>=BAL.late1?BAL.lm1:1;
+const gainInc=(p,b)=>Math.max(1,Math.round(b.inc*BAL.ui*BAL.incS/(BAL.incS+p.income))),lateMul=()=>S.t>=BAL.late2?BAL.lm2:S.t>=BAL.late1?BAL.lm1:1;
 function kbU(u,n,force){if(!force&&(im(u,'kb')||u.kbt>0))return;if(u.bp.t==='G'&&u.pi>1)u.pi=Math.max(0,u.pi-2*n);else u.y=Math.max(cellY(0),u.y-1.1*n);u.kbt=7+Math.random()*3}
 function addPois(u,pv,src){u.pst=Math.min(BAL.pmax,(u.pst||0)+1);u.ps=BAL.pdur;if(pv>=(u.pv||0)){u.pv=pv;u.psrc=src}}
 function dmgU(u,d){if(u.amp>0)d*=1.35;const h0=Math.max(0,u.hp)+Math.max(0,u.sh||0),d0=d;if(u.sh>0){const a=Math.min(u.sh,d);u.sh-=a;d-=a}u.hp-=d;u.hit=.1;return Math.min(h0,d0)}
