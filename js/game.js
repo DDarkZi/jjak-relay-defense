@@ -285,6 +285,7 @@ const rOf=p=>p&&p.race?RACE[p.race]:null,raceOK=(p,x)=>{const r=rOf(p);return(!x
  tcost=(p,b)=>Math.max(1,Math.round(b.c*((rOf(p)&&rOf(p).tc)||1))),ucost=(p,b)=>Math.max(1,Math.round(b.c*((rOf(p)&&rOf(p).uc)||1))),refR=p=>(rOf(p)&&rOf(p).ref)||.7,
  mkR=(b,p)=>{const t=mk(b),r=rOf(p);if(r&&r.tr&&b.r)t.r+=r.tr;return t};
 function raceAssign(gs){if(gs&&gs.races)return gs.races;if(!gs&&gameMode==='normal')return Array(8).fill(null);const a=[];RK_KEYS.forEach(k=>{a.push(k,k)});for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}if(!gs){const j=a.indexOf(raceSel);[a[0],a[j]]=[a[j],a[0]]}return a}
+const banOf=(p,x)=>{const r=rOf(p);return !!(r&&r.ban&&r.ban.includes(x.id))},banMsg=(p,x)=>{const r=rOf(p);return `🚫 ${r.ic} ${r.n}은(는) ${x.n}을(를) 쓸 수 없어요 (종족 규칙)`};
 const has=(p,k)=>p.tech===k||p.tech2===k,techOK=(p,x)=>(!x.tech||has(p,x.tech))&&(!x.combo||(has(p,x.combo[0])&&has(p,x.combo[1])))&&raceOK(p,x),hasBat=p=>has(p,'dark');
 const im=(u,k)=>!!(u.bp.imm&&u.bp.imm.includes(k)),comboOf=(a,b)=>COMBO.find(c=>c.k.includes(a)&&c.k.includes(b)),tIcons=p=>(p.tech?TECH[p.tech].ic:'')+(p.tech2?TECH[p.tech2].ic:'');
 const cnt=g=>g.flat().filter(Boolean).length;
@@ -312,7 +313,7 @@ const cntOf=b=>b.cntR?b.cntR[0]+Math.floor(Math.random()*(b.cntR[1]-b.cntR[0]+1)
 function send(b){if(netG()){if(!S.pl[0].alive)return toast('👀 관전 중이에요');if(S.cdn>0)return toast('⏱ 카운트다운 중엔 속성만 고를 수 있어요');sfx('send',{unit:b.id});return NET.cmd({a:'send',b:b.id})}actSend(0,b.id)}
 function actSend(pid,bid){const me=S.pl[pid],b=UB[bid],loc=pid===0;if(!me||!b)return;if(!me.alive)return say(pid,'👀 관전 중이에요');
  if(b.hidden||(b.secret&&!(loc&&eggHas(b.secret))))return;
- if(!techOK(me,b))return say(pid,b.race?`${RACE[b.race].ic} ${RACE[b.race].n} 전용 새예요`:b.tech?`${TECH[b.tech].ic} ${TECH[b.tech].n} 테크 전용 새예요`:'이 종족은 쓸 수 없는 새예요');
+ if(!techOK(me,b))return say(pid,b.race?`${RACE[b.race].ic} ${RACE[b.race].n} 전용 새예요`:b.tech?`${TECH[b.tech].ic} ${TECH[b.tech].n} 테크 전용 새예요`:banMsg(me,b));
  if(S.cdn>0)return say(pid,'⏱ 카운트다운 중엔 속성만 고를 수 있어요');
  const bc=ucost(me,b);if(me.gold<bc)return say(pid,`💰 골드가 부족해요 (${bc}G 필요)`);
  const gi=gainInc(me,b);me.gold-=bc;me.income+=gi;const n=nextAlive(pid);
@@ -858,10 +859,10 @@ function ui(){const me=S.pl[0];
  else ib.style.display='none';
  const sb=$('sb');sb.style.display='none';
  st('t1',`🏹 타워 ${tIcons(me)}`+(me.tech2?'':' · 🔮속성 '+(me.tech?'+1':'선택')));
- T.forEach(t=>{t.el.style.display=techOK(me,t)?'':'none';t.el.classList.toggle('sel',sel===t);const lk=!!(t.cctv&&!cctvOK(me));t.el.classList.toggle('off',me.gold<tcost(me,t)||lk);if(t.el.children[2])t.el.children[2].textContent=tcost(me,t)+'G';if(t.cctv&&t.el.firstChild)t.el.firstChild.textContent=lk?'🔒':t.ic});
+ T.forEach(t=>{const bn=banOf(me,t)&&techOK(me,Object.assign({},t,{id:'_'}));t.el.style.display=techOK(me,t)||bn?'':'none';t.el.classList.toggle('rban',bn);t.el.classList.toggle('sel',sel===t);const lk=!!(t.cctv&&!cctvOK(me));t.el.classList.toggle('off',me.gold<tcost(me,t)||lk);if(t.el.children[2])t.el.children[2].textContent=tcost(me,t)+'G';if(t.cctv&&t.el.firstChild)t.el.firstChild.textContent=lk?'🔒':t.ic});
  {const sb=$('shB');if(sb&&sb.classList)sb.classList.toggle('t2',!!me.tech)}
  TK.forEach(k=>{const e=TECH[k].el;if(e){e.style.display=(has(me,k)||me.tech2)?'none':'';e.classList.toggle('sel',techPend===k);const cb=me.tech?comboOf(me.tech,k):null;if(e.lastChild)e.lastChild.textContent=me.tech?`${TECH2C}G · ${cb?TB[cb.t].ic+'조합':''}`:'무료'}});
- U.forEach(u=>{const ok=techOK(me,u)&&!u.hidden&&(!u.secret||eggHas(u.secret));u.el.style.display=ok?'':'none';if(u.id==='egg_legs'&&u.el.children&&u.el.children[3])u.el.children[3].textContent=`+${u.inc} 🥚${EGG.n}`;u.el.classList.toggle('off',me.gold<ucost(me,u));if(u.el.children[2])u.el.children[2].textContent=ucost(me,u)+'G'});
+ U.forEach(u=>{const vis=!u.hidden&&(!u.secret||eggHas(u.secret)),bn=vis&&banOf(me,u)&&techOK(me,Object.assign({},u,{id:'_'})),ok=techOK(me,u)&&vis;u.el.style.display=ok||bn?'':'none';u.el.classList.toggle('rban',bn);if(u.id==='egg_legs'&&u.el.children&&u.el.children[3])u.el.children[3].textContent=`+${u.inc} 🥚${EGG.n}`;u.el.classList.toggle('off',me.gold<ucost(me,u));if(u.el.children[2])u.el.children[2].textContent=ucost(me,u)+'G'});
  st('t2',`🪶 유닛 전송 (${U.filter(u=>techOK(me,u)&&!u.hidden&&(!u.secret||eggHas(u.secret))).length})`);
  {const tm=$('tm');if(tm&&tm.style)tm.style.color=S.lm>=3?'#f43f5e':S.lm>=2?'#fb923c':''}
  const s=skillOf(me),sk=$('skb');
@@ -873,9 +874,9 @@ function hud(){const me=S.pl[0];st('tm',fmt(S.t));st('gd',Math.floor(me.gold)+'G
  st('lf',me.life);st('dm',S.dealt);}
 const tierOf=c=>c>=1000?'lg':c>=500?'ep':c>=250?'rr':'cm';
 function build(){T.forEach(t=>{const e=document.createElement('button');e.classList.add('tr-'+tierOf(t.c));e.innerHTML=`<i>${t.ic}</i><span>${t.race?RACE[t.race].ic:''}${t.n}</span><u>${t.c}G</u>`;
-  e.onclick=()=>{sel=sel===t?null:t;view=0;insp=null;ui()};$('shB').append(e);t.el=e});
+  e.onclick=()=>{if(S&&banOf(S.pl[0],t))return toast(banMsg(S.pl[0],t));sel=sel===t?null:t;view=0;insp=null;ui()};$('shB').append(e);t.el=e});
  U.forEach(u=>{const e=document.createElement('button');e.classList.add('tr-'+tierOf(u.c));e.innerHTML=`<i>${u.ic}</i><span>${u.sn||u.n}</span><u>${u.c}G</u><s>+${u.inc}</s>`;
-  e.onclick=()=>{send(u);ui()};$('shU').append(e);u.el=e})}
+  e.onclick=()=>{if(S&&banOf(S.pl[0],u))return toast(banMsg(S.pl[0],u));send(u);ui()};$('shU').append(e);u.el=e})}
 build();
 $('t1').onclick=()=>{if(S&&S.pl[0].alive)view=0;ui();$('t1').className='on';$('t2').className='';$('shB').style.display='grid';$('shU').style.display='none'};
 $('t2').onclick=()=>{$('t2').className='on';$('t1').className='';$('shU').style.display='grid';$('shB').style.display='none'};
@@ -2539,7 +2540,7 @@ function renderTitle(){
 function renderRaces(){const free=!SV.races.length,vk=raceView||(SV.races.includes(raceSel)?raceSel:RK_KEYS[0]);
  $('rc').innerHTML=RK_KEYS.map(k=>{const own=SV.races.includes(k);return `<button data-k="${k}" class="${own?(raceSel===k?'on':''):'lk'}"><i>${RACE[k].ic}</i><b>${RACE[k].n}</b><small>${own?RACE[k].tag:'🔒 '+(free||!RACE_COST?'무료 선택':RACE_COST+'🪶')}</small></button>`}).join('');
  const r=RACE[vk],own=SV.races.includes(vk),tw=T.filter(t=>t.race===vk).map(t=>t.ic+t.n).join(', '),un=U.filter(u=>u.race===vk).map(u=>u.ic+u.n).join(', ');
- $('rd').innerHTML=`<b style="color:${r.col}">${r.ic} ${r.n}</b> · ${r.d}<br>✨ ${r.p}<br>🏗 전용 타워: ${tw}<br>🐦 전용 새: ${un}`+(own?'':`<br><button class="big" id="rbuy" style="margin-top:8px;padding:10px;font-size:14px">${free||!RACE_COST?'🎁 이 종족을 선택':`🔓 ${RACE_COST}🪶로 해금`}</button>`);
+ $('rd').innerHTML=`<b style="color:${r.col}">${r.ic} ${r.n}</b> · ${r.d}<br>✨ ${r.p}<br>🏗 전용 타워: ${tw}<br>🐦 전용 새: ${un}<br>🚫 못 쓰는 것: ${r.ban.map(id=>(TB[id]||UB[id]).n).join(', ')}`+(own?'':`<br><button class="big" id="rbuy" style="margin-top:8px;padding:10px;font-size:14px">${free||!RACE_COST?'🎁 이 종족을 선택':`🔓 ${RACE_COST}🪶로 해금`}</button>`);
  const bb=$('rbuy');if(bb)bb.onclick=()=>buyRace(vk)}
 function buyRace(k){if(SV.races.includes(k))return;const free=!SV.races.length;
  if(!free&&SV.coins<RACE_COST)return tmsg(`🪶 깃털 코인이 부족해요 (${SV.coins}/${RACE_COST})`);
