@@ -56,7 +56,6 @@
 
 ## 그래픽 파일
 - 아이콘 512×512 (스토어용, 투명도 포함 32비트): assets/store/icon-512-store.png
-  - 새 아이콘 후보(마스코트 AI): assets/store/icon-candidate-AI-512.png
 - 그래픽 이미지 1024×500: assets/store/feature-graphic-1024x500.png
 - 휴대전화 스크린샷 1080×1920: assets/store/screenshots/01~06
 

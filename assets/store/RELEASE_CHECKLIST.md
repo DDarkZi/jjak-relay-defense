@@ -5,7 +5,7 @@
 
 ## ✅ 이미 준비된 것
 - 스토어 글: `assets/store/listing.md` (이름·짧은 설명·자세한 설명·등급 설문 참고)
-- 아이콘 512×512: `assets/store/icon-512-store.png` (새 후보: `icon-candidate-AI-512.png`)
+- 아이콘 512×512: `assets/store/icon-512-store.png` — 마스코트 AI(사이렌 드론 병아리)
 - 그래픽 이미지 1024×500: `assets/store/feature-graphic-1024x500.png`
 - 휴대전화 스크린샷 6장(1080×1920): `assets/store/screenshots/`
 - 홍보 영상: 가로 `trailer_16x9.mp4` / 세로 `trailer_vertical_9x16.mp4` (유튜브에 올려 링크 사용)
