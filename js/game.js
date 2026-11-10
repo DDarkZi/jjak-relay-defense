@@ -334,7 +334,7 @@ function actDem(pid,x,y){const me=S.pl[pid],t=me&&me.grid[y]&&me.grid[y][x];if(!
 // ---------- 조합 스킬 (속성 2개 필요, 해금 SKC골드) ----------
 const SKC=1500,SKILL={
  steam:{n:'증기 폭발',d:'모든 적에게 최대체력 30% 피해 + 4초 감속',cd:55,f:p=>p.units.forEach(u=>{dmgU(u,u.bp.hp*.3);u.slow=Math.max(u.slow,4)})},
- plasma:{n:'플라즈마 낙뢰',d:'무작위 적에게 낙뢰 12회 (최대체력 25%+화상)',cd:55,f:p=>{for(let k=0;k<12&&p.units.length;k++){const u=p.units[Math.floor(Math.random()*p.units.length)];dmgU(u,u.bp.hp*.25+300);u.pois=3;u.pd=60;u.bc=true}}},
+ plasma:{n:'플라즈마 낙뢰',d:'무작위 적에게 낙뢰 12회 (최대체력 25%+화상)',cd:55,f:p=>{for(let k=0;k<12&&p.units.length;k++){const u=p.units[Math.floor(Math.random()*p.units.length)];if(!S.sim&&p.id===view&&typeof PFX!=='undefined')PFX.strike(u.x,BH-u.y,u.bp.t==='A'?1.2:0,k*.09);dmgU(u,u.bp.hp*.25+300);u.pois=3;u.pd=60;u.bc=true}}},
  firestorm:{n:'화염 폭풍',d:'모든 적 6초 강한 화상 + 밀어내기',cd:60,f:p=>p.units.forEach(u=>{u.pois=6;u.pd=u.bp.hp*.05;u.bc=true;kbU(u,2)})},
  pyre:{n:'역병의 불길',d:'모든 적 8초 독화상 + 받는 피해 +35%',cd:60,f:p=>p.units.forEach(u=>{u.pois=8;u.pd=u.bp.hp*.04;u.bc=true;u.amp=8})},
  aurora:{n:'절대영도',d:'모든 적 3초 빙결 (면역 무시)',cd:60,f:p=>p.units.forEach(u=>{u.stun=Math.max(u.stun,3)})},
@@ -748,7 +748,7 @@ function birdMesh3(b,oc){const g=birdMesh2(b,oc),id=b.id,at=(m,x,y,z,s)=>{m.posi
  else if(id==='thunderbird'){[-1,0,1].forEach(s=>at(up(KO(.035,.2,0xfde047,GL(0xfacc15))),s*.07,-.28,.66))}
  else if(id==='crow')[-1,1].forEach(s=>at(SP(.03,0xfacc15,GL(0xfacc15)),s*.08,-.39,.52));
  return g}
-function sync3(dt){const p=S.pl[view],seen=new Set();
+function sync3(dt){if(typeof PFX!=='undefined')PFX.update(dt);const p=S.pl[view],seen=new Set();
  p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(!t)return;const k=y*8+x;seen.add(k);let m=tm.get(k);
   if(!m||m.userData.t!==t||m.userData.lv0!==t.lv){if(m)rmM(m);m=mkTowerMesh(t.bp,t.lv);m.userData.t=t;m.userData.lv0=t.lv;Sc.add(m);tm.set(k,m)}
   m.position.set(cellX(x,y),BH-cellY(y),0);const s=1+(t.lv-1)*.15;m.scale.set(s/XK,s,s);m.rotation.z=t.dis>0?Math.sin(S.t*30)*.2:0;
@@ -2579,6 +2579,41 @@ function tutOpen(){if(!S||S.net||S.sim||$('tut'))return;const pv=paused;paused=t
 {const b=document.createElement('button');b.textContent='🗑 처음부터 다시 (저장 초기화)';b.className='tutre tutrs';b.onclick=()=>{if(!confirm('코인·승리·해금한 종족·영웅 꾸미기가 모두 지워지고 처음 상태로 돌아가요. 정말 초기화할까요?'))return;try{localStorage.removeItem(SAVE_KEY)}catch(e){}location.reload()};const tb=document.querySelector('#tipm .tipb');if(tb)tb.prepend(b)}
 if(/[?&]reset=1/.test(location.search)){try{localStorage.removeItem(SAVE_KEY)}catch(e){}location.replace(location.pathname)}
 {const b=document.createElement('button');b.textContent='📘 튜토리얼 다시 보기';b.className='tutre';b.onclick=()=>{SV.tut=0;svSave();toast('📘 다음 판을 시작할 때 튜토리얼이 다시 나와요')};const tb=document.querySelector('#tipm .tipb');if(tb)tb.prepend(b)}
+
+// ---------- ✨ PFX: 코드로 그리는 픽셀 이펙트 (pixelfx 방식 참고, 직접 구현) ----------
+// 작은 캔버스에 한 점씩 그려 NearestFilter 스프라이트로 띄워요. 효과마다 draw(g,t) 하나. 스킬 이펙트 시제품: 플라즈마 낙뢰
+const PFX=(()=>{const L=[],Q=[];
+ const pal=['#2b1055','#4c1d95','#7c3aed','#60a5fa','#a5f3fc','#fef08a','#ffffff'],SPK=['#7c2d12','#ea580c','#fb923c','#fde68a','#ffffff'];
+ const FL=[1,.7,.25,.95,.45,.85,.2,.6];
+ function spawn(W,H,ox,oy,dur,draw,x,y,z,wu){if(typeof Sc==='undefined'||!Sc)return;const cv=document.createElement('canvas');cv.width=W;cv.height=H;const g=cv.getContext('2d');
+  const tx=new THREE.CanvasTexture(cv);tx.magFilter=tx.minFilter=THREE.NearestFilter;tx.generateMipmaps=false;
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tx,transparent:true,depthWrite:false,depthTest:false}));sp.center.set(ox/W,1-oy/H);sp.scale.set(wu,wu*H/W,1);sp.position.set(x,y,z);sp.renderOrder=40;Sc.add(sp);
+  L.push({sp,g,tx,W,H,t:0,dur,draw,st:{}})}
+ // 지그재그 번개 줄기(위→아래), 가지 2~3개
+ function bolt(g,st,W,H,ox,oy,seed){const R=k=>{const v=Math.sin(seed*91.7+k*12.9898)*43758.5453;return v-Math.floor(v)},pts=[];let x=ox+ (R(1)-.5)*10;
+  for(let i=0;i<=12;i++){const yy=Math.round(i*oy/12);if(i>0&&i<12)x+=(R(i+2)-.5)*9;else if(i===12)x=ox;pts.push([Math.round(x),yy])}return pts}
+ function line(g,a,b,c,w){const dx=b[0]-a[0],dy=b[1]-a[1],n=Math.max(Math.abs(dx),Math.abs(dy))||1;g.fillStyle=c;for(let i=0;i<=n;i++){const x=Math.round(a[0]+dx*i/n),y=Math.round(a[1]+dy*i/n);g.fillRect(x-(w>>1),y,w,1)}}
+ function strike(x,y,z,delay){Q.push({x,y,z,at:delay})}
+ function drawStrike(g,t,W,H,st){const ox=24,oy=86;if(!st.s){st.s=Math.random()*100;st.sp=[];st.br=[]}
+  // 0~.16 바닥 마법진(점선 고리가 그려지며 빛남)
+  if(t<.5){const rev=Math.min(1,t/.16),fade=t<.2?1:Math.max(0,1-(t-.2)/.3);g.globalAlpha=fade;for(let i=0;i<20;i++){if(i/20>rev)continue;const a=i/20*6.283+t*3;g.fillStyle=t>.16&&t<.24?pal[6]:pal[i%2?4:3];g.fillRect(Math.round(ox+Math.cos(a)*14),Math.round(oy+Math.sin(a)*4),2,1)}g.globalAlpha=1}
+  // .16~ 내리치기: 깜박이는 굵은 줄기 + 가지, 시간이 지나면 보라로 식음
+  const s0=.16;if(t>=s0&&t<.62){const k=t-s0,f=FL[Math.min(FL.length-1,Math.floor(k*26))]*(k<.3?1:Math.max(0,1-(k-.3)/.16)),reroll=Math.floor(k*20);
+   const pts=bolt(g,st,W,H,ox,oy,st.s+reroll*.37),lead=k<.05?Math.floor(k/.05*12):12;
+   g.globalAlpha=Math.min(1,.35+f);for(let i=0;i<lead;i++)line(g,pts[i],pts[i+1],k>.3?pal[2]:pal[3],5);
+   for(let i=0;i<lead;i++)line(g,pts[i],pts[i+1],k>.3?pal[3]:pal[5],3);
+   if(f>.4)for(let i=0;i<lead;i++)line(g,pts[i],pts[i+1],pal[6],1);
+   if(k>.05&&k<.3)[3,6,8].forEach((j,n)=>{const a=pts[j],b=[a[0]+(n%2?9:-9),a[1]+7],c=[b[0]+(n%2?4:-4),b[1]+6];line(g,a,b,pal[4],1);line(g,b,c,pal[3],1)});
+   if(k<.12){g.globalAlpha=.55*(1-k/.12);g.fillStyle=pal[6];g.fillRect(ox-9,oy-6,19,8);g.fillStyle=pal[5];g.fillRect(ox-14,oy-3,29,4)}
+   g.globalAlpha=1}
+  // 맞는 순간 불꽃 튀김(플라즈마라 주황 불똥 섞임) + 그을음
+  if(t>=s0&&!st.boom){st.boom=1;for(let i=0;i<22;i++){const a=Math.PI+Math.random()*Math.PI,v=20+Math.random()*45;st.sp.push({x:ox,y:oy-1,vx:Math.cos(a)*v,vy:Math.sin(a)*v*.8,l:.3+Math.random()*.45,c:Math.random()<.5?SPK:pal})}}
+  const dt=1/60;st.sp.forEach(p=>{if(p.l<=0)return;p.l-=dt;p.vy+=160*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.y>oy+2){p.y=oy+2;p.vy*=-.35;p.vx*=.6}const c=p.c[Math.max(0,Math.min(p.c.length-1,Math.floor(p.l*9)))];g.fillStyle=c;g.fillRect(Math.round(p.x),Math.round(p.y),1,1)});
+  if(t>=s0){const a=Math.max(0,1-(t-s0)/1.1);g.globalAlpha=.75*a;g.fillStyle='#1c1917';g.fillRect(ox-8,oy-1,17,3);g.fillRect(ox-5,oy-2,11,5);g.fillStyle=SPK[1];g.globalAlpha=a*(t<.5?1:.4);g.fillRect(ox-2,oy-1,5,2);g.globalAlpha=1}}
+ function update(dt){for(let i=Q.length-1;i>=0;i--){const q=Q[i];q.at-=dt;if(q.at<=0){Q.splice(i,1);spawn(48,92,24,86,1.35,drawStrike,q.x,q.y,q.z,1.7)}}
+  for(let i=L.length-1;i>=0;i--){const e=L[i];e.t+=dt;if(e.t>=e.dur){Sc.remove(e.sp);e.sp.material.map.dispose();e.sp.material.dispose();L.splice(i,1);continue}
+   e.g.clearRect(0,0,e.W,e.H);e.draw(e.g,e.t,e.W,e.H,e.st);e.tx.needsUpdate=true}}
+ return {strike,update,n:()=>L.length+Q.length}})();
 
 renderTitle();
 function raceDex(){let h='<h3>🏰 종족 도감 <small>시작 화면에서 종족을 골라요</small></h3>';
