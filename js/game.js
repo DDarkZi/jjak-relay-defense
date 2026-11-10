@@ -476,7 +476,7 @@ function escape(p,u){const o=S.pl[u.owner];if(u.owner===0&&p.id!==0){S.esc=S.esc
   if(u.bp.steal&&o.alive){o.income+=u.bp.steal;if(u.owner===0)toast('🏴‍☠️ 인컴 약탈 +'+u.bp.steal)}}
  const n=nextAlive(p.id);if(n!==null&&n!==u.owner)spawn(S.pl[n],u.bp,u.owner,u.hp,{sh:u.sh,rv:u.rv,hatch:u.hatch,hd:u.hd,gold:u.gold,col:u.col})}
 function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
- {const lm=lateMul();if(lm!==S.lm){S.lm=lm;sfx('alarm',{mul:lm});if(!S.sim)toast(`⏰ ${Math.floor(S.t/60)}분 돌파! 이제 탈출한 새의 피해가 ${lm}배예요`)}}
+ {const lm=lateMul();if(lm!==S.lm){S.lm=lm;sfx('alarm',{mul:lm});if(!S.sim){if(typeof newsBird==='function'&&typeof Sc!=='undefined'&&Sc)newsBird(`${Math.floor(S.t/60)}분 돌파! 탈출 피해 ${lm}배!`);else toast(`⏰ ${Math.floor(S.t/60)}분 돌파! 이제 탈출한 새의 피해가 ${lm}배예요`)}}}
  S.pl.forEach(p=>{if(p.skCD>0)p.skCD-=dt;if(p.boost>0)p.boost-=dt;if(p.reveal>0)p.reveal-=dt});
  if(S.t>=300&&!S.snap){S.snap=1;S.pl.forEach(q=>q.inc5=q.income)}
  if(S.inc>=TICK){S.inc-=TICK;S.pl.forEach(p=>{if(p.alive)p.gold+=p.income*(p.ai?(D.im||1):1)})}
@@ -780,7 +780,7 @@ function birdMesh3(b,oc){const g=birdMesh2(b,oc),id=b.id,at=(m,x,y,z,s)=>{m.posi
  else if(id==='thunderbird'){[-1,0,1].forEach(s=>at(up(KO(.035,.2,0xfde047,GL(0xfacc15))),s*.07,-.28,.66))}
  else if(id==='crow')[-1,1].forEach(s=>at(SP(.03,0xfacc15,GL(0xfacc15)),s*.08,-.39,.52));
  return g}
-function sync3(dt){if(typeof PFX!=='undefined')PFX.update(dt);const p=S.pl[view],seen=new Set();
+function sync3(dt){if(typeof PFX!=='undefined')PFX.update(dt);if(typeof newsUpd==='function')newsUpd(dt);const p=S.pl[view],seen=new Set();
  p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(!t)return;const k=y*8+x;seen.add(k);let m=tm.get(k);
   if(!m||m.userData.t!==t||m.userData.lv0!==t.lv){if(m)rmM(m);m=mkTowerMesh(t.bp,t.lv);m.userData.t=t;m.userData.lv0=t.lv;Sc.add(m);tm.set(k,m)}
   m.position.set(cellX(x,y),BH-cellY(y),0);const s=1+(t.lv-1)*.15;m.scale.set(s/XK,s,s);if(t.kick>0){t.kick=Math.max(0,t.kick-dt*7);const k=t.kick*t.kick;m.scale.set(s/XK*(1+.1*k),s*(1+.1*k),s*(1-.16*k))}// 쏠 때 움찔 반동m.rotation.z=t.dis>0?Math.sin(S.t*30)*.2:0;
@@ -2728,6 +2728,45 @@ const PFX=(()=>{const L=[],Q=[];
   for(let i=L.length-1;i>=0;i--){const e=L[i];e.t+=dt;if(e.t>=e.dur){Sc.remove(e.sp);e.sp.material.map.dispose();e.sp.material.dispose();L.splice(i,1);continue}
    e.g.clearRect(0,0,e.W,e.H);e.draw(e.g,e.t,e.W,e.H,e.st);e.tx.needsUpdate=true}}
  return {strike,play,many,towers,board,update,FX,n:()=>L.length+Q.length+PL.length+PQ.length}})();
+
+
+// ---------- 🗞 뉴스새 'AI' (NPC 마스코트·조류 인플루언서): 까치 + 머리 사이렌 + 헤드셋 + 경고 현수막 ----------
+// 소식을 전한다는 길조 까치. 피해 배수가 바뀔 때 게임판 위를 가로질러 날며 현수막으로 알려요
+function magpieMesh(){const g=new THREE.Group(),B=0x15151c,W=0xf8fafc,BL=0x1e40af,TL=0x0f766e,at=(m,x,y,z,s,p)=>{m.position.set(x,y,z);if(s)m.scale.set(s[0],s[1],s[2]);(p||g).add(m);return m};
+ const body=new THREE.Group();g.add(body);const ab=(m,x,y,z,s)=>at(m,x,y,z,s,body);
+ ab(SP(.3,B),0,0,0,[.95,1.3,.9]);ab(SP(.24,W),0,-.12,-.08,[.9,1,.85]);[-1,1].forEach(s=>ab(SP(.12,W),s*.24,.02,.06,[.5,1.3,.6]));// 검은 몸 + 흰 배 + 흰 어깨깃
+ ab(SP(.21,B),0,-.42,.2);[-1,1].forEach(s=>{ab(SP(.075,W),s*.085,-.58,.25);ab(SP(.045,B),s*.088,-.63,.26);ab(SP(.016,W),s*.075,-.66,.29);ab(SP(.035,0xf9a8d4),s*.15,-.55,.15,[1,.4,.7])});// 큰 눈·볼
+ const bk=KO(.05,.17,0x334155);bk.rotation.x=PI/2;bk.rotation.z=PI;ab(bk,0,-.66,.17);
+ // 긴 청록 꼬리
+ const tl=SP(.1,TL);ab(tl,0,.55,.06,[.9,4,.35]);ab(SP(.1,BL),0,.4,.08,[1.05,2,.4]);
+ // 🎧 헤드셋(인플루언서) + 📢 사이렌
+ ab(TR(.215,.018,0x111827),0,-.42,.2,[1,1,1]).rotation.y=PI/2;ab(SP(.05,0xef4444),.2,-.42,.2);const mic=CY(.012,.012,.16,0x111827);mic.rotation.set(0,0,0);ab(mic,.17,-.5,.12).rotation.x=1.2;ab(SP(.03,0xfacc15),.13,-.58,.06);
+ ab(CY(.07,.08,.06,0x374151),0,-.42,.42);const sir=new THREE.Group();sir.position.set(0,-.42,.5);body.add(sir);
+ const sR=new THREE.MeshStandardMaterial({color:0xef4444,emissive:0xef4444,emissiveIntensity:1.2,roughness:.3}),sB=new THREE.MeshStandardMaterial({color:0x3b82f6,emissive:0x3b82f6,emissiveIntensity:.2,roughness:.3});
+ const hR=new THREE.Mesh(new THREE.SphereGeometry(.085,16,10,0,PI,0,PI/2),sR),hB=new THREE.Mesh(new THREE.SphereGeometry(.085,16,10,PI,PI,0,PI/2),sB);hR.rotation.x=hB.rotation.x=PI/2;sir.add(hR,hB);
+ const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex(),color:0xff4d4d,transparent:true,opacity:.9,depthWrite:false,blending:THREE.AdditiveBlending}));glow.scale.set(.7,.7,1);sir.add(glow);
+ // 날개(파란 광택 + 흰 첫째깃)
+ const wings=[-1,1].map(s=>{const P=new THREE.Group();P.position.set(s*.22,0,.08);body.add(P);const w=SP(1,B);w.scale.set(.42,.22,.04);w.position.set(s*.4,.02,0);P.add(w);const w2=SP(1,BL);w2.scale.set(.3,.15,.045);w2.position.set(s*.32,-.02,.01);P.add(w2);
+  for(let i=0;i<3;i++){const f=SP(1,i===1?W:B);f.scale.set(.2,.05,.03);f.rotation.z=s*(-.1+i*.25);f.position.set(s*(.78+i*.02),.04+i*.07,-.01);P.add(f)}return P});
+ g.userData={wings,sir,sR,sB,glow,body};return g}
+let GLOWT=null;function glowTex(){if(GLOWT)return GLOWT;const cv=document.createElement('canvas');cv.width=cv.height=64;const x=cv.getContext('2d'),gr=x.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.35,'rgba(255,255,255,.55)');gr.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gr;x.fillRect(0,0,64,64);return GLOWT=new THREE.CanvasTexture(cv)}
+function bannerTex(txt){const cv=document.createElement('canvas');cv.width=640;cv.height=150;const x=cv.getContext('2d');
+ x.fillStyle='#140b33';x.beginPath();x.roundRect?x.roundRect(6,6,628,138,26):x.rect(6,6,628,138);x.fill();x.fillStyle='#ffd43b';x.beginPath();x.roundRect?x.roundRect(14,14,612,122,20):x.rect(14,14,612,122);x.fill();
+ for(let i=-2;i<18;i++){x.fillStyle=i%2?'#140b33':'#ffd43b';x.beginPath();x.moveTo(14+i*40,14);x.lineTo(34+i*40,14);x.lineTo(14+i*40,34);x.fill()}
+ x.fillStyle='#dc2626';x.fillRect(14,100,612,36);x.fillStyle='#fff';x.font='900 26px Jua, "Black Han Sans", sans-serif';x.textAlign='center';x.fillText('📢 AI 속보 · 까치 뉴스',320,128);
+ x.fillStyle='#140b33';let fs=50;do{x.font=`400 ${fs}px "Black Han Sans", Jua, sans-serif`;fs-=2}while(x.measureText(txt).width>580&&fs>22);x.fillText(txt,320,82);
+ const t=new THREE.CanvasTexture(cv);t.minFilter=THREE.LinearFilter;return t}
+let NEWS=null;
+function newsBird(txt){if(typeof Sc==='undefined'||!Sc)return;if(NEWS)newsEnd();const m=magpieMesh();m.scale.setScalar(1.75);m.rotation.z=PI/2;Sc.add(m);
+ const bn=new THREE.Sprite(new THREE.SpriteMaterial({map:bannerTex(txt),transparent:true,depthTest:false,depthWrite:false}));bn.scale.set(5.2,1.22,1);bn.renderOrder=45;Sc.add(bn);
+ const rope=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]),new THREE.LineBasicMaterial({color:0x111827}));Sc.add(rope);
+ const W=typeof COLS!=='undefined'?COLS:8;NEWS={m,bn,rope,t:0,dur:6,x0:-2.5,x1:W+7.5,y:BH*.6};m.traverse(o=>{o.renderOrder=44});
+}
+function newsEnd(){if(!NEWS)return;[NEWS.m,NEWS.bn,NEWS.rope].forEach(o=>Sc.remove(o));NEWS.bn.material.map.dispose();NEWS.bn.material.dispose();NEWS.rope.geometry.dispose();NEWS=null}
+function newsUpd(dt){if(!NEWS)return;const N=NEWS;N.t+=dt;const k=N.t/N.dur;if(k>=1){newsEnd();return}const u=N.m.userData,x=N.x0+(N.x1-N.x0)*k,z=2.6+Math.sin(N.t*3)*.15,y=N.y+Math.sin(N.t*1.7)*.25;
+ N.m.position.set(x,y,z);N.m.rotation.y=Math.sin(N.t*6)*.12;u.wings.forEach((w,i)=>w.rotation.y=(i?-1:1)*Math.sin(N.t*16)*.7);
+ const on=Math.floor(N.t*6)%2;u.sR.emissiveIntensity=on?1.4:.15;u.sB.emissiveIntensity=on?.15:1.4;u.glow.material.color.setHex(on?0xff4d4d:0x4d8bff);u.glow.scale.setScalar(.5+.25*Math.abs(Math.sin(N.t*12)));u.sir.rotation.z=N.t*8;
+ const bx=x-4.2,bz=z+.1;N.bn.position.set(bx,y+Math.sin(N.t*2.4)*.12,bz);const pa=N.rope.geometry.attributes.position;pa.setXYZ(0,x-1.1,y,z);pa.setXYZ(1,bx+2.55,N.bn.position.y,bz);pa.needsUpdate=true}
 
 renderTitle();
 function raceDex(){let h='<h3>🏰 종족 도감 <small>시작 화면에서 종족을 골라요</small></h3>';
