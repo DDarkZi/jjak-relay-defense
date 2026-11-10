@@ -333,16 +333,16 @@ function actDem(pid,x,y){const me=S.pl[pid],t=me&&me.grid[y]&&me.grid[y][x];if(!
 
 // ---------- 조합 스킬 (속성 2개 필요, 해금 SKC골드) ----------
 const SKC=1500,SKILL={
- steam:{n:'증기 폭발',d:'모든 적에게 최대체력 30% 피해 + 4초 감속',cd:55,f:p=>p.units.forEach(u=>{dmgU(u,u.bp.hp*.3);u.slow=Math.max(u.slow,4)})},
+ steam:{n:'증기 폭발',d:'모든 적에게 최대체력 30% 피해 + 4초 감속',cd:55,f:p=>((!S.sim&&p.id===view&&typeof PFX!=='undefined')&&PFX.many('steam',p.units),0)||p.units.forEach(u=>{dmgU(u,u.bp.hp*.3);u.slow=Math.max(u.slow,4)})},
  plasma:{n:'플라즈마 낙뢰',d:'무작위 적에게 낙뢰 12회 (최대체력 25%+화상)',cd:55,f:p=>{for(let k=0;k<12&&p.units.length;k++){const u=p.units[Math.floor(Math.random()*p.units.length)];if(!S.sim&&p.id===view&&typeof PFX!=='undefined')PFX.strike(u.x,BH-u.y,u.bp.t==='A'?1.2:0,k*.09);dmgU(u,u.bp.hp*.25+300);u.pois=3;u.pd=60;u.bc=true}}},
- firestorm:{n:'화염 폭풍',d:'모든 적 6초 강한 화상 + 밀어내기',cd:60,f:p=>p.units.forEach(u=>{u.pois=6;u.pd=u.bp.hp*.05;u.bc=true;kbU(u,2)})},
- pyre:{n:'역병의 불길',d:'모든 적 8초 독화상 + 받는 피해 +35%',cd:60,f:p=>p.units.forEach(u=>{u.pois=8;u.pd=u.bp.hp*.04;u.bc=true;u.amp=8})},
- aurora:{n:'절대영도',d:'모든 적 3초 빙결 (면역 무시)',cd:60,f:p=>p.units.forEach(u=>{u.stun=Math.max(u.stun,3)})},
- whiteout:{n:'눈사태',d:'모든 적을 크게 밀어내고 6초 감속',cd:60,f:p=>p.units.forEach(u=>{kbU(u,3,true);u.slow=Math.max(u.slow,6)})},
- frostbane:{n:'빙독 감옥',d:'모든 적 8초 감속 + 독(초당 최대체력 3%)',cd:55,f:p=>p.units.forEach(u=>{u.slow=Math.max(u.slow,8);u.pois=8;u.pd=u.bp.hp*.03;u.bc=false})},
- tempest:{n:'폭풍의 눈',d:'10초간 내 모든 타워 공격속도 2배',cd:60,f:p=>{p.boost=10}},
- venomvolt:{n:'신경독 전류',d:'모든 적 최대체력 20% 피해 + 2초 기절 + 약화',cd:60,f:p=>p.units.forEach(u=>{dmgU(u,u.bp.hp*.2);u.stun=Math.max(u.stun,2);u.amp=8})},
- miasma:{n:'독안개 장막',d:'10초간 은신 해제 + 감속 + 독',cd:55,f:p=>{p.reveal=10;p.units.forEach(u=>{u.slow=Math.max(u.slow,10);u.pois=10;u.pd=u.bp.hp*.02;u.bc=false})}}};
+ firestorm:{n:'화염 폭풍',d:'모든 적 6초 강한 화상 + 밀어내기',cd:60,f:p=>((!S.sim&&p.id===view&&typeof PFX!=='undefined')&&PFX.many('fire',p.units),0)||p.units.forEach(u=>{u.pois=6;u.pd=u.bp.hp*.05;u.bc=true;kbU(u,2)})},
+ pyre:{n:'역병의 불길',d:'모든 적 8초 독화상 + 받는 피해 +35%',cd:60,f:p=>((!S.sim&&p.id===view&&typeof PFX!=='undefined')&&PFX.many('gfire',p.units),0)||p.units.forEach(u=>{u.pois=8;u.pd=u.bp.hp*.04;u.bc=true;u.amp=8})},
+ aurora:{n:'절대영도',d:'모든 적 3초 빙결 (면역 무시)',cd:60,f:p=>((!S.sim&&p.id===view&&typeof PFX!=='undefined')&&PFX.many('ice',p.units),0)||p.units.forEach(u=>{u.stun=Math.max(u.stun,3)})},
+ whiteout:{n:'눈사태',d:'모든 적을 크게 밀어내고 6초 감속',cd:60,f:p=>((!S.sim&&p.id===view&&typeof PFX!=='undefined')&&PFX.many('snow',p.units,.07),0)||p.units.forEach(u=>{kbU(u,3,true);u.slow=Math.max(u.slow,6)})},
+ frostbane:{n:'빙독 감옥',d:'모든 적 8초 감속 + 독(초당 최대체력 3%)',cd:55,f:p=>((!S.sim&&p.id===view&&typeof PFX!=='undefined')&&PFX.many('cage',p.units),0)||p.units.forEach(u=>{u.slow=Math.max(u.slow,8);u.pois=8;u.pd=u.bp.hp*.03;u.bc=false})},
+ tempest:{n:'폭풍의 눈',d:'10초간 내 모든 타워 공격속도 2배',cd:60,f:p=>{(!S.sim&&p.id===view&&typeof PFX!=='undefined')&&PFX.towers('wind',p);p.boost=10}},
+ venomvolt:{n:'신경독 전류',d:'모든 적 최대체력 20% 피해 + 2초 기절 + 약화',cd:60,f:p=>((!S.sim&&p.id===view&&typeof PFX!=='undefined')&&PFX.many('zap',p.units,.03),0)||p.units.forEach(u=>{dmgU(u,u.bp.hp*.2);u.stun=Math.max(u.stun,2);u.amp=8})},
+ miasma:{n:'독안개 장막',d:'10초간 은신 해제 + 감속 + 독',cd:55,f:p=>{(!S.sim&&p.id===view&&typeof PFX!=='undefined')&&PFX.board('fog',16);p.reveal=10;p.units.forEach(u=>{u.slow=Math.max(u.slow,10);u.pois=10;u.pd=u.bp.hp*.02;u.bc=false})}}};
 function skillOf(p){if(!p.tech2)return null;const c=comboOf(p.tech,p.tech2);return c?Object.assign({id:c.t,c},SKILL[c.t]):null}
 function useSkill(p){const s=skillOf(p);if(!s||!p.skU||p.skCD>0)return false;s.f(p);p.skCD=s.cd;p.skN=(p.skN||0)+1;if(p.id===view||p.id===0)sfx('skill',{id:s.id,mine:p.id===0});if(p.id===view)artFx('skill',{id:s.id,col1:TECH[s.c.k[0]].col,col2:TECH[s.c.k[1]].col});if(p.id===view&&!S.sim)skFx(s);if(p.id===0&&!S.sim)toast(`${s.c.ic} ${s.n} 발동!`);return true}
 
@@ -2610,10 +2610,44 @@ const PFX=(()=>{const L=[],Q=[];
   if(t>=s0&&!st.boom){st.boom=1;for(let i=0;i<22;i++){const a=Math.PI+Math.random()*Math.PI,v=20+Math.random()*45;st.sp.push({x:ox,y:oy-1,vx:Math.cos(a)*v,vy:Math.sin(a)*v*.8,l:.3+Math.random()*.45,c:Math.random()<.5?SPK:pal})}}
   const dt=1/60;st.sp.forEach(p=>{if(p.l<=0)return;p.l-=dt;p.vy+=160*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.y>oy+2){p.y=oy+2;p.vy*=-.35;p.vx*=.6}const c=p.c[Math.max(0,Math.min(p.c.length-1,Math.floor(p.l*9)))];g.fillStyle=c;g.fillRect(Math.round(p.x),Math.round(p.y),1,1)});
   if(t>=s0){const a=Math.max(0,1-(t-s0)/1.1);g.globalAlpha=.75*a;g.fillStyle='#1c1917';g.fillRect(ox-8,oy-1,17,3);g.fillRect(ox-5,oy-2,11,5);g.fillStyle=SPK[1];g.globalAlpha=a*(t<.5?1:.4);g.fillRect(ox-2,oy-1,5,2);g.globalAlpha=1}}
+ // ── 미리 그린 프레임 시트: 효과 종류×변형 3개를 한 번만 그리고, 인스턴스는 UV만 바꿔 재생(새가 많아도 가벼움)
+ const SH={};const rngOf=sd=>{let a=sd*2654435761>>>0;return()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}};
+ const px=(g,x,y,c,a)=>{g.globalAlpha=a??1;g.fillStyle=c;g.fillRect(Math.round(x),Math.round(y),1,1)},disc=(g,cx,cy,r,c,a)=>{g.globalAlpha=a??1;g.fillStyle=c;for(let y=-r;y<=r;y++){const w=Math.floor(Math.sqrt(Math.max(0,r*r-y*y)));g.fillRect(Math.round(cx-w),Math.round(cy+y),w*2+1,1)}};
+ const ln=(g,x0,y0,x1,y1,c,a)=>{const n=Math.max(Math.abs(x1-x0),Math.abs(y1-y0))||1;for(let i=0;i<=n;i++)px(g,x0+(x1-x0)*i/n,y0+(y1-y0)*i/n,c,a)};
+ const C={steam:['#64748b','#94a3b8','#cbd5e1','#f1f5f9','#ffffff'],fire:['#450a0a','#b91c1c','#ea580c','#f59e0b','#fde68a','#ffffff'],gfire:['#052e16','#15803d','#22c55e','#86efac','#ecfccb','#ffffff'],
+  ice:['#0c4a6e','#0284c7','#38bdf8','#a5f3fc','#ecfeff','#ffffff'],snow:['#64748b','#bae6fd','#e0f2fe','#ffffff'],poi:['#3b0764','#7e22ce','#a855f7','#e9d5ff'],volt:['#14532d','#16a34a','#84cc16','#d9f99d','#ffffff'],wind:['#0e7490','#22d3ee','#a5f3fc','#ffffff'],fog:['#2e1065','#4c1d95','#6d28d9','#4d7c0f','#65a30d']};
+ const FX={
+  steam:{W:40,H:56,ox:20,oy:52,N:18,fps:20,wu:1.25,d(g,t,R){const P=C.steam;for(let i=0;i<7;i++){const t0=i*.055,k=(t-t0)/.65;if(k<0||k>1)continue;const x=20+(R[i]-.5)*12+Math.sin(k*6+i)*2,y=50-k*42,r=2+k*7;disc(g,x,y,Math.round(r),P[Math.min(4,1+Math.floor((1-k)*4))],.85*(1-k*k));disc(g,x-1,y-1,Math.max(1,Math.round(r*.55)),P[4],.7*(1-k))}
+   if(t<.45)for(let i=0;i<6;i++){const a=-Math.PI*(.15+.7*R[10+i]),v=26+R[20+i]*20;px(g,20+Math.cos(a)*v*t,48+Math.sin(a)*v*t+70*t*t,'#7dd3fc',1-t/.45)}}},
+  fire:{W:40,H:60,ox:20,oy:56,N:20,fps:20,wu:1.25,d(g,t,R,P0){const P=P0||C.fire,env=t<.15?t/.15:t>.75?Math.max(0,1-(t-.75)/.25):1;for(let x=-9;x<=9;x++){const h=Math.max(0,(16+R[(x+9)%20]*14-Math.abs(x)*1.2)*env*(.8+.25*Math.sin(t*22+x*1.7+R[0]*9)));for(let y=0;y<h;y++){const f=y/Math.max(1,h),ci=f>.85?1:f>.6?2:f>.35?3:f>.15?4:5;if(Math.abs(x)>3&&ci>4)continue;px(g,20+x,55-y,P[Math.min(5,ci)],1)}}
+   for(let i=0;i<5;i++){const k=((t*1.6+R[30+i])%1);px(g,20+(R[40+i]-.5)*14,52-k*40,P[3+(i%2)],(1-k)*env)}}},
+  gfire:{W:40,H:60,ox:20,oy:56,N:20,fps:20,wu:1.25,d(g,t,R){FX.fire.d(g,t,R,C.gfire);if(t>.25&&t<.9){const k=(t-.25)/.65,y=Math.round(30-k*18),x=17;['.###.','#.#.#','#####','.#.#.'].forEach((r,j)=>[...r].forEach((c,i)=>{if(c==='#')px(g,x+i,y+j,'#ecfccb',1-k*.6)}))}}},
+  ice:{W:40,H:56,ox:20,oy:50,N:20,fps:20,wu:1.5,d(g,t,R){const P=C.ice;if(t<.72){const gr=Math.min(1,t/.22);for(let i=0;i<7;i++){const a=-Math.PI/2+(i-3)*.42+(R[i]-.5)*.2,L=(10+R[10+i]*16)*gr,x1=20+Math.cos(a)*L,y1=48+Math.sin(a)*L;ln(g,20,48,x1,y1,P[2]);ln(g,21,48,x1+1,y1,P[3]);px(g,x1,y1,P[5])}disc(g,20,46,Math.round(5*gr),P[4],.55)}
+   else{const k=(t-.72)/.28;for(let i=0;i<16;i++){const a=R[20+i]*6.283,v=8+R[40+i]*16;px(g,20+Math.cos(a)*v*k*1.4,40+Math.sin(a)*v*k+30*k*k,P[3+(i%3)],1-k)}}}},
+  snow:{W:40,H:64,ox:20,oy:58,N:20,fps:20,wu:2,d(g,t,R){const P=C.snow,T=.32;if(t<T){const y=4+(t/T)*48;disc(g,20,y,5,P[1]);disc(g,19,y-1,4,P[3]);for(let i=1;i<4;i++)px(g,20+(R[i]-.5)*4,y-6-i*3,P[2],.6)}else{const k=(t-T)/(1-T);disc(g,20,55,Math.round(4+k*9),P[3],.55*(1-k));for(let i=0;i<18;i++){const a=-Math.PI*R[i],v=14+R[20+i]*26;px(g,20+Math.cos(a)*v*k,55+Math.sin(a)*v*k+40*k*k,P[2+(i%2)],1-k)}disc(g,20,57,Math.round(6*(1-k*.5)),P[3],.8*(1-k))}}},
+  cage:{W:40,H:60,ox:20,oy:56,N:22,fps:20,wu:1.25,d(g,t,R){const P=C.ice,Q=C.poi,dn=Math.min(1,t/.2),fd=t>.8?1-(t-.8)/.3:1;for(let i=0;i<5;i++){const x=8+i*6,L=Math.round(48*dn);for(let y=0;y<L;y++){px(g,x,8+y,P[2],fd);px(g,x+1,8+y,P[4],fd)}}if(dn>=1){ln(g,6,8,34,8,P[3],fd);ln(g,6,55,34,55,P[3],fd)}
+   for(let i=0;i<5;i++){const k=((t*1.3+R[i])%1);px(g,11+i*5,12+k*40,Q[2],fd);px(g,11+i*5,13+k*40,Q[3],fd*.7)}}},
+  zap:{W:40,H:48,ox:20,oy:40,N:16,fps:20,wu:1.5,d(g,t,R){const P=C.volt,f=[1,.5,.9,.3,1,.6,.2,.8][Math.floor(t*16)%8]*(t>.5?Math.max(0,1-(t-.5)/.3):1),rr=rngOf(Math.floor(t*16)+Math.floor(R[0]*999));for(let b=0;b<5;b++){let x=20,y=26,a=rr()*6.283;for(let s=0;s<6;s++){const nx=x+Math.cos(a)*3+(rr()-.5)*3,ny=y+Math.sin(a)*3+(rr()-.5)*3;ln(g,x,y,nx,ny,s<2?P[4]:P[2+(s%2)],f);x=nx;y=ny}}disc(g,20,26,3,P[3],.5*f)}},
+  wind:{W:48,H:48,ox:24,oy:40,N:24,fps:20,wu:2.3,d(g,t,R){const P=C.wind,fd=Math.min(1,t<.15?t/.15:t>.85?(1.2-t)/.35:1);for(let r=0;r<3;r++){const z=36-r*9-t*6,rx=12+r*3,ry=4+r;for(let i=0;i<26;i++){const a=i/26*6.283+t*(9+r*3)+r;if(Math.sin(a)<-.2&&i%2)continue;px(g,24+Math.cos(a)*rx,z+Math.sin(a)*ry,P[(i+r)%4],fd*(Math.sin(a)>0?1:.5))}}}},
+  fog:{W:64,H:40,ox:32,oy:20,N:24,fps:16,wu:3.4,d(g,t,R){const P=C.fog,e=t<.25?t/.25:t>.7?Math.max(0,1-(t-.7)/.8):1;for(let i=0;i<9;i++){const x=10+R[i]*44+Math.sin(t*3+i)*3,y=12+R[10+i]*16,r=Math.round((5+R[20+i]*6)*(.7+.3*e));disc(g,x,y,r,P[i%5],.5*e)}}}};
+ function sheet(k,v){const key=k+v;if(SH[key])return SH[key];const f=FX[k],cols=8,rows=Math.ceil(f.N/cols),cv=document.createElement('canvas');cv.width=f.W*cols;cv.height=f.H*rows;const g=cv.getContext('2d'),R=[],rr=rngOf(k.length*131+v*977+7);for(let i=0;i<64;i++)R.push(rr());
+  for(let n=0;n<f.N;n++){g.save();g.translate((n%cols)*f.W,Math.floor(n/cols)*f.H);g.beginPath();g.rect(0,0,f.W,f.H);g.clip();f.d(g,n/f.fps,R);g.restore()}g.globalAlpha=1;
+  const tx=new THREE.CanvasTexture(cv);tx.magFilter=tx.minFilter=THREE.NearestFilter;tx.generateMipmaps=false;return SH[key]={tx,cols,rows}}
+ const PL=[],PQ=[];
+ function play(k,x,y,z,delay,sc){if(!FX[k])return;PQ.push({k,x,y,z,at:delay||0,sc:sc||1})}
+ function start(q){if(typeof Sc==='undefined'||!Sc)return;const f=FX[q.k],sh=sheet(q.k,(Math.random()*3)|0),tx=sh.tx.clone();tx.needsUpdate=true;tx.repeat.set(1/sh.cols,1/sh.rows);tx.offset.set(0,1-1/sh.rows);
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tx,transparent:true,depthWrite:false,depthTest:false}));sp.center.set(f.ox/f.W,1-f.oy/f.H);const w=f.wu*q.sc;sp.scale.set(w,w*f.H/f.W,1);sp.position.set(q.x,q.y,q.z);sp.renderOrder=40;Sc.add(sp);PL.push({sp,tx,f,sh,t:0})}
+ // 여러 새에게: 최대 14마리만 골라 순서대로(성능), 공중 새는 높이 1.2
+ function many(k,units,gap){[...units].sort(()=>Math.random()-.5).slice(0,14).forEach((u,i)=>play(k,u.x,BH-u.y,u.bp.t==='A'?1.2:0,i*(gap??.05)))}
+ function towers(k,p){let i=0;p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t&&t.bp.id!=='wall'&&i<16)play(k,cellX(x,y),BH-cellY(y),0,(i++)*.04)}))}
+ function board(k,n){for(let i=0;i<n;i++)play(k,.3+Math.random()*(COLS-.6),.5+Math.random()*(BH-1),.3,i*.06)}
  function update(dt){for(let i=Q.length-1;i>=0;i--){const q=Q[i];q.at-=dt;if(q.at<=0){Q.splice(i,1);spawn(48,92,24,86,1.35,drawStrike,q.x,q.y,q.z,1.7)}}
+  for(let i=PQ.length-1;i>=0;i--){const q=PQ[i];q.at-=dt;if(q.at<=0){PQ.splice(i,1);start(q)}}
+  for(let i=PL.length-1;i>=0;i--){const e=PL[i];e.t+=dt;const n=Math.floor(e.t*e.f.fps);if(n>=e.f.N){Sc.remove(e.sp);e.tx.dispose();e.sp.material.dispose();PL.splice(i,1);continue}
+   e.tx.offset.set((n%e.sh.cols)/e.sh.cols,1-(Math.floor(n/e.sh.cols)+1)/e.sh.rows)}
   for(let i=L.length-1;i>=0;i--){const e=L[i];e.t+=dt;if(e.t>=e.dur){Sc.remove(e.sp);e.sp.material.map.dispose();e.sp.material.dispose();L.splice(i,1);continue}
    e.g.clearRect(0,0,e.W,e.H);e.draw(e.g,e.t,e.W,e.H,e.st);e.tx.needsUpdate=true}}
- return {strike,update,n:()=>L.length+Q.length}})();
+ return {strike,play,many,towers,board,update,FX,n:()=>L.length+Q.length+PL.length+PQ.length}})();
 
 renderTitle();
 function raceDex(){let h='<h3>🏰 종족 도감 <small>시작 화면에서 종족을 골라요</small></h3>';
