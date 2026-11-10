@@ -2585,19 +2585,30 @@ function heroDeco(m,b,cfg,hp){const{hz,hy,hr}=hp||headPos(b.id),top=hz+hr,g=new 
  return g}
 // 🧸 AI 3D 영웅 모델(Hyper3D Rodin → assets/models/*.glb, 1.2만 면·512 텍스처). 로비·꾸미기·광장에서만 써요(게임판은 가벼운 기존 모델)
 // h: 키, hp: 모자·안경 위치(머리 높이 hz·앞뒤 hy·반지름 hr, 눈 ey·ez·간격 ex)
-const HGLB={chick:{f:'assets/models/chick.glb',h:.75,hp:{hz:.45,hy:-.02,hr:.2,ey:-.21,ez:.38,ex:.1}}},HG={};
+const HGLB={chick:{f:'assets/models/chick_anim.glb',h:.75,hp:{hz:.45,hy:-.02,hr:.2,ey:-.21,ez:.38,ex:.1}}},HG={};
+/* 뼈대 모델은 포즈를 입힌 실제 꼭짓점으로 크기를 재요(뼈에 배율이 있으면 Box3가 틀림) */
+function skinBox(o){const b=new THREE.Box3(),v=new THREE.Vector3();let sk=0;o.traverse(m=>{if(!m.isSkinnedMesh)return;sk=1;const p=m.geometry.attributes.position;m.skeleton.update();for(let i=0;i<p.count;i+=3){v.fromBufferAttribute(p,i);m.boneTransform(i,v);v.applyMatrix4(m.matrixWorld);b.expandByPoint(v)}});return sk?b:b.setFromObject(o)}
 function hglbGet(id){const d=HGLB[id];if(!d||!THREE.GLTFLoader)return null;const c=HG[id];if(c)return c.st==='ok'?c.s:null;HG[id]={st:'load'};
- new THREE.GLTFLoader().load(d.f,g=>{const sc=g.scene,w=new THREE.Group();sc.rotation.x=PI/2;w.add(sc);sc.updateMatrixWorld(true);const bx=new THREE.Box3().setFromObject(sc),k=d.h/Math.max(.01,bx.max.z-bx.min.z);sc.scale.setScalar(k);sc.position.z=-bx.min.z*k;
-  sc.traverse(o=>{if(o.isMesh){const t=o.material.map||o.material.emissiveMap;if(t)t.encoding=THREE.LinearEncoding;o.material=new THREE.MeshBasicMaterial({map:t});o.geometry.userData.cached=true}});
+ new THREE.GLTFLoader().load(d.f,g=>{const sc=g.scene,w=new THREE.Group();w.userData.clips=g.animations||[];sc.rotation.x=PI/2;w.add(sc);sc.updateMatrixWorld(true);const bx=skinBox(sc),k=d.h/Math.max(.01,bx.max.z-bx.min.z);sc.scale.setScalar(k);sc.position.z=-bx.min.z*k;
+  sc.traverse(o=>{if(o.isMesh){const t=o.material.map||o.material.emissiveMap;if(t)t.encoding=THREE.LinearEncoding;o.material=new THREE.MeshBasicMaterial({map:t,skinning:!!o.isSkinnedMesh});o.geometry.userData.cached=true}});
   HG[id]={st:'ok',s:w};LHK=''},null,()=>{HG[id]={st:'fail'}});return null}
-function heroMeshAI(cfg,b0){const src=hglbGet(cfg.id);if(!src)return null;const m=new THREE.Group(),c=src.clone(true);m.add(c);
+/* 뼈대(스킨) 있는 모델 복제: 그냥 clone하면 뼈가 원본을 가리켜서 따로 못 움직임 */
+function skinClone(src){const c=src.clone(true),sL=new Map(),cL=new Map();const par=(a,b)=>{sL.set(b,a);cL.set(a,b);a.children.forEach((k,i)=>par(k,b.children[i]))};par(src,c);
+ c.traverse(o=>{if(!o.isSkinnedMesh)return;const so=sL.get(o),sk=so.skeleton.clone();sk.bones=so.skeleton.bones.map(b=>cL.get(b));o.bind(sk,so.bindMatrix)});return c}
+function heroMeshAI(cfg,b0){const src=hglbGet(cfg.id);if(!src)return null;const m=new THREE.Group(),c=skinClone(src);m.add(c);
+ if(src.userData.clips.length){const mx=new THREE.AnimationMixer(c),A={};src.userData.clips.forEach(k=>A[k.name]=mx.clipAction(k));m.userData.mix={mx,A,cur:null,t:null,ft:3+Math.random()*3}}
  if(cfg.col!=null)c.traverse(o=>{if(o.isMesh){o.material=o.material.clone();o.material.color.setHex(cfg.col).lerp(new THREE.Color(0xffffff),.45)}});
  m.userData.w=[];heroDeco(m,b0,cfg,HGLB[cfg.id].hp);m.userData.b=b0;m.userData.ai=1;return m}
 function heroMesh(cfg){const b0=UB[cfg.id]||UB.chick,ai=heroMeshAI(cfg,b0);if(ai)return ai;const b=b0.t==='A'?Object.assign({},b0,{t:'G'}):b0,m=birdMesh3(b,0x60a5fa);artFx('bird',{m,b,dex:true});// 영웅은 받침대 위에 서 있으니 공중 새도 날개 접고 발로 서게
  m.traverse(o=>{if(o.name==='artOutl'||(o.geometry&&o.geometry.type==='TorusGeometry'&&o.material&&o.material.color&&o.material.color.getHex()===0x60a5fa))o.visible=false;});// 영웅은 가까이 보니까 게임판용 외곽선·팀 고리는 숨겨요
  m.traverse(o=>{if(o.geometry&&o.geometry.type==='PlaneGeometry')o.visible=false;else if(cfg.col!=null&&o.material&&o.material.color&&!(o.name||'').startsWith('art')&&o.material.color.getHex()===b.col)o.material.color.setHex(cfg.col)});
  heroDeco(m,b,cfg);m.userData.b=b0;return m}
-const birdAnim=(m,t,walk)=>{(m.userData.w||[]).forEach((q,i)=>q.rotation.y=(i?-1:1)*Math.sin(t*14)*.5);const bd=m.children[0];if(bd)bd.rotation.z=walk?Math.sin(t*12)*.16:Math.sin(t*2)*.04;if(m.userData.an)m.userData.an(t,m)};
+/* 3D 영웅 애니메이션(idle·walk·flap): 걸으면 walk, 서 있으면 idle, 가끔 flap 한 번 */
+function heroPlay(X,n,fade){const a=X.A[n];if(!a||X.cur===n)return;const o=X.A[X.cur];a.reset();if(n==='flap'){a.setLoop(THREE.LoopRepeat,2)}a.play();if(o)a.crossFadeFrom(o,fade||.2,false);X.cur=n}
+function heroClip(X,t,walk){const dt=X.t==null?0:Math.min(.1,Math.max(0,t-X.t));X.t=t;X.ft-=dt;
+ if(walk)heroPlay(X,'walk');else if(X.cur==='flap'){if(!X.A.flap.isRunning())heroPlay(X,'idle',.25)}else if(X.ft<=0&&X.A.flap){X.ft=5+Math.random()*4;heroPlay(X,'flap',.15)}else heroPlay(X,'idle',.3);
+ X.mx.update(dt)}
+const birdAnim=(m,t,walk)=>{const X=m.userData.mix;if(X){heroClip(X,t,walk);return}(m.userData.w||[]).forEach((q,i)=>q.rotation.y=(i?-1:1)*Math.sin(t*14)*.5);const bd=m.children[0];if(bd)bd.rotation.z=walk?Math.sin(t*12)*.16:Math.sin(t*2)*.04;if(m.userData.an)m.userData.an(t,m)};
 // 공용 렌더러(로비·꾸미기·광장이 돌려 씀)
 let LR=null,LS=null,LC=null,LH=null,LHK='',lobMode='lobby',lobT=0;
 function lobLights(sc){sc.add(new THREE.AmbientLight(0xffffff,.5));sc.add(new THREE.HemisphereLight(0xe0f2ff,0x6b5a3a,.65));const d=new THREE.DirectionalLight(0xfff3d0,.95);d.position.set(3,-5,8);sc.add(d)}

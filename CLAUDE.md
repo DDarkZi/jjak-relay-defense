@@ -42,6 +42,7 @@
 - 공중 새 인컴은 `BAL.airInc`(0.8)배(데이터 로드 때 `u.inc`에 반영). 결과 표 `resultUI()`(#eres): 진영별 `p.kills`(막은 새)·`p.dealt`(준 피해)·`p.income`·`p.dieT`.
 - 업그레이드 비용: `upc = c × BAL.upk × lv × (1 + BAL.upg × (lv-1))` × 종족 배율.
 - `S.sim`일 때는 사운드·이펙트를 건너뛴다. 통계 훅은 `S.st`가 있을 때만 동작.
+- 🦴 병아리 영웅은 Blender로 뼈대·애니메이션(idle·walk·flap)을 넣은 `assets/models/chick_anim.glb`(사용자 컴퓨터의 Claude Code+Blender 5.x에서 제작). 복제는 `skinClone`(그냥 clone하면 뼈 공유), 크기는 `skinBox`, 재생은 `heroClip`(걸으면 walk·서 있으면 idle·5~9초마다 flap). ⚠️ 뼈대 GLB는 위치·가중치를 quantize하지 말 것(크기 계산이 깨짐) — `--pattern "{NORMAL,TEXCOORD_0}"`만. 클라우드 세션에서 컴퓨터 폴더 연결은 이 계정에서 아직 안 됨(2026-11-10).
 - AI 3D 영웅 모델: Hyper3D Rodin으로 만든 GLB를 gltf-transform+meshoptimizer로 1.2만 면·512 JPEG·quantize로 줄여 `assets/models/`에. `HGLB`(키·모자/안경 위치)·`hglbGet`·`heroMeshAI`, 로비·꾸미기·광장 영웅에만(게임판은 기존 모델). 약관 메모 `art_src/models/README.md`(Rodin은 상업 이용 제한 없음, ChatAvatar는 개인용만).
 - 픽셀 이펙트 `PFX`(game.js 끝, pixelfx 방식을 참고해 직접 구현, 외부 코드 실행·복사 없음): 작은 캔버스에 점을 찍어 NearestFilter 스프라이트로 띄움. `PFX.strike(x,y,z,delay)`=플라즈마 낙뢰 시제품, `sync3`에서 `PFX.update(dt)`. 다른 조합 스킬은 아직 기존 파티클(`A.skill`).
 - 💬 말하는 새(도도·앵무, `talk`): 끝까지 가는 동안 진행 25·50·75%에서 한 마디씩 3번(1.6초), 화면 동시 최대 3개(`sync3.tA`). 타조는 말 안 함(피루엣만).
