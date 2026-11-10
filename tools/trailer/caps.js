@@ -2,7 +2,7 @@ const {chromium}=require('playwright'),fs=require('fs');
 const C=[['swarm','🚨 새떼 주의보 발령!','하늘을 뒤덮은 새떼가 몰려온다','#ffd23a'],
 ['news','📢 AI 속보!','마스코트 AI가 위기를 알려요','#ff6b6b'],
 ['build','타워를 세워 막아라','타워 42종 · 5가지 속성','#ffd23a'],
-['fun','웃긴 새 55종','발레 타조 · 각설이 도도 · 욕쟁이 앵무','#ff8fc0'],
+['fun','이상한 새 55종','발레 타조 · 각설이 도도 · 욕쟁이 앵무','#ff8fc0'],
 ['skill','조합 스킬 💥','속성 2개를 섞으면 필살기','#7ce7ff'],
 ['send','새를 보내 공격!','보낼수록 수입이 쑥쑥','#9dff7a'],
 ['ring','8명 릴레이 대전','최후의 1인이 되어라','#c4b5fd'],
@@ -26,6 +26,7 @@ const end=(w,h)=>`<html><head>${FONT}</head><body style="margin:0;width:${w}px;h
 <div style="font-family:Jua;font-size:${h>w?54:44}px;color:#fff;background:#dc2626;border:5px solid #000;border-radius:14px;padding:6px 22px 0;margin-bottom:18px">🚨 AI 속보</div>
 ${T('새떼 주의보','#ffd23a',w>h?150:170)}
 <div style="display:inline-block;font-family:'Black Han Sans';font-size:${h>w?84:72}px;color:#fff;background:#dc2626;border:6px solid #000;border-radius:18px;padding:4px 34px 0;margin-top:16px;transform:rotate(-2deg);box-shadow:0 8px 0 #000">짹짹 디펜스</div>
-<div style="margin-top:46px;font-family:Jua;font-size:${h>w?58:48}px;color:#1a0f33;background:#ffd23a;border:5px solid #000;border-radius:999px;padding:14px 48px 8px;box-shadow:0 8px 0 #000">▶ 설치 없이 바로 플레이</div></body></html>`;
+<div style="margin-top:46px;font-family:Jua;font-size:${h>w?58:48}px;color:#1a0f33;background:#ffd23a;border:5px solid #000;border-radius:999px;padding:14px 48px 8px;box-shadow:0 8px 0 #000">▶ Google Play에서 만나요!</div>
+<div style="margin-top:22px;font-family:Jua;font-size:${h>w?40:34}px;color:#fff">지금 바로 다운로드 📲</div></body></html>`;
 for(const [n,w,h] of [['v',1080,1920],['h',1920,1080]]){await pg.setViewportSize({width:w,height:h});await pg.setContent(end(w,h).replace(/color:undefined/,'color:#ffd23a'),{waitUntil:'networkidle'});await pg.evaluate(()=>document.fonts.ready);await pg.screenshot({path:`cap/${n}_end.png`})}
 await b.close()})();
