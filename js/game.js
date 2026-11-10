@@ -21,7 +21,7 @@ const T=[
 {id:'breeze',tech:'wind',n:'산들 풍차',c:150,d:14,r:2.8,cd:1.1,kb:1,ic:'🎐',col:0x5eead4,x:'넉백'},
 {id:'wind',tech:'wind',n:'비눗방울 기계',c:330,d:30,r:3.4,cd:1.4,bubble:1.4,ic:'🧼',col:0x7dd3fc,x:'비눗방울에 가둬 1.4초 둥실 · 갇힌 새는 멈추고 공중으로 떠서 대공 타워에도 맞아요 · 터질 때 공격력 2배 피해 · 넉백 면역 새는 안 갇혀요'},
 {id:'twister',tech:'wind',n:'회오리 대공',c:300,d:135,r:4.5,cd:.8,t:'A',kb:1,ic:'🌀',col:0x0ea5e9,x:'강력 대공+넉백'},
-{id:'bat',tech:'dark',n:'박쥐 둥지',c:180,d:28,r:3,cd:.7,ic:'🦇',col:0x9f1239,x:'흡혈박쥐새 해금'},
+{id:'bat',n:'박쥐 둥지',c:180,d:28,r:3,cd:.7,ic:'🦇',col:0x9f1239,x:'박쥐 떼가 날아가 쪼아요(공용)'},
 {id:'flu',tech:'dark',n:'독감 물약',c:240,d:16,r:3.2,cd:1.6,splash:1.4,poison:8,ic:'🧪',col:0x22c55e,x:'광역 독'},
 {id:'acid',tech:'dark',n:'산성 늪',c:300,d:18,r:3,cd:1.3,splash:1.6,amp:1,poison:5,t:'G',ic:'🫧',col:0x84cc16,x:'받는 피해 +35%'},
 // ✨ 조합 타워 (두 속성을 모두 고르면 해금)
@@ -126,7 +126,7 @@ U.push(
 U.sort((a,b)=>a.c-b.c);
 const TECH={fire:{n:'화염',ic:'🔥',col:0xf97316,t:['ember','lava','sun'],u:'phoenix',d:'화상 지속 피해'},ice:{n:'빙결',ic:'❄️',col:0x67e8f9,t:['ice','frost','bliz'],u:'penguin',d:'감속·빙결'},
  thunder:{n:'뇌전',ic:'⚡',col:0xfacc15,t:['static','thunder','storm'],u:'thunderbird',d:'연쇄 번개·기절'},wind:{n:'폭풍',ic:'🌪️',col:0x2dd4bf,t:['breeze','wind','twister'],u:'albatross',d:'넉백·방울·대공'},
- dark:{n:'독',ic:'☠️',col:0x84cc16,t:['bat','flu','acid'],u:'vampire',d:'독·약화·흡혈'}},TK=Object.keys(TECH),TECH2C=300;
+ dark:{n:'독',ic:'☠️',col:0x84cc16,t:['flu','acid'],u:'vampire',d:'독·약화·흡혈'}},TK=Object.keys(TECH),TECH2C=300;
 const BAL=/*BAL*/{upk:1.05,upg:.2,rh:.15,rs:0.5,hcr:2,hmx:0.03,pk:0.35,pmax:5,pdur:4,bk:1.1,bdur:3,bsp:.7,cl:2.5,mode:{normal:{uh:0.95,td:0.84,as:1.02},race:{uh:1,td:0.85,as:0.97}},cap:44,ovs:.9,airInc:.8,need:1,uhp:2.4,incS:805,late1:420,lm1:2,late2:540,lm2:3,py:{ar:.85,am:2.4,gr:1.1,gm:.8,lr:1.1,la:1.2,lg:.4}}/*BALEND*/;T.forEach(b=>{if(!b.d||b.pylon||b.snack||b.cctv)return;const tr=[];if(b.cd<=.8){b.rapid=1;tr.push('⚡연사 가속: 계속 쏘면 공속 최대 +50%')}else if(b.cd>=1.5){b.heavy=1;tr.push('💥강타: 3번째 공격마다 치명타 ×2 + 대상 최대체력 3% 추가 피해')}if(b.poison)tr.push('☠️독 중첩(최대 5)'+((b.splash||b.self)?' · 독연기 2.5초 잔류':''));if(b.burn)tr.push('🔥화상 번짐: 불탄 채 쓰러지면 옆으로 옮겨붙음');if(tr.length)b.x=(b.x?b.x+' · ':'')+tr.join(' · ')});U.forEach(u=>{u.inc=Math.round(u.inc*1.4*(u.t==='A'?BAL.airInc:1));u.hp=Math.round(u.hp*BAL.uhp);if(u.shield)u.shield*=BAL.uhp});const TICK=4;
 const COMBO=T.filter(t=>t.combo).map(t=>({k:t.combo,t:t.id,u:U.find(u=>u.combo&&u.combo.join()===t.combo.join()).id,n:t.combo.map(k=>TECH[k].n).join('+'),ic:t.combo.map(k=>TECH[k].ic).join('')}));
 // 🎭 웃긴 이름 + 한 줄 설명 (도감용)
