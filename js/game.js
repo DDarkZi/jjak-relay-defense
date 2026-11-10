@@ -64,7 +64,7 @@ const U=[
 {id:'humbee',n:'벌새',c:360,hp:125,sp:1.9,t:'G',dm:1,inc:19,count:6,cntR:[5,7],swarm:1,ic:'🐝',col:0xfacc15,x:'5~7마리 떼 · 너무 작아서 강타형 타워(공격 간격 1.5초 이상)의 피해를 절반만 받아요'},
 {id:'pelican',n:'펠리컨',c:3000,hp:5200,sp:.8,t:'A',dm:10,inc:190,carry:8,ic:'🚌',col:0xf8fafc,x:'쓰러지면 부리 주머니에서 승객 새 8마리가 쏟아져 지상으로 걸어가요'},
 {id:'crocbird',n:'악어새',c:1600,hp:3300,sp:.75,t:'G',dm:6,inc:110,rage:1,ic:'🐊',col:0xb8bec9,x:'악어를 타고 와요 · 체력이 35% 아래로 떨어지면 악어가 화나서 1.6배 빨라져요'},
-{id:'ostrich',n:'타조타이탄',c:1900,hp:4500,sp:.7,t:'G',dm:8,inc:130,ic:'🦩',col:0x292524},
+{id:'ostrich',n:'타조타이탄',c:1900,hp:4500,sp:.7,t:'G',dm:8,inc:130,ic:'🦩',col:0x292524,talk:['백조의 호수~♪','빙글빙글 피루엣!','발끝으로 사뿐~ 쿵!'],x:'발레를 하며 빙글빙글 돌아요(능력은 없음)'},
 // ✨ 조합 새
 {id:'crane',combo:['fire','ice'],n:'온천 두루미',c:650,hp:900,sp:1.4,t:'G',dm:3,inc:38,imm:['slow','burn'],heal:1,ic:'🌡️',col:0xfecdd3,x:'화상·감속 면역 · 주변 치유'},
 {id:'plasmabird',combo:['fire','thunder'],n:'번개불새',c:900,hp:935,sp:2.3,t:'A',dm:4,inc:55,zap:1,imm:['stun'],ic:'🌟',col:0xfb923c,x:'기절 면역 · 타워 마비 · 고속'},
@@ -761,7 +761,7 @@ function sync3(dt){if(typeof PFX!=='undefined')PFX.update(dt);const p=S.pl[view]
  p.units.forEach(u=>{us.add(u.id);let m=um.get(u.id);if(m&&m.userData.bp!==u.bp){rmM(m);um.delete(u.id);m=null}if(!m){m=birdMesh3(u.bp,parseInt(PC[u.owner].slice(1),16));artFx('bird',{m,b:u.bp,u});m.userData.bp=u.bp;Sc.add(m);um.set(u.id,m)}
   m.position.set(u.x,BH-u.y,u.bp.t==='A'?(u.gr>0?.35:1.4):u.fl>0?.75+Math.sin(S.t*5)*.06:.05);{let bb=m.userData.bub;if(u.fl>0&&!bb){bb=m.userData.bub=new THREE.Mesh(new THREE.SphereGeometry(.42,16,12),new THREE.MeshStandardMaterial({color:0xbae6fd,emissive:0x7dd3fc,emissiveIntensity:.5,transparent:true,opacity:.42,roughness:.1,depthWrite:false}));bb.position.z=.28;const hl=new THREE.Mesh(new THREE.SphereGeometry(.07,8,6),new THREE.MeshBasicMaterial({color:0xffffff}));hl.position.set(-.18,-.2,.2);bb.add(hl);m.add(bb)}if(bb)bb.visible=u.fl>0}m.scale.x=m.scale.y/XK;
   if(u.bp.talk){let sp=m.userData.talk;const ph=(S.t*.5+u.id*1.37)%u.bp.talk.length,i=Math.floor(ph),on=ph-i<.72;
-   if(!sp&&on){sp=m.userData.talk=new THREE.Sprite(new THREE.SpriteMaterial({map:talkTex(u.bp,i),depthTest:false,transparent:true}));sp.geometry.userData.cached=1;sp.renderOrder=30;sp.position.set(0,-.2,1.35);m.add(sp)}
+   if(!sp&&on){sp=m.userData.talk=new THREE.Sprite(new THREE.SpriteMaterial({map:talkTex(u.bp,i),depthTest:false,transparent:true}));sp.geometry.userData.cached=1;sp.renderOrder=30;sp.position.set(0,-.2,u.bp.id==='ostrich'?2.05:1.35);m.add(sp)}
    if(sp){sp.visible=on;if(on){const tx=talkTex(u.bp,i);if(sp.material.map!==tx){sp.material.map=tx;sp.material.needsUpdate=true}const k=1/m.scale.y;sp.scale.set(2.5*k,.86*k,1)}}}
   if(u.bp.stealth){const st=u.y<BH*u.bp.stealth&&!u.seen;if(m.userData.st!==st){m.userData.st=st;m.traverse(o=>{if(o.material&&o.name!=='f'&&!(o.name||'').startsWith('art')){if(o.userData.op0===undefined)o.userData.op0=o.material.opacity;o.material.transparent=true;o.material.opacity=st?.3*o.userData.op0:o.userData.op0}})}}
   const sh=m.getObjectByName('shd');if(sh)sh.visible=u.sh>0;
@@ -1623,9 +1623,12 @@ const ART=(()=>{
    if(a.P.length){const o=new THREE.Mesh(gk('anP_'+id+a.kk,()=>merge(a.P)),cl(AMAT()));o.name='artAnimP';q.add(o);if(st)fadeSt(o,m)}
    if(a.G.length){const o=new THREE.Mesh(gk('anG_'+id+a.kk,()=>merge(a.G)),cl(GMAT()));o.name='artAnimG';q.add(o);if(st)fadeSt(o,m)}
    m.add(q);return q});
-  const shiv=id==='penguin',peck=id==='woodpecker',dance=id==='dodo';if(!gs.length&&!shiv&&!peck&&!dance)return;
+  const shiv=id==='penguin',peck=id==='woodpecker',dance=id==='dodo',ballet=id==='ostrich';if(!gs.length&&!shiv&&!peck&&!dance&&!ballet)return;
   m.userData.an=(t,mm)=>{if(shiv){mm.position.x+=Math.sin(t*61)*.016;mm.position.y+=Math.cos(t*47)*.009}
    if(dance){mm.rotation.y=Math.sin(t*5)*.2;mm.position.z+=Math.abs(Math.sin(t*5))*.03}
+   // 🩰 발레 타조: 살랑살랑 걷다가 2.6초마다 발끝으로 서서 빙글 한 바퀴(피루엣). 바깥에서 방향을 정해 줘도(광장) 그 위에 더해서 돌아요
+   if(ballet){const ph=t%2.6,sp=ph<.9?(1-Math.cos(ph/.9*Math.PI))/2*6.2832:0,ud=mm.userData;if(ud.rzl===undefined||Math.abs(mm.rotation.z-ud.rzl)>1e-6)ud.rzb=mm.rotation.z;
+    mm.rotation.z=ud.rzb+sp;ud.rzl=mm.rotation.z;mm.rotation.y=ph<.9?0:Math.sin(t*4)*.14;mm.position.z+=ph<.9?Math.sin(ph/.9*Math.PI)*.12:Math.abs(Math.sin(t*4))*.02}
    if(peck){const ph=t%1.8;mm.rotation.x=ph<.55?Math.abs(Math.sin(ph*34))*.3:0}
    for(const q of gs){const k=q.userData.k;
     if(k==='fan'){const s=1+.07*Math.sin(t*3.2);q.scale.set(s,1,s);q.rotation.y=Math.sin(t*1.7)*.07}
