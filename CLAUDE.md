@@ -45,6 +45,7 @@
 - 픽셀 이펙트 `PFX`(game.js 끝, pixelfx 방식을 참고해 직접 구현, 외부 코드 실행·복사 없음): 작은 캔버스에 점을 찍어 NearestFilter 스프라이트로 띄움. `PFX.strike(x,y,z,delay)`=플라즈마 낙뢰 시제품, `sync3`에서 `PFX.update(dt)`. 다른 조합 스킬은 아직 기존 파티클(`A.skill`).
 - 💬 말하는 새(도도·앵무, `talk`): 끝까지 가는 동안 진행 25·50·75%에서 한 마디씩 3번(1.6초), 화면 동시 최대 3개(`sync3.tA`). 타조는 말 안 함(피루엣만).
 - 🗞 뉴스새 마스코트 'AI'(NPC, 조류 인플루언서): **드론 메카 병아리**. 정식 3D `assets/models/ai_mascot.glb`(Hyper3D Rodin, 341면·52KB, 원본·시안 `art_src/mascot/`) — `aiMascotGet`(게임 시작 때 미리 불러옴)·`aiMascotMesh`(사이렌 빛 + 프로펠러 4곳 회전 잔상 `blurTex`), 못 불러오면 코드 모델 `mechaChickMesh`. `newsBird(txt)`·`newsUpd`(sync3)·`bannerTex`('AI 속보 · 짹짹 뉴스'). 카메라 쪽으로 숙여(rotation.x -1.05) 얼굴을 보이며 현수막을 끌고 판을 가로지름. 6분30초·8분30초 '30초 뒤 피해 N배!' 예고 + 7·9분 '돌파'.
+- 🪴 꿀꺽 파리지옥(`flytrap`, 독 속성 3번째, 260G, 지상 전용, cd1.4): 머리 수=레벨(최대 3)만큼 지상 새를 물어 `u.stun`·`u.held`로 1.6초(Lv3+ 1.8초, 체력 2000+ 새는 절반) 묶고 독. Lv.4는 체력 12% 이하면 꿀꺽(`A.gulp`). 이펙트 `A.vine`(덩굴 줄기)·`PFX 'chomp'`(픽셀 턱, `play(...,dur)`로 길이 맞춤). 박쥐 둥지는 공용 타워로 옮김. 90판 시뮬: 피해 효율 0.68(묶기가 본업), 독 첫 속성 승률 11.6%.
 - 🔢 피해 숫자 `dmgPop`: 치명타 또는 최대 체력 12%(최소 60) 이상만, 90ms 간격. ⚠️ 한 줄 코드 중간에 `//` 주석을 넣으면 뒤 코드가 다 주석이 됨(두 번 버그 남) — `/* */`를 쓰거나 줄을 바꿀 것.
 - 만화풍 전투 UI(v11.2): 상점 초상화 `thumbOne/shopThumbTick`(두 프레임에 하나, `DXC['s_…']`), 카드 등급 클래스 `tr-cm/rr/ep/lg`(`tierOf`), 피해 숫자 `dmgPop`(DOM `#dmgl`, `pfS>=2`면 끔), 격추 배너 `killBanner`(600G 이상·3초 간격), 타워 별 뱃지 `starTex`(Lv.2+), 새 외곽선은 ART `A.bird`에서 실제 몸통 크기로(`outl2_`). 3D 원본 백업 브랜치: `backup-3d-v11.1`.
 
