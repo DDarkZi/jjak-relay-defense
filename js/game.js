@@ -476,7 +476,8 @@ function escape(p,u){const o=S.pl[u.owner];if(u.owner===0&&p.id!==0){S.esc=S.esc
   if(u.bp.steal&&o.alive){o.income+=u.bp.steal;if(u.owner===0)toast('🏴‍☠️ 인컴 약탈 +'+u.bp.steal)}}
  const n=nextAlive(p.id);if(n!==null&&n!==u.owner)spawn(S.pl[n],u.bp,u.owner,u.hp,{sh:u.sh,rv:u.rv,hatch:u.hatch,hd:u.hd,gold:u.gold,col:u.col})}
 function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
- {const lm=lateMul();if(lm!==S.lm){S.lm=lm;sfx('alarm',{mul:lm});if(!S.sim){if(typeof newsBird==='function'&&typeof Sc!=='undefined'&&Sc)newsBird(`${Math.floor(S.t/60)}분 돌파! 탈출 피해 ${lm}배!`);else toast(`⏰ ${Math.floor(S.t/60)}분 돌파! 이제 탈출한 새의 피해가 ${lm}배예요`)}}}
+ {if(!S.sim&&typeof newsBird==='function'){const pw=[[BAL.late1-30,BAL.lm1],[BAL.late2-30,BAL.lm2]].find(([t])=>S.t>=t&&S.t<t+1&&S.pw!==t);if(pw){S.pw=pw[0];newsBird(`30초 뒤 탈출 피해 ${pw[1]}배!`)}}
+  const lm=lateMul();if(lm!==S.lm){S.lm=lm;sfx('alarm',{mul:lm});if(!S.sim){if(typeof newsBird==='function'&&typeof Sc!=='undefined'&&Sc)newsBird(`${Math.floor(S.t/60)}분 돌파! 탈출 피해 ${lm}배!`);else toast(`⏰ ${Math.floor(S.t/60)}분 돌파! 이제 탈출한 새의 피해가 ${lm}배예요`)}}}
  S.pl.forEach(p=>{if(p.skCD>0)p.skCD-=dt;if(p.boost>0)p.boost-=dt;if(p.reveal>0)p.reveal-=dt});
  if(S.t>=300&&!S.snap){S.snap=1;S.pl.forEach(q=>q.inc5=q.income)}
  if(S.inc>=TICK){S.inc-=TICK;S.pl.forEach(p=>{if(p.alive)p.gold+=p.income*(p.ai?(D.im||1):1)})}
@@ -2435,7 +2436,9 @@ function shopThumbTick(){shopThumbTick.f=(shopThumbTick.f||0)+1;if(shopThumbTick
  try{if(!DXC['s_'+key])thumbOne(key)}catch(e){return}const x=key[0]==='u'?UB[key.slice(2)]:TB[key.slice(2)];if(x&&x.el&&DXC['s_'+key]){const i=x.el.querySelector('i');if(i){i.innerHTML=`<img src="${DXC['s_'+key]}" alt="">`;x.el.classList.add('pic')}}}
 // 💥 피해 숫자(내가 보는 진영만, 너무 많으면 건너뜀) + 큰 새 격추 배너
 const DMGP={pool:[],i:0,t:0};
-function dmgPop(u,v,crit){if(!S||S.sim||!R||!Cam||v<1||pfS>=2)return;// 휴대폰이 느려 화질을 두 번 낮췄으면 피해 숫자도 꺼요const now=performance.now();if(now-DMGP.t<30&&!crit)return;DMGP.t=now;
+// 피해 숫자: 치명타이거나 큰 피해(최대 체력 12% 이상, 최소 60)만. 휴대폰이 느려 화질을 두 번 낮췄으면 끔
+function dmgPop(u,v,crit){if(!S||S.sim||!R||!Cam||v<1||pfS>=2)return;if(!crit&&v<Math.max(60,u.bp.hp*.12))return;
+ const now=performance.now();if(now-DMGP.t<90&&!crit)return;DMGP.t=now;
  if(!DMGP.pool.length){const L=document.createElement('div');L.id='dmgl';$('cv').parentNode.appendChild(L);for(let i=0;i<28;i++){const d=document.createElement('b');L.appendChild(d);DMGP.pool.push(d)}}
  const z=u.bp.t==='A'&&!(u.gr>0)?1.7:1,v3=new THREE.Vector3(u.x,BH-u.y,z).applyMatrix4(Sc.matrixWorld).project(Cam);if(v3.z>1)return;const el=R.domElement,w=el.clientWidth,h=el.clientHeight;
  const d=DMGP.pool[DMGP.i++%DMGP.pool.length];d.style.left=((v3.x*.5+.5)*w+(Math.random()-.5)*16)+'px';d.style.top=((-v3.y*.5+.5)*h)+'px';d.textContent=Math.round(v);d.className=crit?'c':'';void d.offsetWidth;d.className=(crit?'c ':'')+'go'}
@@ -2765,8 +2768,20 @@ function bannerTex(txt){const cv=document.createElement('canvas');cv.width=640;c
  x.fillStyle='#dc2626';x.fillRect(14,100,612,36);x.fillStyle='#fff';x.font='900 26px Jua, "Black Han Sans", sans-serif';x.textAlign='center';x.fillText('📢 AI 속보 · 짹짹 뉴스',320,128);
  x.fillStyle='#140b33';let fs=50;do{x.font=`400 ${fs}px "Black Han Sans", Jua, sans-serif`;fs-=2}while(x.measureText(txt).width>580&&fs>22);x.fillText(txt,320,82);
  const t=new THREE.CanvasTexture(cv);t.minFilter=THREE.LinearFilter;return t}
+// 🐣 마스코트 정식 3D(Hyper3D Rodin → assets/models/ai_mascot.glb, 341면·52KB). 불러오면 이걸 쓰고, 그 전엔 코드 모델
+let AIM=null,AIMst=0;function aiMascotGet(){if(AIMst===0&&THREE.GLTFLoader){AIMst=1;new THREE.GLTFLoader().load('assets/models/ai_mascot.glb',g=>{const sc=g.scene;sc.rotation.x=PI/2;sc.updateMatrixWorld(true);const bx=new THREE.Box3().setFromObject(sc),k=1.25/Math.max(.01,bx.max.z-bx.min.z);sc.scale.setScalar(k);sc.position.z=-bx.min.z*k-.62;
+  sc.traverse(o=>{if(o.isMesh){const t=o.material.map||o.material.emissiveMap;if(t)t.encoding=THREE.LinearEncoding;o.material=new THREE.MeshBasicMaterial({map:t});o.geometry.userData.cached=true}});AIM=sc;AIMst=2},null,()=>{AIMst=3})}return AIMst===2?AIM:null}
+let BLURT=null;function blurTex(){if(BLURT)return BLURT;const cv=document.createElement('canvas');cv.width=cv.height=64;const x=cv.getContext('2d');x.translate(32,32);for(let i=0;i<2;i++){x.rotate(PI/2);const gr=x.createLinearGradient(-30,0,30,0);gr.addColorStop(0,'rgba(255,255,255,0)');gr.addColorStop(.5,'rgba(230,236,245,.75)');gr.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=gr;x.beginPath();x.ellipse(0,0,30,5,0,0,PI*2);x.fill()}
+ x.globalAlpha=.25;x.fillStyle='#e5e7eb';x.beginPath();x.arc(0,0,28,0,PI*2);x.fill();return BLURT=new THREE.CanvasTexture(cv)}
+function aiMascotMesh(){const src=aiMascotGet();if(!src)return mechaChickMesh();const g=new THREE.Group(),body=new THREE.Group();g.add(body);body.add(src.clone(true));
+ // 사이렌 빛 + 프로펠러 4개 위치에 도는 잔상(모델의 프로펠러는 고정이라)
+ const sir=new THREE.Group();sir.position.set(0,0,.6);body.add(sir);const sR={emissiveIntensity:0},sB={emissiveIntensity:0};
+ const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex(),color:0xff4d4d,transparent:true,opacity:.95,depthWrite:false,blending:THREE.AdditiveBlending}));glow.scale.set(.75,.75,1);sir.add(glow);
+ const rot=[[-.48,.38],[.48,.38],[-.72,.12],[.72,.12]].map(([x,z])=>{const s=new THREE.Sprite(new THREE.SpriteMaterial({map:blurTex(),transparent:true,depthWrite:false,opacity:.85}));s.scale.set(.5,.5,1);s.position.set(x,-.05,z);body.add(s);return {rotation:{set z(v){s.material.rotation=v}}}});// newsUpd가 r.rotation.z=… 로 돌려요
+ g.userData={wings:[],rot,sir,sR,sB,glow,body};return g}
 let NEWS=null;
-function newsBird(txt){if(typeof Sc==='undefined'||!Sc)return;if(NEWS)newsEnd();const m=mechaChickMesh();m.scale.setScalar(1.75);m.rotation.z=PI/2;Sc.add(m);
+if(typeof start==='function'){const _st=start;start=function(){const r=_st.apply(this,arguments);try{if(!S.sim)aiMascotGet()}catch(e){}return r}}
+function newsBird(txt){if(typeof Sc==='undefined'||!Sc)return;if(NEWS)newsEnd();const m=aiMascotMesh();m.scale.setScalar(1.75);m.rotation.x=-1.05;/* 위에서 보는 카메라 쪽으로 얼굴을 돌려 '화면을 보며' 날아가요 */Sc.add(m);
  const bn=new THREE.Sprite(new THREE.SpriteMaterial({map:bannerTex(txt),transparent:true,depthTest:false,depthWrite:false}));bn.scale.set(5.2,1.22,1);bn.renderOrder=45;Sc.add(bn);
  const rope=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),new THREE.Vector3()]),new THREE.LineBasicMaterial({color:0x111827}));Sc.add(rope);
  const W=typeof COLS!=='undefined'?COLS:8;NEWS={m,bn,rope,t:0,dur:6,x0:-2.5,x1:W+7.5,y:BH*.6};m.traverse(o=>{o.renderOrder=44});

@@ -11,12 +11,10 @@
 - 홍보 영상은 나중에 Remotion(또는 HyperFrames)으로 게임 녹화 + 자막 트레일러를 만들기로 함. 지금은 보류.
 
 ## 📝 나중에 할 일 (사용자와 합의해 미뤄 둔 것)
-- 🐣 마스코트 'AI'(드론 메카 병아리) 등장 늘리기: 튜토리얼 안내원, 첫 승리·조합 스킬 해금 축하, 로비에 둥실 떠 있기, 광장 NPC. 정식 3D 모델은 배경 없는 그림 → Hyper3D(Rodin, 크레딧 4개 남음).
+- 🐣 마스코트 'AI'(드론 메카 병아리) 등장 늘리기: 튜토리얼 안내원, 첫 승리·조합 스킬 해금 축하, 로비에 둥실 떠 있기, 광장 NPC. 정식 3D 모델은 이미 있음(`assets/models/ai_mascot.glb`).
 - 🎬 홍보 영상(Remotion/HyperFrames).
 - 💰 수익 구조(단계별 안): v1.0 무료·광고 없음 → 사람이 모이면 보상형 광고(코인 2배) → 꾸미기 상점·광고 제거·후원 팩. 페이투윈·랜덤 뽑기는 안 함. 광고 넣으면 개인정보처리방침·데이터 보안 설문 수정.
 - 📲 구글 플레이 출시: 개발자 계정(25달러) → PWABuilder로 TWA 패키지(assetlinks.json 받아서 넣기) → 비공개 테스트 12명×14일.
-- 🔢 피해 숫자가 많이 겹침: 큰 피해만 보이기 또는 합쳐 보이기(사용자 의견 대기).
-- ⏰ 피해 배수 30초 전 예고(지금은 뉴스새가 바뀌는 순간에만 날아감).
 - 🧠 AI: 안정형이 아직 약간 약함(8%), 평균 게임 시간 약 15분(사용자: 일단 그대로).
 - 🦤 Tripo로 만든 도도새 3D: GLB 받기 + Tripo 무료 약관(상업 이용) 확인 필요.
 
@@ -46,7 +44,8 @@
 - AI 3D 영웅 모델: Hyper3D Rodin으로 만든 GLB를 gltf-transform+meshoptimizer로 1.2만 면·512 JPEG·quantize로 줄여 `assets/models/`에. `HGLB`(키·모자/안경 위치)·`hglbGet`·`heroMeshAI`, 로비·꾸미기·광장 영웅에만(게임판은 기존 모델). 약관 메모 `art_src/models/README.md`(Rodin은 상업 이용 제한 없음, ChatAvatar는 개인용만).
 - 픽셀 이펙트 `PFX`(game.js 끝, pixelfx 방식을 참고해 직접 구현, 외부 코드 실행·복사 없음): 작은 캔버스에 점을 찍어 NearestFilter 스프라이트로 띄움. `PFX.strike(x,y,z,delay)`=플라즈마 낙뢰 시제품, `sync3`에서 `PFX.update(dt)`. 다른 조합 스킬은 아직 기존 파티클(`A.skill`).
 - 💬 말하는 새(도도·앵무, `talk`): 끝까지 가는 동안 진행 25·50·75%에서 한 마디씩 3번(1.6초), 화면 동시 최대 3개(`sync3.tA`). 타조는 말 안 함(피루엣만).
-- 🗞 뉴스새 마스코트 'AI'(NPC, 조류 인플루언서): **드론 메카 병아리** — 노란 병아리가 은색 메카 슈트를 입고 프로펠러 4개로 남, 헬멧 위 빨강·파랑 사이렌·카메라 렌즈·헤드셋(시안 `art_src/mascot/ai_chick_drone.png`). `mechaChickMesh`·`newsBird(txt)`·`newsUpd`(sync3)·`bannerTex`('AI 속보 · 짹짹 뉴스'). 피해 배수 바뀔 때(7·9분) 현수막을 끌고 판 위를 가로질러 날아감.
+- 🗞 뉴스새 마스코트 'AI'(NPC, 조류 인플루언서): **드론 메카 병아리**. 정식 3D `assets/models/ai_mascot.glb`(Hyper3D Rodin, 341면·52KB, 원본·시안 `art_src/mascot/`) — `aiMascotGet`(게임 시작 때 미리 불러옴)·`aiMascotMesh`(사이렌 빛 + 프로펠러 4곳 회전 잔상 `blurTex`), 못 불러오면 코드 모델 `mechaChickMesh`. `newsBird(txt)`·`newsUpd`(sync3)·`bannerTex`('AI 속보 · 짹짹 뉴스'). 카메라 쪽으로 숙여(rotation.x -1.05) 얼굴을 보이며 현수막을 끌고 판을 가로지름. 6분30초·8분30초 '30초 뒤 피해 N배!' 예고 + 7·9분 '돌파'.
+- 🔢 피해 숫자 `dmgPop`: 치명타 또는 최대 체력 12%(최소 60) 이상만, 90ms 간격. ⚠️ 한 줄 코드 중간에 `//` 주석을 넣으면 뒤 코드가 다 주석이 됨(두 번 버그 남) — `/* */`를 쓰거나 줄을 바꿀 것.
 - 만화풍 전투 UI(v11.2): 상점 초상화 `thumbOne/shopThumbTick`(두 프레임에 하나, `DXC['s_…']`), 카드 등급 클래스 `tr-cm/rr/ep/lg`(`tierOf`), 피해 숫자 `dmgPop`(DOM `#dmgl`, `pfS>=2`면 끔), 격추 배너 `killBanner`(600G 이상·3초 간격), 타워 별 뱃지 `starTex`(Lv.2+), 새 외곽선은 ART `A.bird`에서 실제 몸통 크기로(`outl2_`). 3D 원본 백업 브랜치: `backup-3d-v11.1`.
 
 ## 테스트 · 밸런스 시뮬레이션
