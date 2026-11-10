@@ -40,7 +40,7 @@ const U=[
 {id:'egg_legs',n:'다리 알',c:60,hp:80,sp:1.4,t:'G',dm:1,inc:3,ic:'🥚',col:0xfef08a},
 {id:'kiwi',n:'키위새',c:80,hp:110,sp:1.3,t:'G',dm:1,inc:4,ic:'🥝',col:0x92400e},
 {id:'chick',n:'병아리',c:100,hp:130,sp:1.6,t:'G',dm:1,inc:5,ic:'🐥',col:0xfde047},
-{id:'turkey',n:'칠면조',c:140,hp:180,sp:1.2,t:'G',dm:1,inc:8,ic:'🦃',col:0x5b3a29},
+{id:'turkey',n:'칠면조',c:140,hp:140,sp:1.2,t:'G',dm:1,inc:10,ic:'🦃',col:0x5b3a29,x:'몸은 약하지만 인컴이 높아요'},
 {id:'rooster',n:'수탉',c:180,hp:218,sp:2.2,t:'G',dm:1,inc:9,ic:'🐔',col:0xf8fafc},
 {id:'pigeon',n:'비둘기',c:200,hp:182,sp:2.4,t:'A',dm:1,inc:10,ic:'🕊️',col:0x94a3b8},
 {id:'goose',n:'거위',c:220,hp:377,sp:1.2,t:'G',dm:1,inc:11,split:2,ic:'🪿',col:0xf5f5f4,x:'쓰러지면 다리 알 2개로 분열'},
@@ -134,7 +134,7 @@ const NM={
 egg_legs:['수상한 알','다리가 왜 달렸는지는 묻지 마세요. 많이 보내면 무언가 일어난대요…'],
 kiwi:['과일아닌 키위','과일 코너에서 발견되면 즉시 신고 바랍니다.'],
 chick:['삐약이','귀여움으로 타워를 0.1초 망설이게 만들어요. (기분 탓)'],
-turkey:['탈주 칠면조','추수감사절이 다가오자 전력 질주 중.'],
+turkey:['탈주 칠면조','추수감사절이 다가오자 전력 질주 중. 겁 많고 약하지만 몸값(인컴)은 비싸요.'],
 rooster:['새벽5시 수탉','알람 끄기 버튼이 없어요.'],
 pigeon:['닭둘기','과자 부스러기만 보면 이성을 잃어요.'],
 goose:['깡패 거위','공원 최강자. 쓰러져도 알 두 개가 복수하러 와요.'],
@@ -598,7 +598,7 @@ function towerMesh2(b){const g=new THREE.Group(),sp=[],id=b.id,cl=b.col,wd=0x713
 const BODYS={eagle:[.86,1.62,.84],stormeagle:[.88,1.62,.86],falcon:[.76,1.68,.74],berserk:[1.26,1.36,1.12],pigeon:[1.2,1.12,1.14],crow:[.9,1.48,.86],ghostcrow:[.9,1.48,.86],bonecrow:[.86,1.5,.82],plague:[.94,1.42,.9],
  seagull:[.9,1.52,.84],blizgull:[.94,1.5,.88],albatross:[.82,1.64,.78],pirate:[1.04,1.4,.96],owl:[1.22,.96,1.22],shadowowl:[1.2,.96,1.2],lich:[1.16,.98,1.22],auroraowl:[1.2,.96,1.2],
  parrot:[.92,1.2,1.1],vampire:[.84,.9,.9],voltbat:[.86,.92,.92],phoenix:[.86,1.56,.88],plasmabird:[.86,1.56,.88],comet:[.8,1.64,.8],thunderbird:[1.22,1.36,1.1],pelican:[1.12,1.45,1.02],
- duck:[1.12,1.45,.86],goose:[1,1.42,1.02],turkey:[1.25,1.12,1.14],rooster:[1,1.18,1.14],dodo:[1.28,1.22,1.18],woodpecker:[.86,1.18,1.08],kiwi:[1.06,1.22,.98],peacock:[.96,1.3,.98]};
+ duck:[1.12,1.45,.86],goose:[1,1.42,1.02],turkey:[1.02,1.18,1],rooster:[1,1.18,1.14],dodo:[1.28,1.22,1.18],woodpecker:[.86,1.18,1.08],kiwi:[1.06,1.22,.98],peacock:[.96,1.3,.98]};
 const PENG={penguin:1,frostpeng:1},CHICKY={chick:1,hatch_chick:1,hatch_fire:1,hatch_ice:1,hatch_thunder:1,hatch_wind:1,hatch_dark:1,hatch_gold:1};
 const LIFT={crocbird:.26,knight:.3,egg_legs:.2,crane:.25};
 const HEADX={dodo:{hz:.74,hy:-.36,hr:.15},crocbird:{hz:.68,hy:-.2,hr:.12},hatch_chick:{hz:.56,hy:-.15,hr:.18},hatch_fire:{hz:.56,hy:-.15,hr:.18},hatch_ice:{hz:.56,hy:-.15,hr:.18},hatch_thunder:{hz:.56,hy:-.15,hr:.18},hatch_wind:{hz:.56,hy:-.15,hr:.18},hatch_dark:{hz:.56,hy:-.15,hr:.18},hatch_gold:{hz:.56,hy:-.15,hr:.18},frostpeng:{hz:.74,hy:-.08,hr:.15},auroraowl:{hz:.46,hy:-.3,hr:.2},crane:{hz:.98,hy:-.3,hr:.13},chick:{hz:.56,hy:-.15,hr:.18},penguin:{hz:.74,hy:-.08,hr:.15},swan:{hz:.86,hy:-.3,hr:.13},goose:{hz:.66,hy:-.36,hr:.14}};
