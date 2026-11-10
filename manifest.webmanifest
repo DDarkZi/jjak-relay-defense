@@ -2,7 +2,7 @@
   "id": "/jjak-relay-defense/index.html",
   "name": "새떼 주의보: 짹짹 디펜스",
   "short_name": "새떼 주의보",
-  "description": "새떼 주의보 발령! 8명이 이어 달리는 3D 타워 디펜스. 웃긴 새를 보내고 타워로 막아라!",
+  "description": "새떼 주의보 발령! 8명이 이어 달리는 3D 타워 디펜스. 이상한 새를 보내고 타워로 막아라!",
   "lang": "ko",
   "start_url": "./index.html",
   "scope": "./",
@@ -47,7 +47,7 @@
       "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "웃긴 새 55종"
+      "label": "이상한 새 55종"
     },
     {
       "src": "assets/store/screenshots/03_s4_units.png",

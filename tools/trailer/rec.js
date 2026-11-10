@@ -7,7 +7,7 @@ await pg.click('#go');await tk(10);
 await pg.evaluate(()=>{S.cdn=0;S.cdl=0;$('cdn').style.display='none';S.off=0;const me=S.pl[0];me.gold=4200;actTech(0,'fire');actTech(0,'thunder');
  window.__R=(a,b)=>a+Math.random()*(b-a);window.__bird=(id,k,y)=>{const u=spawn(S.pl[0],UB[id],k);if(y!==undefined)u.y=y;return u};});
 await tk(30);
-// 3) 웃긴 새 클로즈업: 한 마리씩 단독
+// 3) 이상한 새 클로즈업: 한 마리씩 단독
 if(!ONLY||ONLY==='fun'){await pg.evaluate(()=>{window.__keep=S.pl[0].units.slice()});
  await R.clip(pg,'sc/fun',128,i=>{const ids=['ostrich','dodo','parrot','crocbird'],k=Math.floor(i/32);
   if(i%32===0){window.__cf=null;S.pl[0].units.length=0;const u=__bird(ids[k],[3,2,4,3][k],.9);u.hp*=50;u.max=u.hp;u.spd0=u.spd;window.__cu=u;if(u.bp.talk){u.tkN=3;u.tkI=[0,0,0,0][k];u.tkT=S.t+2}}
