@@ -118,7 +118,7 @@ const NET=(()=>{
   Object.assign(st,{role:null,code:'',tr:null,slots:[],me:-1,started:false,gview:{},cid2slot:{},slot2cid:{},acc:0,ended:false,lost:false});if($n('netm'))panel('a')}
  function bind(){if(!$n('netm'))return;$n('nmk').onclick=host;$n('njoin').onclick=join;$n('ngo').onclick=hStart;$n('nx').onclick=close;
   $n('ncode').addEventListener('keydown',e=>{if(e.key==='Enter')join()});
-  $n('ncopy').onclick=async()=>{const url=inviteURL(),txt=`🐦 짹짹 릴레이 디펜스 같이 해요! 방 코드: ${st.code}\n${url}`;try{if(navigator.share){await navigator.share({title:'짹짹 릴레이 디펜스',text:txt,url});return}}catch(e){}
+  $n('ncopy').onclick=async()=>{const url=inviteURL(),txt=`🚨 새떼 주의보: 짹짹 디펜스 같이 해요! 방 코드: ${st.code}\n${url}`;try{if(navigator.share){await navigator.share({title:'새떼 주의보: 짹짹 디펜스',text:txt,url});return}}catch(e){}
    try{await navigator.clipboard.writeText(txt);toast('📋 초대 링크를 복사했어요')}catch(e){prompt('초대 링크를 복사해 주세요',url)}};
   const nb=$n('netb');if(nb)nb.onclick=e=>{e.stopPropagation();ovl('modem',0);open()};
   if(new URLSearchParams(location.search).get('room'))setTimeout(open,400)}

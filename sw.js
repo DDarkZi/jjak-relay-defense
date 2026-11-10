@@ -1,4 +1,4 @@
-// 짹짹 릴레이 디펜스 서비스 워커: 네트워크 우선(항상 최신 버전), 인터넷이 끊기면 마지막으로 받은 파일로 실행
+// 새떼 주의보: 짹짹 디펜스 서비스 워커: 네트워크 우선(항상 최신 버전), 인터넷이 끊기면 마지막으로 받은 파일로 실행
 const CACHE='jjak-v1';
 self.addEventListener('install',e=>self.skipWaiting());
 self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));
