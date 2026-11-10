@@ -2541,7 +2541,7 @@ function lobLoop(now){requestAnimationFrame(lobLoop);const vis=$('title').style.
  try{lobMode==='plaza'?plazaFrame(t,dt):lobbyFrame(t)}catch(e){console.log(e)}}
 // UI
 function lobUI(){try{$('lwin').textContent=SV.wins||0;$('lhic').textContent=UB[SV.hero.id].ic;$('lnick').textContent=SV.hero.name;$('lname').textContent=SV.hero.name;
- $('lmodet').textContent=(gameMode==='race'?'🏰 종족 모드'+(SV.races.includes(raceSel)?' · '+RACE[raceSel].ic+RACE[raceSel].n:''):'🐥 일반 모드')+' · 난이도 '+DIFF[diff].n.split(' ').pop()}catch(e){}}
+ $('lmodet').innerHTML=(gameMode==='race'?'🏰 종족 모드'+(SV.races.includes(raceSel)?' · '+RACE[raceSel].ic+RACE[raceSel].n:''):'🐥 일반 모드')+'<small class="lmd">난이도 '+DIFF[diff].n.split(' ').pop()+'</small>'}catch(e){}}
 const ovl=(id,on)=>{$(id).style.display=on?'flex':'none'};
 function openMode(){ovl('modem',1);renderTitle()}
 let hTab='sp';
