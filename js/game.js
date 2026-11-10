@@ -515,7 +515,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
    let hits=b.self?p.units.filter(o=>vis(o)&&Math.hypot(o.x-cx,o.y-cy)<=t.r):b.splash?p.units.filter(o=>vis(o)&&Math.hypot(o.x-tg.x,o.y-tg.y)<=b.splash):[tg];
    if(b.chain){const set=[tg];let cur=tg;for(let k=1;k<b.chain;k++){let nb=null,nd=1.8;for(const o of p.units){if(set.includes(o)||!vis(o))continue;const d=Math.hypot(o.x-cur.x,o.y-cur.y);if(d<nd){nd=d;nb=o}}
      if(!nb)break;if(p.id===view)beamU(cur,nb,b.col);set.push(nb);cur=nb}hits=set}
-   if(p.id===view){beam(cx,BH-cy,tg,b.col);sfx('shoot',{tower:b.id});artFx('shoot',{tower:b.id,x:cx,y:BH-cy,tx:tg.x,ty:BH-tg.y,air:tg.bp.t==='A',col:b.col,b})}
+   if(p.id===view){sfx('shoot',{tower:b.id});artFx('shoot',{tower:b.id,x:cx,y:BH-cy,tx:tg.x,ty:BH-tg.y,air:tg.bp.t==='A',col:b.col,b})}
    const lvm=1+(t.lv-1)*.5;if(crit>1&&p.id===view)artFx('crit',{u:tg});
    if(b.poison&&(b.splash||b.self)){p.clouds=p.clouds||[];if(p.clouds.length>=14)p.clouds.shift();const cx2=b.self?cx:tg.x,cy2=b.self?cy:tg.y,cr=b.self?Math.min(t.r,2.2):b.splash;p.clouds.push({x:cx2,y:cy2,r:cr,life:BAL.cl,tk:.5,pv:b.poison*BAL.pk*lvm,src:b.id});if(p.id===view)artFx('smoke',{x:cx2,y:BH-cy2,r:cr,col:b.col})}
    hits.forEach((h,i)=>{const dd=(t.d*(b.chain&&i?.75:1)*(h===tg?crit:1)+(b.heavy&&h===tg?h.bp.hp*BAL.hmx:0))*(h.bp.swarm&&b.heavy?.5:1);const ef=dmgU(h,dd);if(S.st)S.st.td[b.id]=(S.st.td[b.id]||0)+ef;if(p.id===view&&!S.sim)dmgPop(h,ef,h===tg&&crit>1);
@@ -1255,7 +1255,7 @@ const ART=(()=>{
  const EM=[];
  function emitter(dur,rate,fn){if(EM.length>6)EM.shift();EM.push({L:dur,r:rate,a:0,fn})}
  function stepEm(dt){for(let i=EM.length-1;i>=0;i--){const e=EM[i];e.L-=dt;e.a+=e.r*dt;let n=Math.min(40,Math.floor(e.a));e.a-=n;while(n-->0)e.fn();if(e.L<=0)EM.splice(i,1)}}
- function clearAll(){clearSys(PA);clearSys(PN);EM.length=0;RINGS.forEach(m=>{m.userData.L=0;m.visible=false});PIL.forEach(m=>{m.userData.L=0;m.visible=false});if(VG){vgL=0;VG.visible=false}}
+ function clearAll(){clearSys(PA);clearSys(PN);if(typeof PJ!=='undefined'){PJ.forEach(p=>root.remove(p.sp));PJ.length=0;PZL.forEach(z=>root.remove(z.g));PZL.length=0}EM.length=0;RINGS.forEach(m=>{m.userData.L=0;m.visible=false});PIL.forEach(m=>{m.userData.L=0;m.visible=false});if(VG){vgL=0;VG.visible=false}}
 
  // ---------- 장식 흔들림 셰이더 주입 (인스턴스 위치로 위상, 높이에 비례) ----------
  function sway(m,amt){m.onBeforeCompile=s=>{s.uniforms.uTA=U.t;s.vertexShader='uniform float uTA;\n'+s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n#ifdef USE_INSTANCING\nvec3 ipA=instanceMatrix[3].xyz;\n#else\nvec3 ipA=vec3(0.);\n#endif\nfloat swA=sin(uTA*1.7+ipA.x*1.3+ipA.y*.9)*'+amt.toFixed(3)+'*max(position.z,0.);transformed.x+=swA;transformed.y+=swA*.4;')};m.customProgramCacheKey=()=>'artSway'+amt;return m}
@@ -2232,13 +2232,58 @@ const ART=(()=>{
   else if(kind==='egg'){for(let i=0;i<3;i++){const a=rnd()*6.28;E(PN,4,x,y,z,Math.cos(a)*1.2,Math.sin(a)*1.2,1.6,.4,.1,.07,i?0xfffbeb:0xfde047,1,7,.5,0,1)}E(PN,6,x,y,z,0,0,.3,.35,.18,.38,0xfef3c7,.7,0,1,0,0)}
   else if(kind==='air'){for(let i=0;i<2;i++){const a=rnd()*6.28;E(PN,2,x,y,z,Math.cos(a)*.6,Math.sin(a)*.6,.4,.55,.16,.14,0xffffff,.95,1.5,1,0,2)}E(PA,0,x,y,z,0,0,0,.2,.45,.2,0x67e8f9,.8,0,0,0,0)}
   else{for(let i=0;i<3;i++){const a=rnd()*6.28;E(PN,6,x,y,z-.1,Math.cos(a)*.7,Math.sin(a)*.7,.25,rr(.35,.5),.12,.3,0xd6b98c,.6,0,2.5,0,0)}}}
+
+ // 🎯 날아가는 탄: 타워마다 픽셀 탄 모양·궤적이 달라요(피해 계산은 그대로, 겉모습만). 맞는 순간 기존 hit 이펙트
+ const PJT={},PJ=[],PZL=[],PJS={};
+ const PJD={// 모양 그리기(16×16 픽셀)
+  egg:(g)=>{dsk(g,8,9,5,6,'#fff7ed');dsk(g,7,8,3,3,'#ffffff');px1(g,10,12,'#fcd34d')},
+  feather:(g)=>{for(let i=0;i<12;i++){px1(g,2+i,13-i,'#e0f2fe');px1(g,3+i,13-i,i>8?'#7dd3fc':'#ffffff');if(i%2)px1(g,2+i,12-i,'#bae6fd')}},
+  acorn:(g)=>{dsk(g,8,10,5,5,'#a16207');dsk(g,7,9,3,3,'#ca8a04');for(let x=3;x<14;x++)for(let y=4;y<7;y++)px1(g,x,y,'#713f12');px1(g,8,2,'#3f2a12');px1(g,8,3,'#3f2a12')},
+  crumb:(g)=>{dsk(g,8,8,4,3,'#d97706');px1(g,7,7,'#fde68a');px1(g,9,8,'#7c2d12')},
+  net:(g)=>{for(let i=2;i<15;i+=3){for(let j=2;j<15;j++){px1(g,i,j,'#e7e5e4');px1(g,j,i,'#e7e5e4')}}},
+  fire:(g)=>{dsk(g,8,9,5,5,'#ea580c');dsk(g,8,9,3,3,'#f59e0b');dsk(g,8,9,1,1,'#fff7ed');px1(g,8,3,'#f97316');px1(g,6,4,'#fb923c')},
+  lava:(g)=>{dsk(g,8,8,6,6,'#7f1d1d');dsk(g,8,8,4,4,'#dc2626');dsk(g,7,7,2,2,'#fbbf24')},
+  ice:(g)=>{for(let i=0;i<10;i++){px1(g,3+i,12-i,'#38bdf8');px1(g,4+i,12-i,'#e0f2fe');px1(g,4+i,13-i,'#0ea5e9')}px1(g,13,3,'#ffffff')},
+  snow:(g)=>{dsk(g,8,8,5,5,'#bae6fd');dsk(g,7,7,4,4,'#ffffff')},
+  leaf:(g)=>{dsk(g,8,8,5,3,'#4ade80');for(let i=4;i<13;i++)px1(g,i,8,'#166534')},
+  bubble:(g)=>{for(let a=0;a<6.28;a+=.15)px1(g,8+Math.cos(a)*6,8+Math.sin(a)*6,'#a5f3fc');px1(g,5,5,'#ffffff');px1(g,6,4,'#ffffff')},
+  bat:(g)=>{dsk(g,8,9,2,2,'#581c87');for(let i=0;i<6;i++){px1(g,7-i,8-(i%3),'#7e22ce');px1(g,9+i,8-(i%3),'#7e22ce');px1(g,7-i,9,'#3b0764');px1(g,9+i,9,'#3b0764')}px1(g,7,8,'#f472b6');px1(g,9,8,'#f472b6')},
+  potion:(g)=>{dsk(g,8,10,5,4,'#4d7c0f');dsk(g,8,10,3,2,'#a3e635');for(let y=2;y<6;y++)px1(g,8,y,'#e7e5e4');px1(g,8,1,'#92400e')},
+  acid:(g)=>{dsk(g,8,9,5,5,'#65a30d');dsk(g,7,8,2,2,'#d9f99d');px1(g,8,14,'#84cc16')},
+  orb:(g)=>{dsk(g,8,8,5,5,'#ffffff');dsk(g,8,8,3,3,'#ffffff')}};
+ function px1(g,x,y,c){g.fillStyle=c;g.fillRect(Math.round(x),Math.round(y),1,1)}
+ function dsk(g,cx,cy,rx,ry,c){g.fillStyle=c;for(let y=-ry;y<=ry;y++){const w=Math.round(rx*Math.sqrt(Math.max(0,1-(y/ry)**2)));g.fillRect(cx-w,cy+y,w*2+1,1)}}
+ function pjMat(k,tint){const key=k+(tint??'');if(PJS[key])return PJS[key];if(!PJT[k]){const cv=document.createElement('canvas');cv.width=cv.height=16;PJD[k](cv.getContext('2d'));const tx=new THREE.CanvasTexture(cv);tx.magFilter=tx.minFilter=THREE.NearestFilter;tx.generateMipmaps=false;PJT[k]=tx}
+  return PJS[key]=new THREE.SpriteMaterial({map:PJT[k],color:tint??0xffffff,transparent:true,depthWrite:false})}
+ // 타워 → [모양, 궤적(dart 곧게/lob 포물선/float 둥실/zap 번개/sky 하늘번개/beam 광선), 크기, 색칠(orb·zap용)]
+ const PSTY={egg:['egg','lob',.32],air:['feather','dart',.36],acorn:['acorn','lob',.4],snack:['crumb','spray',.22],pylon:[0,'zap',0,0x7dd3fc],net:['net','lob',.5],
+  ember:['fire','dart',.34],lava:['lava','lob',.42],sun:[0,'beam',0,0xfde047],ice:['ice','dart',.34],frost:['ice','dart',.34],bliz:['snow','lob',.36],
+  static:[0,'zap',0,0xfde047],thunder:[0,'sky',0,0xfef08a],storm:[0,'sky',0,0xa5b4fc],breeze:['leaf','dart',.3],wind:['bubble','float',.38],twister:['leaf','dart',.3],
+  bat:['bat','dart',.42],flu:['potion','lob',.36],acid:['acid','lob',.34],steam:['orb','lob',.36,0xe0f2fe],plasma:[0,'beam',0,0xfb923c],firestorm:['fire','dart',.4],pyre:['fire','lob',.38,0x84cc16],
+  aurora:[0,'sky',0,0x67e8f9],whiteout:['snow','lob',.4],frostbane:['ice','dart',.36,0xa78bfa],tempest:[0,'sky',0,0xfde047],venomvolt:[0,'zap',0,0x84cc16],miasma:['orb','float',.4,0x86efac]};
+ const ZG=new THREE.CylinderGeometry(1,1,1,5),ZM={},UP3=new THREE.Vector3(0,1,0);ZG.userData.cached=1;
+ function zmat(c){return ZM[c]||(ZM[c]=new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.95,depthWrite:false}))}
+ // 굵은 번개·광선: 짧은 막대 여러 개를 지그재그로 이어요(1픽셀 선보다 휴대폰에서 잘 보임). 시간이 지나면 가늘어지며 사라짐
+ function zline(x0,y0,z0,x1,y1,z1,col,n,amp,life,th){const pts=[];th=th||.05;for(let i=0;i<=n;i++){const t=i/n,j=i&&i<n?amp:0;pts.push(new THREE.Vector3(x0+(x1-x0)*t+(rnd()-.5)*j,y0+(y1-y0)*t+(rnd()-.5)*j,z0+(z1-z0)*t+(rnd()-.5)*j*.6))}
+  const g=new THREE.Group();g.renderOrder=35;for(let i=0;i<n;i++){const a=pts[i],b=pts[i+1],d=b.clone().sub(a),L=d.length();if(L<1e-4)continue;const m=new THREE.Mesh(ZG,zmat(col));m.renderOrder=35;m.position.copy(a).addScaledVector(d,.5);m.quaternion.setFromUnitVectors(UP3,d.normalize());m.scale.set(th,L,th);g.add(m)}
+  root.add(g);PZL.push({g,t:0,life,th})}
+ function fire(tower,b,x,y,tx,ty,z,col,onHit){const st=PSTY[tower]||[ 'orb','dart',.28,b.col??col],sty=st[1];
+  if(sty==='zap'){zline(x,y,.9,tx,ty,z,st[3],7,.3,.14,.06);zline(x,y,.9,tx,ty,z,0xffffff,7,.12,.09,.025);onHit();return}
+  if(sty==='sky'){zline(tx+(rnd()-.5)*.4,ty+.6,4.2,tx,ty,z,st[3],9,.45,.18,.09);zline(tx,ty+.6,4.2,tx,ty,z,0xffffff,9,.15,.12,.035);onHit();return}
+  if(sty==='beam'){zline(x,y,1.1,tx,ty,z,st[3],1,0,.2,.11);zline(x,y,1.1,tx,ty,z,0xffffff,1,0,.14,.045);onHit();return}
+  const n=sty==='spray'?3:1,d=Math.hypot(tx-x,ty-y),dur=sty==='dart'?Math.max(.08,d/16):sty==='float'?Math.max(.25,d/5):Math.max(.22,d/8),arc=sty==='lob'?.5+d*.12:sty==='spray'?.35:sty==='float'?.15:0;
+  for(let i=0;i<n;i++){const sp=new THREE.Sprite(pjMat(st[0],st[3]));sp.scale.set(st[2]*1.7,st[2]*1.7,1);sp.renderOrder=34;root.add(sp);const jx=n>1?(rnd()-.5)*.5:0,jy=n>1?(rnd()-.5)*.5:0;
+   PJ.push({sp,x0:x,y0:y,z0:.9,x1:tx+jx,y1:ty+jy,z1:z,t:0,dur:dur*(1+i*.15),arc,spin:sty==='lob'?(rnd()<.5?-8:8):0,rot:Math.atan2(ty-y,tx-x),sty,on:i===0?onHit:null,trail:sty==='dart'?col:null})}}
+ function pjUpdate(dt){for(let i=PJ.length-1;i>=0;i--){const p=PJ[i];p.t+=dt/p.dur;if(p.t>=1){root.remove(p.sp);PJ.splice(i,1);if(p.on)p.on();continue}const t=p.t;
+   p.sp.position.set(p.x0+(p.x1-p.x0)*t,p.y0+(p.y1-p.y0)*t+(p.sty==='float'?Math.sin(t*12)*.08:0),p.z0+(p.z1-p.z0)*t+p.arc*4*t*(1-t));
+   p.sp.material.rotation=p.spin?p.t*p.spin:(p.sty==='dart'?p.rot-Math.PI/4:0);if(p.trail!=null&&rnd()<.5)E(PA,0,p.sp.position.x,p.sp.position.y,p.sp.position.z,0,0,0,.18,.12,.03,p.trail,.7,0,0,0,0)}
+  for(let i=PZL.length-1;i>=0;i--){const z=PZL[i];z.t+=dt;const k=Math.max(0,1-z.t/z.life);z.g.children.forEach(m=>{m.scale.x=m.scale.z=z.th*k});if(z.t>=z.life){root.remove(z.g);PZL.splice(i,1)}}}
  A.shoot=({tower,x,y,tx,ty,air,col,b})=>{if(!PA||!b)return;const z=air?1.4:.4;
   const kind=elemOf(b)||(tower==='egg'?'egg':tower==='air'?'air':'dust');const k=kind==='dark'&&tower==='bat'?'dark':kind;
   // 발사구 반짝
   E(PA,0,x,y,.85,0,0,.4,.16,.32,.12,col,.7,0,0,0,0);
-  hit(k,b,tx,ty,z,col);
-  if(b.combo){const k2=b.combo[1];hit(k2,b,tx,ty,z,TECH[k2].col)}
-  if(b.splash&&rnd()<.5)ring(tx,ty,z-.1,.15,b.splash*.9,.35,col,.55)};
+  const land=()=>{hit(k,b,tx,ty,z,col);if(b.combo){const k2=b.combo[1];hit(k2,b,tx,ty,z,TECH[k2].col)}if(b.splash&&rnd()<.5)ring(tx,ty,z-.1,.15,b.splash*.9,.35,col,.55)};
+  if(PJ.length<90)fire(tower,b,x,y,tx,ty,z,col,land);else land()};
  A.die=({u,col,air})=>{if(!PA||!u)return;const x=u.x,y=BH-u.y,z=air?1.4:.3,c=col==null?0xffffff:col;
   for(let i=0;i<9;i++){const a=rnd()*6.28,v=rr(.6,1.5);E(PN,2,x,y,z+.15,Math.cos(a)*v,Math.sin(a)*v,rr(1.2,2.4),rr(1.4,2.2),rr(.18,.28),rr(.15,.24),i%3===2?0xffffff:c,1,2.2,1.2,0,3)}
   for(let i=0;i<4;i++){const a=i*1.57+rnd()*.5;E(PA,1,x,y,z+.2,Math.cos(a)*1.4,Math.sin(a)*1.4,1.2,.6,.24,.08,i&1?0xfff3b0:0xfde047,1,2.5,2,0,0)}
@@ -2295,7 +2340,7 @@ const ART=(()=>{
    for(let i=0;i<22;i++){const a=rnd()*6.28,v=rr(2,4);E(PA,i%3?1:5,x,y,.9,Math.cos(a)*v,Math.sin(a)*v,rr(1,4),rr(.6,1),rr(.18,.32),.06,i&1?0xffd700:0xfff3b0,1,3,1.4,0,0)}
    emitter(1,40,()=>E(PA,1,x+rr(-.7,.7),y+rr(-.7,.7),rr(1.2,2.4),0,0,-.4,rr(.6,1),rr(.12,.22),.03,rnd()<.5?0xffd700:0xffffff,1,.4,.2,0,0))}};
  A.update=({dt,view:v,t})=>{if(!root)return;clock+=dt;U.t.value=clock;if(typeof S!=='undefined'&&S&&S.pl&&S.pl[v])hex3Theme(((v+(S.off||0))%8)%5);
-  if(v!==lastView||t<lastT-1){clearAll();lastView=v}lastT=t;
+  if(v!==lastView||t<lastT-1){clearAll();lastView=v}lastT=t;pjUpdate(dt);
   if(XK!==lastXK){lastXK=XK;layDecor()}
   PU.uS.value=2.2*ren.domElement.height/(2*Math.tan(cam.fov*Math.PI/360));// 2.2: 아틀라스 칸 여백 보정
   // 입구·출구 맥박
