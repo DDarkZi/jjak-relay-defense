@@ -246,16 +246,23 @@ const DIFF=/*DIFF*/{E:{n:'🐣 쉬움',g:450,i:25,tick:2,im:.92,d:'AI가 느긋�
 {n:"중장갑 러시",s:{"n":10,"win":20,"pts":61,"inc5":185,"lost":68,"surv":40},g:{"tw0":3,"twRate":2.588,"inc0":30,"incRate":46.64,"uShare":0.726,"uAir":0.163,"uHeavy":0.959,"uTier":0.954,"uSpec":0.307,"wall":0.203,"upAgg":0.908,"upMax":3.684,"def8":1.299,"crisis":26.121,"rush":316.723,"keep":393.189,"tech2":4.5,"m_cx":0.8,"tech":2.5,"m_egg":0.551,"m_air":0.075,"m_acorn":0.709,"m_t1":0.461,"m_t2":0.773,"m_t3":0.053}},
 {n:"미로 설계자",s:{"n":23,"win":30,"pts":58,"inc5":1306,"lost":74,"surv":30},g:{"tw0":3.613,"twRate":0.292,"inc0":110.666,"incRate":23.741,"uShare":0.412,"uAir":0.48,"uHeavy":0.36,"uTier":0.514,"uSpec":0.118,"wall":0.459,"upAgg":0.988,"upMax":2.766,"def8":0.461,"crisis":21.207,"rush":571.912,"keep":621.537,"tech2":3.5,"m_cx":0.8,"tech":0.5,"m_egg":0.933,"m_air":0.398,"m_acorn":0.605,"m_t1":0.574,"m_t2":0.356,"m_t3":0.625}}];/*AIS_END*/
 // 🧠 AI 성향 풀: 속성 조합 10 × 운영 스타일 3(이자형=인컴 투자·안정형=수비·밸런스형) + 특수 전략. 한 판에 7개를 무작위로 뽑아요
-const AIP=(()=>{const by=n=>AIS.find(a=>a.n===n).g,B={...by('폭풍 전략가'),def8:1.05,rush:430,keep:380},L=[];
+const AIP=(()=>{const by=n=>AIS.find(a=>a.n===n).g,B={...by('폭풍 전략가'),def8:.95,rush:430,keep:380},L=[];
  // 스타일은 밸런스형(폭풍 전략가)을 바탕으로 적당히만 기울여요(극단값은 AI끼리 싸울 때 한쪽이 독식해서)
- const ST=[['이자형',{...B,inc0:70,incRate:52,uShare:.66,uTier:.72,uHeavy:.55,def8:.92,upAgg:.4,rush:380,keep:300}],
-  ['안정형',{...B,tw0:7,twRate:2.1,def8:1.22,upAgg:.9,incRate:46,uShare:.66,crisis:34,rush:520,keep:450}],
+ const ST=[['이자형',{...B,inc0:66,incRate:48,uShare:.64,uTier:.72,uHeavy:.6,def8:.9,upAgg:.45,rush:390,keep:320}],
+  ['안정형',{...B,tw0:5.5,twRate:1.9,def8:1.0,upAgg:.8,inc0:66,incRate:56,uShare:.72,crisis:34,rush:450,keep:400}],
   ['밸런스형',{...B}]];
  const SN={steam:'증기',plasma:'플라즈마',firestorm:'화염폭풍',pyre:'역병',aurora:'절대영도',whiteout:'눈사태',frostbane:'빙독',tempest:'폭풍',venomvolt:'신경독',miasma:'독안개'};
  COMBO.forEach(c=>ST.forEach(([sn,g])=>L.push({n:`${SN[c.t]||c.n} ${sn}`,g:{...g,tech:TK.indexOf(c.k[0])+.5,tech2:TK.indexOf(c.k[1])+.5}})));
- L.push({n:'수상한 알 전략',g:{...B,inc0:75,incRate:58,uShare:.9,uTier:.45,uHeavy:.2,def8:1.0,tech:undefined,tech2:undefined},fav:{egg_legs:5,kiwi:1.2}});// 싼 알을 쉴 새 없이
+ L.push({n:'수상한 알 전략',g:{...B,inc0:70,incRate:52,uShare:.7,uTier:.72,uHeavy:.5,def8:.92,tech:undefined,tech2:undefined},fav:{egg_legs:1.6,kiwi:.6,turkey:.8}});// 싼 알을 쉴 새 없이
  L.push({n:'공작새 치유 전략',g:{...B,uShare:.78,uTier:.9,uHeavy:.8,tech:undefined,tech2:undefined},fav:{peacock:4,crane:3,duck:1,dodo:1,goose:.8}});// 치유 공작 + 튼튼한 새
- ['중장갑 러시','특수 조류 조련사','미로 설계자'].forEach(n=>L.push(AIS.find(a=>a.n===n)));return L})();
+ ['중장갑 러시','특수 조류 조련사','미로 설계자'].forEach(n=>L.push(AIS.find(a=>a.n===n)));
+ L.push({n:'올인 타이밍',g:{...B,inc0:72,incRate:54,uShare:.7,uTier:.72,def8:.98,upAgg:.5,rush:400,keep:1800,tech:undefined,tech2:undefined}});// 피해 2배(7분) 직전까지 모았다가 몰아치기
+ // 🧠 지능형(헬 전용): 이자형 운영을 바탕으로 각자 기술을 더해요 — 정찰 카운터 · 킬존 · 재배치 미로
+ const EG=ST[0][1];
+ L.push({n:'정찰 카운터',hell:1,fl:{scout:1},g:{...EG,tech:undefined,tech2:undefined}});
+ L.push({n:'킬존 설계자',hell:1,fl:{kz:1},g:{...EG,upAgg:.65,tech:undefined,tech2:undefined}});
+ L.push({n:'재배치 미로',hell:1,fl:{jug:1,kz:1},g:{...EG,tech:undefined,tech2:undefined}});
+ return L})();
 
 // ---------- 로직 (육각 타일: 홀수 줄이 오른쪽으로 반 칸 밀린 6방향 격자) ----------
 const HH=.866025,BH=ROWS*HH,cellX=(c,r)=>c+.5+(r&1?.5:0),cellY=r=>(r+.5)*HH,EY=cellY(ROWS-1)-.05,HALF=BH*.5;
@@ -405,22 +412,28 @@ function mazeOrder(p){if(p.mzo)return p.mzo;const L=MZ_TIER[diff];if(!L)return n
  const a=mzLen(cells,true),b=mzLen(cells,false);p.mzDem=b>a+1;p.mzName=MZ[k].n+(p.mzDem?' (알 타워 철거)':'');return p.mzo=cells}
 function buildT(p,g,wall){const b=wall?TB.wall:pickTower(p,g);if(!b||p.gold<tcost(p,b))return false;
  const mo=MZ_TIER[diff]&&mazeOrder(p);if(mo){if(p.mzDem){const e=p.grid[8][3];if(e&&e.bp.id==='egg'){p.gold+=Math.floor(e.inv*refR(p));p.grid[8][3]=null;refreshPaths(p)}}
-  for(const [x,y] of mo){if(p.grid[y][x])continue;p.grid[y][x]=mkR(b,p);if(allOK(p.grid)){p.gold-=tcost(p,b);if(S.st){S.st.ti[b.id]=(S.st.ti[b.id]||0)+tcost(p,b);S.st.tn[b.id]=(S.st.tn[b.id]||0)+1}refreshPaths(p);return true}p.grid[y][x]=null}return false}
+  const kz=g.fl&&g.fl.kz&&b.r&&(b.slow||b.splash||b.freeze||b.self||b.chain);let mo2=mo;if(kz){const pa=bfs(p.grid,COLS>>1,0)||[],cand=mo.filter(([x,y])=>!p.grid[y][x]).slice(0,6);// 🎯 킬존: 다음 후보 중 길을 가장 많이 덮는 칸부터
+   mo2=cand.map(([x,y])=>[x,y,pa.filter(q=>Math.hypot(cellX(q.x,q.y)-cellX(x,y),cellY(q.y)-cellY(y))<=b.r).length]).sort((a,c)=>c[2]-a[2]).concat(mo)}
+  for(const [x,y] of mo2){if(p.grid[y][x])continue;p.grid[y][x]=mkR(b,p);if(allOK(p.grid)){p.gold-=tcost(p,b);if(S.st){S.st.ti[b.id]=(S.st.ti[b.id]||0)+tcost(p,b);S.st.tn[b.id]=(S.st.tn[b.id]||0)+1}refreshPaths(p);return true}p.grid[y][x]=null}return false}
  let best=null,bs=-1e9;
  for(let k=0;k<24;k++){const x=Math.floor(Math.random()*COLS),y=1+Math.floor(Math.random()*(ROWS-2));
   if(p.grid[y][x])continue;p.grid[y][x]=1;let s=-1e9;const L=allOK(p.grid);
   if(L){const pa=bfs(p.grid,COLS>>1,0),px=cellX(x,y),py=cellY(y);
    s=L*(b.id==='wall'?3:1.6)-(b.id==='wall'?0:Math.min(...pa.map(q=>Math.hypot(cellX(q.x,q.y)-px,cellY(q.y)-py)))*6)+Math.random();
-   if(b.pylon)for(const[dx,dy]of NBR[y&1]){const q=p.grid[y+dy]&&p.grid[y+dy][x+dx];if(q&&q.bp&&q.bp.pylon)s+=9}}
+   if(b.pylon)for(const[dx,dy]of NBR[y&1]){const q=p.grid[y+dy]&&p.grid[y+dy][x+dx];if(q&&q.bp&&q.bp.pylon)s+=9}
+   if(g.fl&&g.fl.kz&&b.r&&(b.slow||b.splash||b.freeze||b.self||b.chain))s+=pa.filter(q=>Math.hypot(cellX(q.x,q.y)-px,cellY(q.y)-py)<=b.r).length*1.1}// 🎯 킬존
   p.grid[y][x]=null;if(s>bs){bs=s;best=[x,y]}}
  if(!best||bs<-1e8)return false;
  p.grid[best[1]][best[0]]=mkR(b,p);p.gold-=tcost(p,b);if(S.st){S.st.ti[b.id]=(S.st.ti[b.id]||0)+tcost(p,b);S.st.tn[b.id]=(S.st.tn[b.id]||0)+1}refreshPaths(p);return true}
-function buyU(p,g,dump){const n=nextAlive(p.id);if(n===null)return false;
+// 🔍 정찰: 다음 사람 판의 대공 비율·광역 비율·CCTV 유무(2초마다 갱신)
+function scoutOf(p,n){const c=p.sc;if(c&&c.n===n&&S.t-c.t<2)return c;let air=0,gr=0,spl=0,all=0,cc=0;S.pl[n].grid.flat().forEach(t=>{if(!t||!t.bp||!t.bp.d)return;const d=t.d/t.bp.cd;all+=d;if(t.bp.t!=='G')air+=d;if(t.bp.t!=='A')gr+=d;if(t.bp.splash||t.bp.self||t.bp.chain)spl+=d;if(t.bp.cctv)cc++});
+ return p.sc={n,t:S.t,air:all?air/all:0,spl:all?spl/all:0,cc}}
+function buyU(p,g,dump){const n=nextAlive(p.id);if(n===null)return false;const sc=g.fl&&g.fl.scout?scoutOf(p,n):null;
  const cap=p.gold*(dump?1:g.uTier),l=U.filter(u=>ucost(p,u)<=cap&&techOK(p,u)&&!u.hidden&&!u.secret);if(!l.length)return false;
- let b=null,bs=-1e9;for(const u of l){const sc=(1-g.uHeavy)*u.inc/u.c*40+g.uHeavy*u.hp/u.c*.8+(u.t==='A'?g.uAir:1-g.uAir)*1.2+(u.x?(g.uSpec??.5)*1.4:0)+(u.tech?.6:0)+(u.combo?1.2:0)+(dump?u.c/400:0)+(g.fav&&g.fav[u.id]||0)+Math.random()*.8;if(sc>bs){bs=sc;b=u}}
+ let b=null,bs=-1e9;for(const u of l){const sc_=(1-g.uHeavy)*u.inc/u.c*40+g.uHeavy*u.hp/u.c*.8+(u.t==='A'?g.uAir:1-g.uAir)*1.2+(u.x?(g.uSpec??.5)*1.4:0)+(u.tech?.6:0)+(u.combo?1.2:0)+(dump?u.c/400:0)+(g.fav&&g.fav[u.id]||0)+(sc?(u.t==='A'?(sc.air<.4?2.2:-.8):0)+((u.count||1)>1&&sc.spl<.3?2:0)+(sc.spl>.5?u.hp/u.c*1.5:0)+(u.stealth&&!sc.cc?2:0):0)+Math.random()*.8;if(sc_>bs){bs=sc_;b=u}}
  if(!b)return false;p.gold-=ucost(p,b);if(S.st){S.st.us[b.id]=(S.st.us[b.id]||0)+ucost(p,b);S.st.un[b.id]=(S.st.un[b.id]||0)+1}p.income+=gainInc(p,b);{const cn=cntOf(b);for(let k=0;k<cn;k++)spawn(S.pl[n],b,p.id)}return true}
 function aiUp(p,c){for(const t of p.grid.flat()){if(t&&t.bp.id!=='wall'&&t.lv<c.up&&p.gold>=upc(t,p)){const k=upc(t,p);p.gold-=k;t.lv++;t.d=Math.floor(t.d*1.6);t.r+=.25;t.inv+=k;if(S.st){S.st.ti[t.bp.id]=(S.st.ti[t.bp.id]||0)+k;S.st.up++}return true}}return false}
-function aiTick(p){if(p.tech2plan&&!p.tech2&&S.t>45&&p.gold>=TECH2C){p.gold-=TECH2C;p.tech2=p.tech2plan;return}
+function aiTick(p){if(p.cfg&&p.cfg.fl&&p.cfg.fl.jug&&jugTick(p))return;if(p.tech2plan&&!p.tech2&&S.t>45&&p.gold>=TECH2C){p.gold-=TECH2C;p.tech2=p.tech2plan;return}
  if(p.tech2&&!p.skU&&S.t>120&&p.gold>=SKC+200&&Math.random()<.5){p.gold-=SKC;p.skU=1;return}
  if(p.skU&&p.skCD<=0&&(p.units.length>=5||(p.life<40&&p.units.length>=2)))useSkill(p);
  const g=p.cfg,t=S.t/60,crisis=p.life<=g.crisis,um={up:Math.round(g.upMax)};
@@ -435,15 +448,23 @@ function aiTick(p){if(p.tech2plan&&!p.tech2&&S.t>45&&p.gold>=TECH2C){p.gold-=TEC
   return 0};
  for(let n=1+Math.min(3,Math.floor(p.gold/1500));n--;)if(!act())break}
 
+// 🔄 재배치 미로(헬 전용): 지상 새가 아래쪽 깊이 들어오면 벽으로 길을 막아 되돌아가게 하고, 5초 뒤 철거해 다시 열어요
+function jugTick(p){if(p.jug){if(S.t-p.jug.t>5){const t=p.grid[p.jug.y][p.jug.x];if(t&&t.bp.id==='wall'){p.gold+=Math.floor(t.inv*refR(p));p.grid[p.jug.y][p.jug.x]=null;refreshPaths(p)}p.jug=null;p.jugCD=S.t+6;return true}return false}
+ if(S.t<(p.jugCD||0)||p.gold<tcost(p,TB.wall))return false;const G=p.units.filter(u=>u.bp.t==='G'&&!(u.fl>0)&&u.path);if(G.length<4)return false;
+ const deep=G.filter(u=>u.y>BH*.5);if(deep.length<3)return false;const cost=()=>G.reduce((a,u)=>{const c=nearCell(u.x,u.y),pa=bfs(p.grid,c.x,c.y);return a+(pa?pa.length:999)},0),base=cost();
+ let best=null,bg=0;const lead=deep.sort((a,b)=>b.y-a.y)[0];for(let k=0;k<5&&lead.path&&lead.pi+k+1<lead.path.length;k++){const q=lead.path[lead.pi+k+1];if(!q||p.grid[q.y][q.x]||q.y<1||q.y>ROWS-2)continue;
+  p.grid[q.y][q.x]=1;if(allOK(p.grid)){const gn=cost()-base;if(gn>bg){bg=gn;best=q}}p.grid[q.y][q.x]=null}
+ if(!best||bg<G.length*2)return false;p.grid[best.y][best.x]=mkR(TB.wall,p);p.gold-=tcost(p,TB.wall);refreshPaths(p);p.jug={x:best.x,y:best.y,t:S.t};return true}
+
 // ---------- 시뮬레이션 ----------
 function applyModeBal(k){const m=BAL.mode[k]||BAL.mode.normal;S_MODE=k;
  U.forEach(u=>{if(u.hp0==null){u.hp0=u.hp;u.sh0=u.shield||0}u.hp=Math.round(u.hp0*m.uh);if(u.sh0)u.shield=Math.round(u.sh0*m.uh)});
  T.forEach(b=>{if(b.d0==null){b.d0=b.d;b.cd0=b.cd}b.d=Math.round(b.d0*m.td);b.cd=+(b.cd0*m.as).toFixed(3)})}
 let S_MODE='normal';
-function start(gs,p0h){const D=DIFF[diff];const cf=[...AIP].sort(()=>Math.random()-.5);
+function start(gs,p0h){const D=DIFF[diff];const cf=AIP.filter(a=>!a.hell||diff==='X').sort(()=>Math.random()-.5);// 매 판 성향 무작위(지능형은 헬에서만)
  const RK=raceAssign(gs);applyModeBal(RK.some(Boolean)?'race':'normal');EGG.n=0;S={t:0,inc:0,kills:0,dealt:0,off:Math.floor(Math.random()*8),sim:!!gs,p0h:!!p0h,cdn:gs?0:5,lm:1,pl:[]};techPend=null;
  for(let i=0;i<8;i++){const g=Array.from({length:ROWS},()=>Array(COLS).fill(null));g[8][3]=mkR(TB.egg,{race:RK[i]});
-  const ai=gs?gs[i]:(i?{...mutG(cf[i-1].g,.07),tech:cf[i-1].g.tech,tech2:cf[i-1].g.tech2,fav:cf[i-1].fav,pn:cf[i-1].n}:null),tech=ai?TK[Math.min(4,Math.floor(ai.tech??Math.random()*5))]:null;
+  const ai=gs?gs[i]:(i?{...mutG(cf[i-1].g,.07),tech:cf[i-1].g.tech,tech2:cf[i-1].g.tech2,fav:cf[i-1].fav,pn:cf[i-1].n,fl:cf[i-1].fl}:null),tech=ai?TK[Math.min(4,Math.floor(ai.tech??Math.random()*5))]:null;
   let t2=ai?TK[Math.min(4,Math.floor(ai.tech2??Math.random()*5))]:null;if(t2&&t2===tech)t2=TK[(TK.indexOf(tech)+1+Math.floor(Math.random()*4))%5];
   S.pl.push({id:i,name:gs?`G${i}`:(i?`${(i+S.off)%8+1}번 ${RK[i]?RACE[RK[i]].ic:''}${TECH[tech].ic}${TECH[t2].ic}${cf[i-1].n}`:`${S.off+1}번 ${heroTag()}`),tech,tech2:null,tech2plan:t2,race:RK[i],skU:0,skCD:0,boost:0,reveal:0,color:PC[i],gold:(i||(gs&&!p0h))?D.g:500,income:(i||(gs&&!p0h))?D.i:30,ai:!!(i||(gs&&!p0h)),life:100,alive:true,grid:g,units:[],cfg:ai,dealt:0,pi:0,aiT:Math.random()*1.5})}
  sel=null;insp=null;view=0;paused=false;over=false;spd=1;document.querySelector('footer').style.opacity='';$('pz').textContent='⏸';$('sp').textContent='1x';$('end').style.display='none';
