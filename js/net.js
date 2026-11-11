@@ -110,7 +110,7 @@ const NET=(()=>{
   if(d.t==='s')return gApply(d);
   if(d.t==='msg')return toast(d.m);
   if(d.t==='end'){st.ended=true;const w=d.w;if(w===0)return finish(true);if(w>=0&&(S.spec||st.lost))return specEnd(S.pl[w]);if(w>=0){endLocal('👀',`${S.pl[w].name} 우승!`)}else endLocal('🏁','게임 종료')}}
- function gStart(d){st.k=d.k;if(d.re&&S&&S.net==='guest'){st.retry=0;S.pl.forEach(p=>{p.units=[]});toast('📶 다시 연결됐어요!');return}try{heroReset()}catch(e){}diff=d.diff||'N';gameMode='normal';applyModeBal('normal');EGG.n=0;ovl('netm',0);
+ function gStart(d){st.k=d.k;if(d.re&&S&&S.net==='guest'){st.retry=0;S.pl.forEach(p=>{p.units=[]});toast('📶 다시 연결됐어요!');return}try{heroReset()}catch(e){}diff=d.diff||'M';gameMode='normal';applyModeBal('normal');EGG.n=0;ovl('netm',0);
   S={t:0,inc:0,kills:0,dealt:0,off:(d.hoff+d.k)%8,sim:false,cdn:5,lm:1,pl:[],net:'guest'};techPend=null;
   for(let i=0;i<8;i++)S.pl.push({id:i,name:d.names[(i+d.k)%8],hero:d.heroes?heroSafe(d.heroes[i]):heroRand(),tech:null,tech2:null,race:null,skU:0,skCD:0,boost:0,reveal:0,color:PC[i],gold:500,income:30,ai:i>0,life:100,alive:true,grid:Array.from({length:ROWS},()=>Array(COLS).fill(null)),units:[],cfg:null,dealt:0});
   sel=null;insp=null;view=0;st.lastView=0;paused=false;over=false;spd=1;document.querySelector('footer').style.opacity='';$n('pz').textContent='⏸';$n('sp').textContent='1x';$n('end').style.display='none';

@@ -244,7 +244,8 @@ Object.assign(EVO,{keep:["수호 망루","경비실 초소","아파트 경비 �
 T.forEach(t=>{t.lvn=(EVO[t.id]&&EVO[t.id].length===4)?EVO[t.id]:[t.n,t.n+' Ⅱ',t.n+' Ⅲ',t.n+' Ⅳ'];t.lvn[0]=t.n});const tName=t=>t.bp.lvn[t.lv-1]||t.bp.n;
 const TB=Object.fromEntries(T.map(t=>[t.id,t])),UB=Object.fromEntries(U.map(u=>[u.id,u]));
 const PC=['#ef4444','#3b82f6','#10b981','#eab308','#a855f7','#f97316','#06b6d4','#ec4899'];
-const DIFF=/*DIFF*/{E:{n:'🐣 쉬움',g:450,i:25,tick:2,im:.92,d:'AI가 느긋하게 생각하고 돈도 덜 벌어요. 처음 해보는 분께 추천!'},N:{n:'🐥 일반',g:500,i:30,tick:1.6,d:'AI가 차분하게 판단하는 균형 모드예요.'},M:{n:'🐓 숙련',g:575,i:37,tick:1.25,d:'일반보다 AI가 한 박자 빠르고 자금도 넉넉해요. 🐍 넓은 가로 미로로 길을 1.9배 늘려요. 어려움 전 단계!'},H:{n:'🦅 어려움',g:650,i:45,tick:.9,d:'AI가 더 많은 자금으로 빠르게 판단하고, 🐍 세로·대각선·빗살 미로 중 하나로 길을 2.2~2.6배 늘려요.'},X:{n:'🔥 헬',g:800,i:58,tick:.7,im:1.12,uh:1.06,d:'AI가 번개처럼 판단하고, 돈을 12% 더 벌고, 새 체력도 6% 높아요. 🐍 가로 뱀·혼합 미로로 길을 최대 3배 늘리고, 필요하면 알 타워도 철거해요. 진짜 극악!'}}/*DIFFEND*/;
+/* 2026-11-11 난이도 한 단계씩 내림(옛 쉬움 삭제): 키는 그대로 두고 이름만 → N=쉬움(옛 일반)·M=일반(옛 숙련)·H=숙련(옛 어려움)·X=어려움(옛 헬)·Z=새 헬 */
+const DIFF=/*DIFF*/{N:{n:'🐣 쉬움',g:500,i:30,tick:1.6,d:'AI가 차분하게 판단해요. 처음 해 보는 분께 추천!'},M:{n:'🐥 일반',g:575,i:37,tick:1.25,d:'AI가 한 박자 빠르고 자금도 넉넉해요. 🐍 넓은 가로 미로로 길을 1.9배 늘려요.'},H:{n:'🐓 숙련',g:650,i:45,tick:.9,d:'AI가 더 많은 자금으로 빠르게 판단하고, 🐍 세로·대각선·빗살 미로 중 하나로 길을 2.2~2.6배 늘려요.'},X:{n:'🦅 어려움',g:800,i:58,tick:.7,im:1.12,uh:1.06,d:'AI가 번개처럼 판단하고 돈을 12% 더 벌고 새 체력도 6% 높아요. 정찰·킬존·재배치 미로를 쓰는 지능형 AI도 섞여요. 🐍 길을 최대 3배 늘려요.'},Z:{n:'🔥 헬',g:950,i:70,tick:.5,im:1.25,uh:1.15,d:'진짜 극악! AI 돈 +25%, 새 체력 +15%, 판단은 0.5초마다. 지능형 AI가 더 많이 나오고, 미로는 최대 3배. 살아남으면 자랑해도 돼요.'}}/*DIFFEND*/;
 /*AIS_BEGIN*/const AIS=[
 {n:"수익 스노우볼",s:{"n":8,"win":25,"pts":64,"inc5":1585,"lost":86,"surv":25},g:{"tw0":3.181,"twRate":1.679,"inc0":54.144,"incRate":29.531,"uShare":0.305,"uAir":0.163,"uHeavy":0.634,"uTier":0.572,"uSpec":0.491,"wall":0.496,"upAgg":0.062,"upMax":3.822,"def8":0.327,"crisis":57.023,"rush":283.005,"keep":547.247,"tech2":0.5,"m_cx":0.8,"tech":4.5,"m_egg":0.64,"m_air":0.385,"m_acorn":0.885,"m_t1":0.54,"m_t2":0,"m_t3":0.648}},
 {n:"철벽 수비",s:{"n":29,"win":55,"pts":82,"inc5":239,"lost":51,"surv":66},g:{"tw0":3.719,"twRate":1.932,"inc0":98.972,"incRate":49.86,"uShare":0.732,"uAir":0.168,"uHeavy":0.904,"uTier":0.968,"uSpec":0.752,"wall":0.228,"upAgg":0.941,"upMax":3.683,"def8":1.285,"crisis":22.466,"rush":791.507,"keep":404.873,"tech2":1.5,"m_cx":0.8,"tech":3.5,"m_egg":0.497,"m_air":0.042,"m_acorn":0.935,"m_t1":0.454,"m_t2":0.982,"m_t3":0.021}},
@@ -298,7 +299,7 @@ const banOf=(p,x)=>{const r=rOf(p);return !!(r&&r.ban&&r.ban.includes(x.id))},ba
 const has=(p,k)=>p.tech===k||p.tech2===k,techOK=(p,x)=>(!x.tech||has(p,x.tech))&&(!x.combo||(has(p,x.combo[0])&&has(p,x.combo[1])))&&raceOK(p,x),hasBat=p=>has(p,'dark');
 /* 🛡 보호막이 남아 있으면 독·화상·감속에 안 걸림 */const SHIM={poison:1,burn:1,slow:1},im=(u,k)=>(u.sh>0&&!!SHIM[k])||!!(u.bp.imm&&u.bp.imm.includes(k)),comboOf=(a,b)=>COMBO.find(c=>c.k.includes(a)&&c.k.includes(b)),tIcons=p=>(p.tech?TECH[p.tech].ic:'')+(p.tech2?TECH[p.tech2].ic:'');
 const cnt=g=>g.flat().filter(Boolean).length;
-let S=null,diff='N',sel=null,view=0,insp=null,spd=1,paused=false,over=false,uid=0;
+let S=null,diff='M',sel=null,view=0,insp=null,spd=1,paused=false,over=false,uid=0;
 
 function nextAlive(i){for(let k=1;k<=8;k++){const n=(i+k)%8;if(S.pl[n].alive&&n!==i)return n}return null}
 const cctvN=p=>p.grid.flat().filter(t=>t&&t.bp&&t.bp.cctv).length,cctvOK=p=>(p.sawSt||S.t>=240)&&cctvN(p)<2;
@@ -430,7 +431,7 @@ const MZ=(()=>{const C=COLS,Y=ROWS,rng=(a,b)=>{const o=[];for(let i=a;i<=b;i++)o
   diag:{n:'대각선 뱀',f:()=>{const o=[];[1,4,7,10].forEach((y0,k)=>{const ch=[];let x=0,y=y0;ch.push([x,y]);while(true){x++;if(x>=C)break;ch.push([x,y]);const nx=y%2?x+1:x;y++;if(nx>=C||y>Y-2)break;x=nx;ch.push([x,y])}(k%2?ch.slice(1):ch.slice(0,-1)).forEach(c=>o.push(c))});return o}},
   comb:{n:'빗살 미로',f:()=>{const o=[];for(let r=0;r<7;r++){const y=2+r*2;(r%2?rng(2,6):rng(0,4)).forEach(x=>o.push([x,y]))}return o}},
   whsnake:{n:'넓은 가로 뱀',f:()=>hs([2,5,8,11])}}})();
-const MZ_TIER={M:['whsnake'],H:['wvsnake','diag','comb'],X:['hsnake','hsnake2','mix','vsnake']};
+const MZ_TIER={M:['whsnake'],H:['wvsnake','diag','comb'],X:['hsnake','hsnake2','mix','vsnake'],Z:['hsnake','hsnake2','mix','vsnake']};
 // 완성했을 때의 평균 길 길이(기본 알 타워를 남길 때/철거할 때)를 미리 계산해서, 더 길어지는 쪽을 골라요
 function mzLen(cells,keepEgg){const g=Array.from({length:ROWS},()=>Array(COLS).fill(null));let n=0;if(keepEgg){g[8][3]=1;n=1}
  for(const [x,y] of cells){if(n>=BAL.cap)break;if(x<0||x>=COLS||y<1||y>=ROWS-1||g[y][x])continue;g[y][x]=1;if(!allOK(g)){g[y][x]=null;continue}n++}
@@ -494,7 +495,7 @@ function applyModeBal(k){const m=BAL.mode[k]||BAL.mode.normal;S_MODE=k;
  U.forEach(u=>{if(u.hp0==null){u.hp0=u.hp;u.sh0=u.shield||0}u.hp=Math.round(u.hp0*m.uh);if(u.sh0)u.shield=Math.round(u.sh0*m.uh)});
  T.forEach(b=>{if(b.d0==null){b.d0=b.d;b.cd0=b.cd}b.d=Math.round(b.d0*m.td);b.cd=+(b.cd0*m.as).toFixed(3)})}
 let S_MODE='normal';
-function start(gs,p0h){const D=DIFF[diff];const cf=AIP.filter(a=>!a.hell||diff==='X').sort(()=>Math.random()-.5);// 매 판 성향 무작위(지능형은 헬에서만)
+function start(gs,p0h){const D=DIFF[diff];const cf=AIP.filter(a=>!a.hell||diff==='X'||diff==='Z').sort(()=>Math.random()-.5);if(diff==='Z')cf.sort((a,b)=>(b.hell||0)-(a.hell||0));/* 매 판 성향 무작위(지능형은 어려움·헬에서만, 헬은 지능형 3종이 꼭 나옴) */
  const RK=raceAssign(gs);applyModeBal(RK.some(Boolean)?'race':'normal');EGG.n=0;S={t:0,inc:0,kills:0,dealt:0,off:Math.floor(Math.random()*8),sim:!!gs,p0h:!!p0h,cdn:gs?0:5,lm:1,pl:[]};techPend=null;
  for(let i=0;i<8;i++){const g=Array.from({length:ROWS},()=>Array(COLS).fill(null));g[8][3]=mkR(TB.egg,{race:RK[i]});
   const ai=gs?gs[i]:(i?{...mutG(cf[i-1].g,.07),tech:cf[i-1].g.tech,tech2:cf[i-1].g.tech2,fav:cf[i-1].fav,pn:cf[i-1].n,fl:cf[i-1].fl}:null),tech=ai?TK[Math.min(4,Math.floor(ai.tech??Math.random()*5))]:null;
@@ -2628,7 +2629,7 @@ $('dif').innerHTML=Object.keys(DIFF).map(k=>`<button data-k="${k}">${DIFF[k].n.r
 function setDiff(k){diff=k;[...$('dif').children].forEach(b=>b.className=b.dataset.k===k?'on':'');$('dd').textContent='💡 '+DIFF[k].d;lobUI()}
 $('dif').onclick=e=>{if(e.target.dataset.k)setDiff(e.target.dataset.k)};setDiff('N');
 // ---------- 🪶 깃털 코인 · 모드 선택 · 종족 해금 ----------
-const SAVE_KEY='jjj_save_v1',MODE_COST=0,RACE_COST=30,COIN_WIN={E:2,N:3,M:4,H:6,X:8};
+const SAVE_KEY='jjj_save_v1',MODE_COST=0,RACE_COST=30,COIN_WIN={N:2,M:3,H:4,X:6,Z:10};
 let SV={coins:0,modeOK:0,races:[],wins:0},gameMode='normal',raceView=null;
 try{const sv=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(sv&&typeof sv==='object')SV=Object.assign(SV,sv)}catch(e){}
 SV.heroes=SV.heroes||[];if(SV.hero&&SV.hero.id&&!SV.heroes.includes(SV.hero.id)&&!['chick','duck','penguin'].includes(SV.hero.id))SV.heroes.push(SV.hero.id);
