@@ -13,7 +13,8 @@ const PAGEFN=`window.evalCand=function(cand,dk,seat,opp){opp=opp||[];R=R||__mk()
 const rnd=(a,b)=>a+Math.random()*(b-a);
 /* 성향별 진화(ARCH=이름): 성향의 핵심 유전자 범위를 고정해서 그 성격 안에서만 최강을 찾음 */
 const ARCHS={inc:{inc0:[85,140],incRate:[45,60],uShare:[.65,1]},def:{def8:[1.05,1.3],tw0:[6,14],inc0:[30,60]},rush:{uShare:[.78,1],uTier:[.8,1],rush:[150,260],keep:[100,200],inc0:[30,70]},air:{uAir:[.78,1]},fire:{tech:[0,.99],uShare:[.72,1],uTier:[.75,1],keep:[100,300]},pzt:{tech:[4,4.99],tech2:[2,2.99],m_snack:[.5,1],m_t3:[.4,1]},up:{upAgg:[.6,1],upMax:[3,4]}};
-const AC=process.env.ARCH?ARCHS[process.env.ARCH]:null;
+const AQ=process.env.ARCH||'';/* ARCH=c03 → 속성 조합 고정(0화염 1빙결 2뇌전 3폭풍 4독) */if(/^c\d\d$/.test(AQ)){const a=+AQ[1],b=+AQ[2];ARCHS[AQ]={tech:[a,a+.99],tech2:[b,b+.99]}}
+const AC=AQ?ARCHS[AQ]:null;
 function clampA(g){if(!AC)return g;if(process.env.ARCH==='pzt')g.fl={...(g.fl||{}),pzt:1};if(process.env.ARCH==='fire'){g.fav={...(g.fav||{})};g.fav.phoenix=Math.max(2,g.fav.phoenix||0);if(Math.floor(g.tech2??0)===0)g.tech2=1+Math.random()*3.99}/* 🔥 불사조 테러 */for(const k in AC){const[a,b]=AC[k];const v=g[k]??(a+b)/2;g[k]=v<a||v>b?a+Math.random()*(b-a):v}return g}
 async function mutate(pg,c,s){return clampA(await pg.evaluate(([c,s,FK])=>{const g=mutG(c,s);g.tech=c.tech;g.tech2=c.tech2;if(Math.random()<s*1.5)g.tech=Math.random()*5;if(Math.random()<s*1.5)g.tech2=Math.random()*5;
   const fl={...(c.fl||{})};for(const k of ['scout','kz','jug'])if(Math.random()<s)fl[k]=fl[k]?0:1;g.fl=fl;const fv={...(c.fav||{})};for(const k of FK){if(Math.random()<s*2)fv[k]=Math.max(0,Math.min(2.5,(fv[k]||0)+(Math.random()-.5)*1.2))}g.fav=fv;return g},[c,s,FAVK]))}
