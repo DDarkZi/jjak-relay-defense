@@ -51,7 +51,7 @@ const U=[
 {id:'duck',n:'청둥오리',c:300,hp:747,sp:1,t:'G',dm:3,inc:16,ic:'🦆',col:0x9a8f7e},
 {id:'woodpecker',n:'딱따구리',c:320,hp:450,sp:1.5,t:'G',dm:2,inc:16,peck:1,ic:'🪵',col:0x1f2937,x:'근처 타워를 쪼아 2초 마비'},
 {id:'seagull',n:'폭격갈매기',c:360,hp:320,sp:1.3,t:'A',dm:2,inc:20,ic:'🪽',col:0xe2e8f0},
-{id:'swan',n:'백조',c:380,hp:377,sp:1.3,t:'A',dm:2,inc:19,shield:580,ic:'🦢',col:0xffffff,x:'보호막(체력 400 추가)'},
+{id:'swan',n:'백조',c:380,hp:377,sp:1.3,t:'A',dm:2,inc:19,shield:580,ic:'🦢',col:0xffffff,x:'보호막(체력 400 추가) · 보호막 동안 독·화상·감속 면역 · ⚡번개에 약함'},
 {id:'penguin',n:'황제펭귄',c:400,hp:390,sp:1.2,t:'G',dm:1,inc:22,count:3,imm:['slow'],tech:'ice',ic:'🐧',col:0x3f4d6e,x:'3마리 무리 · 감속 면역'},
 {id:'vampire',n:'흡혈박쥐새',c:420,hp:490,sp:1.5,t:'A',dm:2,inc:22,drain:2,tech:'dark',ic:'🦇',col:0x8b2f45,x:'탈출 시 내 라이프 +2'},
 {id:'peacock',n:'공작',c:460,hp:720,sp:1.1,t:'G',dm:2,inc:24,heal:1,ic:'🦚',col:0x1d6fd8,x:'주변 아군 치유'},
@@ -72,9 +72,9 @@ const U=[
 // ✨ 조합 새
 {id:'crane',combo:['fire','ice'],n:'온천 두루미',c:650,hp:900,sp:1.4,t:'G',dm:3,inc:38,imm:['slow','burn'],heal:1,ic:'🌡️',col:0xfecdd3,x:'화상·감속 면역 · 주변 치유'},
 {id:'plasmabird',combo:['fire','thunder'],n:'번개불새',c:900,hp:935,sp:2.3,t:'A',dm:4,inc:55,zap:1,imm:['stun'],ic:'🌟',col:0xfb923c,x:'기절 면역 · 타워 마비 · 고속'},
-{id:'comet',combo:['fire','wind'],n:'혜성 매',c:700,hp:510,sp:3.6,t:'A',dm:3,inc:42,shield:425,imm:['kb'],ic:'☄️',col:0xf43f5e,x:'보호막 · 넉백 면역 · 초고속'},
+{id:'comet',combo:['fire','wind'],n:'혜성 매',c:700,hp:510,sp:3.6,t:'A',dm:3,inc:42,shield:425,imm:['kb'],ic:'☄️',col:0xf43f5e,x:'보호막(독·화상·감속 면역, ⚡번개에 약함) · 넉백 면역 · 초고속'},
 {id:'plague',combo:['fire','dark'],n:'역병 까마귀',c:600,hp:300,sp:1.8,t:'A',dm:3,inc:36,stealth:.75,split:2,ic:'🦠',col:0x5a7a2e,x:'3/4까지 은신 · 분열'},
-{id:'auroraowl',combo:['ice','thunder'],n:'오로라 올빼미',c:850,hp:1105,sp:2,t:'A',dm:4,inc:50,imm:['stun','slow'],shield:340,ic:'🌠',col:0x93c5fd,x:'기절·감속 면역 · 보호막'},
+{id:'auroraowl',combo:['ice','thunder'],n:'오로라 올빼미',c:850,hp:1105,sp:2,t:'A',dm:4,inc:50,imm:['stun','slow'],shield:340,ic:'🌠',col:0x93c5fd,x:'기절·감속 면역 · 보호막(독·화상 면역, ⚡번개에 약함)'},
 {id:'blizgull',combo:['ice','wind'],n:'눈보라 갈매기',c:600,hp:630,sp:2.2,t:'A',dm:3,inc:36,count:2,imm:['kb','slow'],ic:'⛄',col:0xf0fdfa,x:'2마리 · 넉백·감속 면역'},
 {id:'frostpeng',mat:'ice',combo:['ice','dark'],n:'빙독 펭귄',c:550,hp:352,sp:1.3,t:'G',dm:1,inc:33,count:4,imm:['slow','poison'],ic:'🥶',col:0x9a8fe8,x:'4마리 무리 · 감속·독 면역'},
 {id:'stormeagle',combo:['thunder','wind'],n:'폭풍 독수리',c:1000,hp:1530,sp:1.8,t:'A',dm:5,inc:62,imm:['stun','kb'],ic:'💫',col:0x6366f1,x:'기절·넉백 면역'},
@@ -119,7 +119,7 @@ T.push(
  {id:'moonbow',race:'grove',n:'달빛 활',c:300,d:220,r:5,cd:1.3,t:'A',ic:'🌛',col:0xc4b5fd,x:'초장거리 대공',fl:'“보름달이 뜨면 명중률이 두 배. (기분 탓)”'},
  {id:'thorn',race:'grove',n:'가시 덩굴',c:200,d:10,r:2.8,cd:.8,splash:1.2,slow:1,ic:'🌿',col:0x22c55e,x:'광역 감속',fl:'“발에 감기면 풀리지 않아요. 풀인데도요.”'});
 U.push(
- {id:'knight',race:'nest',n:'근위 황새',c:420,hp:494,sp:1.2,t:'G',dm:2,inc:21,shield:390,over:1,ic:'🛡️',col:0xf1f5f9,x:'긴 다리로 타워를 성큼 넘어 직진(지상 판정) · 보호막(체력 300 추가)',fl:'“방패는 들었는데 아기는 어디 갔지?”'},
+ {id:'knight',race:'nest',n:'근위 황새',c:420,hp:494,sp:1.2,t:'G',dm:2,inc:21,shield:390,over:1,ic:'🛡️',col:0xf1f5f9,x:'긴 다리로 타워를 성큼 넘어 직진(지상 판정) · 보호막(독·화상·감속 면역·⚡번개에 약함, 체력 300 추가)',fl:'“방패는 들었는데 아기는 어디 갔지?”'},
  {id:'priest',race:'nest',n:'치유 사제새',c:360,hp:384,sp:1.3,t:'G',dm:1,inc:18,heal:1,ic:'⛑️',col:0xfef9c3,x:'주변 아군 치유',fl:'“아프면 부리 벌려요. 아~ 하고.”'},
  {id:'berserk',race:'raptor',n:'광전사 독수리',c:520,hp:598,sp:2.7,t:'A',dm:3,inc:33,ic:'🪓',col:0xdc2626,x:'빠른 공중 돌격',fl:'“화나면 눈이 빨개져요. 원래 빨간 거였어요.”'},
  {id:'warturkey',race:'raptor',n:'전투 칠면조',c:430,hp:855,sp:1.45,t:'G',dm:3,inc:27,ic:'🍗',col:0xb45309,x:'단단한 지상 돌격대',fl:'“추수감사절을 피해 군대에 입대했어요.”'},
@@ -131,7 +131,7 @@ U.sort((a,b)=>a.c-b.c);
 const TECH={fire:{n:'화염',ic:'🔥',col:0xf97316,t:['ember','lava','sun'],u:'phoenix',d:'화상 지속 피해'},ice:{n:'빙결',ic:'❄️',col:0x67e8f9,t:['ice','frost','bliz'],u:'penguin',d:'감속·빙결'},
  thunder:{n:'뇌전',ic:'⚡',col:0xfacc15,t:['static','thunder','storm'],u:'thunderbird',d:'연쇄 번개·기절'},wind:{n:'폭풍',ic:'🌪️',col:0x2dd4bf,t:['breeze','wind','twister'],u:'albatross',d:'넉백·방울·대공'},
  dark:{n:'독',ic:'☠️',col:0x84cc16,t:['flu','acid','flytrap'],u:'vampire',d:'독·약화·흡혈'}},TK=Object.keys(TECH),TECH2C=300;
-const BAL=/*BAL*/{upk:1.05,upg:.2,rh:.15,rs:0.5,hcr:2,hmx:0.03,pk:0.35,pmax:5,pdur:4,bk:1.1,bdur:3,bsp:.7,cl:2.5,mode:{normal:{uh:0.95,td:0.84,as:1.02},race:{uh:1,td:0.85,as:0.97}},cap:44,ovs:.9,airInc:.8,kr:.2,ui:.9,need:1,uhp:2.4,incS:805,late1:420,lm1:2,late2:540,lm2:3,py:{ar:.85,am:2.4,gr:1.1,gm:.8,lr:1.1,la:1.2,lg:.4}}/*BALEND*/;T.forEach(b=>{if(!b.d||b.pylon||b.snack||b.cctv)return;const tr=[];if(b.cd<=.8){b.rapid=1;tr.push('⚡연사 가속: 계속 쏘면 공속 최대 +50%')}else if(b.cd>=1.5){b.heavy=1;tr.push('💥강타: 3번째 공격마다 치명타 ×2 + 대상 최대체력 3% 추가 피해')}if(b.poison)tr.push('☠️독 중첩(최대 5)'+((b.splash||b.self)?' · 독연기 2.5초 잔류':''));if(b.burn)tr.push('🔥화상 번짐: 불탄 채 쓰러지면 옆으로 옮겨붙음');if(tr.length)b.x=(b.x?b.x+' · ':'')+tr.join(' · ')});U.forEach(u=>{u.inc=Math.round(u.inc*1.4*(u.t==='A'?BAL.airInc:1));u.hp=Math.round(u.hp*BAL.uhp);if(u.shield)u.shield*=BAL.uhp});const TICK=4;
+const BAL=/*BAL*/{shz:2,upk:1.05,upg:.2,rh:.15,rs:0.5,hcr:2,hmx:0.03,pk:0.35,pmax:5,pdur:4,bk:1.1,bdur:3,bsp:.7,cl:2.5,mode:{normal:{uh:0.95,td:0.84,as:1.02},race:{uh:1,td:0.85,as:0.97}},cap:44,ovs:.9,airInc:.8,kr:.2,ui:.9,need:1,uhp:2.4,incS:805,late1:420,lm1:2,late2:540,lm2:3,py:{ar:.85,am:2.4,gr:1.1,gm:.8,lr:1.1,la:1.2,lg:.4}}/*BALEND*/;T.forEach(b=>{if(!b.d||b.pylon||b.snack||b.cctv)return;const tr=[];if(b.cd<=.8){b.rapid=1;tr.push('⚡연사 가속: 계속 쏘면 공속 최대 +50%')}else if(b.cd>=1.5){b.heavy=1;tr.push('💥강타: 3번째 공격마다 치명타 ×2 + 대상 최대체력 3% 추가 피해')}if(b.poison)tr.push('☠️독 중첩(최대 5)'+((b.splash||b.self)?' · 독연기 2.5초 잔류':''));if(b.burn)tr.push('🔥화상 번짐: 불탄 채 쓰러지면 옆으로 옮겨붙음');if(tr.length)b.x=(b.x?b.x+' · ':'')+tr.join(' · ')});U.forEach(u=>{u.inc=Math.round(u.inc*1.4*(u.t==='A'?BAL.airInc:1));u.hp=Math.round(u.hp*BAL.uhp);if(u.shield)u.shield*=BAL.uhp});const TICK=4;
 const COMBO=T.filter(t=>t.combo).map(t=>({k:t.combo,t:t.id,u:U.find(u=>u.combo&&u.combo.join()===t.combo.join()).id,n:t.combo.map(k=>TECH[k].n).join('+'),ic:t.combo.map(k=>TECH[k].ic).join('')}));
 // 🎭 웃긴 이름 + 한 줄 설명 (도감용)
 const NM={
@@ -240,6 +240,7 @@ Object.assign(EVO,{keep:["수호 망루","경비실 초소","아파트 경비 �
  ballista:["투창 노포","쌍발 노포","연발 노포","창던지기 금메달 노포"],spikes:["가시 참호","못판 참호","지압 발판 참호","고행자의 이불"],
  scarecrow:["해골 허수아비","해골 파수꾼","해골 마법사 허수아비","저승 허수아비 대왕"],tomb:["묘비 둥지","이끼 낀 묘비","납골당 둥지","저승 분양 아파트"],
  moonbow:["달빛 활","보름달 활","은하수 장궁","토끼 방아 활"],thorn:["가시 덩굴","장미 덩굴","정글 덩굴","아마존 덩굴 지옥"]});
+/* ⚡ 뇌전 타워(조합 포함)는 보호막에 2배 */T.forEach(t=>{if(t.tech==='thunder'||(t.combo&&t.combo.includes('thunder')))t.zap=1});
 T.forEach(t=>{t.lvn=(EVO[t.id]&&EVO[t.id].length===4)?EVO[t.id]:[t.n,t.n+' Ⅱ',t.n+' Ⅲ',t.n+' Ⅳ'];t.lvn[0]=t.n});const tName=t=>t.bp.lvn[t.lv-1]||t.bp.n;
 const TB=Object.fromEntries(T.map(t=>[t.id,t])),UB=Object.fromEntries(U.map(u=>[u.id,u]));
 const PC=['#ef4444','#3b82f6','#10b981','#eab308','#a855f7','#f97316','#06b6d4','#ec4899'];
@@ -295,7 +296,7 @@ function raceAssign(gs){if(gs&&gs.races)return gs.races;if(!gs&&gameMode==='norm
 const jo=(w,a,b)=>{const c=String(w).replace(/[^가-힣0-9A-Za-z]+$/,'').slice(-1),k=c.charCodeAt(0);if(k>=0xAC00&&k<=0xD7A3)return w+((k-0xAC00)%28?a:b);return w+(/[136780LMNRlmnr]$/.test(c)?a:b)};
 const banOf=(p,x)=>{const r=rOf(p);return !!(r&&r.ban&&r.ban.includes(x.id))},banMsg=(p,x)=>{const r=rOf(p);return `🚫 ${r.ic} ${jo(r.n,'은','는')} ${jo(x.n,'을','를')} 쓸 수 없어요 (종족 규칙)`};
 const has=(p,k)=>p.tech===k||p.tech2===k,techOK=(p,x)=>(!x.tech||has(p,x.tech))&&(!x.combo||(has(p,x.combo[0])&&has(p,x.combo[1])))&&raceOK(p,x),hasBat=p=>has(p,'dark');
-const im=(u,k)=>!!(u.bp.imm&&u.bp.imm.includes(k)),comboOf=(a,b)=>COMBO.find(c=>c.k.includes(a)&&c.k.includes(b)),tIcons=p=>(p.tech?TECH[p.tech].ic:'')+(p.tech2?TECH[p.tech2].ic:'');
+/* 🛡 보호막이 남아 있으면 독·화상·감속에 안 걸림 */const SHIM={poison:1,burn:1,slow:1},im=(u,k)=>(u.sh>0&&!!SHIM[k])||!!(u.bp.imm&&u.bp.imm.includes(k)),comboOf=(a,b)=>COMBO.find(c=>c.k.includes(a)&&c.k.includes(b)),tIcons=p=>(p.tech?TECH[p.tech].ic:'')+(p.tech2?TECH[p.tech2].ic:'');
 const cnt=g=>g.flat().filter(Boolean).length;
 let S=null,diff='N',sel=null,view=0,insp=null,spd=1,paused=false,over=false,uid=0;
 
@@ -311,7 +312,7 @@ function spawn(t,b,owner,hp,ex){const x=Math.floor(Math.random()*COLS),first=hp=
 const gainInc=(p,b)=>Math.max(1,Math.round(b.inc*BAL.ui*BAL.incS/(BAL.incS+p.income))),lateMul=()=>S.t>=BAL.late2?BAL.lm2:S.t>=BAL.late1?BAL.lm1:1;
 function kbU(u,n,force){if(!force&&(im(u,'kb')||u.kbt>0))return;if(u.bp.t==='G'&&u.pi>1)u.pi=Math.max(0,u.pi-2*n);else u.y=Math.max(cellY(0),u.y-1.1*n);u.kbt=7+Math.random()*3}
 function addPois(u,pv,src){u.pst=Math.min(BAL.pmax,(u.pst||0)+1);u.ps=BAL.pdur;if(pv>=(u.pv||0)){u.pv=pv;u.psrc=src}}
-function dmgU(u,d){if(u.amp>0)d*=1.35;const h0=Math.max(0,u.hp)+Math.max(0,u.sh||0),d0=d;if(u.sh>0){const a=Math.min(u.sh,d);u.sh-=a;d-=a}u.hp-=d;u.hit=.1;return Math.min(h0,d0)}
+/* zap: ⚡ 뇌전(번개) 공격은 보호막에 2배 */function dmgU(u,d,zap){if(u.amp>0)d*=1.35;const h0=Math.max(0,u.hp)+Math.max(0,u.sh||0),d0=d;if(u.sh>0){const k=zap?BAL.shz:1,a=Math.min(u.sh,d*k);u.sh-=a;d-=a/k;if(zap&&u.sh<=0)u.shb=1}u.hp-=d;u.hit=.1;return Math.min(h0,d0)}
 /* 🏗 공사 고깔: 두루미가 타워를 이고 간 동안 원래 자리에 세워 둬요(그 칸은 여전히 막혀 있어요) */
 const CONE=new Map();function craneCone(t,x,y){if(!t){CONE.forEach((c,tt)=>{if(!tt.carrier||!c.on){Sc.remove(c.m);CONE.delete(tt)}else c.on=0});return}
  let c=CONE.get(t);if(!c){const g=new THREE.Group(),o=new THREE.Mesh(new THREE.ConeGeometry(.16,.42,10),new THREE.MeshStandardMaterial({color:0xf97316}));o.rotation.x=PI/2;o.position.z=.21;g.add(o);
@@ -379,14 +380,14 @@ function actDem(pid,x,y){const me=S.pl[pid],t=me&&me.grid[y]&&me.grid[y][x];if(!
 // ---------- 조합 스킬 (속성 2개 필요, 해금 SKC골드) ----------
 const SKC=1500,SKILL={
  steam:{n:'증기 폭발',d:'모든 적에게 최대체력 30% 피해 + 4초 감속',cd:55,f:p=>((!S.sim&&p.id===view&&typeof PFX!=='undefined')&&PFX.many('steam',p.units),0)||p.units.forEach(u=>{dmgU(u,u.bp.hp*.3);u.slow=Math.max(u.slow,4)})},
- plasma:{n:'플라즈마 낙뢰',d:'무작위 적에게 낙뢰 12회 (최대체력 25%+화상)',cd:55,f:p=>{for(let k=0;k<12&&p.units.length;k++){const u=p.units[Math.floor(Math.random()*p.units.length)];if(!S.sim&&p.id===view){if(PXS.has('lightning/lightning-strike'))PXS.play('lightning/lightning-strike',u.x,BH-u.y,0,{fit:2.2,delay:k*.09});else if(typeof PFX!=='undefined')PFX.strike(u.x,BH-u.y,u.bp.t==='A'?1.2:0,k*.09)}dmgU(u,u.bp.hp*.25+300);u.pois=3;u.pd=60;u.bc=true}}},
+ plasma:{n:'플라즈마 낙뢰',d:'무작위 적에게 낙뢰 12회 (최대체력 25%+화상)',cd:55,f:p=>{for(let k=0;k<12&&p.units.length;k++){const u=p.units[Math.floor(Math.random()*p.units.length)];if(!S.sim&&p.id===view){if(PXS.has('lightning/lightning-strike'))PXS.play('lightning/lightning-strike',u.x,BH-u.y,0,{fit:2.2,delay:k*.09});else if(typeof PFX!=='undefined')PFX.strike(u.x,BH-u.y,u.bp.t==='A'?1.2:0,k*.09)}dmgU(u,u.bp.hp*.25+300,1);u.pois=3;u.pd=60;u.bc=true}}},
  firestorm:{n:'화염 폭풍',d:'모든 적 6초 강한 화상 + 밀어내기',cd:60,f:p=>((!S.sim&&p.id===view&&typeof PFX!=='undefined')&&(PFX.many('fire',p.units),PXS.some('fire/flame-pillar',p.units,8,{fit:1.6})),0)||p.units.forEach(u=>{u.pois=6;u.pd=u.bp.hp*.05;u.bc=true;kbU(u,2)})},
  pyre:{n:'역병의 불길',d:'모든 적 8초 독화상 + 받는 피해 +35%',cd:60,f:p=>((!S.sim&&p.id===view&&typeof PFX!=='undefined')&&PFX.many('gfire',p.units),0)||p.units.forEach(u=>{u.pois=8;u.pd=u.bp.hp*.04;u.bc=true;u.amp=8})},
  aurora:{n:'절대영도',d:'모든 적 3초 빙결 (면역 무시)',cd:60,f:p=>((!S.sim&&p.id===view&&typeof PFX!=='undefined')&&(PFX.many('ice',p.units),PXS.some('ice/ice-shatter',p.units,10,{fit:1.4,delay:2.7})),0)||p.units.forEach(u=>{u.stun=Math.max(u.stun,3)})},
  whiteout:{n:'눈사태',d:'모든 적을 크게 밀어내고 6초 감속',cd:60,f:p=>((!S.sim&&p.id===view&&typeof PFX!=='undefined')&&PFX.many('snow',p.units,.07),0)||p.units.forEach(u=>{kbU(u,3,true);u.slow=Math.max(u.slow,6)})},
  frostbane:{n:'빙독 감옥',d:'모든 적 8초 감속 + 독(초당 최대체력 3%)',cd:55,f:p=>((!S.sim&&p.id===view&&typeof PFX!=='undefined')&&PFX.many('cage',p.units),0)||p.units.forEach(u=>{u.slow=Math.max(u.slow,8);u.pois=8;u.pd=u.bp.hp*.03;u.bc=false})},
  tempest:{n:'폭풍의 눈',d:'10초간 내 모든 타워 공격속도 2배',cd:60,f:p=>{(!S.sim&&p.id===view&&typeof PFX!=='undefined')&&(PFX.towers('wind',p),PXS.towers('nature/tornado',p,4,{fit:1.7,loop:true,life:3}));p.boost=10}},
- venomvolt:{n:'신경독 전류',d:'모든 적 최대체력 20% 피해 + 2초 기절 + 약화',cd:60,f:p=>((!S.sim&&p.id===view&&typeof PFX!=='undefined')&&PFX.many('zap',p.units,.03),0)||p.units.forEach(u=>{dmgU(u,u.bp.hp*.2);u.stun=Math.max(u.stun,2);u.amp=8})},
+ venomvolt:{n:'신경독 전류',d:'모든 적 최대체력 20% 피해 + 2초 기절 + 약화',cd:60,f:p=>((!S.sim&&p.id===view&&typeof PFX!=='undefined')&&PFX.many('zap',p.units,.03),0)||p.units.forEach(u=>{dmgU(u,u.bp.hp*.2,1);u.stun=Math.max(u.stun,2);u.amp=8})},
  miasma:{n:'독안개 장막',d:'10초간 은신 해제 + 감속 + 독',cd:55,f:p=>{(!S.sim&&p.id===view&&typeof PFX!=='undefined')&&PFX.board('fog',16);p.reveal=10;p.units.forEach(u=>{u.slow=Math.max(u.slow,10);u.pois=10;u.pd=u.bp.hp*.02;u.bc=false})}}};
 function skillOf(p){if(!p.tech2)return null;const c=comboOf(p.tech,p.tech2);return c?Object.assign({id:c.t,c},SKILL[c.t]):null}
 function useSkill(p){const s=skillOf(p);if(!s||!p.skU||p.skCD>0)return false;s.f(p);p.skCD=s.cd;p.skN=(p.skN||0)+1;if(p.id===view||p.id===0)sfx('skill',{id:s.id,mine:p.id===0});if(p.id===view)artFx('skill',{id:s.id,col1:TECH[s.c.k[0]].col,col2:TECH[s.c.k[1]].col});if(p.id===view&&!S.sim)skFx(s);if(p.id===0&&!S.sim)toast(`${s.c.ic} ${s.n} 발동!`);return true}
@@ -511,6 +512,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
  S.pl.forEach(p=>{if(p.alive&&p.cfg){p.aiT+=dt;if(p.aiT>=D.tick){p.aiT=0;aiTick(p)}}});
  S.pl.forEach(p=>{if(!p.alive)return;const born=[],lay=[];
   const drop=[];p.units=p.units.filter(u=>{const b=u.bp;
+   if(u.sh>0&&SHIM.poison&&(u.pois>0||u.ps>0||u.bn>0||u.slow>0)){u.pois=0;u.ps=0;u.pst=0;u.pv=0;u.bn=0;u.slow=0}/* 🛡 보호막 동안 상태이상 씻김 */
    if(u.pois>0){u.pois-=dt;dmgU(u,u.pd*dt)}
    if(u.ps>0){u.ps-=dt;const d=dmgU(u,u.pv*u.pst*dt);if(S.st)S.st.td[u.psrc]=(S.st.td[u.psrc]||0)+d;if(u.ps<=0){u.pst=0;u.pv=0}}
    if(u.bn>0){u.bn-=dt;const d=dmgU(u,u.bv*dt);if(S.st)S.st.td[u.bsrc]=(S.st.td[u.bsrc]||0)+d}
@@ -559,10 +561,10 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
    p.grid.forEach(r=>r.forEach(t=>{if(t&&t.bp&&t.bp.pylon&&t.dis>0)t.dis-=dtp}));
    const hid=u=>u.bp.stealth&&u.y<BH*u.bp.stealth&&!(p.reveal>0)&&!u.seen,air=u=>(u.bp.t==='A'||u.fl>0)&&!(u.gr>0),PY=BAL.py;
    for(const w of W){if(w.a.dis>0||w.b.dis>0)continue;const dps=(w.a.d+w.b.d)/2*w.m;
-    for(const u of p.units){if(hid(u))continue;const d=segD(u.x,u.y,w),A=air(u);if(d<(A?PY.ar:PY.gr)){const ef=dmgU(u,dps*(A?PY.am:PY.gm)*dtp);if(S.st)S.st.td.pylon=(S.st.td.pylon||0)+ef;zapped++;mx=Math.max(mx,w.m)}}}
+    for(const u of p.units){if(hid(u))continue;const d=segD(u.x,u.y,w),A=air(u);if(d<(A?PY.ar:PY.gr)){const ef=dmgU(u,dps*(A?PY.am:PY.gm)*dtp,1);if(S.st)S.st.td.pylon=(S.st.td.pylon||0)+ef;zapped++;mx=Math.max(mx,w.m)}}}
    // 이웃 없는 외톨이 전봇대: 약한 방전
    p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(!t||!t.bp||!t.bp.pylon||t.dis>0)return;if(W.some(w=>w.a===t||w.b===t))return;const cx=cellX(x,y),cy=cellY(y);
-    for(const u of p.units){if(hid(u))continue;const A=air(u);if(Math.hypot(u.x-cx,u.y-cy)<PY.lr){const ef=dmgU(u,t.d*(A?PY.la:PY.lg)*dtp);if(S.st)S.st.td.pylon=(S.st.td.pylon||0)+ef;zapped++}}}));
+    for(const u of p.units){if(hid(u))continue;const A=air(u);if(Math.hypot(u.x-cx,u.y-cy)<PY.lr){const ef=dmgU(u,t.d*(A?PY.la:PY.lg)*dtp,1);if(S.st)S.st.td.pylon=(S.st.td.pylon||0)+ef;zapped++}}}));
    if(zapped&&p.id===view){sfx('wire',{mult:mx});artFx('wire',{n:zapped,mult:mx})}}
   for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(!t)continue;
    if(t.bp.snack){if(t.dis>0){t.dis-=dt;continue}t.cd-=dt;if(t.cd>0)continue;t.cd=t.bp.cd*(p.boost>0?.5:1);const cx=cellX(x,y),cy=cellY(y);p.snacks=p.snacks||[];
@@ -592,7 +594,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
    if(p.id===view){t.kick=1;sfx('shoot',{tower:b.id});artFx('shoot',{tower:b.id,x:cx,y:BH-cy,tx:tg.x,ty:BH-tg.y,air:tg.bp.t==='A',col:b.col,b})}
    const lvm=1+(t.lv-1)*.5;if(crit>1&&p.id===view)artFx('crit',{u:tg});
    if(b.poison&&(b.splash||b.self)){p.clouds=p.clouds||[];if(p.clouds.length>=14)p.clouds.shift();const cx2=b.self?cx:tg.x,cy2=b.self?cy:tg.y,cr=b.self?Math.min(t.r,2.2):b.splash;p.clouds.push({x:cx2,y:cy2,r:cr,life:BAL.cl,tk:.5,pv:b.poison*BAL.pk*lvm,src:b.id});if(p.id===view&&!S.sim)PXS.play('nature/toxic-gas',cx2,BH-cy2,0,{loop:true,life:BAL.cl,fit:cr*1.35,op:.5});if(p.id===view)artFx('smoke',{x:cx2,y:BH-cy2,r:cr,col:b.col})}
-   hits.forEach((h,i)=>{const dd=(t.d*(b.chain&&i?.75:1)*(h===tg?crit:1)+(b.heavy&&h===tg?h.bp.hp*BAL.hmx:0))*(h.bp.swarm&&b.heavy?.5:1);const ef=dmgU(h,dd);if(S.st)S.st.td[b.id]=(S.st.td[b.id]||0)+ef;if(p.id===view&&!S.sim)dmgPop(h,ef,h===tg&&crit>1);
+   hits.forEach((h,i)=>{const dd=(t.d*(b.chain&&i?.75:1)*(h===tg?crit:1)+(b.heavy&&h===tg?h.bp.hp*BAL.hmx:0))*(h.bp.swarm&&b.heavy?.5:1);const ef=dmgU(h,dd,b.zap);if(S.st)S.st.td[b.id]=(S.st.td[b.id]||0)+ef;if(p.id===view&&!S.sim)dmgPop(h,ef,h===tg&&crit>1);
     if(b.poison&&!im(h,'poison'))addPois(h,b.poison*BAL.pk*lvm,b.id);
     if(b.burn&&!im(h,'burn')){h.bn=BAL.bdur;const bv=b.burn*BAL.bk*lvm;if(bv>=(h.bv||0)){h.bv=bv;h.bsrc=b.id}}
     if(b.slow&&!im(h,'slow'))h.slow=Math.max(h.slow,2.2);
@@ -879,7 +881,7 @@ let talkN=0;function sync3(dt){sync3.talkOn=talkN;talkN=0;try{heroBoard(dt)}catc
    if(!sp&&on){sp=m.userData.talk=new THREE.Sprite(new THREE.SpriteMaterial({map:talkTex(u.bp,i),depthTest:false,transparent:true}));sp.geometry.userData.cached=1;sp.renderOrder=30;sp.position.set(0,-.2,1.35);m.add(sp)}
    if(on)talkN++;if(sp){sp.visible=on;if(on){const tx=talkTex(u.bp,i);if(sp.material.map!==tx){sp.material.map=tx;sp.material.needsUpdate=true}const k=1/m.scale.y;sp.scale.set(2.5*k,.86*k,1)}}}
   if(u.bp.stealth){const st=u.y<BH*u.bp.stealth&&!u.seen;if(m.userData.st!==st){m.userData.st=st;m.traverse(o=>{if(o.material&&o.name!=='f'&&!(o.name||'').startsWith('art')){if(o.userData.op0===undefined)o.userData.op0=o.material.opacity;o.material.transparent=true;o.material.opacity=st?.3*o.userData.op0:o.userData.op0}})}}
-  const sh=m.getObjectByName('shd');if(sh)sh.visible=u.sh>0;
+  const sh=m.getObjectByName('shd');if(sh)sh.visible=u.sh>0;if(u.shb){u.shb=0;if(p.id===view&&!S.sim){PXS.play('ice/ice-shatter',u.x,BH-u.y,u.bp.t==='A'?1:0,{fit:1.2,add:true});artFx('crit',{u})}}
   (m.userData.w||[]).forEach((q,i)=>q.rotation.y=(i?-1:1)*Math.sin(S.t*14+u.id)*.5);if(m.userData.an)m.userData.an(S.t+u.id*.37,m);const body=m.children[0];body.rotation.z=Math.sin(S.t*10+u.x*5)*.18;
   const f=m.getObjectByName('f'),r=Math.max(0,Math.min(1,u.hp/u.bp.hp));f.scale.x=Math.max(.01,r);f.position.x=-(1-r)*.28;
   /* 체력바 = 보낸 사람 팀 색(길이로 체력), 보호막이면 하얗게 밝힘 */f.material.color.set(PC[u.owner]||'#22c55e');if(u.sh>0)f.material.color.lerp(WHT3,.55);
