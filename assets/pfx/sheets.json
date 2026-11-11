@@ -51,19 +51,6 @@
   "py": 87,
   "ofw": 224
  },
- "nature/poison-cloud": {
-  "f": "assets/pfx/nature_poison-cloud.png",
-  "n": 60,
-  "fps": 15.0,
-  "loop": true,
-  "cols": 5,
-  "rows": 12,
-  "fw": 221,
-  "fh": 88,
-  "px": 115,
-  "py": 75,
-  "ofw": 256
- },
  "lightning/lightning-strike": {
   "f": "assets/pfx/lightning_lightning-strike.png",
   "n": 46,
@@ -76,5 +63,18 @@
   "px": 115,
   "py": 227,
   "ofw": 240
+ },
+ "nature/toxic-gas": {
+  "f": "assets/pfx/nature_toxic-gas.png",
+  "n": 36,
+  "fps": 15.0,
+  "loop": true,
+  "cols": 6,
+  "rows": 6,
+  "fw": 94,
+  "fh": 78,
+  "px": 47,
+  "py": 67,
+  "ofw": 120
  }
 }
