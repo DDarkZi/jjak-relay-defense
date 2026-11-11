@@ -3,7 +3,7 @@ import { Lights, Rng, fit, TAU, WHITE } from "../../core/index.js";
 
 export const meta = {
   name: "Toxic gas",
-  desc: "A round, lumpy ball of toxic green gas sitting on the ground: soft puffs that breathe in and out and slowly churn round, little bubbles rising through it and popping, a sickly glow underneath.",
+  desc: "A round, lumpy, see-through ball of purple toxic gas sitting on the ground: soft puffs that breathe in and out and slowly churn round, little bubbles rising through it and popping, a sickly glow underneath.",
   tags: ["nature", "poison", "gas", "cloud", "toxic", "loop"],
   size: [120, 100],
   origin: [60, 88],
@@ -12,8 +12,8 @@ export const meta = {
   fps: 30,
   bg: "ground",
   options: {
-    palette: ["#16260c", "#24461a", "#2f6a1e", "#45922a", "#6cbf38", "#a2e45a", "#d6ff8e"],
-    accent: ["#5a2a6e", "#9b3fd0", "#e2b0ff"],
+    palette: ["#1a0b26", "#2e1446", "#4a1f6e", "#6a2f9a", "#8c47c4", "#b578e6", "#e8ccff"],
+    accent: ["#2f6a1e", "#7cd63a", "#d6ff8e"],
     seed: 7,
   },
 };
@@ -37,10 +37,10 @@ export function create(o) {
   };
   const drawBall = (p, b, layer) => {
     const [x, y, r] = pos(b), hy = (y - CY) / 20, lo = hy > 0.25;
-    if (layer === "shade") p.disc(x + r * 0.14, y + r * 0.18, r, lo ? C[1] : C[2], 0.85);
-    else if (layer === "body") p.disc(x - r * 0.05, y - r * 0.08, r * 0.86, lo ? C[2] : C[3], 0.92);
+    if (layer === "shade") p.disc(x + r * 0.14, y + r * 0.18, r, lo ? C[1] : C[2], 0.42);
+    else if (layer === "body") p.disc(x - r * 0.05, y - r * 0.08, r * 0.86, lo ? C[2] : C[3], 0.5);
     else if (hy < -0.35) {
-      p.disc(x - r * 0.24, y - r * 0.3, r * 0.4, C[4], 0.85);
+      p.disc(x - r * 0.24, y - r * 0.3, r * 0.4, C[4], 0.55);
       if (hy < -0.8) p.disc(x - r * 0.3, y - r * 0.38, r * 0.16, C[6], 0.8);
     }
   };
@@ -48,12 +48,12 @@ export function create(o) {
   return {
     update(dt) { t += dt; lights.update(dt); },
     drawBack(p) {
-      p.glow(0, -2, 40, C[4], 0.35);
-      p.glow(0, CY + 6, 30, A[1], 0.12);
+      p.glow(0, -2, 40, C[4], 0.22);
+      p.glow(0, CY + 6, 30, C[5], 0.1);
     },
     draw(p) {
       for (const layer of ["shade", "body", "cap"]) for (const b of balls) drawBall(p, b, layer);
-      // 보라 얼룩이 몇 개 떠다니며 독 느낌
+      // 초록 독 방울이 몇 개 떠다니며 독 느낌
       for (let i = 0; i < 3; i++) {
         const a = (TAU * t) / D + i * 2.1;
         p.disc(Math.cos(a) * 14, CY + 6 + Math.sin(a * 2) * 6, 2.6, A[1], 0.9);p.disc(Math.cos(a) * 14 - 0.8, CY + 5 + Math.sin(a * 2) * 6, 1.1, A[2], 0.9);

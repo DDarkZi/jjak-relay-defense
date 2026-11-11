@@ -591,7 +591,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
      if(!nb)break;if(p.id===view)beamU(cur,nb,b.col);set.push(nb);cur=nb}hits=set}
    if(p.id===view){t.kick=1;sfx('shoot',{tower:b.id});artFx('shoot',{tower:b.id,x:cx,y:BH-cy,tx:tg.x,ty:BH-tg.y,air:tg.bp.t==='A',col:b.col,b})}
    const lvm=1+(t.lv-1)*.5;if(crit>1&&p.id===view)artFx('crit',{u:tg});
-   if(b.poison&&(b.splash||b.self)){p.clouds=p.clouds||[];if(p.clouds.length>=14)p.clouds.shift();const cx2=b.self?cx:tg.x,cy2=b.self?cy:tg.y,cr=b.self?Math.min(t.r,2.2):b.splash;p.clouds.push({x:cx2,y:cy2,r:cr,life:BAL.cl,tk:.5,pv:b.poison*BAL.pk*lvm,src:b.id});if(p.id===view&&!S.sim)PXS.play('nature/toxic-gas',cx2,BH-cy2,0,{loop:true,life:BAL.cl,fit:cr*2});if(p.id===view)artFx('smoke',{x:cx2,y:BH-cy2,r:cr,col:b.col})}
+   if(b.poison&&(b.splash||b.self)){p.clouds=p.clouds||[];if(p.clouds.length>=14)p.clouds.shift();const cx2=b.self?cx:tg.x,cy2=b.self?cy:tg.y,cr=b.self?Math.min(t.r,2.2):b.splash;p.clouds.push({x:cx2,y:cy2,r:cr,life:BAL.cl,tk:.5,pv:b.poison*BAL.pk*lvm,src:b.id});if(p.id===view&&!S.sim)PXS.play('nature/toxic-gas',cx2,BH-cy2,0,{loop:true,life:BAL.cl,fit:cr*1.35,op:.5});if(p.id===view)artFx('smoke',{x:cx2,y:BH-cy2,r:cr,col:b.col})}
    hits.forEach((h,i)=>{const dd=(t.d*(b.chain&&i?.75:1)*(h===tg?crit:1)+(b.heavy&&h===tg?h.bp.hp*BAL.hmx:0))*(h.bp.swarm&&b.heavy?.5:1);const ef=dmgU(h,dd);if(S.st)S.st.td[b.id]=(S.st.td[b.id]||0)+ef;if(p.id===view&&!S.sim)dmgPop(h,ef,h===tg&&crit>1);
     if(b.poison&&!im(h,'poison'))addPois(h,b.poison*BAL.pk*lvm,b.id);
     if(b.burn&&!im(h,'burn')){h.bn=BAL.bdur;const bv=b.burn*BAL.bk*lvm;if(bv>=(h.bv||0)){h.bv=bv;h.bsrc=b.id}}
@@ -2924,15 +2924,15 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-last)/10
 requestAnimationFrame(frame);
 
 // ---------- 🎞 pixelfx 스프라이트 시트 재생기 (효과 출처: github.com/patch-gg/pixelfx, MIT — assets/pfx/LICENSE-pixelfx.txt) ----------
-// 효과 추가: python3 tools/pfx/add.py <pixelfx 폴더> <id...> → js/pfx_sheets.js 목록 갱신. 재생: PXS.play('holy/feather-burst', x, BH-y, z, {sc, delay, add})
+// 효과 추가: python3 tools/pfx/add.py <pixelfx 폴더> <id...> → js/pfx_sheets.js 목록 갱신. 재생: PXS.play(id, x, BH-y, z, {fit:가로 칸, sc, delay, add:빛 섞기, op:불투명도, loop, life})
 const PXS=(()=>{const MAT={},act=[],M=()=>typeof PFXS_META!=='undefined'?PFXS_META:{};
- function mat(id,add){const k=id+(add?'+':'');if(MAT[k])return MAT[k];const m=M()[id];const tx=new THREE.TextureLoader().load(m.f);tx.magFilter=tx.minFilter=THREE.NearestFilter;tx.generateMipmaps=false;
-  return MAT[k]=new THREE.MeshBasicMaterial({map:tx,transparent:true,depthWrite:false,depthTest:false,side:THREE.DoubleSide,blending:add?THREE.AdditiveBlending:THREE.NormalBlending})}
+ function mat(id,add,op){op=op==null?1:op;const k=id+(add?'+':'')+op;if(MAT[k])return MAT[k];const m=M()[id];const tx=new THREE.TextureLoader().load(m.f);tx.magFilter=tx.minFilter=THREE.NearestFilter;tx.generateMipmaps=false;
+  return MAT[k]=new THREE.MeshBasicMaterial({map:tx,transparent:true,depthWrite:false,depthTest:false,side:THREE.DoubleSide,blending:add?THREE.AdditiveBlending:THREE.NormalBlending,opacity:op})}
  function setUV(a){const m=a.m,f=Math.min(m.n-1,a.f),c=f%m.cols,r=(f/m.cols)|0,u0=c/m.cols,u1=(c+1)/m.cols,v1=1-r/m.rows,v0=1-(r+1)/m.rows,uv=a.g.attributes.uv;
   uv.setXY(0,u0,v1);uv.setXY(1,u1,v1);uv.setXY(2,u0,v0);uv.setXY(3,u1,v0);uv.needsUpdate=true}
  function play(id,x,y,z,o){if(typeof Sc==='undefined'||!Sc||(S&&S.sim))return null;const m=M()[id];if(!m)return null;o=o||{};
   const k=o.fit?o.fit/m.fw:(o.sc||1)/64,w=m.fw*k,h=m.fh*k,g=new THREE.PlaneGeometry(w,h);g.translate(-(m.px/m.fw-.5)*w,(m.py/m.fh-.5)*h,0);
-  const me=new THREE.Mesh(g,mat(id,o.add));me.position.set(x,y,z||0);me.renderOrder=42;me.visible=!(o.delay>0);Sc.add(me);
+  const me=new THREE.Mesh(g,mat(id,o.add,o.op));me.position.set(x,y,z||0);me.renderOrder=42;me.visible=!(o.delay>0);Sc.add(me);
   const a={me,g,m,t:-(o.delay||0),f:0,loop:o.loop??m.loop,life:o.life||0};setUV(a);act.push(a);return a}
  function stop(a){if(!a)return;a.dead=1}
  function update(dt){for(let i=act.length-1;i>=0;i--){const a=act[i];a.t+=dt;
