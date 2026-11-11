@@ -268,6 +268,7 @@ const AIP=(()=>{const by=n=>AIS.find(a=>a.n===n).g,B={...by('폭풍 전략가'),
  L.push({n:'수상한 알 전략',g:{...B,inc0:70,incRate:52,uShare:.7,uTier:.72,uHeavy:.5,def8:.92,tech:undefined,tech2:undefined},fav:{egg_legs:1.6,kiwi:.6,turkey:.8}});// 싼 알을 쉴 새 없이
  L.push({n:'공작새 치유 전략',g:{...B,uShare:.78,uTier:.9,uHeavy:.8,tech:undefined,tech2:undefined},fav:{peacock:4,crane:3,duck:1,dodo:1,goose:.8}});// 치유 공작 + 튼튼한 새
  ['중장갑 러시','특수 조류 조련사','미로 설계자'].forEach(n=>L.push(AIS.find(a=>a.n===n)));
+ L.push({n:'해적 선장',g:{...B,uShare:.78,tech:undefined,tech2:undefined,efav:{t:180,w:{pirate:6}}}});/* 🏴‍☠️ 초반 3분 북극해적갈매기로 인컴 털기(실험 40판: 평균 등수 점수 4.58 vs 기준 3.73) */
  L.push({n:'올인 타이밍',g:{...B,inc0:72,incRate:54,uShare:.7,uTier:.72,def8:.98,upAgg:.5,rush:400,keep:1800,tech:undefined,tech2:undefined}});// 피해 2배(7분) 직전까지 모았다가 몰아치기
  // 🧠 지능형(헬 전용): 이자형 운영을 바탕으로 각자 기술을 더해요 — 정찰 카운터 · 킬존 · 재배치 미로
  const EG=ST[0][1];
@@ -468,7 +469,7 @@ function scoutOf(p,n){const c=p.sc;if(c&&c.n===n&&S.t-c.t<2)return c;let air=0,g
 function buyU(p,g,dump){const n=nextAlive(p.id);if(n===null)return false;const hs=g.fl&&g.fl.scout,sc=scoutOf(p,n),kq=hs?1:.75;/* 모든 AI가 다음 사람 수비를 살펴봄(지능형은 더 강하게) */
  const cap=p.gold*(dump?1:g.uTier),l=U.filter(u=>ucost(p,u)<=cap&&techOK(p,u)&&!u.hidden&&!u.secret);if(!l.length)return false;
  let b=null,bs=-1e9;/* 🐝 벌새 떼 폭탄: 광역이 아주 세지 않으면 가끔 돈을 모아 한꺼번에 */const HB=UB.humbee;if(HB&&techOK(p,HB)&&sc.spl<.6&&p.gold>=ucost(p,HB)*2&&Math.random()<(sc.heavy>.3?.25:.12)){b=HB;bs=1e9;p.bomb=1}
- for(const u of l){if(bs>=1e9)break;const sc_=(1-g.uHeavy)*u.inc/u.c*40+g.uHeavy*u.hp/u.c*.8+(u.t==='A'?g.uAir:1-g.uAir)*1.2+(u.x?(g.uSpec??.5)*1.4:0)+(u.tech?.6:0)+(u.combo?1.2:0)+(dump?u.c/400:0)+(g.fav&&g.fav[u.id]||0)+(hs?(u.t==='A'?(sc.air<.4?2.2:-.8):0)+((u.count||1)>1&&sc.spl<.3?2:0)+(sc.spl>.5?u.hp/u.c*1.5:0)+(u.stealth&&!sc.cc?2:0):0)/* 지능형만: 원래 정찰 보정 */
+ for(const u of l){if(bs>=1e9)break;const sc_=(1-g.uHeavy)*u.inc/u.c*40+g.uHeavy*u.hp/u.c*.8+(u.t==='A'?g.uAir:1-g.uAir)*1.2+(u.x?(g.uSpec??.5)*1.4:0)+(u.tech?.6:0)+(u.combo?1.2:0)+(dump?u.c/400:0)+(g.fav&&g.fav[u.id]||0)+(g.efav&&S.t<g.efav.t?(g.efav.w[u.id]||0):0)/* 초반 선호(efav: t초까지만) */+(hs?(u.t==='A'?(sc.air<.4?2.2:-.8):0)+((u.count||1)>1&&sc.spl<.3?2:0)+(sc.spl>.5?u.hp/u.c*1.5:0)+(u.stealth&&!sc.cc?2:0):0)/* 지능형만: 원래 정찰 보정 */
   +kq*((u.t==='A'&&(sc.air<.4||sc.gonly>.35)?1.4:0)+(u.shield&&sc.zap<.15&&sc.dot>.3?2.4:0)+(u.swarm&&sc.heavy>.3&&sc.spl<.45?3.4:0))/* 모든 AI: 공중·보호막·벌새 */+(AIPEN[u.id]||0)+Math.random()*.8;if(sc_>bs){bs=sc_;b=u}}
  if(!b)return false;p.gold-=ucost(p,b);if(S.st){S.st.us[b.id]=(S.st.us[b.id]||0)+ucost(p,b);S.st.un[b.id]=(S.st.un[b.id]||0)+1}p.income+=gainInc(p,b);{const cn=cntOf(b);for(let k=0;k<cn;k++)spawn(S.pl[n],b,p.id)}
  /* 🐝 벌새 떼 폭탄: 강타형 위주·광역 약한 상대면 한꺼번에 몰아 보내기 */if(b.swarm&&p.bomb){p.bomb=0;let ex=0;while(ex<2&&p.gold>=ucost(p,b)){ex++;p.gold-=ucost(p,b);if(S.st){S.st.us[b.id]+=ucost(p,b);S.st.un[b.id]++}p.income+=gainInc(p,b);const cn=cntOf(b);for(let k=0;k<cn;k++)spawn(S.pl[n],b,p.id)}if(ex&&n===0&&!S.sim)toast('🐝 벌새 떼 습격! 광역 타워로 막으세요')}
