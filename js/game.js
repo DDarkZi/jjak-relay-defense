@@ -2747,6 +2747,24 @@ $('hopt').onclick=e=>{const b=e.target.closest('button');if(!b)return;const v=b.
 $('hrand').onclick=()=>{const p=heroPool().filter(u=>heroOwn(u.id));SV.hero.id=p[Math.floor(Math.random()*p.length)].id;svSave();heroOpt();lobUI()};
 $('herox').onclick=closeHero;$('heroo').onclick=openHero;$('lhero').onclick=openHero;$('lhint').onclick=openHero;
 $('modeb').onclick=openMode;$('modex').onclick=()=>{ovl('modem',0);lobUI()};
+/* 🛒 깃털 상점: 구글 Play 결제(TWA = Digital Goods API + Payment Request). 일반 웹 브라우저에서는 구매 불가 안내.
+   상품은 플레이 콘솔 '인앱 상품'에 같은 id로 만들어야 해요(소모성). 받은 결제 토큰은 SV.ptok에 적어 두 번 지급을 막고, 지급 뒤 consume. 앱을 켤 때 남은 구매를 복원. */
+const SHOP_ITEMS=[{sku:'feather_30',ic:'☕',n:'개발자 응원 팩',f:30,p:'₩1,000',d:'1인 개발자를 도와주세요 🙏'}],PLAY_BILL='https://play.google.com/billing';
+let DGS,DGP={};
+async function shopSvc(){if(DGS!==undefined)return DGS;DGS=null;if('getDigitalGoodsService'in window){try{DGS=await window.getDigitalGoodsService(PLAY_BILL)}catch(e){DGS=null}}return DGS}
+function shopGrant(tok,sku){const it=SHOP_ITEMS.find(x=>x.sku===sku);SV.ptok=SV.ptok||[];if(!it||!tok||SV.ptok.includes(tok))return 0;SV.ptok.push(tok);if(SV.ptok.length>60)SV.ptok.shift();SV.coins+=it.f;svSave();try{lobUI();renderTitle()}catch(e){}return it.f}
+async function shopRestore(){const s=await shopSvc();if(!s)return;try{for(const p of await s.listPurchases()){const g=shopGrant(p.purchaseToken,p.itemId);try{await s.consume(p.purchaseToken)}catch(e){}if(g)toast(`🪶 구매한 깃털 +${g}개를 받았어요`)}}catch(e){}}
+function shopUI(){$('shopn').textContent=SV.coins;$('shopl').innerHTML=SHOP_ITEMS.map(it=>`<div class="sitem"><span class="sic">${it.ic}</span><span class="sin"><b>${it.n}</b><em>🪶 깃털 ${it.f}개</em><small>${it.d}</small></span><button data-sku="${it.sku}" ${DGS?'':'disabled'}>${DGP[it.sku]||it.p}</button></div>`).join('')}
+async function openShop(){ovl('shopm',1);$('shopmsg').textContent='';shopUI();const s=await shopSvc();
+ if(!s){$('shopmsg').textContent='💡 구매는 플레이 스토어에서 받은 앱에서만 할 수 있어요';shopUI();return}
+ try{for(const d of await s.getDetails(SHOP_ITEMS.map(x=>x.sku))){try{DGP[d.itemId]=new Intl.NumberFormat('ko-KR',{style:'currency',currency:d.price.currency}).format(+d.price.value)}catch(e){}}}catch(e){}shopUI()}
+async function shopBuy(sku){const s=await shopSvc();if(!s)return;const m=$('shopmsg');m.textContent='결제 창을 여는 중…';
+ try{const rq=new PaymentRequest([{supportedMethods:PLAY_BILL,data:{sku}}],{total:{label:'합계',amount:{currency:'KRW',value:'0'}}});const rs=await rq.show(),tok=rs.details&&rs.details.purchaseToken;
+  const g=shopGrant(tok,sku);try{await s.consume(tok)}catch(e){}await rs.complete('success');m.textContent=g?`🎉 고마워요! 🪶 깃털 +${g}개`:'이미 받은 구매예요';shopUI();if(g)sfx('unlock',{k:'shop'})}
+ catch(e){m.textContent=e&&e.name==='AbortError'?'구매를 취소했어요':'결제를 못 했어요. 잠시 뒤 다시 해 주세요'}}
+$('shopl').onclick=e=>{const b=e.target.closest('button');if(b&&b.dataset.sku&&!b.disabled)shopBuy(b.dataset.sku)};
+$('shopo').onclick=openShop;$('shopc').onclick=openShop;$('shopx').onclick=()=>{ovl('shopm',0);lobUI();renderTitle()};
+window.addEventListener('load',()=>setTimeout(shopRestore,1500));
 $('plz').onclick=openPlaza;$('pzx').onclick=closePlaza;
 $('pemo').innerHTML=EMO.map(e=>`<button>${e}</button>`).join('');$('pemo').onclick=e=>{const b=e.target.closest('button');if(b&&PZ)pzSay(PZ.me,b.textContent,1)};
 $('psend').onclick=()=>{pzChat($('pin').value);$('pin').value=''};$('pin').onkeydown=e=>{if(e.key==='Enter'){pzChat($('pin').value);$('pin').value=''}};

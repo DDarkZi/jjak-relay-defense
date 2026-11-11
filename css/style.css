@@ -257,3 +257,12 @@ html{-webkit-tap-highlight-color:transparent}
 .rpick{margin-left:6px;padding:4px 10px;font-size:12px;border-radius:99px}#racem .mbox{max-height:92vh;overflow:auto}#racem .mhd .soon{font-size:12px;vertical-align:middle}
 /* 🪶 영웅 해금 */
 .hopt .hnote,.hopt .hbuy{grid-column:1/-1;font-size:12px;padding:6px 8px;border-radius:10px;background:#0006;text-align:center}.hopt .hbuy button{margin-left:6px;padding:4px 10px;font-size:12px}.hopt button.hlk{opacity:.6}.hopt button small{display:block;font-size:9px;color:#fde68a}
+
+/* 🛒 깃털 상점 */
+#shopc{cursor:pointer}.lplus{background:#fde047;color:#000;border-radius:50%;width:16px;height:16px;line-height:16px;font-size:12px;font-weight:900;text-align:center;margin-left:2px}
+.shopl{display:flex;flex-direction:column;gap:10px;margin:6px 0}
+.sitem{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#fff7d6,#ffe08a);color:#2a1a00;border:3px solid #000;border-radius:16px;padding:10px 12px;box-shadow:0 4px 0 #000}
+.sitem .sic{font-size:40px;line-height:1}.sitem .sin{flex:1;display:flex;flex-direction:column;gap:2px}.sitem .sin b{font-family:"Black Han Sans","Jua",sans-serif;font-weight:400;font-size:19px}
+.sitem .sin small{font-size:13px;color:#5b4300}.sitem .sin em{font-style:normal;font-weight:800;color:#b45309}
+.sitem button{background:#22c55e;color:#fff;border:3px solid #000;border-radius:12px;padding:8px 12px;font-family:"Black Han Sans","Jua",sans-serif;font-size:17px;box-shadow:0 3px 0 #000;white-space:nowrap}
+.sitem button:disabled{background:#94a3b8;color:#e2e8f0}.shopnote{font-size:12px;text-align:center;opacity:.8;margin:2px 0}
