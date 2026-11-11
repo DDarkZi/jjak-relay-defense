@@ -671,7 +671,7 @@ function towerMesh2(b){const g=new THREE.Group(),sp=[],id=b.id,cl=b.col,wd=0x713
 // 🐦 새별 몸통 비율 [폭 x, 길이 y, 높이 z] (기본 1·1.25·.95). 맹금·바닷새는 길쭉, 비둘기·올빼미는 통통, 박쥐는 작고 동글
 const BODYS={archaeo:[.9,1.62,.86],archaeo_g:[.95,1.5,.9],eagle:[.86,1.62,.84],stormeagle:[.88,1.62,.86],falcon:[.76,1.68,.74],berserk:[1.26,1.36,1.12],pigeon:[1.2,1.12,1.14],crow:[.9,1.48,.86],ghostcrow:[.9,1.48,.86],bonecrow:[.86,1.5,.82],plague:[.94,1.42,.9],
  seagull:[.9,1.52,.84],blizgull:[.94,1.5,.88],albatross:[.82,1.64,.78],pirate:[1.04,1.4,.96],owl:[1.22,.96,1.22],shadowowl:[1.2,.96,1.2],lich:[1.16,.98,1.22],auroraowl:[1.2,.96,1.2],
- parrot:[.92,1.2,1.1],vampire:[.84,.9,.9],voltbat:[.86,.92,.92],phoenix:[.86,1.56,.88],plasmabird:[.86,1.56,.88],comet:[.8,1.64,.8],thunderbird:[1.22,1.36,1.1],pelican:[1.12,1.45,1.02],
+ parrot:[.92,1.2,1.1],vampire:[.84,.9,.9],voltbat:[.86,.92,.92],phoenix:[.86,1.56,.88],plasmabird:[.86,1.56,.88],comet:[.8,1.64,.8],thunderbird:[.72,1.85,.7],pelican:[1.12,1.45,1.02],
  duck:[1.12,1.45,.86],goose:[1,1.42,1.02],turkey:[1.02,1.18,1],rooster:[1,1.18,1.14],dodo:[1.28,1.22,1.18],woodpecker:[.86,1.18,1.08],kiwi:[1.06,1.22,.98],peacock:[.96,1.3,.98]};
 const PENG={penguin:1,frostpeng:1},CHICKY={chick:1,hatch_chick:1,hatch_fire:1,hatch_ice:1,hatch_thunder:1,hatch_wind:1,hatch_dark:1,hatch_gold:1};
 const LIFT={crocbird:.26,knight:.3,egg_legs:.2,crane:.25,demcrane:.25};
@@ -707,7 +707,8 @@ function birdMesh2(b,oc){const g=new THREE.Group(),id=b.id,A=b.t==='A',c=b.col,w
    if(A){const tp=SP(1,oc);tp.userData.noStone=1;tp.scale.set(wl*.5,.15,.035);tp.rotation.z=s*.45;tp.position.set(s*wl*1.6,.16,id==='swan'?wl*.72:0);if(id==='swan')tp.rotation.y=-s*.4;P.add(tp);w.push(P)}})}
  /* 팀 색 목 고리는 디자인을 해쳐서 뺐음(2026-11-11) — 팀 표시는 나중에 다른 방식으로 */
  const tc=(n,len,col,sp,o)=>{for(let i=0;i<n;i++){const a=(i-(n-1)/2)*sp,t=KO(.07,len,col[i%col.length],o);t.rotation.z=a;at(t,-Math.sin(a)*len/2,.3+Math.cos(a)*len/2,z0+.1)}};
- if(id==='turkey');else if(id==='phoenix')tc(5,.8,[0xf97316,0xfde047,0xef4444],.3,GL(0xf97316));else if(id==='plasmabird')tc(5,.7,[0xfb923c,0xfde047,0x60a5fa],.3,GL(0xfb923c));else if(id==='comet')tc(3,.6,[0xf43f5e,0xfb923c],.2,GL(0xf43f5e));else if(id==='parrot')tc(3,.5,[0xe53935,0x1e88e5,0xe53935],.22);else if(id==='rooster')tc(3,.5,[0x16a34a,0x111827],.3);else if(A&&id!=='swan'&&id!=='hatch_wind')[-.42,0,.42].forEach((a,i)=>{const f=SP(1,i===1?oc:dkn3(WINGC[id]??c,.85));if(i===1)f.userData.noStone=1;f.scale.set(.065,.2,.018);f.rotation.z=a;const ty=.26*((BODYS[id]||[1,1.25])[1])*.86;at(f,-Math.sin(a)*.17,ty+Math.cos(a)*.17,z0+.04)});// 🪶 공중 새 꼬리깃 부채(가운데는 팀 색)
+ if(id==='turkey');else if(id==='phoenix')tc(5,.8,[0xf97316,0xfde047,0xef4444],.3,GL(0xf97316));else if(id==='plasmabird')tc(5,.7,[0xfb923c,0xfde047,0x60a5fa],.3,GL(0xfb923c));else if(id==='comet')tc(3,.6,[0xf43f5e,0xfb923c],.2,GL(0xf43f5e));else if(id==='parrot')tc(3,.5,[0xe53935,0x1e88e5,0xe53935],.22);else if(id==='rooster')tc(3,.5,[0x16a34a,0x111827],.3);else if(id==='ghostcrow'){/* 👻 유령 꼬리: 점점 가늘어지며 위로 말려 올라가는 연기 꼬리, matTick에서 살랑 */const ty=.26*BODYS[id][1]*.86,gt=[];for(let i=0;i<8;i++){const k=i/7,sg=SP(1,[0x94a3b8,0xa5b4c8,0xb8c4d6,0xcbd5e1,0xd8e0ea,0xe2e8f0,0xeef2f7,0xf8fafc][i]);const r=.16*(1-k*.8);sg.scale.set(r*1.15,r*1.3,r*.7);const y=ty-.06+i*.062,z=z0+.03+(k>.55?(k-.55)*(k-.55)*1.1:0)-k*.03;at(sg,0,y,z);sg.userData.gx=0;gt.push(sg)}const tip=KO(.025,.09,0xf8fafc);tip.rotation.x=-.5;at(tip,0,ty-.06+8*.062,z0+.25);gt.push(tip);g.userData.gtail=gt}
+ else if(A&&id!=='swan'&&id!=='hatch_wind')[-.42,0,.42].forEach((a,i)=>{const f=SP(1,i===1?oc:dkn3(WINGC[id]??c,.85));if(i===1)f.userData.noStone=1;f.scale.set(.065,.2,.018);f.rotation.z=a;const ty=.26*((BODYS[id]||[1,1.25])[1])*.86;at(f,-Math.sin(a)*.17,ty+Math.cos(a)*.17,z0+.04)});// 🪶 공중 새 꼬리깃 부채(가운데는 팀 색)
  else if(id!=='kiwi'&&id!=='egg_legs'&&!PENG[id])tc(1,.3,[A?oc:c],0);
  const up=(r,h,col,x,y,z,o)=>{const e=KO(r,h,col,o);e.rotation.x=PI/2;at(e,x,y,z)};
  if(id==='rooster'){[0,1,2].forEach(i=>at(SP(.05,0xef4444),0,hy-.02+i*.06,hz+.15-i*.02));at(SP(.04,0xef4444),0,hy-.15,hz-.1)}
@@ -832,7 +833,7 @@ function matFx(g,k,b){const K=MATK[k];if(!K)return;const fx=[];g.traverse(o=>{if
   else if(k==='gold'){if(uv){n.map=matTex('gold');n.bumpMap=matTex('gold');n.bumpScale=.01}n.metalness=.55;n.roughness=.28;n.emissive.setHex(K.em);n.emissiveIntensity=K.ei;fx.push([n,'gold',Math.random()*9])}
   n.needsUpdate=true;o.material=n});g.userData.fxm=fx}
 /* 매 프레임: 불은 일렁, 전기는 가끔 번쩍, 유령은 숨쉬듯, 금은 반짝, 얼음은 은은하게 */
-function matTick(m,t){const fx=m.userData.fxm;if(!fx||!fx.length)return;for(const[n,k,ph]of fx){const q=t+ph;
+function matTick(m,t){const gt=m.userData.gtail;if(gt)gt.forEach((o,i)=>{o.position.x=Math.sin(t*3.2-i*.7)*.012*i});const fx=m.userData.fxm;if(!fx||!fx.length)return;for(const[n,k,ph]of fx){const q=t+ph;
   if(k==='fire'){n.emissiveIntensity=1.2+.5*Math.sin(q*7)+.3*Math.sin(q*17.3);if(n.emissiveMap)n.emissiveMap.offset.y=(q*.08)%1}
   else if(k==='elec'){const z=(q*1.7)%2.2;n.emissiveIntensity=z<.08||(z>.18&&z<.24)?3:.35+.15*Math.sin(q*30)}
   else if(k==='ghost')n.emissiveIntensity=.3+.25*Math.sin(q*2.2);
