@@ -266,3 +266,7 @@ html{-webkit-tap-highlight-color:transparent}
 .sitem .sin small{font-size:13px;color:#5b4300}.sitem .sin em{font-style:normal;font-weight:800;color:#b45309}
 .sitem button{background:#22c55e;color:#fff;border:3px solid #000;border-radius:12px;padding:8px 12px;font-family:"Black Han Sans","Jua",sans-serif;font-size:17px;box-shadow:0 3px 0 #000;white-space:nowrap}
 .sitem button:disabled{background:#94a3b8;color:#e2e8f0}.shopnote{font-size:12px;text-align:center;opacity:.8;margin:2px 0}
+
+/* 🐣 제작 영웅 */
+.hsec{grid-column:1/-1;font-family:"Black Han Sans","Jua",sans-serif;font-size:15px;color:#fde047;margin:6px 2px 0}.hsec small{font-family:system-ui,sans-serif;font-size:11px;color:#cbd5e1;margin-left:6px}
+.hopt .hcus{background:linear-gradient(135deg,#7c3aed,#db2777)!important;color:#fff}.hcred{grid-column:1/-1;font-size:12px;color:#f5d0fe;background:#0b0a24aa;border-radius:10px;padding:6px 8px}

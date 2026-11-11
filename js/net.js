@@ -8,7 +8,7 @@ const NET=(()=>{
  const st={role:null,code:'',tr:null,slots:[],me:-1,started:false,gview:{},cid2slot:{},slot2cid:{},acc:0,ended:false,lost:false,lastView:0,nameT:0,tok:{},myTok:'',lastG:{},bytes:0,retry:0,glane:{},lc:{},lastLane:-2};
  const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302','stun:stun.cloudflare.com:3478']},{urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'}]};// 직접 연결이 안 되면 PeerJS 무료 중계(TURN)로
  const UIX={};U.forEach((u,i)=>UIX[u.id]=i);const TIX={};T.forEach((t,i)=>TIX[t.id]=i);
- const myHello=()=>{let ic='🐥',n='짹짹이',hero=null;try{ic=UB[SV.hero.id].ic;n=SV.hero.name||n;const h=SV.hero;hero={id:h.id}}catch(e){}return{nick:String(n).slice(0,10),ic,hero}};
+ const myHello=()=>{let ic='🐥',n='짹짹이',hero=null;try{ic=hInfo(SV.hero.id).ic;n=SV.hero.name||n;const h=SV.hero;hero={id:h.id}}catch(e){}return{nick:String(n).slice(0,10),ic,hero}};
  const rot=(i,k)=>((i-k)%8+8)%8;// 방장 번호 i → 손님 k 화면의 번호
 
  // ---------- 연결(트랜스포트) ----------

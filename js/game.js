@@ -2644,18 +2644,27 @@ $('tipo').onclick=()=>{$('tipm').style.display='flex'};$('tipx').onclick=()=>{$(
 /* 🎨 꾸미기(색·모자·얼굴)는 2026-11-11 사용자 요청으로 완전히 뺌 — 영웅은 새 종류 + 이름만 */
 const NICKS=['깃털장인','짹짹대장','먹이도둑','둥지부자','부리부리','날개짱','삐약대장','구구구','꽥꽥이','새벽수탉','모이왕','하늘산책'];
 const heroPool=()=>U.filter(u=>!u.hidden&&u.id!=='egg_legs'&&!u.race);
+/* 🐣 제작 영웅(유저 제작 3D 영웅, 롤토체스 꼬마 전설이·겟앰프드 유저 아이템 방식): 싸우는 새가 아니라 로비·광장·게임판 미니 영웅으로만.
+   신작은 한 달 판매(until까지 구매 가능, 산 사람은 계속 보유), 테스트 기간 가격 깃털 500. HERO_ALL_OPEN과 상관없이 사야 열림. 모델은 HGLB에 같은 id로 */
+const CHERO=[{id:'c_chick',n:'3D 삐약이',ic:'🐣',by:'Avian Influencer',p:500,until:'2026-12-11',d:'뼈대가 있어서 걷고 날갯짓하는 진짜 3D 삐약이'},
+ {id:'c_ai',n:'AI 기자',ic:'🚁',by:'Avian Influencer',p:500,until:'2026-12-11',d:'짹짹 뉴스 마스코트, 드론 병아리 기자'}];
+const CHB=Object.fromEntries(CHERO.map(c=>[c.id,c]));
+const chOn=c=>!c.until||Date.now()<new Date(c.until+'T23:59:59+09:00').getTime();
+/* 영웅 정보: 새 종류(UB) 또는 제작 영웅 */
+function hInfo(id){const c=CHB[id];if(c)return{id,n:c.n,ic:c.ic,custom:1,c};const u=UB[id]||UB.chick;return{id:u.id,n:u.sn||u.n,ic:u.ic,u}}
+const heroValid=id=>!!(CHB[id]||(UB[id]&&heroPool().some(u=>u.id===id)));
 /* 🪶 영웅 해금: 기본 3마리 무료, 나머지는 깃털로. 테스트 기간엔 HERO_ALL_OPEN=true로 전부 열어 둠(출시 때 false) */
 const HERO_ALL_OPEN=true,HERO_FREE=['chick','duck','penguin'];
 const heroPrice=u=>u.c<300?10:u.c<700?20:u.c<2000?30:50;
-const heroOwn=id=>HERO_ALL_OPEN||HERO_FREE.includes(id)||(SV.heroes||[]).includes(id);
+const heroOwn=id=>CHB[id]?(SV.heroes||[]).includes(id):HERO_ALL_OPEN||HERO_FREE.includes(id)||(SV.heroes||[]).includes(id);
 let hOwned=null;/* 꾸미기 창을 열 때 마지막으로 가진 영웅(잠긴 새를 구경만 하고 닫으면 되돌림) */
-if(!SV.hero||!UB[SV.hero.id])SV.hero={id:'chick',name:'짹짹이'};delete SV.hero.col;delete SV.hero.hat;delete SV.hero.face;
-function heroTag(){try{return UB[SV.hero.id].ic+SV.hero.name}catch(e){return '나'}}
+if(!SV.hero||!heroValid(SV.hero.id))SV.hero={id:'chick',name:'짹짹이'};delete SV.hero.col;delete SV.hero.hat;delete SV.hero.face;
+function heroTag(){try{return hInfo(SV.hero.id).ic+SV.hero.name}catch(e){return '나'}}
 const hexS=c=>'#'+c.toString(16).padStart(6,'0');
 function headPos(id){const tall=id==='ostrich',z0=tall?.6:.26+(LIFT[id]||0);if(HEADX[id])return HEADX[id];return{hz:tall?1.3:z0+.2,hy:tall?-.28:-.3,hr:id==='owl'?.2:id==='chick'?.17:.15}}
 // 🧸 AI 3D 영웅 모델(Hyper3D Rodin → assets/models/*.glb, 1.2만 면·512 텍스처). 로비·꾸미기·광장에서만 써요(게임판은 가벼운 기존 모델)
 // h: 키, hp: 모자·안경 위치(머리 높이 hz·앞뒤 hy·반지름 hr, 눈 ey·ez·간격 ex)
-const HGLB={chick:{f:'assets/models/chick_anim.glb',h:.75,hp:{hz:.45,hy:-.02,hr:.2,ey:-.21,ez:.38,ex:.1}}},HG={};
+const HGLB={c_chick:{f:'assets/models/chick_anim.glb',h:.75},c_ai:{f:'assets/models/ai_mascot.glb',h:.85}},HG={};
 /* 뼈대 모델은 포즈를 입힌 실제 꼭짓점으로 크기를 재요(뼈에 배율이 있으면 Box3가 틀림) */
 function skinBox(o){const b=new THREE.Box3(),v=new THREE.Vector3();let sk=0;o.traverse(m=>{if(!m.isSkinnedMesh)return;sk=1;const p=m.geometry.attributes.position;m.skeleton.update();for(let i=0;i<p.count;i+=3){v.fromBufferAttribute(p,i);m.boneTransform(i,v);v.applyMatrix4(m.matrixWorld);b.expandByPoint(v)}});return sk?b:b.setFromObject(o)}
 function hglbGet(id){const d=HGLB[id];if(!d||!THREE.GLTFLoader)return null;const c=HG[id];if(c)return c.st==='ok'?c.s:null;HG[id]={st:'load'};
@@ -2730,15 +2739,18 @@ function plazaFrame(t,dt){if(!PZ)pzBuild();PZ.t+=dt;PZ.nt-=dt;if(PZ.ai){PZ.ai.nt
 function lobLoop(now){requestAnimationFrame(lobLoop);const vis=$('title').style.display!=='none';if(!vis||!LR)return;const t=now/1000,dt=Math.min(.05,t-(lobT||t));lobT=t;
  try{lobMode==='plaza'?plazaFrame(t,dt):lobbyFrame(t)}catch(e){console.log(e)}}
 // UI
-function lobUI(){try{$('lwin').textContent=SV.wins||0;$('lhic').textContent=UB[SV.hero.id].ic;$('lnick').textContent=SV.hero.name;$('lname').textContent=SV.hero.name;
+function lobUI(){try{$('lwin').textContent=SV.wins||0;$('lhic').textContent=hInfo(SV.hero.id).ic;$('lnick').textContent=SV.hero.name;$('lname').textContent=SV.hero.name;
  $('lmodet').innerHTML=(gameMode==='race'?'🏰 종족 모드'+(SV.races.includes(raceSel)?' · '+RACE[raceSel].ic+RACE[raceSel].n:''):'🐥 일반 모드')+'<small class="lmd">난이도 '+DIFF[diff].n.split(' ').pop()+'</small>'}catch(e){}}
 const ovl=(id,on)=>{$(id).style.display=on?'flex':'none'};
 function openMode(){ovl('modem',1);renderTitle()}
 function heroOpt(){const h=SV.hero,o=$('hopt');
- {const cu=UB[h.id],lk=!heroOwn(h.id);
-  o.innerHTML=(HERO_ALL_OPEN?'<div class="hnote">🧪 테스트 기간: 모든 영웅이 열려 있어요</div>':lk?`<div class="hbuy">🔒 <b>${cu.sn||cu.n}</b> 구경 중 · 🪶${heroPrice(cu)}로 해금 <button id="hbuyb">🔓 해금</button></div>`:'')+
-   heroPool().map(u=>{const own=heroOwn(u.id);return `<button data-v="${u.id}" class="${h.id===u.id?'on':''}${own?'':' hlk'}"><i>${u.ic}</i>${u.sn||u.n}${own?'':`<small>🔒🪶${heroPrice(u)}</small>`}</button>`}).join('');
-  const bb=$('hbuyb');if(bb)bb.onclick=e=>{e.stopPropagation();const p=heroPrice(cu);if(SV.coins<p){$('hbuyb').textContent=`🪶 ${SV.coins}/${p} 부족`;return}SV.coins-=p;(SV.heroes=SV.heroes||[]).push(h.id);hOwned=h.id;svSave();heroOpt();lobUI();renderTitle()}}}
+ {const cu=hInfo(h.id),lk=!heroOwn(h.id),pr=cu.custom?cu.c.p:heroPrice(cu.u),sold=cu.custom&&!chOn(cu.c);
+  const btn=u=>{const own=heroOwn(u.id),c=CHB[u.id];return `<button data-v="${u.id}" class="${h.id===u.id?'on':''}${own?'':' hlk'}${c?' hcus':''}"><i>${u.ic}</i>${c?c.n:u.sn||u.n}${own?'':c&&!chOn(c)?'<small>판매 종료</small>':`<small>🔒🪶${c?c.p:heroPrice(u)}</small>`}</button>`};
+  o.innerHTML=(lk?`<div class="hbuy">🔒 <b>${cu.n}</b> 구경 중 · ${sold?'판매가 끝났어요':`🪶${pr}로 해금 <button id="hbuyb">🔓 해금</button>`}</div>`:HERO_ALL_OPEN&&!cu.custom?'<div class="hnote">🧪 테스트 기간: 기본 영웅은 모두 열려 있어요</div>':'')+
+   `<div class="hsec">🐣 제작 영웅 <small>신작은 한 달 한정 판매</small></div>`+CHERO.map(c=>btn({id:c.id,ic:c.ic})).join('')+
+   (cu.custom?`<div class="hcred">🎨 제작: ${cu.c.by} · ${cu.c.d}${cu.c.until?` · ${chOn(cu.c)?`${cu.c.until.slice(5).replace('-','/')}까지 판매`:'판매 종료'}`:''}</div>`:'')+
+   `<div class="hsec">🐦 기본 영웅</div>`+heroPool().map(btn).join('');
+  const bb=$('hbuyb');if(bb)bb.onclick=e=>{e.stopPropagation();if(SV.coins<pr){$('hbuyb').textContent=`🪶 ${SV.coins}/${pr} 부족`;return}SV.coins-=pr;(SV.heroes=SV.heroes||[]).push(h.id);hOwned=h.id;svSave();sfx('unlock',{k:'hero'});heroOpt();lobUI();renderTitle()}}}
 function openHero(){hOwned=heroOwn(SV.hero.id)?SV.hero.id:HERO_FREE[0];lobMode='hero';ovl('herom',1);lobAttach($('hpv'));$('hname').value=SV.hero.name;heroOpt()}
 function closeHero(){const n=$('hname').value.trim();if(n)SV.hero.name=n.slice(0,10);if(!heroOwn(SV.hero.id))SV.hero.id=hOwned&&heroOwn(hOwned)?hOwned:HERO_FREE[0];svSave();ovl('herom',0);lobMode='lobby';lobAttach($('lstage'));lobUI()}
 function openPlaza(){lobMode='plaza';ovl('plaza',1);lobAttach($('plv'));if(PZ){PZ.me.x=0;PZ.me.y=-2.6;PZ.me.go=0}}
@@ -2817,7 +2829,7 @@ function aiPlazaAdd(){if(!PZ||PZ.ai||!aiMascotGet())return;const w=new THREE.Gro
 function aiEnd(win){const e=$('ew');if(!e||!S||S.sim)return;const k=win===null?'spec':win?(SV.wins===1?'first':'win'):'lose';const d=document.createElement('div');d.className='aiend';d.innerHTML='<img src="assets/ui/ai.png" alt="AI"><p></p>';d.lastChild.textContent=aiPick(k);e.prepend(d)}
 // ---------- 🐥 게임 속 미니 영웅(롤토체스 꼬마 전설이처럼): 판 주인은 왼쪽 아래, 정찰 온 영웅은 왼쪽 위로 걸어 들어와요 ----------
 function heroRand(){const P=heroPool(),u=P[Math.floor(Math.random()*P.length)];return{id:u.id}}
-function heroSafe(h){/* 온라인으로 받은 영웅 설정 검사 */if(!h||!UB[h.id]||!heroPool().some(u=>u.id===h.id))return heroRand();return{id:h.id}}
+function heroSafe(h){/* 온라인으로 받은 영웅 설정 검사 */if(!h||!heroValid(h.id))return heroRand();return{id:h.id}}
 const HB=new Map();
 function heroReset(){HB.forEach(e=>{if(e.m&&e.m.parent)e.m.parent.remove(e.m);if(e.tag&&e.tag.parent)e.tag.parent.remove(e.tag)});HB.clear()}
 {const st2=start;start=function(gs,p0h){const r=st2.apply(this,arguments);if(!gs&&S){heroReset();S.pl.forEach((p,i)=>{p.hero=i===0?Object.assign({},SV.hero):heroRand();p.vt=15+Math.random()*40})}return r}}
@@ -2833,7 +2845,7 @@ function heroBoard(dt){if(!S||!Sc||!S.pl)return;
  /* AI는 30~90초마다 아무 판에나 5초 놀러 가요(방장·혼자 할 때만 계산, 손님은 방장이 보내 준 걸 그려요) */
  if(S.net!=='guest'&&S.cdn<=0)S.pl.forEach((p,i)=>{if(!p.ai||!p.alive)return;p.vt=(p.vt??30)-dt;if(p.vt<=0){p.vt=30+Math.random()*60;const o=S.pl.filter(q=>q.alive&&q.id!==i);if(o.length)p.visit={b:o[Math.floor(Math.random()*o.length)].id,t:S.t+5}}});
  const v=view,want=[[v,1]].concat(visitorsOf(v).map(i=>[i,0])),seen=new Set(),HX=.5;let vk=0;
- for(const[i,home]of want){const p=S.pl[i];if(!p||!p.hero||(home&&!p.alive))continue;const key=JSON.stringify(p.hero);let e=HB.get(i);
+ for(const[i,home]of want){const p=S.pl[i];if(!p||!p.hero||(home&&!p.alive))continue;const hid=p.hero.id;if(HGLB[hid])hglbGet(hid);/* 3D 영웅은 불러오기가 끝나면 다시 만들어 진짜 모델로 */const key=JSON.stringify(p.hero)+(HG[hid]&&HG[hid].st==='ok'?'g':'');let e=HB.get(i);
   if(!e||e.key!==key){if(e&&e.m)Sc.remove(e.m);const h=heroMesh(p.hero);h.rotation.x=-.75;/* 위에서 보는 카메라 쪽으로 기울여 얼굴이 보이게 */const m=new THREE.Group();m.add(h);m.scale.setScalar(1.3);m.traverse(o=>{o.renderOrder=30});Sc.add(m);e={m,h,key,tag:e&&e.tag,shown:0};HB.set(i,e)}
   const tx=HX+(home?0:vk%2*.0),ty=home?BH-cellY(ROWS-2)+.1:BH-cellY(1.4)-vk*1.5;if(!home)vk++;
   if(!e.shown||e.home!==home||e.v!==v){e.x=tx;e.y=home?ty:BH+1.2;e.home=home;e.v=v}
