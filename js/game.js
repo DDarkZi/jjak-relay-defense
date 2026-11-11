@@ -326,9 +326,9 @@ function craneDrop(p,u,move){const c=u.carry;if(!c)return;u.carry=null;const t=c
  if(p.id===view&&!S.sim)artFx('smoke',{x:cellX(c.ox,c.oy),y:BH-cellY(c.oy),r:.5,col:0xd6c7a1})}
 /* 🦖 시조새 착지: 가장 가까운 빈칸에 내려와 지상형으로 바뀌고, 주변 타워 2초 기절 */
 function fossilLand(p,u){const cs=[];for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)if(!p.grid[y][x])cs.push([Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y),x,y]);cs.sort((a,b)=>a[0]-b[0]);
- for(const[,x,y]of cs.slice(0,12)){const np=bfs(p.grid,x,y);if(!np)continue;const r=u.hp/u.bp.hp;u.bp=UB.archaeo_g;u.hp=u.bp.hp*r;u.path=np;u.pi=0;u.gr=0;u.x=cellX(x,y);u.y=cellY(y);
+ for(const[,x,y]of cs.slice(0,12)){const np=bfs(p.grid,x,y);if(!np)continue;const ax=u.x,ay=u.y,r=u.hp/u.bp.hp;u.bp=UB.archaeo_g;u.hp=u.bp.hp*r;u.path=np;u.pi=0;u.gr=0;u.x=cellX(x,y);u.y=cellY(y);
   p.grid.forEach((row,ty)=>row.forEach((t,tx)=>{if(t&&t.bp.d&&Math.hypot(cellX(tx,ty)-u.x,cellY(ty)-u.y)<1.8)t.dis=Math.max(t.dis||0,2)}));
-  if(p.id===view&&!S.sim){sfx('hatch',{to:'hatch_dino'});artFx('hatch',{u});PXS.play('impacts/ground-slam',u.x,BH-u.y,0,{fit:3.6});artFx('smoke',{x:u.x,y:BH-u.y,r:1.8,col:0xd6c7a1});if(p.id===0)toast('🦖 시조새가 쿵! 착지했어요 · 주변 타워 2초 기절')}return}}
+  if(p.id===view&&!S.sim){sfx('hatch',{to:'hatch_dino'});u.popT=S.t+.5;/* 1) 하늘의 돌 화석이 금 가며 깨짐 → 2) 내려온 칸에 뼈 화석 돌판 → 3) 그 위에서 깨어난 시조새 */if(PXS.has('nature/fossil-crack')){PXS.play('nature/fossil-crack',ax,BH-ay,.6,{fit:3});PXS.play('nature/fossil-imprint',u.x,BH-u.y-.7,0,{fit:2.1,delay:.35})}else PXS.play('impacts/ground-slam',u.x,BH-u.y,0,{fit:3.6});artFx('smoke',{x:u.x,y:BH-u.y,r:1.8,col:0xd6c7a1});setTimeout(()=>artFx('hatch',{u}),500);if(p.id===0)toast('🦖 화석이 깨지고 시조새가 깨어났어요! · 주변 타워 2초 기절')}return}}
 function refreshPaths(p){p.units.forEach(u=>{if(u.bp.t!=='G')return;const c=nearCell(u.x,u.y),np=bfs(p.grid,c.x,c.y);if(np){u.path=np;u.pi=0}})}
 function toast(m){const e=$('toast');e.textContent=m;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2400)}
 
@@ -842,7 +842,7 @@ let talkN=0;function sync3(dt){sync3.talkOn=talkN;talkN=0;try{heroBoard(dt)}catc
  tm.forEach((m,k)=>{if(!seen.has(k)){rmM(m);tm.delete(k)}});craneCone(null);
  const us=new Set();
  p.units.forEach(u=>{us.add(u.id);let m=um.get(u.id);if(m&&m.userData.bp!==u.bp){rmM(m);um.delete(u.id);m=null}if(!m){m=birdMesh3(u.bp,parseInt(PC[u.owner].slice(1),16));artFx('bird',{m,b:u.bp,u});m.userData.bp=u.bp;Sc.add(m);um.set(u.id,m)}
-  m.position.set(u.x,BH-u.y,u.bp.t==='A'?(u.gr>0?.35:1.4):u.fl>0?.75+Math.sin(S.t*5)*.06:.05);{let bb=m.userData.bub;if(u.fl>0&&!bb){bb=m.userData.bub=new THREE.Mesh(new THREE.SphereGeometry(.42,16,12),new THREE.MeshStandardMaterial({color:0xbae6fd,emissive:0x7dd3fc,emissiveIntensity:.5,transparent:true,opacity:.42,roughness:.1,depthWrite:false}));bb.position.z=.28;const hl=new THREE.Mesh(new THREE.SphereGeometry(.07,8,6),new THREE.MeshBasicMaterial({color:0xffffff}));hl.position.set(-.18,-.2,.2);bb.add(hl);m.add(bb)}if(bb)bb.visible=u.fl>0}m.scale.x=m.scale.y/XK;
+  m.visible=!(u.popT&&S.t<u.popT);m.position.set(u.x,BH-u.y,u.bp.t==='A'?(u.gr>0?.35:1.4):u.fl>0?.75+Math.sin(S.t*5)*.06:.05);{let bb=m.userData.bub;if(u.fl>0&&!bb){bb=m.userData.bub=new THREE.Mesh(new THREE.SphereGeometry(.42,16,12),new THREE.MeshStandardMaterial({color:0xbae6fd,emissive:0x7dd3fc,emissiveIntensity:.5,transparent:true,opacity:.42,roughness:.1,depthWrite:false}));bb.position.z=.28;const hl=new THREE.Mesh(new THREE.SphereGeometry(.07,8,6),new THREE.MeshBasicMaterial({color:0xffffff}));hl.position.set(-.18,-.2,.2);bb.add(hl);m.add(bb)}if(bb)bb.visible=u.fl>0}m.scale.x=m.scale.y/XK;
   // 💬 말하는 새: 끝까지 가는 동안 진행 25%·50%·75%에서 딱 한 마디씩(3번), 1.6초. 화면에 동시에 최대 3개
   if(u.bp.talk){let sp=m.userData.talk;const prog=u.y/BH,nx=u.tkN||0;
    if(nx<3&&prog>=(nx+1)*.25){u.tkN=nx+1;const A=sync3.tA=(sync3.tA||[]).filter(t=>t>S.t);if(A.length<3){u.tkI=nx%u.bp.talk.length;u.tkT=S.t+1.6;A.push(u.tkT)}}

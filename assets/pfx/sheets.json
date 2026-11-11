@@ -76,5 +76,31 @@
   "px": 47,
   "py": 67,
   "ofw": 120
+ },
+ "nature/fossil-crack": {
+  "f": "assets/pfx/nature_fossil-crack.png",
+  "n": 25,
+  "fps": 15.0,
+  "loop": false,
+  "cols": 5,
+  "rows": 5,
+  "fw": 150,
+  "fh": 108,
+  "px": 75,
+  "py": 95,
+  "ofw": 150
+ },
+ "nature/fossil-imprint": {
+  "f": "assets/pfx/nature_fossil-imprint.png",
+  "n": 40,
+  "fps": 15.0,
+  "loop": false,
+  "cols": 5,
+  "rows": 8,
+  "fw": 130,
+  "fh": 74,
+  "px": 64,
+  "py": 56,
+  "ofw": 170
  }
 }
