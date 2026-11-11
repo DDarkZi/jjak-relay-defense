@@ -1,0 +1,2 @@
+// tools/pfx/add.py가 만드는 파일(직접 고치지 마세요). pixelfx 효과 시트 목록
+const PFXS_META={"holy/feather-burst": {"f": "assets/pfx/holy_feather-burst.png", "n": 46, "fps": 15.0, "loop": false, "cols": 7, "rows": 7, "fw": 141, "fh": 137, "px": 68, "py": 50, "ofw": 160}, "fire/flame-pillar": {"f": "assets/pfx/fire_flame-pillar.png", "n": 76, "fps": 15.0, "loop": false, "cols": 11, "rows": 7, "fw": 169, "fh": 237, "px": 84, "py": 214, "ofw": 184}};

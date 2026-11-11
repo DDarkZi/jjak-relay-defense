@@ -807,7 +807,7 @@ function birdMesh3(b,oc){const g=birdMesh2(b,oc),id=b.id,at=(m,x,y,z,s)=>{m.posi
  else if(id==='thunderbird'){[-1,0,1].forEach(s=>at(up(KO(.035,.2,0xfde047,GL(0xfacc15))),s*.07,-.28,.66))}
  else if(id==='crow')[-1,1].forEach(s=>at(SP(.03,0xfacc15,GL(0xfacc15)),s*.08,-.39,.52));
  return g}
-let talkN=0;function sync3(dt){sync3.talkOn=talkN;talkN=0;if(typeof PFX!=='undefined')PFX.update(dt);if(typeof newsUpd==='function')newsUpd(dt);const p=S.pl[view],seen=new Set();
+let talkN=0;function sync3(dt){sync3.talkOn=talkN;talkN=0;if(typeof PFX!=='undefined')PFX.update(dt);PXS.update(dt);if(typeof newsUpd==='function')newsUpd(dt);const p=S.pl[view],seen=new Set();
  p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(!t)return;const k=y*8+x;seen.add(k);let m=tm.get(k);
   if(!m||m.userData.t!==t||m.userData.lv0!==t.lv){if(m)rmM(m);m=mkTowerMesh(t.bp,t.lv);m.userData.t=t;m.userData.lv0=t.lv;Sc.add(m);tm.set(k,m)}
   m.position.set(cellX(x,y),BH-cellY(y),0);const s=1+(t.lv-1)*.15;if(t.lifter){if(t.dis>0){m.position.z=.75+Math.sin(S.t*7+k)*.08}else t.lifter=null}m.scale.set(s/XK,s,s);if(t.kick>0){t.kick=Math.max(0,t.kick-dt*7);const k=t.kick*t.kick;m.scale.set(s/XK*(1+.1*k),s*(1+.1*k),s*(1-.16*k))}/* 쏠 때 움찔 반동 */
@@ -2907,3 +2907,22 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-last)/10
  if(S.net==='host')NET.htick(dt);
  hud();sync3(dt);minimap();if(!S.sim&&(!SHQd||SHQ.length))shopThumbTick()}
 requestAnimationFrame(frame);
+
+// ---------- 🎞 pixelfx 스프라이트 시트 재생기 (효과 출처: github.com/patch-gg/pixelfx, MIT — assets/pfx/LICENSE-pixelfx.txt) ----------
+// 효과 추가: python3 tools/pfx/add.py <pixelfx 폴더> <id...> → js/pfx_sheets.js 목록 갱신. 재생: PXS.play('holy/feather-burst', x, BH-y, z, {sc, delay, add})
+const PXS=(()=>{const MAT={},act=[],M=()=>typeof PFXS_META!=='undefined'?PFXS_META:{};
+ function mat(id,add){const k=id+(add?'+':'');if(MAT[k])return MAT[k];const m=M()[id];const tx=new THREE.TextureLoader().load(m.f);tx.magFilter=tx.minFilter=THREE.NearestFilter;tx.generateMipmaps=false;
+  return MAT[k]=new THREE.MeshBasicMaterial({map:tx,transparent:true,depthWrite:false,depthTest:false,side:THREE.DoubleSide,blending:add?THREE.AdditiveBlending:THREE.NormalBlending})}
+ function setUV(a){const m=a.m,f=Math.min(m.n-1,a.f),c=f%m.cols,r=(f/m.cols)|0,u0=c/m.cols,u1=(c+1)/m.cols,v1=1-r/m.rows,v0=1-(r+1)/m.rows,uv=a.g.attributes.uv;
+  uv.setXY(0,u0,v1);uv.setXY(1,u1,v1);uv.setXY(2,u0,v0);uv.setXY(3,u1,v0);uv.needsUpdate=true}
+ function play(id,x,y,z,o){if(typeof Sc==='undefined'||!Sc||(S&&S.sim))return null;const m=M()[id];if(!m)return null;o=o||{};
+  const k=(o.sc||1)/64,w=m.fw*k,h=m.fh*k,g=new THREE.PlaneGeometry(w,h);g.translate(-(m.px/m.fw-.5)*w,(m.py/m.fh-.5)*h,0);
+  const me=new THREE.Mesh(g,mat(id,o.add));me.position.set(x,y,z||0);me.renderOrder=42;me.visible=!(o.delay>0);Sc.add(me);
+  const a={me,g,m,t:-(o.delay||0),f:0,loop:o.loop??m.loop,life:o.life||0};setUV(a);act.push(a);return a}
+ function stop(a){if(!a)return;a.dead=1}
+ function update(dt){for(let i=act.length-1;i>=0;i--){const a=act[i];a.t+=dt;
+   if(a.t<0){a.me.visible=false;continue}a.me.visible=true;if(typeof Cam!=='undefined'&&Cam){a.me.quaternion.copy(Cam.quaternion);a.me.scale.x=1/(Sc.scale.x||1)}
+   let f=Math.floor(a.t*a.m.fps);if(f>=a.m.n){if(a.loop&&!a.dead&&(!a.life||a.t<a.life))f%=a.m.n;else{Sc.remove(a.me);a.g.dispose();act.splice(i,1);continue}}
+   if(a.dead&&!a.loop){}if(f!==a.f){a.f=f;setUV(a)}}}
+ return{play,stop,update,get count(){return act.length}}})();
+
