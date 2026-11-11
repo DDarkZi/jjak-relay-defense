@@ -281,3 +281,4 @@ html{-webkit-tap-highlight-color:transparent}
 .pzc{background:#fde047;color:#000;border:2px solid #000;border-radius:8px;padding:1px 6px;font-size:12px}.pzc b{font:400 15px "Black Han Sans",system-ui;letter-spacing:1px}
 #pzn button{padding:3px 8px;font-size:12px;border-radius:8px}#pzinv{background:#22c55e;color:#fff}
 #dmgl b.t{color:#fff;font-size:17px;white-space:nowrap;-webkit-text-stroke:0}
+#dif{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}#dif button{margin:0!important}
