@@ -251,3 +251,6 @@ html{-webkit-tap-highlight-color:transparent}
 .sh button.rban{opacity:1;filter:none;background:#1f1d2e}
 .sh button.rban>*{opacity:.35;filter:grayscale(1)}
 .sh button.rban::after{content:'🚫 종족 제한';position:absolute;top:38%;left:50%;transform:translateX(-50%) rotate(-8deg);font:400 9px "Black Han Sans",system-ui;white-space:nowrap;color:#fff;background:#b91c1c;border:1.5px solid #000;border-radius:6px;padding:1px 4px;box-shadow:0 2px 0 #000;pointer-events:none}
+
+/* 🤖 온라인 방 AI 난이도 */
+.ndifw{margin:8px 0}.ndifw .row button{flex:1;min-width:0;font-size:11px;padding:6px 2px}.ndifw .row button:disabled{opacity:.55}.ndifw .row button.on{opacity:1}

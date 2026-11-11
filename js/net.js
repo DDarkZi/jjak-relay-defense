@@ -36,8 +36,12 @@ const NET=(()=>{
  const $n=id=>document.getElementById(id);
  function panel(which){$n('netA').style.display=which==='a'?'':'none';$n('netR').style.display=which==='r'?'':'none'}
  function status(m){$n('nst').textContent=m||''}
- function renderSlots(){const box=$n('nsl');if(!box)return;box.innerHTML='';for(let i=0;i<8;i++){const s=st.slots[i],d=document.createElement('div');d.className='nslot'+(s&&s.kind!=='ai'?' on':'')+(i===st.me?' me':'');
-   d.innerHTML=`<i>${i+1}</i><b></b><small></small>`;d.querySelector('b').textContent=s&&s.kind!=='ai'?`${s.ic} ${s.nick}`:'🤖 AI';d.querySelector('small').textContent=s&&s.kind==='host'?'👑 방장':i===st.me?'나':'';box.append(d)}
+ /* 🤖 AI 난이도: 방장만 바꿀 수 있고 손님은 보기만 */
+ function renderDiff(){const b=$n('ndif');if(!b)return;const host=st.role==='host',k=st.role==='guest'?(st.diff||'N'):diff;
+  b.innerHTML=Object.keys(DIFF).map(x=>`<button data-k="${x}" class="${x===k?'on':''}"${host?'':' disabled'}>${DIFF[x].n.replace(' ','<br>')}</button>`).join('');
+  $n('ndd').textContent=(host?'':'방장이 정해요 · ')+DIFF[k].d}
+ function renderSlots(){renderDiff();const box=$n('nsl');if(!box)return;box.innerHTML='';for(let i=0;i<8;i++){const s=st.slots[i],d=document.createElement('div');d.className='nslot'+(s&&s.kind!=='ai'?' on':'')+(i===st.me?' me':'');
+   d.innerHTML=`<i>${i+1}</i><b></b><small></small>`;d.querySelector('b').textContent=s&&s.kind!=='ai'?`${s.ic} ${s.nick}`:`🤖 AI·${DIFF[st.role==='guest'?(st.diff||'N'):diff].n.split(' ').pop()}`;d.querySelector('small').textContent=s&&s.kind==='host'?'👑 방장':i===st.me?'나':'';box.append(d)}
   const n=st.slots.filter(s=>s&&s.kind!=='ai').length;$n('ngo').style.display=st.role==='host'?'':'none';$n('ngo').textContent=`▶ 게임 시작 (${n}명 + AI ${8-n})`;
   if(st.role==='guest')status('방장이 게임을 시작하기를 기다리는 중…')}
  function open(){ovl('netm',1);panel('a');status('');const q=new URLSearchParams(location.search).get('room');if(q&&!st.role){$n('ncode').value=q.toUpperCase();}
@@ -51,7 +55,7 @@ const NET=(()=>{
   panel('r');$n('ncd').textContent=st.code;status('방을 여는 중…');renderSlots();
   st.tr=hostT(st.code,{ready:()=>status('친구에게 방 코드나 초대 링크를 보내 주세요! 📌 방장은 게임 내내 앱을 화면에 켜 두세요(방장 폰이 게임을 계산해요)'),err:e=>{if(e==='taken'){leave();return host()}status('⚠️ 연결 오류: '+e+' (잠시 후 다시 시도해 주세요)')},
    join:cid=>{},leave:cid=>hLeave(cid),msg:(cid,d)=>hMsg(cid,d)})}
- function hBroadcastLobby(){Object.keys(st.cid2slot).forEach(cid=>st.tr.send(cid,{t:'lobby',slots:st.slots,you:st.cid2slot[cid],tok:st.tok[st.cid2slot[cid]],code:st.code}));renderSlots()}
+ function hBroadcastLobby(){Object.keys(st.cid2slot).forEach(cid=>st.tr.send(cid,{t:'lobby',slots:st.slots,you:st.cid2slot[cid],tok:st.tok[st.cid2slot[cid]],code:st.code,diff}));renderSlots()}
  function hMsg(cid,d){if(!d||!d.t)return;
   if(d.t==='hello'&&d.rejoin&&st.started){const i=d.slot|0,p=S&&S.pl[i];if(i<1||i>7||st.tok[i]!==d.rejoin||st.slot2cid[i]||!p){st.tr.send(cid,{t:'full',m:'다시 들어갈 수 없어요 (게임이 끝났거나 자리가 없어요)'});return}
    st.cid2slot[cid]=i;st.slot2cid[i]=cid;delete st.lastG[cid];if(p.alive&&p.ai){p.ai=false;p.cfg=null;p.name=p.name.replace(/ 🤖$/,'')}st.gview[i]=i;
@@ -99,7 +103,7 @@ const NET=(()=>{
   st.retry++;toast(`📶 연결이 끊겼어요… 다시 연결하는 중 (${st.retry}/6)`);setTimeout(()=>{if(!st.ended&&S&&S.net==='guest')gConnect(true)},3000)}
  function endLocal(ic,h){over=true;$n('eT').textContent=ic;$n('eH').textContent=h;$n('eP').textContent='';$n('ew').innerHTML='';$n('spec').style.display='none';$n('end').style.display='flex'}
  function gMsg(d){if(!d||!d.t)return;
-  if(d.t==='lobby'){st.slots=d.slots;st.me=d.you;if(d.tok)st.myTok=d.tok;renderSlots();return}
+  if(d.t==='lobby'){st.slots=d.slots;st.me=d.you;if(d.tok)st.myTok=d.tok;if(d.diff)st.diff=d.diff;renderSlots();return}
   if(d.t==='full'){if(S&&S.net==='guest'){st.ended=true;try{st.tr.close()}catch(e){}st.tr=null;endLocal('📴',d.m);return}status('⚠️ '+d.m);try{st.tr.close()}catch(e){}st.tr=null;st.role=null;return}
   if(d.t==='start')return gStart(d);
   if(!S||S.net!=='guest')return;
@@ -135,7 +139,7 @@ const NET=(()=>{
  // ---------- 공통 ----------
  function leave(){try{if(st.role==='guest'&&st.tr)st.tr.close();if(st.role==='host'&&st.tr)st.tr.close()}catch(e){}
   Object.assign(st,{role:null,code:'',tr:null,slots:[],me:-1,started:false,gview:{},cid2slot:{},slot2cid:{},acc:0,ended:false,lost:false,tok:{},myTok:'',lastG:{},bytes:0,retry:0,glane:{},lc:{},lastLane:-2});if($n('netm'))panel('a')}
- function bind(){if(!$n('netm'))return;$n('nmk').onclick=host;$n('njoin').onclick=join;$n('ngo').onclick=hStart;$n('nx').onclick=close;
+ function bind(){if(!$n('netm'))return;$n('ndif').onclick=e=>{const b=e.target.closest('button');if(!b||st.role!=='host'||st.started)return;setDiff(b.dataset.k);hBroadcastLobby()};$n('nmk').onclick=host;$n('njoin').onclick=join;$n('ngo').onclick=hStart;$n('nx').onclick=close;
   $n('ncode').addEventListener('keydown',e=>{if(e.key==='Enter')join()});
   $n('ncopy').onclick=async()=>{const url=inviteURL(),txt=`🚨 새떼 주의보: 짹짹 디펜스 같이 해요! 방 코드: ${st.code}\n${url}`;try{if(navigator.share){await navigator.share({title:'새떼 주의보: 짹짹 디펜스',text:txt,url});return}}catch(e){}
    try{await navigator.clipboard.writeText(txt);toast('📋 초대 링크를 복사했어요')}catch(e){prompt('초대 링크를 복사해 주세요',url)}};
