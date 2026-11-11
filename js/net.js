@@ -5,7 +5,7 @@
 // 자리 번호: 손님 화면에선 항상 자기가 0번이 되도록 돌려서(회전) 기존 1인용 화면 코드를 그대로 써요.
 const NET=(()=>{
  const CODE_CH='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',HZ=.1;
- const st={role:null,code:'',tr:null,slots:[],me:-1,started:false,gview:{},cid2slot:{},slot2cid:{},acc:0,ended:false,lost:false,lastView:0,nameT:0,tok:{},myTok:'',lastG:{},bytes:0,retry:0};
+ const st={role:null,code:'',tr:null,slots:[],me:-1,started:false,gview:{},cid2slot:{},slot2cid:{},acc:0,ended:false,lost:false,lastView:0,nameT:0,tok:{},myTok:'',lastG:{},bytes:0,retry:0,glane:{},lc:{},lastLane:-2};
  const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302','stun:stun.cloudflare.com:3478']},{urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'}]};// 직접 연결이 안 되면 PeerJS 무료 중계(TURN)로
  const UIX={};U.forEach((u,i)=>UIX[u.id]=i);const TIX={};T.forEach((t,i)=>TIX[t.id]=i);
  const myHello=()=>{let ic='🐥',n='짹짹이';try{ic=UB[SV.hero.id].ic;n=SV.hero.name||n}catch(e){}return{nick:String(n).slice(0,10),ic}};
@@ -60,6 +60,7 @@ const NET=(()=>{
    st.slots[i]={kind:'guest',nick:String(d.nick||'손님').slice(0,10),ic:String(d.ic||'🐦').slice(0,4)};st.cid2slot[cid]=i;st.slot2cid[i]=cid;st.tok[i]=Math.random().toString(36).slice(2,10);hBroadcastLobby();if(!S)toast(`👋 ${st.slots[i].nick} 님이 들어왔어요`);return}
   const pid=st.cid2slot[cid];if(pid==null||!S||S.net!=='host')return;
   if(d.t==='view'){if(d.v>=0&&d.v<8)st.gview[pid]=d.v;return}
+  if(d.t==='lane'){st.glane[pid]=d.v>=0&&d.v<8?d.v:null;return}
   if(d.t==='cmd'&&d.c){const c=d.c;try{if(c.a==='send')actSend(pid,String(c.b));else if(c.a==='build')actBuild(pid,c.x|0,c.y|0,String(c.t));else if(c.a==='upg')actUpg(pid,c.x|0,c.y|0);
    else if(c.a==='dem')actDem(pid,c.x|0,c.y|0);else if(c.a==='tech')actTech(pid,String(c.k));else if(c.a==='skill')actSkill(pid)}catch(e){console.log(e)}}}
  function hLeave(cid){const i=st.cid2slot[cid];if(i==null)return;delete st.cid2slot[cid];delete st.slot2cid[i];delete st.lastG[cid];
@@ -73,7 +74,12 @@ const NET=(()=>{
   const vb=st.gview[k]??k,v=S.pl[vb],hid=u=>u.bp.stealth&&u.y<BH*u.bp.stealth&&!(v.reveal>0)&&!u.seen;
   const us=v.units.map(u=>[u.id,UIX[u.bp.id],Math.round(u.x*100),Math.round(u.y*100),Math.round(Math.max(0,u.hp)/u.bp.hp*1000),rot(u.owner,k),(u.sh>0?1:0)|(u.fl>0?2:0)|(u.gr>0?4:0)|(u.stun>0?8:0)|(u.slow>0?16:0)|(u.bn>0?32:0)|((u.pois>0||u.ps>0)?64:0)|(u.hit>0?128:0)|(hid(u)?0:256)|(u.amp>0?512:0)].concat(u.col?[u.col]:[]));
   const g={},cid=st.slot2cid[k],L=st.lastG[cid]||(st.lastG[cid]={}),full=st.nameT<=0,addG=(b,p)=>{const e=gridEnc(p),js=JSON.stringify(e);if(full||L[b]!==js){g[rot(b,k)]=e;L[b]=js}};addG(vb,v);if(vb!==k)addG(k,S.pl[k]);
-  const o={t:'s',T:Math.round(S.t*10)/10,c:Math.round(S.cdn*10)/10,i:Math.round(S.inc*10)/10,v:rot(vb,k),pl,g,u:us};if(st.nameT<=0)o.n=S.pl.map((p,i)=>S.pl[(i+k)%8].name);return o}
+  /* 미니맵: 내 새가 가 있는 판(또는 고른 판)의 타워·새 위치를 0.3초마다 */
+  let ln=null;st.lc[k]=(st.lc[k]||0)+1;if(st.lc[k]%3===1){const cnt={};S.pl.forEach(p=>{if(p.alive&&p.id!==k){const n=p.units.filter(u=>u.owner===k).length;if(n)cnt[p.id]=n}});const ids=Object.keys(cnt).map(Number),pk=st.glane[k];
+   let lb=pk!=null&&S.pl[pk]&&S.pl[pk].alive&&(cnt[pk]||!ids.length)?pk:null;if(lb==null)lb=ids.length?ids.sort((a,b)=>cnt[b]-cnt[a])[0]:nextAlive(k);
+   if(lb!=null){addG(lb,S.pl[lb]);const rc=o2=>{const r={};Object.keys(o2).forEach(i=>r[rot(+i,k)]=o2[i]);return r},E={},K={};for(let i=0;i<8;i++){const q=k*8+i;if(S.escA&&S.escA[q])E[i]=S.escA[q];if(S.klA&&S.klA[q])K[i]=S.klA[q]}
+    ln={b:rot(lb,k),c:rc(cnt),e:rc(E),k:rc(K),u:S.pl[lb].units.map(u=>[Math.round(u.x*20),Math.round(u.y*20),u.owner===k?1:0,Math.round(Math.max(0,u.hp)/u.bp.hp*100),u.bp.t==='A'&&!(u.gr>0)?1:0])}}}
+  const o={t:'s',T:Math.round(S.t*10)/10,c:Math.round(S.cdn*10)/10,i:Math.round(S.inc*10)/10,v:rot(vb,k),pl,g,u:us,eg:S.pl[k].egg||0};if(ln)o.ln=ln;if(st.nameT<=0)o.n=S.pl.map((p,i)=>S.pl[(i+k)%8].name);return o}
  function htick(dt){if(!st.tr||!st.started)return;st.acc+=dt;const hz=Object.keys(st.cid2slot).length>=4?.15:HZ;/* 손님이 많으면 조금 덜 자주(방장 폰 업로드 줄이기) */if(st.acc<hz)return;st.acc=0;st.nameT-=HZ;Object.keys(st.cid2slot).forEach(cid=>{const k=st.cid2slot[cid];try{const o=snap(k);st.bytes+=JSON.stringify(o).length;st.tr.send(cid,o)}catch(e){}});if(st.nameT<=0)st.nameT=2}
  function hOver(w){if(st.ended||st.role!=='host')return;st.ended=true;Object.keys(st.cid2slot).forEach(cid=>st.tr.send(cid,{t:'end',w:w<0?-1:rot(w,st.cid2slot[cid])}))}
  function tell(pid,m){const cid=st.slot2cid[pid];if(cid&&st.tr)st.tr.send(cid,{t:'msg',m})}
@@ -107,16 +113,18 @@ const NET=(()=>{
   $n('title').style.display='none';$n('game').style.display='flex';if(!R)init3();resize();ui();lanePick=null;try{laneFit()}catch(e){}try{$n('t1').onclick&&$n('t1').onclick()}catch(e){}S.cdl=6;cdnUI();sfx('start');toast('🌐 온라인 대전 시작! 카운트다운 동안 속성을 골라요')}
  function gGrid(p,arr){const seen=new Set();arr.forEach(([ci,ti,lv,dd,r,dis,inv])=>{const x=ci%COLS,y=(ci/COLS)|0,b=T[ti];seen.add(ci);let t=p.grid[y][x];if(!t||t.bp!==b){t=mkR(b,p);p.grid[y][x]=t}t.lv=lv;t.d=dd;t.r=r/100;t.dis=dis?1:0;t.inv=inv});
   p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t&&!seen.has(y*COLS+x))row[x]=null}))}
- function gApply(d){S.t=d.T;S.cdn=d.c;S.inc=d.i;if(d.n)d.n.forEach((n,i)=>S.pl[i].name=n);
+ function gApply(d){S.t=d.T;S.cdn=d.c;S.inc=d.i;if(d.eg!=null&&d.eg!==EGG.n){const m=EGGM.find(m=>m.n===d.eg);EGG.n=d.eg;if(m&&d.eg>0){sfx('unlock',{k:m.k});toast(`${m.ic} 해금! ${m.t} — ${m.d}`)}}if(d.n)d.n.forEach((n,i)=>S.pl[i].name=n);
   d.pl.forEach((a,i)=>{const p=S.pl[i];[p.gold,p.income,p.life]=a;p.alive=!!a[3];p.tech=a[4]||null;p.tech2=a[5]||null;p.skU=a[6];p.skCD=a[7];p.boost=a[8]?1:0;p.reveal=a[9]?1:0;if(a[10])p.dieT=a[10];p.dealt=a[11]||0;p.kills=a[12]||0});
   Object.keys(d.g).forEach(i=>gGrid(S.pl[+i],d.g[i]));
   const v=d.v,p=S.pl[v],old=new Map(p.units.map(u=>[u.id,u])),nu=[];
   d.u.forEach(([id,bi,x,y,hp,ow,f,col])=>{const b=U[bi];let u=old.get(id);if(!u){u={id,bp:b,x:x/100,y:y/100,owner:ow,col:col||0};}else old.delete(id);
    u.bp=b;u.tx=x/100;u.ty=y/100;u.hp=hp/1000*b.hp;u.owner=ow;u.sh=f&1?1:0;u.fl=f&2?1:0;u.gr=f&4?1:0;u.stun=f&8?1:0;u.slow=f&16?1:0;u.bn=f&32?1:0;u.pois=f&64?1:0;u.ps=0;u.hit=f&128?.05:0;u.seen=!!(f&256);u.amp=f&512?1:0;u.col=col||0;nu.push(u)});
   if(v===view)old.forEach(u=>{if(u.hp/u.bp.hp<.3&&u.ty<EY-.6){artFx('die',{u,col:u.bp.col,air:u.bp.t==='A'});sfx('die',{unit:u.bp.id})}});
-  S.pl.forEach((q,i)=>{if(i!==v)q.units=[]});p.units=nu;
+  const lb0=S.laneNet?S.laneNet.b:-1;S.pl.forEach((q,i)=>{if(i!==v&&i!==lb0)q.units=[]});p.units=nu;
+  if(d.ln){S.laneNet=d.ln;S.esc=d.ln.e;S.kl=d.ln.k;const lb=d.ln.b;if(lb!==v){S.pl.forEach((q,i)=>{if(i!==v&&i!==lb)q.units=[]});S.pl[lb].units=d.ln.u.map(a=>({x:a[0]/20,y:a[1]/20,owner:a[2]?0:9,hp:a[3],bp:{hp:100,t:a[4]?'A':'G'},gr:0}))}}
   if(!S.pl[0].alive&&!st.lost&&!st.ended){st.lost=true;finish(false)}}
  function gtick(dt){if(!S)return;if(view!==st.lastView){st.lastView=view;st.tr&&st.tr.send({t:'view',v:(view+st.k)%8})}
+  if(lanePick!==st.lastLane){st.lastLane=lanePick;st.tr&&st.tr.send({t:'lane',v:lanePick==null?-1:(lanePick+st.k)%8})}
   const p=S.pl[view],k=Math.min(1,dt*10);p.units.forEach(u=>{if(u.tx==null)return;u.x+=(u.tx-u.x)*k;u.y+=(u.ty-u.y)*k});
   // 손님 화면용 연출: 사거리 안의 새를 향해 타워가 쏘는 모습(실제 피해 계산은 방장이 해요)
   p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(!t||!t.d||t.bp.pylon||t.bp.snack||t.dis>0)return;t.gc=(t.gc||Math.random()*t.bp.cd)-dt;if(t.gc>0)return;const cx=cellX(x,y),cy=cellY(y);let tg=null,my=-1;
@@ -126,7 +134,7 @@ const NET=(()=>{
 
  // ---------- 공통 ----------
  function leave(){try{if(st.role==='guest'&&st.tr)st.tr.close();if(st.role==='host'&&st.tr)st.tr.close()}catch(e){}
-  Object.assign(st,{role:null,code:'',tr:null,slots:[],me:-1,started:false,gview:{},cid2slot:{},slot2cid:{},acc:0,ended:false,lost:false,tok:{},myTok:'',lastG:{},bytes:0,retry:0});if($n('netm'))panel('a')}
+  Object.assign(st,{role:null,code:'',tr:null,slots:[],me:-1,started:false,gview:{},cid2slot:{},slot2cid:{},acc:0,ended:false,lost:false,tok:{},myTok:'',lastG:{},bytes:0,retry:0,glane:{},lc:{},lastLane:-2});if($n('netm'))panel('a')}
  function bind(){if(!$n('netm'))return;$n('nmk').onclick=host;$n('njoin').onclick=join;$n('ngo').onclick=hStart;$n('nx').onclick=close;
   $n('ncode').addEventListener('keydown',e=>{if(e.key==='Enter')join()});
   $n('ncopy').onclick=async()=>{const url=inviteURL(),txt=`🚨 새떼 주의보: 짹짹 디펜스 같이 해요! 방 코드: ${st.code}\n${url}`;try{if(navigator.share){await navigator.share({title:'새떼 주의보: 짹짹 디펜스',text:txt,url});return}}catch(e){}
@@ -134,4 +142,6 @@ const NET=(()=>{
   const nb=$n('netb');if(nb)nb.onclick=e=>{e.stopPropagation();ovl('modem',0);open()};
   if(new URLSearchParams(location.search).get('room'))setTimeout(open,400)}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
- return{open,cmd,tell,htick,gtick,over:hOver,leave,get role(){return st.role},_st:st,_drop:()=>{try{st.tr&&st.tr.close()}catch(e){}gLost()}}})();
+ /* 원형 지도에 첫 글자를 띄우기 위한 사람 자리 닉네임(내 자리는 YOU라 제외) */
+ function nick(i){if(!st.started&&!(S&&S.net==='guest'))return null;const hi=st.role==='guest'?(i+st.k)%8:i,s=st.slots[hi];return i!==0&&s&&s.kind!=='ai'?s.nick:null}
+ return{open,cmd,tell,htick,gtick,nick,over:hOver,leave,get role(){return st.role},_st:st,_drop:()=>{try{st.tr&&st.tr.close()}catch(e){}gLost()}}})();

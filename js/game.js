@@ -217,7 +217,7 @@ const EGGM=[{n:10,k:'hatch',ic:'🐣',t:'부화 해금',d:'보낸 알이 진영 
  {n:50,k:'gold',ic:'✨',t:'황금알',d:'10% 확률로 황금알! 부화하면 황금 병아리가 되어 탈출 시 인컴을 털어와요.',u:'hatch_gold'},
  {n:100,k:'chief',ic:'🎩',t:'전설의 새: 알부자 회장닭',d:'상점에 알부자 회장닭이 나타나요. 걸으며 수상한 알을 낳아요.',u:'eggchief'},
  {n:150,k:'dino',ic:'🦖',t:'고대 유전자',d:'부화할 때 3% 확률로 티라노 병아리가 태어나요.',u:'hatch_dino'}];
-const eggHas=k=>{const m=EGGM.find(m=>m.k===k);return !!m&&EGG.n>=m.n},eggNext=()=>EGGM.find(m=>EGG.n<m.n);
+const eggHas=k=>{const m=EGGM.find(m=>m.k===k);return !!m&&EGG.n>=m.n},eggN=p=>!p?0:p.id===0?EGG.n:(S&&S.net==='host'&&!p.ai?(p.egg||0):0)/* 온라인 손님은 방장 기기에서 자기 알 개수로 연구 효과(AI는 없음) */,eggHasP=(p,k)=>{const m=EGGM.find(m=>m.k===k);return !!m&&eggN(p)>=m.n},eggNext=()=>EGGM.find(m=>EGG.n<m.n);
 Object.assign(NM,{priest:['아~ 해봐요 사제새','아프면 부리 벌려요. 아~ 하고.'],knight:['육아휴직 황새','방패는 들었는데 아기는 어디 갔지? 다리가 길어서 타워쯤은 성큼 넘어가요.'],
  warturkey:['추수감사절 탈영… 아니 입대 칠면조','추수감사절을 피해 군대에 입대했어요.'],berserk:['버럭 독수리','화나면 눈이 빨개져요. 원래 빨간 거였어요.'],
  bonecrow:['뼈다귀 까악이','뼈만 남았는데 아직도 까악 소리는 크네요.'],lich:['영혼출근 올빼미','밤샘 근무가 너무 길어서 영혼이 먼저 출근했어요.'],
@@ -312,19 +312,19 @@ const netG=()=>!!(S&&S.net==='guest'),say=(pid,m)=>{if(pid===0)toast(m);else if(
 const cntOf=b=>b.cntR?b.cntR[0]+Math.floor(Math.random()*(b.cntR[1]-b.cntR[0]+1)):(b.count||1);
 function send(b){if(netG()){if(!S.pl[0].alive)return toast('👀 관전 중이에요');if(S.cdn>0)return toast('⏱ 카운트다운 중엔 속성만 고를 수 있어요');sfx('send',{unit:b.id});return NET.cmd({a:'send',b:b.id})}actSend(0,b.id)}
 function actSend(pid,bid){const me=S.pl[pid],b=UB[bid],loc=pid===0;if(!me||!b)return;if(!me.alive)return say(pid,'👀 관전 중이에요');
- if(b.hidden||(b.secret&&!(loc&&eggHas(b.secret))))return;
+ if(b.hidden||(b.secret&&!eggHasP(me,b.secret)))return;
  if(!techOK(me,b))return say(pid,b.race?`${RACE[b.race].ic} ${RACE[b.race].n} 전용 새예요`:b.tech?`${TECH[b.tech].ic} ${TECH[b.tech].n} 테크 전용 새예요`:banMsg(me,b));
  if(S.cdn>0)return say(pid,'⏱ 카운트다운 중엔 속성만 고를 수 있어요');
  const bc=ucost(me,b);if(me.gold<bc)return say(pid,`💰 골드가 부족해요 (${bc}G 필요)`);
  const gi=gainInc(me,b);me.gold-=bc;me.income+=gi;const n=nextAlive(pid);
- if(b.id==='egg_legs'){if(n!==null){const tw=loc&&eggHas('twin')&&Math.random()<.25;for(let k=0;k<(tw?2:1);k++){const g=loc&&eggHas('gold')&&Math.random()<.1;spawn(S.pl[n],b,pid,undefined,{hatch:loc&&eggHas('hatch')?1:0,gold:g?1:0,col:g?0xfacc15:0})}}
-  if(!loc)return say(pid,`🥚 수상한 알 소환! (인컴 +${gi})`);
+ if(b.id==='egg_legs'){if(n!==null){const tw=eggHasP(me,'twin')&&Math.random()<.25;for(let k=0;k<(tw?2:1);k++){const g=eggHasP(me,'gold')&&Math.random()<.1;spawn(S.pl[n],b,pid,undefined,{hatch:eggHasP(me,'hatch')?1:0,gold:g?1:0,col:g?0xfacc15:0})}}
+  if(!loc){me.egg=(me.egg||0)+1;const m2=!me.ai&&EGGM.find(m=>m.n===me.egg);return say(pid,m2?`${m2.ic} 해금! ${m2.t} — ${m2.d}`:`🥚 수상한 알 소환! (인컴 +${gi})`)}
   EGG.n++;const m=EGGM.find(m=>m.n===EGG.n);
   if(m){sfx('unlock',{k:m.k});artFx('unlock',{k:m.k});toast(`${m.ic} 해금! ${m.t} — ${m.d}`);ui();return}
   sfx('send',{unit:b.id});const nx=eggNext();return toast(nx?`🥚 수상한 알 ${EGG.n}/${nx.n} · 다음: ${nx.ic}${nx.t}`:`🥚 수상한 알 ${EGG.n}개 · 연구소 완전 해금!`)}
  if(n!==null){const cn=cntOf(b);for(let k=0;k<cn;k++)spawn(S.pl[n],b,pid)}
  if(loc)sfx('send',{unit:b.id});say(pid,`🕊️ ${b.n} 소환! (인컴 +${gi})${b.x?' · '+b.x:''}`)}
-function hatchOf(u){if(u.gold)return UB.hatch_gold;if(eggHas('dino')&&Math.random()<.03)return UB.hatch_dino;const o=S.pl[u.owner],ks=[o.tech,o.tech2].filter(Boolean);
+function hatchOf(u){if(u.gold)return UB.hatch_gold;if(eggHasP(S.pl[u.owner],'dino')&&Math.random()<.03)return UB.hatch_dino;const o=S.pl[u.owner],ks=[o.tech,o.tech2].filter(Boolean);
  return ks.length?UB['hatch_'+ks[Math.floor(Math.random()*ks.length)]]:UB.hatch_chick}
 
 function cell(x,y){
@@ -472,7 +472,7 @@ function start(gs,p0h){const D=DIFF[diff];const cf=AIP.filter(a=>!a.hell||diff==
  sel=null;insp=null;view=0;paused=false;over=false;spd=1;document.querySelector('footer').style.opacity='';$('pz').textContent='⏸';$('sp').textContent='1x';$('end').style.display='none';
  $('title').style.display='none';$('game').style.display='flex';
  if(!R)init3();resize();ui();lanePick=null;try{laneFit()}catch(e){}if(!gs){try{$('t1').onclick&&$('t1').onclick()}catch(e){}S.cdl=6;cdnUI();sfx('start');toast((RK[0]?`${RACE[RK[0]].ic} ${RACE[RK[0]].n} · `:'')+'🔮 카운트다운 동안 타워 탭에서 속성을 골라요')}}
-function escape(p,u){const o=S.pl[u.owner];if(u.owner===0&&p.id!==0){S.esc=S.esc||{};S.esc[p.id]=(S.esc[p.id]||0)+1}if(u.owner!==p.id){if(p.id===0)sfx('leak',{dm:u.bp.dm*lateMul()});if(p.id===view)artFx('leak',{u})}
+function escape(p,u){const o=S.pl[u.owner];if(u.owner!==p.id){const E=S.escA||(S.escA={}),q=u.owner*8+p.id;E[q]=(E[q]||0)+1}if(u.owner===0&&p.id!==0){S.esc=S.esc||{};S.esc[p.id]=(S.esc[p.id]||0)+1}if(u.owner!==p.id){if(p.id===0)sfx('leak',{dm:u.bp.dm*lateMul()});if(p.id===view)artFx('leak',{u})}
  if(u.owner!==p.id){const dm=u.bp.dm*lateMul();p.life=Math.max(0,p.life-dm);if(S.st){const k=u.hatch?'egg_legs':u.bp.id;S.st.ue[k]=(S.st.ue[k]||0)+dm}o.dealt+=dm;if(u.owner===0)S.dealt+=dm;{const rm=rOf(o);if(rm&&rm.loot&&o.alive)o.gold+=rm.loot}
   if(u.bp.drain&&o.alive){o.life=Math.min(100,o.life+u.bp.drain);if(u.owner===0)toast('🦇 라이프 강탈 +'+u.bp.drain)}
   if(u.bp.steal&&o.alive){o.income+=u.bp.steal;if(u.owner===0)toast('🏴‍☠️ 인컴 약탈 +'+u.bp.steal)}}
@@ -496,7 +496,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
    if(u.hp<=0){
     if(u.bn>0&&!u.rv){for(const o of p.units)if(o!==u&&o.hp>0&&!im(o,'burn')&&Math.hypot(o.x-u.x,o.y-u.y)<1.3&&(o.bn||0)<1){o.bn=2;o.bv=Math.max(o.bv||0,u.bv*BAL.bsp);o.bsrc=u.bsrc}if(p.id===view)artFx('ignite',{u})}
     if(u.rv){u.rv=0;u.hp=b.hp*.5;u.pois=0;u.ps=0;u.pst=0;u.bn=0;u.stun=0;if(p.id===view){sfx('revive');artFx('revive',{u})}if(p.id===0&&!S.sim)toast('🔥 불사조가 되살아났어요!');return true}
-    if(p.id===view&&!S.sim&&b.c>=600)killBanner(b);p.gold+=Math.ceil(b.c/(b.count||1)*BAL.kr);p.kills=(p.kills||0)+1;if(p.id===0)S.kills++;if(u.owner===0&&p.id!==0){S.kl=S.kl||{};S.kl[p.id]=(S.kl[p.id]||0)+1}if(p.id===view){sfx('die',{unit:b.id});artFx('die',{u,col:b.col,air:b.t==='A'})}
+    if(p.id===view&&!S.sim&&b.c>=600)killBanner(b);p.gold+=Math.ceil(b.c/(b.count||1)*BAL.kr);p.kills=(p.kills||0)+1;if(p.id===0)S.kills++;if(u.owner===0&&p.id!==0){S.kl=S.kl||{};S.kl[p.id]=(S.kl[p.id]||0)+1}if(u.owner!==p.id){const K=S.klA||(S.klA={}),q=u.owner*8+p.id;K[q]=(K[q]||0)+1}if(p.id===view){sfx('die',{unit:b.id});artFx('die',{u,col:b.col,air:b.t==='A'})}
     for(let k=0;k<(b.split||0);k++)born.push(u);
     if(b.carry)for(let k=0;k<b.carry;k++)drop.push(u);
     return false}
@@ -520,7 +520,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
   born.forEach(u=>spawnAt(p,UB.egg_legs,u.owner,undefined,u.x+(Math.random()-.5)*.4,u.y));
   if(drop.length){const PAX=['chick','turkey','rooster','kiwi','goose','duck'];drop.forEach(u=>spawnAt(p,UB[PAX[Math.floor(Math.random()*PAX.length)]],u.owner,undefined,Math.max(.3,Math.min(COLS+.2,u.x+(Math.random()-.5)*1.4)),u.y+(Math.random()-.5)*.8,u.tag?{tag:u.tag}:undefined));
    if(p.id===view&&!S.sim){toast('🚌 펠리컨 격추! 승객 새들이 우르르 쏟아져요');artFx('hatch',{u:drop[0]})}}
-  lay.forEach(u=>{spawnAt(p,UB.egg_legs,u.owner,undefined,u.x,u.y,{hatch:u.owner===0&&eggHas('hatch')?1:0});if(p.id===view){sfx('lay');artFx('lay',{u})}});
+  lay.forEach(u=>{spawnAt(p,UB.egg_legs,u.owner,undefined,u.x,u.y,{hatch:eggHasP(S.pl[u.owner],'hatch')?1:0});if(p.id===view){sfx('lay');artFx('lay',{u})}});
   {const cc=[];p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t&&t.bp&&t.bp.cctv&&!(t.dis>0))cc.push([cellX(x,y),cellY(y),t.r])}));p.units.forEach(u=>{u.seen=u.bp.stealth&&cc.some(c=>Math.hypot(u.x-c[0],u.y-c[1])<=c[2])})}
   if(p.snacks&&p.snacks.length)p.snacks=p.snacks.filter(s=>!s.e&&(s.life-=dt)>0);
   if(p.clouds&&p.clouds.length){p.clouds=p.clouds.filter(c=>(c.life-=dt)>0);for(const c of p.clouds){c.tk-=dt;if(c.tk>0)continue;c.tk=.5;for(const u of p.units)if(!im(u,'poison')&&Math.hypot(u.x-c.x,u.y-c.y)<=c.r)addPois(u,c.pv,c.src)}}
@@ -824,7 +824,8 @@ function minimap(){const c=$('mm'),x=c.getContext('2d'),w=c.width,cx=w/2,o=w*.47
  for(let i=0;i<8;i++){const a=-Math.PI/2+((i+S.off)%8)*Math.PI/4,p=S.pl[i];x.beginPath();x.arc(cx,cx,o,a,a+Math.PI/4);x.arc(cx,cx,n,a+Math.PI/4,a,true);x.closePath();
   x.fillStyle=!p.alive?'#14141a':view===i?'#ffffff73':'#ffffff14';x.fill();x.strokeStyle=p.alive?p.color:'#334155';x.lineWidth=view===i?5:2;x.stroke();
   const m=a+Math.PI/8,r=(o+n)/2;x.font='bold 12px monospace';x.textAlign='center';x.textBaseline='middle';x.fillStyle=p.life<30?'#ef4444':'#fff';
-  x.fillText(((i+S.off)%8+1)+':'+(p.alive?p.life:'💀'),cx+r*Math.cos(m),cx+r*Math.sin(m))}
+  const nk=S.net&&typeof NET!=='undefined'&&NET.nick?NET.nick(i):null;if(nk)x.fillStyle=p.life<30?'#ef4444':'#fde047';
+  x.fillText((nk?Array.from(nk)[0]:((i+S.off)%8+1))+':'+(p.alive?p.life:'💀'),cx+r*Math.cos(m),cx+r*Math.sin(m))}
  x.fillStyle='#38bdf8';x.font='bold 14px sans-serif';x.fillText(view?((view+S.off)%8+1)+'번':'YOU',cx,cx)}
 
 // ---------- UI ----------
@@ -832,10 +833,10 @@ let pd=[];const setH=(e,h)=>{if(e._h!==h){e._h=h;e.innerHTML=h}};const st=(id,v)
 let techPend=null,laneT=0,lanePick=null;
 const hx6=(c,x,y,r)=>{c.beginPath();for(let i=0;i<6;i++){const a=Math.PI/6+i*Math.PI/3;c.lineTo(x+Math.cos(a)*r,y+Math.sin(a)*r)}c.closePath()};
 const css=n=>'#'+n.toString(16).padStart(6,'0');
-function laneTargets(){const cnt={};S.pl.forEach(p=>{if(p.alive&&p.id!==0){const n=p.units.filter(u=>u.owner===0).length;if(n)cnt[p.id]=n}});return cnt}
+function laneTargets(){if(S.net==='guest'&&S.laneNet)return Object.assign({},S.laneNet.c);const cnt={};S.pl.forEach(p=>{if(p.alive&&p.id!==0){const n=p.units.filter(u=>u.owner===0).length;if(n)cnt[p.id]=n}});return cnt}
 function lanePanel(dt){const box=$('lane');if(!box||!S)return;laneT+=dt;if(laneT<.12)return;laneT=0;
  const cnt=laneTargets(),ids=Object.keys(cnt).map(Number);let id=lanePick!==null&&S.pl[lanePick].alive&&(cnt[lanePick]||!ids.length)?lanePick:null;
- if(id===null)id=ids.length?ids.sort((a,b)=>cnt[b]-cnt[a])[0]:nextAlive(0);if(id===null||id===undefined){box.style.display='none';return}box.style.display='';
+ if(id===null)id=ids.length?ids.sort((a,b)=>cnt[b]-cnt[a])[0]:nextAlive(0);if(S.net==='guest'&&S.laneNet&&S.pl[S.laneNet.b]&&S.pl[S.laneNet.b].alive)id=S.laneNet.b;if(id===null||id===undefined){box.style.display='none';return}box.style.display='';
  const p=S.pl[id],cv=$('lanec'),c=cv.getContext('2d'),W=cv.width,H=cv.height,s=Math.min(W/(COLS+.6),H/(BH+.2)),ox=(W-(COLS+.5)*s)/2,oy=(H-BH*s)/2,X=x=>ox+x*s,Y=y=>oy+y*s;
  c.clearRect(0,0,W,H);
  for(let r=0;r<ROWS;r++)for(let q=0;q<COLS;q++){hx6(c,X(cellX(q,r)),Y(cellY(r)),s*.52);c.fillStyle=r===0?'#166534':r===ROWS-1?'#7f1d1d':(q+r)%2?'#14352a':'#10291f';c.fill()}
