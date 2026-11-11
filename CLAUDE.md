@@ -14,7 +14,7 @@
 
 ## 📝 나중에 할 일 (사용자와 합의해 미뤄 둔 것)
 - 🐣 마스코트 AI 등장(v12.3 완료): 로비(`aiLobby`·`#aib` 말풍선, 첫 방문 자기소개 `SV.aiIntro`, 누르면 한마디)·튜토리얼(첫 카드 자기소개 + 얼굴 `assets/ui/ai.png`)·게임 속보(조합 스킬 해금·탈락 `newsBird`)·광장(`aiPlazaAdd`, 내 영웅 근처를 따라다니며 생중계, 채팅에 'AI' 넣으면 대답)·결과 화면(`aiEnd`, 첫 우승 특별 대사). 대사는 `AIL`. 이름 개그: AI = 인공지능 아니고 **Avian Influencer**(조류 인플루언서), 짹튜브 「짹짹 뉴스」 구독자 800만 새. 개발자 계정 이름도 Avian Influencer.
-- 🐦 4000~5000G 신규 새 2종(2026-11-11 확정): **🏗 철거반장 두루미**(4800·지상, 타워 1개를 4초 들고 다님) + **🦖 시조새**(5000·공중→지상, 체력 절반에 착지하며 주변 타워 2초 기절). 아직 구현 안 함. 나머지 후보 18개는 `docs/bird_ideas.md`.
+- 🐦 고급 새 2종(v12.8 구현): `demcrane` 철거반장 두루미(4800·지상, `grab`: 6초마다 1.8칸 안 공격 타워를 `t.dis=4`+`t.lifter`로 4초 들기 → 3D에서 타워가 떠서 흔들림, 두루미가 죽으면 떨어뜨림, `LIFT`·`NECK`·`HEADX`는 온천 두루미와 같은 긴 다리 체형, 안전모·주황 조끼) · `archaeo` 시조새(5000·공중, `fossil`: 체력 50% 미만이 되면 `fossilLand` → 가까운 빈칸에 착지해 숨은 지상형 `archaeo_g`(분홍 털 빠진 몸)로 바꾸고 bfs 길 찾기, 1.8칸 안 타워 2초 기절). 효율 측정은 `tools/sim/unit_an.py`(archaeo_g 피해는 archaeo로 합산). 나머지 후보 18개는 `docs/bird_ideas.md`.
 - 🎬 홍보 영상: 초안 완성(2026-11-10, 약 30초, 가로·세로). 만드는 법 `tools/trailer/README.md`(가상 시계 프레임 녹화 + 자막 PNG + ffmpeg + 칩튠). 다듬기는 나중에.
 - 💰 수익 구조(단계별 안): v1.0 무료·광고 없음 → 사람이 모이면 보상형 광고(코인 2배) → 꾸미기 상점·광고 제거·후원 팩. 페이투윈·랜덤 뽑기는 안 함. 광고 넣으면 개인정보처리방침·데이터 보안 설문 수정.
 - 📲 구글 플레이 출시: 단계별 안내 `assets/store/RELEASE_CHECKLIST.md`. ⚠️ assetlinks.json은 도메인 맨 위(`ddarkzi.github.io/.well-known/`)여야 해서 사용자 사이트 저장소 `DDarkZi.github.io`(만듦, `/home/user/ddarkzi.github.io`, 첫 페이지는 게임으로 이동, assetlinks에 업로드 키 지문 넣음(패키지 io.github.ddarkzi.jjakdefense), Play 앱 서명 키 지문은 아직). Play 앱 서명 키 SHA-256도 함께 넣기. 앱 아이콘 = 마스코트 AI(2026-11-10 교체, 원본 렌더는 ai_mascot.glb + 경고 빛줄기·새떼 실루엣 배경).
