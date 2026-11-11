@@ -822,7 +822,7 @@ function birdMesh3(b,oc){const g=birdMesh2(b,oc),id=b.id,at=(m,x,y,z,s)=>{m.posi
  else if(id==='thunderbird'){[-1,0,1].forEach(s=>at(up(KO(.035,.2,0xfde047,GL(0xfacc15))),s*.07,-.28,.66))}
  else if(id==='crow')[-1,1].forEach(s=>at(SP(.03,0xfacc15,GL(0xfacc15)),s*.08,-.39,.52));
  return g}
-let talkN=0;function sync3(dt){sync3.talkOn=talkN;talkN=0;if(typeof PFX!=='undefined')PFX.update(dt);PXS.update(dt);if(typeof newsUpd==='function')newsUpd(dt);const p=S.pl[view],seen=new Set();
+let talkN=0;function sync3(dt){sync3.talkOn=talkN;talkN=0;try{heroBoard(dt)}catch(e){}if(typeof PFX!=='undefined')PFX.update(dt);PXS.update(dt);if(typeof newsUpd==='function')newsUpd(dt);const p=S.pl[view],seen=new Set();
  p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(!t)return;const k=y*8+x;seen.add(k);let m=tm.get(k);
   if(!m||m.userData.t!==t||m.userData.lv0!==t.lv){if(m)rmM(m);m=mkTowerMesh(t.bp,t.lv);m.userData.t=t;m.userData.lv0=t.lv;Sc.add(m);tm.set(k,m)}
   m.position.set(cellX(x,y),BH-cellY(y),0);const s=1+(t.lv-1)*.15;if(t.carrier){const cu=t.carrier;m.position.set(cu.x,BH-cu.y,1.25+Math.sin(S.t*6)*.05);craneCone(t,cellX(x,y),BH-cellY(y))}m.scale.set(s/XK,s,s);if(t.kick>0){t.kick=Math.max(0,t.kick-dt*7);const k=t.kick*t.kick;m.scale.set(s/XK*(1+.1*k),s*(1+.1*k),s*(1-.16*k))}/* 쏠 때 움찔 반동 */
@@ -2785,6 +2785,34 @@ function aiPlazaAdd(){if(!PZ||PZ.ai||!aiMascotGet())return;const w=new THREE.Gro
  const b={m:w,el,bb:el.firstChild,name:'📢 AI',me:0,ai:1,air:1,x:2.5,y:1.5,tx:0,ty:0,wait:2,say:0,ph:0,nt:2.5};PZ.b.push(b);PZ.ai=b}
 /* 결과 화면: AI 기자의 한마디 */
 function aiEnd(win){const e=$('ew');if(!e||!S||S.sim)return;const k=win===null?'spec':win?(SV.wins===1?'first':'win'):'lose';const d=document.createElement('div');d.className='aiend';d.innerHTML='<img src="assets/ui/ai.png" alt="AI"><p></p>';d.lastChild.textContent=aiPick(k);e.prepend(d)}
+// ---------- 🐥 게임 속 미니 영웅(롤토체스 꼬마 전설이처럼): 판 주인은 왼쪽 아래, 정찰 온 영웅은 왼쪽 위로 걸어 들어와요 ----------
+function heroRand(){const P=heroPool(),u=P[Math.floor(Math.random()*P.length)];return{id:u.id,col:Math.random()<.3?HCOL[1+Math.floor(Math.random()*(HCOL.length-1))]:null,hat:Math.random()<.65?HATS[1+Math.floor(Math.random()*(HATS.length-1))][0]:'none',face:Math.random()<.25?FACES[1+Math.floor(Math.random()*(FACES.length-1))][0]:'none'}}
+function heroSafe(h){/* 온라인으로 받은 영웅 설정 검사 */if(!h||!UB[h.id]||!heroPool().some(u=>u.id===h.id))return heroRand();return{id:h.id,col:typeof h.col==='number'?h.col:null,hat:HATS.some(x=>x[0]===h.hat)?h.hat:'none',face:FACES.some(x=>x[0]===h.face)?h.face:'none'}}
+const HB=new Map();
+function heroReset(){HB.forEach(e=>{if(e.m&&e.m.parent)e.m.parent.remove(e.m);if(e.tag&&e.tag.parent)e.tag.parent.remove(e.tag)});HB.clear()}
+{const st2=start;start=function(gs,p0h){const r=st2.apply(this,arguments);if(!gs&&S){heroReset();S.pl.forEach((p,i)=>{p.hero=i===0?Object.assign({},SV.hero):heroRand();p.vt=15+Math.random()*40})}return r}}
+/* v판을 지금 구경 중인 다른 플레이어들(나·온라인 손님·가끔 놀러 가는 AI) */
+function visitorsOf(v){if(!S)return[];if(S.net==='guest')return(S.vz||[]).filter(i=>i!==v);const L=[];
+ if(view===v&&v!==0)L.push(0);
+ if(S.net==='host'&&typeof NET!=='undefined'){const st=NET._st;Object.keys(st.slot2cid||{}).forEach(k=>{const i=+k;if(i!==v&&st.gview[i]===v&&!L.includes(i))L.push(i)})}
+ S.pl.forEach((p,i)=>{if(p.ai&&p.alive&&p.visit&&p.visit.b===v&&S.t<p.visit.t&&i!==v&&!L.includes(i))L.push(i)});return L.slice(0,4)}
+function tagTex(txt){const c=document.createElement('canvas'),g=c.getContext('2d');c.width=160;c.height=44;g.font='bold 26px "Jua",sans-serif';const w=Math.min(156,g.measureText(txt).width+18);
+ g.fillStyle='#1a0f33dd';g.beginPath();g.roundRect?g.roundRect((160-w)/2,4,w,36,12):g.rect((160-w)/2,4,w,36);g.fill();g.fillStyle='#fde047';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,80,23);
+ const t=new THREE.CanvasTexture(c);return t}
+function heroBoard(dt){if(!S||!Sc||!S.pl)return;
+ /* AI는 30~90초마다 아무 판에나 5초 놀러 가요(방장·혼자 할 때만 계산, 손님은 방장이 보내 준 걸 그려요) */
+ if(S.net!=='guest'&&S.cdn<=0)S.pl.forEach((p,i)=>{if(!p.ai||!p.alive)return;p.vt=(p.vt??30)-dt;if(p.vt<=0){p.vt=30+Math.random()*60;const o=S.pl.filter(q=>q.alive&&q.id!==i);if(o.length)p.visit={b:o[Math.floor(Math.random()*o.length)].id,t:S.t+5}}});
+ const v=view,want=[[v,1]].concat(visitorsOf(v).map(i=>[i,0])),seen=new Set(),HX=.5;let vk=0;
+ for(const[i,home]of want){const p=S.pl[i];if(!p||!p.hero||(home&&!p.alive))continue;const key=JSON.stringify(p.hero);let e=HB.get(i);
+  if(!e||e.key!==key){if(e&&e.m)Sc.remove(e.m);const h=heroMesh(p.hero);h.rotation.x=-.75;/* 위에서 보는 카메라 쪽으로 기울여 얼굴이 보이게 */const m=new THREE.Group();m.add(h);m.scale.setScalar(1.3);m.traverse(o=>{o.renderOrder=30});Sc.add(m);e={m,h,key,tag:e&&e.tag,shown:0};HB.set(i,e)}
+  const tx=HX+(home?0:vk%2*.0),ty=home?BH-cellY(ROWS-2)+.1:BH-cellY(1.4)-vk*1.5;if(!home)vk++;
+  if(!e.shown||e.home!==home||e.v!==v){e.x=tx;e.y=home?ty:BH+1.2;e.home=home;e.v=v}
+  const dx=tx-e.x,dy=ty-e.y,d=Math.hypot(dx,dy),walk=d>.04;if(walk){const k=Math.min(1,dt*3.2/d);e.x+=dx*k;e.y+=dy*k;e.m.rotation.z=Math.atan2(dx,-dy)}else e.m.rotation.z+=(0-e.m.rotation.z)*Math.min(1,dt*6);
+  e.m.position.set(e.x,e.y,walk?Math.abs(Math.sin(S.t*12+i))*.05:0);e.m.visible=true;birdAnim(e.h,S.t+i,walk);
+  if(!home){const lbl=i===0?'👀 나':`👀 ${(i+S.off)%8+1}번`;if(!e.tag||e.tagTxt!==lbl){if(e.tag)Sc.remove(e.tag);e.tag=new THREE.Sprite(new THREE.SpriteMaterial({map:tagTex(lbl),transparent:true,depthTest:false}));e.tag.scale.set(1.6,.44,1);e.tag.renderOrder=46;e.tagTxt=lbl;Sc.add(e.tag)}
+   e.tag.visible=true;e.tag.position.set(e.x,e.y+.1,1.55);e.tag.scale.x=1.6/(Sc.scale.x||1)}else if(e.tag)e.tag.visible=false;
+  e.shown=1;seen.add(i)}
+ HB.forEach((e,i)=>{if(!seen.has(i)){if(e.m)e.m.visible=false;if(e.tag)e.tag.visible=false;e.shown=0}})}
 if(/[?&]reset=1/.test(location.search)){try{localStorage.removeItem(SAVE_KEY)}catch(e){}location.replace(location.pathname)}
 {const b=document.createElement('button');b.textContent='📘 튜토리얼 다시 보기';b.className='tutre';b.onclick=()=>{SV.tut=0;svSave();toast('📘 다음 판을 시작할 때 튜토리얼이 다시 나와요')};const tb=document.querySelector('#tipm .tipb');if(tb)tb.prepend(b)}
 

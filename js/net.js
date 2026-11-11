@@ -8,7 +8,7 @@ const NET=(()=>{
  const st={role:null,code:'',tr:null,slots:[],me:-1,started:false,gview:{},cid2slot:{},slot2cid:{},acc:0,ended:false,lost:false,lastView:0,nameT:0,tok:{},myTok:'',lastG:{},bytes:0,retry:0,glane:{},lc:{},lastLane:-2};
  const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302','stun:stun.cloudflare.com:3478']},{urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'}]};// 직접 연결이 안 되면 PeerJS 무료 중계(TURN)로
  const UIX={};U.forEach((u,i)=>UIX[u.id]=i);const TIX={};T.forEach((t,i)=>TIX[t.id]=i);
- const myHello=()=>{let ic='🐥',n='짹짹이';try{ic=UB[SV.hero.id].ic;n=SV.hero.name||n}catch(e){}return{nick:String(n).slice(0,10),ic}};
+ const myHello=()=>{let ic='🐥',n='짹짹이',hero=null;try{ic=UB[SV.hero.id].ic;n=SV.hero.name||n;const h=SV.hero;hero={id:h.id,col:h.col,hat:h.hat,face:h.face}}catch(e){}return{nick:String(n).slice(0,10),ic,hero}};
  const rot=(i,k)=>((i-k)%8+8)%8;// 방장 번호 i → 손님 k 화면의 번호
 
  // ---------- 연결(트랜스포트) ----------
@@ -61,7 +61,7 @@ const NET=(()=>{
    st.cid2slot[cid]=i;st.slot2cid[i]=cid;delete st.lastG[cid];if(p.alive&&p.ai){p.ai=false;p.cfg=null;p.name=p.name.replace(/ 🤖$/,'')}st.gview[i]=i;
    st.tr.send(cid,{t:'start',k:i,hoff:S.off,names:S.pl.map(q=>q.name),diff,re:1});toast(`📶 ${st.slots[i].nick} 님이 다시 연결됐어요`);return}
   if(d.t==='hello'){if(st.started){st.tr.send(cid,{t:'full',m:'이미 시작한 방이에요'});return}if(st.cid2slot[cid]!=null)return;let i=st.slots.findIndex((s,j)=>j>0&&!s);if(i<0){st.tr.send(cid,{t:'full',m:'방이 꽉 찼어요 (8명)'});return}
-   st.slots[i]={kind:'guest',nick:String(d.nick||'손님').slice(0,10),ic:String(d.ic||'🐦').slice(0,4)};st.cid2slot[cid]=i;st.slot2cid[i]=cid;st.tok[i]=Math.random().toString(36).slice(2,10);hBroadcastLobby();if(!S)toast(`👋 ${st.slots[i].nick} 님이 들어왔어요`);return}
+   st.slots[i]={kind:'guest',nick:String(d.nick||'손님').slice(0,10),ic:String(d.ic||'🐦').slice(0,4),hero:heroSafe(d.hero)};st.cid2slot[cid]=i;st.slot2cid[i]=cid;st.tok[i]=Math.random().toString(36).slice(2,10);hBroadcastLobby();if(!S)toast(`👋 ${st.slots[i].nick} 님이 들어왔어요`);return}
   const pid=st.cid2slot[cid];if(pid==null||!S||S.net!=='host')return;
   if(d.t==='view'){if(d.v>=0&&d.v<8)st.gview[pid]=d.v;return}
   if(d.t==='lane'){st.glane[pid]=d.v>=0&&d.v<8?d.v:null;return}
@@ -71,8 +71,8 @@ const NET=(()=>{
   if(!st.started){st.slots[i]=null;hBroadcastLobby();return}
   const p=S&&S.pl[i];if(p&&p.alive){const a=AIS[Math.floor(Math.random()*AIS.length)];p.cfg=Object.assign({},a.g);p.ai=true;p.aiT=0;if(!p.tech)p.tech=TK[Math.floor(Math.random()*5)];if(!p.tech2plan)p.tech2plan=TK[(TK.indexOf(p.tech)+1)%5];if(!/ 🤖$/.test(p.name))p.name+=' 🤖';toast(`📴 ${st.slots[i].nick} 님 연결이 끊겨 AI가 대신해요 (다시 들어오면 돌려줘요)`)}}
  function hStart(){if(st.role!=='host'||st.started)return;st.started=true;ovl('netm',0);gameMode='normal';start();S.net='host';
-  for(let i=1;i<8;i++){const s=st.slots[i];if(!s||s.kind!=='guest')continue;const p=S.pl[i];p.cfg=null;p.ai=false;p.gold=500;p.income=30;p.tech=null;p.tech2=null;p.tech2plan=null;p.name=`${(i+S.off)%8+1}번 ${s.ic}${s.nick}`;st.gview[i]=i}
-  ui();Object.keys(st.cid2slot).forEach(cid=>{const k=st.cid2slot[cid];st.tr.send(cid,{t:'start',k,hoff:S.off,names:S.pl.map(p=>p.name),diff})})}
+  for(let i=1;i<8;i++){const s=st.slots[i];if(!s||s.kind!=='guest')continue;const p=S.pl[i];p.cfg=null;p.ai=false;p.gold=500;p.income=30;p.tech=null;p.tech2=null;p.tech2plan=null;p.name=`${(i+S.off)%8+1}번 ${s.ic}${s.nick}`;p.hero=s.hero||heroRand();st.gview[i]=i}
+  ui();Object.keys(st.cid2slot).forEach(cid=>{const k=st.cid2slot[cid];st.tr.send(cid,{t:'start',k,hoff:S.off,names:S.pl.map(p=>p.name),heroes:S.pl.map((p,i)=>S.pl[(i+k)%8].hero),diff})})}
  const gridEnc=p=>{const o=[];p.grid.forEach((r,y)=>r.forEach((t,x)=>{if(t)o.push([y*COLS+x,TIX[t.bp.id],t.lv,t.d,Math.round(t.r*100),t.dis>0?1:0,t.inv])}));return o};
  function snap(k){const pl=Array(8);S.pl.forEach(p=>{pl[rot(p.id,k)]=[Math.floor(p.gold),p.income,Math.round(p.life),p.alive?1:0,p.tech||'',p.tech2||'',p.skU?1:0,Math.ceil(p.skCD||0),p.boost>0?1:0,p.reveal>0?1:0,p.dieT?Math.round(p.dieT):0,Math.round(p.dealt||0),p.kills||0]});
   const vb=st.gview[k]??k,v=S.pl[vb],hid=u=>u.bp.stealth&&u.y<BH*u.bp.stealth&&!(v.reveal>0)&&!u.seen;
@@ -83,7 +83,7 @@ const NET=(()=>{
    let lb=pk!=null&&S.pl[pk]&&S.pl[pk].alive&&(cnt[pk]||!ids.length)?pk:null;if(lb==null)lb=ids.length?ids.sort((a,b)=>cnt[b]-cnt[a])[0]:nextAlive(k);
    if(lb!=null){addG(lb,S.pl[lb]);const rc=o2=>{const r={};Object.keys(o2).forEach(i=>r[rot(+i,k)]=o2[i]);return r},E={},K={};for(let i=0;i<8;i++){const q=k*8+i;if(S.escA&&S.escA[q])E[i]=S.escA[q];if(S.klA&&S.klA[q])K[i]=S.klA[q]}
     ln={b:rot(lb,k),c:rc(cnt),e:rc(E),k:rc(K),u:S.pl[lb].units.map(u=>[Math.round(u.x*20),Math.round(u.y*20),u.owner===k?1:0,Math.round(Math.max(0,u.hp)/u.bp.hp*100),u.bp.t==='A'&&!(u.gr>0)?1:0])}}}
-  const o={t:'s',T:Math.round(S.t*10)/10,c:Math.round(S.cdn*10)/10,i:Math.round(S.inc*10)/10,v:rot(vb,k),pl,g,u:us,eg:S.pl[k].egg||0};if(ln)o.ln=ln;if(st.nameT<=0)o.n=S.pl.map((p,i)=>S.pl[(i+k)%8].name);return o}
+  const o={t:'s',T:Math.round(S.t*10)/10,c:Math.round(S.cdn*10)/10,i:Math.round(S.inc*10)/10,v:rot(vb,k),pl,g,u:us,eg:S.pl[k].egg||0,vz:visitorsOf(vb).map(j=>rot(j,k))};if(ln)o.ln=ln;if(st.nameT<=0)o.n=S.pl.map((p,i)=>S.pl[(i+k)%8].name);return o}
  function htick(dt){if(!st.tr||!st.started)return;st.acc+=dt;const hz=Object.keys(st.cid2slot).length>=4?.15:HZ;/* 손님이 많으면 조금 덜 자주(방장 폰 업로드 줄이기) */if(st.acc<hz)return;st.acc=0;st.nameT-=HZ;Object.keys(st.cid2slot).forEach(cid=>{const k=st.cid2slot[cid];try{const o=snap(k);st.bytes+=JSON.stringify(o).length;st.tr.send(cid,o)}catch(e){}});if(st.nameT<=0)st.nameT=2}
  function hOver(w){if(st.ended||st.role!=='host')return;st.ended=true;Object.keys(st.cid2slot).forEach(cid=>st.tr.send(cid,{t:'end',w:w<0?-1:rot(w,st.cid2slot[cid])}))}
  function tell(pid,m){const cid=st.slot2cid[pid];if(cid&&st.tr)st.tr.send(cid,{t:'msg',m})}
@@ -110,14 +110,14 @@ const NET=(()=>{
   if(d.t==='s')return gApply(d);
   if(d.t==='msg')return toast(d.m);
   if(d.t==='end'){st.ended=true;const w=d.w;if(w===0)return finish(true);if(w>=0&&(S.spec||st.lost))return specEnd(S.pl[w]);if(w>=0){endLocal('👀',`${S.pl[w].name} 우승!`)}else endLocal('🏁','게임 종료')}}
- function gStart(d){st.k=d.k;if(d.re&&S&&S.net==='guest'){st.retry=0;S.pl.forEach(p=>{p.units=[]});toast('📶 다시 연결됐어요!');return}diff=d.diff||'N';gameMode='normal';applyModeBal('normal');EGG.n=0;ovl('netm',0);
+ function gStart(d){st.k=d.k;if(d.re&&S&&S.net==='guest'){st.retry=0;S.pl.forEach(p=>{p.units=[]});toast('📶 다시 연결됐어요!');return}try{heroReset()}catch(e){}diff=d.diff||'N';gameMode='normal';applyModeBal('normal');EGG.n=0;ovl('netm',0);
   S={t:0,inc:0,kills:0,dealt:0,off:(d.hoff+d.k)%8,sim:false,cdn:5,lm:1,pl:[],net:'guest'};techPend=null;
-  for(let i=0;i<8;i++)S.pl.push({id:i,name:d.names[(i+d.k)%8],tech:null,tech2:null,race:null,skU:0,skCD:0,boost:0,reveal:0,color:PC[i],gold:500,income:30,ai:i>0,life:100,alive:true,grid:Array.from({length:ROWS},()=>Array(COLS).fill(null)),units:[],cfg:null,dealt:0});
+  for(let i=0;i<8;i++)S.pl.push({id:i,name:d.names[(i+d.k)%8],hero:d.heroes?heroSafe(d.heroes[i]):heroRand(),tech:null,tech2:null,race:null,skU:0,skCD:0,boost:0,reveal:0,color:PC[i],gold:500,income:30,ai:i>0,life:100,alive:true,grid:Array.from({length:ROWS},()=>Array(COLS).fill(null)),units:[],cfg:null,dealt:0});
   sel=null;insp=null;view=0;st.lastView=0;paused=false;over=false;spd=1;document.querySelector('footer').style.opacity='';$n('pz').textContent='⏸';$n('sp').textContent='1x';$n('end').style.display='none';
   $n('title').style.display='none';$n('game').style.display='flex';if(!R)init3();resize();ui();lanePick=null;try{laneFit()}catch(e){}try{$n('t1').onclick&&$n('t1').onclick()}catch(e){}S.cdl=6;cdnUI();sfx('start');toast('🌐 온라인 대전 시작! 카운트다운 동안 속성을 골라요')}
  function gGrid(p,arr){const seen=new Set();arr.forEach(([ci,ti,lv,dd,r,dis,inv])=>{const x=ci%COLS,y=(ci/COLS)|0,b=T[ti];seen.add(ci);let t=p.grid[y][x];if(!t||t.bp!==b){t=mkR(b,p);p.grid[y][x]=t}t.lv=lv;t.d=dd;t.r=r/100;t.dis=dis?1:0;t.inv=inv});
   p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t&&!seen.has(y*COLS+x))row[x]=null}))}
- function gApply(d){S.t=d.T;S.cdn=d.c;S.inc=d.i;if(d.eg!=null&&d.eg!==EGG.n){const m=EGGM.find(m=>m.n===d.eg);EGG.n=d.eg;if(m&&d.eg>0){sfx('unlock',{k:m.k});toast(`${m.ic} 해금! ${m.t} — ${m.d}`)}}if(d.n)d.n.forEach((n,i)=>S.pl[i].name=n);
+ function gApply(d){S.vz=d.vz||[];S.t=d.T;S.cdn=d.c;S.inc=d.i;if(d.eg!=null&&d.eg!==EGG.n){const m=EGGM.find(m=>m.n===d.eg);EGG.n=d.eg;if(m&&d.eg>0){sfx('unlock',{k:m.k});toast(`${m.ic} 해금! ${m.t} — ${m.d}`)}}if(d.n)d.n.forEach((n,i)=>S.pl[i].name=n);
   d.pl.forEach((a,i)=>{const p=S.pl[i];[p.gold,p.income,p.life]=a;p.alive=!!a[3];p.tech=a[4]||null;p.tech2=a[5]||null;p.skU=a[6];p.skCD=a[7];p.boost=a[8]?1:0;p.reveal=a[9]?1:0;if(a[10])p.dieT=a[10];p.dealt=a[11]||0;p.kills=a[12]||0});
   Object.keys(d.g).forEach(i=>gGrid(S.pl[+i],d.g[i]));
   const v=d.v,p=S.pl[v],old=new Map(p.units.map(u=>[u.id,u])),nu=[];
