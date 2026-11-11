@@ -804,7 +804,7 @@ function towerMesh3(b){if(b.race)return raceTowerMesh(b);if(b.combo)return combo
  else if(id==='acid'){at(CY(.38,.38,.05,0x65a30d,Object.assign({},TP,GL(0x4d7c0f))),0,0,.12);const r=rot(.2,1.1);[[.2,.05,.07],[-.15,.15,.05],[-.05,-.2,.06],[.1,-.1,.04]].forEach(e=>at(SP(e[2],0xbef264,GL(0x84cc16)),e[0],e[1],0,r));at(SP(.09,0xf5f5f4),0,0,.25)}
  return g}
 /* 🪨 돌(화석) 재질: 밝기만 남겨 사암·회색 돌 색으로 바꾸고, 각진 면(flatShading)과 거친 표면으로. 눈(아주 어둡거나 아주 흰 부분)과 외곽선은 그대로 */
-let STX=null;function stoneTex(){if(STX)return STX;const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d');x.fillStyle='#bdbdbd';x.fillRect(0,0,64,64);
+const WHT3=new THREE.Color(0xffffff);let STX=null;function stoneTex(){if(STX)return STX;const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d');x.fillStyle='#bdbdbd';x.fillRect(0,0,64,64);
  for(let i=0;i<900;i++){const v=150+Math.floor(Math.random()*100);x.fillStyle=`rgb(${v},${v},${v})`;x.fillRect(Math.random()*64|0,Math.random()*64|0,1+(Math.random()*2|0),1+(Math.random()*2|0))}
  x.strokeStyle='#6b6b6b';x.lineWidth=1;for(let i=0;i<5;i++){x.beginPath();let px=Math.random()*64,py=Math.random()*64;x.moveTo(px,py);for(let k=0;k<4;k++){px+=Math.random()*16-8;py+=Math.random()*16-8;x.lineTo(px,py)}x.stroke()}
  STX=new THREE.CanvasTexture(c);STX.wrapS=STX.wrapT=THREE.RepeatWrapping;STX.repeat.set(2,2);return STX}
@@ -853,7 +853,7 @@ let talkN=0;function sync3(dt){sync3.talkOn=talkN;talkN=0;try{heroBoard(dt)}catc
   const sh=m.getObjectByName('shd');if(sh)sh.visible=u.sh>0;
   (m.userData.w||[]).forEach((q,i)=>q.rotation.y=(i?-1:1)*Math.sin(S.t*14+u.id)*.5);if(m.userData.an)m.userData.an(S.t+u.id*.37,m);const body=m.children[0];body.rotation.z=Math.sin(S.t*10+u.x*5)*.18;
   const f=m.getObjectByName('f'),r=Math.max(0,Math.min(1,u.hp/u.bp.hp));f.scale.x=Math.max(.01,r);f.position.x=-(1-r)*.28;
-  f.material.color.setHex(u.sh>0?0x38bdf8:r>.4?0x22c55e:r>.2?0xfacc15:0xef4444);
+  /* 체력바 = 보낸 사람 팀 색(길이로 체력), 보호막이면 하얗게 밝힘 */f.material.color.set(PC[u.owner]||'#22c55e');if(u.sh>0)f.material.color.lerp(WHT3,.55);
   body.material.color.setHex(u.hit>0?0xffffff:u.bn>0?0xf97316:u.ps>0?0x22c55e:u.pois>0?(u.bc?0xf97316:0x22c55e):u.stun>0?0x93c5fd:u.amp>0?0xbef264:(u.col||u.bp.col))});
  um.forEach((m,id)=>{if(!us.has(id)){rmM(m);um.delete(id)}});
  syncExtras(p,dt);lanePanel(dt);artFx('update',{dt,view,t:S.t});
