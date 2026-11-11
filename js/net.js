@@ -15,21 +15,21 @@ const NET=(()=>{
  function loadPeer(cb,err){if(window.Peer)return cb();const src=['https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js','https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js'];let i=0;
   const tryOne=()=>{if(i>=src.length)return err('연결 도구를 불러오지 못했어요. 인터넷을 확인해 주세요');const s=document.createElement('script');s.src=src[i++];s.onload=()=>window.Peer?cb():tryOne();s.onerror=tryOne;document.head.appendChild(s)};tryOne()}
  const local=/[?&]net=local/.test(location.search);
- function hostT(code,h){
-  if(local){const bc=new BroadcastChannel('jjak-'+code);bc.onmessage=e=>{const m=e.data;if(m.to!=='H')return;if(m.k==='open')h.join(m.from);else if(m.k==='close')h.leave(m.from);else h.msg(m.from,m.d)};setTimeout(h.ready,0);
+ function hostT(code,h,pre){pre=pre||'jjak-';
+  if(local){const bc=new BroadcastChannel(pre+code);bc.onmessage=e=>{const m=e.data;if(m.to!=='H')return;if(m.k==='open')h.join(m.from);else if(m.k==='close')h.leave(m.from);else h.msg(m.from,m.d)};setTimeout(h.ready,0);
    return{send:(cid,d)=>bc.postMessage({to:cid,from:'H',k:'d',d}),close:()=>{try{bc.postMessage({to:'*',from:'H',k:'close'});bc.close()}catch(e){}}}}
   const conns={};let peer=null;const o={send:(cid,d)=>{const c=conns[cid];if(c&&c.open)try{c.send(d)}catch(e){}},close:()=>{try{peer&&peer.destroy()}catch(e){}}};
-  loadPeer(()=>{peer=new Peer('jjak-'+code,{debug:0,config:ICE});peer.on('open',()=>h.ready());peer.on('error',e=>h.err(e&&e.type==='unavailable-id'?'taken':(e&&e.type)||'error'));
+  loadPeer(()=>{peer=new Peer(pre+code,{debug:0,config:ICE});peer.on('open',()=>h.ready());peer.on('error',e=>h.err(e&&e.type==='unavailable-id'?'taken':(e&&e.type)||'error'));
    peer.on('connection',c=>{c.on('open',()=>{conns[c.peer]=c;h.join(c.peer)});c.on('data',d=>h.msg(c.peer,d));c.on('close',()=>{delete conns[c.peer];h.leave(c.peer)});c.on('error',()=>{})})},m=>h.err(m));
   return o}
- function guestT(code,h){
-  if(local){const id='G'+Math.random().toString(36).slice(2,8),bc=new BroadcastChannel('jjak-'+code);bc.onmessage=e=>{const m=e.data;if(m.to===id)h.msg(m.d);else if(m.to==='*'&&m.k==='close')h.close()};
+ function guestT(code,h,pre){pre=pre||'jjak-';
+  if(local){const id='G'+Math.random().toString(36).slice(2,8),bc=new BroadcastChannel(pre+code);bc.onmessage=e=>{const m=e.data;if(m.to===id)h.msg(m.d);else if(m.to==='*'&&m.k==='close')h.close()};
    addEventListener('pagehide',()=>{try{bc.postMessage({to:'H',from:id,k:'close'})}catch(e){}});
    setTimeout(()=>{bc.postMessage({to:'H',from:id,k:'open'});h.ready()},50);return{send:d=>bc.postMessage({to:'H',from:id,k:'d',d}),close:()=>{try{bc.postMessage({to:'H',from:id,k:'close'});bc.close()}catch(e){}}}}
   let peer=null,c=null;const o={send:d=>{if(c&&c.open)try{c.send(d)}catch(e){}},close:()=>{try{peer&&peer.destroy()}catch(e){}}};
   addEventListener('pagehide',()=>{try{peer&&peer.destroy()}catch(e){}});
   loadPeer(()=>{peer=new Peer({debug:0,config:ICE});peer.on('error',e=>h.err(e&&e.type==='peer-unavailable'?'noroom':(e&&e.type)||'error'));
-   peer.on('open',()=>{c=peer.connect('jjak-'+code,{reliable:true,serialization:'json'});const to=setTimeout(()=>{if(!c.open)h.slow&&h.slow()},12000);c.on('open',()=>{clearTimeout(to);h.ready()});c.on('data',d=>h.msg(d));c.on('close',()=>h.close());c.on('error',()=>{})})},m=>h.err(m));
+   peer.on('open',()=>{c=peer.connect(pre+code,{reliable:true,serialization:'json'});const to=setTimeout(()=>{if(!c.open)h.slow&&h.slow()},12000);c.on('open',()=>{clearTimeout(to);h.ready()});c.on('data',d=>h.msg(d));c.on('close',()=>h.close());c.on('error',()=>{})})},m=>h.err(m));
   return o}
 
  // ---------- 로비 화면 ----------
@@ -148,4 +148,6 @@ const NET=(()=>{
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
  /* 원형 지도에 첫 글자를 띄우기 위한 사람 자리 닉네임(내 자리는 YOU라 제외) */
  function nick(i){if(!st.started&&!(S&&S.net==='guest'))return null;const hi=st.role==='guest'?(i+st.k)%8:i,s=st.slots[hi];return i!==0&&s&&s.kind!=='ai'?s.nick:null}
- return{open,cmd,tell,htick,gtick,nick,over:hOver,leave,get role(){return st.role},_st:st,_drop:()=>{try{st.tr&&st.tr.close()}catch(e){}gLost()}}})();
+ /* 🏞 광장도 같은 연결 도구를 써요(방 id 앞머리만 jjpz-) */
+ const newCode=()=>Array.from({length:5},()=>CODE_CH[Math.floor(Math.random()*CODE_CH.length)]).join('');
+ return{open,cmd,tell,htick,gtick,nick,over:hOver,leave,pzHost:(c,h)=>hostT(c,h,'jjpz-'),pzGuest:(c,h)=>guestT(c,h,'jjpz-'),newCode,get role(){return st.role},_st:st,_drop:()=>{try{st.tr&&st.tr.close()}catch(e){}gLost()}}})();
