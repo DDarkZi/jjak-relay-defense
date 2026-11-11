@@ -1,17 +1,4 @@
 {
- "holy/feather-burst": {
-  "f": "assets/pfx/holy_feather-burst.png",
-  "n": 46,
-  "fps": 15.0,
-  "loop": false,
-  "cols": 7,
-  "rows": 7,
-  "fw": 141,
-  "fh": 137,
-  "px": 68,
-  "py": 50,
-  "ofw": 160
- },
  "fire/flame-pillar": {
   "f": "assets/pfx/fire_flame-pillar.png",
   "n": 76,
@@ -24,5 +11,70 @@
   "px": 84,
   "py": 214,
   "ofw": 184
+ },
+ "impacts/ground-slam": {
+  "f": "assets/pfx/impacts_ground-slam.png",
+  "n": 49,
+  "fps": 15.0,
+  "loop": false,
+  "cols": 6,
+  "rows": 9,
+  "fw": 244,
+  "fh": 172,
+  "px": 122,
+  "py": 129,
+  "ofw": 288
+ },
+ "nature/tornado": {
+  "f": "assets/pfx/nature_tornado.png",
+  "n": 30,
+  "fps": 15.0,
+  "loop": true,
+  "cols": 6,
+  "rows": 5,
+  "fw": 149,
+  "fh": 165,
+  "px": 76,
+  "py": 151,
+  "ofw": 196
+ },
+ "ice/ice-shatter": {
+  "f": "assets/pfx/ice_ice-shatter.png",
+  "n": 43,
+  "fps": 15.0,
+  "loop": false,
+  "cols": 5,
+  "rows": 9,
+  "fw": 187,
+  "fh": 108,
+  "px": 58,
+  "py": 87,
+  "ofw": 224
+ },
+ "nature/poison-cloud": {
+  "f": "assets/pfx/nature_poison-cloud.png",
+  "n": 60,
+  "fps": 15.0,
+  "loop": true,
+  "cols": 5,
+  "rows": 12,
+  "fw": 221,
+  "fh": 88,
+  "px": 115,
+  "py": 75,
+  "ofw": 256
+ },
+ "lightning/lightning-strike": {
+  "f": "assets/pfx/lightning_lightning-strike.png",
+  "n": 46,
+  "fps": 15.0,
+  "loop": false,
+  "cols": 8,
+  "rows": 6,
+  "fw": 231,
+  "fh": 262,
+  "px": 115,
+  "py": 227,
+  "ofw": 240
  }
 }

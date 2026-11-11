@@ -1,5 +1,6 @@
 """pixelfx 효과를 게임용 스프라이트 시트로 가져오기.
 사용: python3 tools/pfx/add.py <pixelfx 폴더> <효과 id...>   예: python3 tools/pfx/add.py ~/pixelfx holy/feather-burst spawn/poof
+  색 바꾸기: 'nature/poison-cloud@{"palette":["#112","#3a6","#cf6"]}' 처럼 id 뒤에 @옵션JSON
 - pixelfx(MIT, https://github.com/patch-gg/pixelfx)의 tools/render.mjs --sheet로 시트를 뽑고,
 - 프레임을 절반(30→15fps)으로 줄이고 256색 PNG로 줄여 assets/pfx/<분류>_<이름>.png 로 저장,
 - js/pfx_sheets.js(효과 목록)를 다시 만들어요. 게임에서는 PXS.play('holy/feather-burst', x, y, z)로 재생.
@@ -10,9 +11,10 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 OUT = os.path.join(ROOT, 'assets', 'pfx'); META = os.path.join(OUT, 'sheets.json')
 px, ids = os.path.abspath(sys.argv[1]), sys.argv[2:]
 meta = json.load(open(META)) if os.path.exists(META) else {}
-for fid in ids:
+for arg in ids:
+    fid, _, opts = arg.partition('@')
     cat, name = fid.split('/')
-    subprocess.run(['node', 'tools/render.mjs', fid, '--sheet'], cwd=px, check=True, stdout=subprocess.DEVNULL)
+    subprocess.run(['node', 'tools/render.mjs', fid, '--sheet'] + (['--opts', opts] if opts else []), cwd=px, check=True, stdout=subprocess.DEVNULL)
     src = os.path.join(px, 'records', cat, name)
     m = json.load(open(os.path.join(src, name + '.json')))['meta']['pixelfx']
     im = Image.open(os.path.join(src, name + '.png')).convert('RGBA')
