@@ -59,9 +59,9 @@ const U=[
 {id:'falcon',n:'송골매',c:560,hp:504,sp:3.4,t:'A',dm:3,inc:30,ic:'💨',col:0x78716c,x:'가장 빠른 새'},
 {id:'albatross',n:'알바트로스',c:620,hp:770,sp:2.6,t:'A',dm:3,inc:36,imm:['kb'],tech:'wind',ic:'🌊',col:0xe0f2fe,x:'넉백 면역 · 고속'},
 {id:'owl',n:'올빼미',c:680,hp:1100,sp:2.1,t:'A',dm:3,inc:40,ic:'🦉',col:0x8d6e4c},
-{id:'thunderbird',n:'천둥새',c:700,hp:990,sp:1.8,t:'A',dm:3,inc:40,imm:['stun'],zap:1,tech:'thunder',ic:'⛈️',col:0x4338ca,x:'기절 면역 · 근처 타워 마비'},
+{id:'thunderbird',mat:'elec',n:'천둥새',c:700,hp:990,sp:1.8,t:'A',dm:3,inc:40,imm:['stun'],zap:1,tech:'thunder',ic:'⛈️',col:0x4338ca,x:'기절 면역 · 근처 타워 마비'},
 {id:'eagle',n:'제왕독수리',c:850,hp:1690,sp:1,t:'A',dm:4,inc:52,ic:'🦅',col:0x6b4f3a},
-{id:'phoenix',n:'불사조',c:1300,hp:1950,sp:1.4,t:'A',dm:6,inc:85,revive:1,tech:'fire',ic:'🔥',col:0xf97316,x:'한 번 부활'},
+{id:'phoenix',mat:'fire',n:'불사조',c:1300,hp:1950,sp:1.4,t:'A',dm:6,inc:85,revive:1,tech:'fire',ic:'🔥',col:0xf97316,x:'한 번 부활'},
 {id:'humbee',n:'벌새',c:360,hp:125,sp:1.9,t:'G',dm:1,inc:19,count:6,cntR:[5,7],swarm:1,ic:'🐝',col:0xfacc15,x:'5~7마리 떼 · 너무 작아서 강타형 타워(공격 간격 1.5초 이상)의 피해를 절반만 받아요'},
 {id:'pelican',n:'펠리컨',c:3000,hp:5200,sp:.8,t:'A',dm:10,inc:190,carry:8,ic:'🚌',col:0xf8fafc,x:'쓰러지면 부리 주머니에서 승객 새 8마리가 쏟아져 지상으로 걸어가요'},
 {id:'demcrane',n:'철거반장 두루미',c:4800,hp:8200,sp:.75,t:'G',dm:14,inc:250,grab:1,ic:'🏗️',col:0xf1f5f9,talk:['이거 불법 건축물이에요~','철거 들어갑니다!','민원 접수됐습니다'],x:'6초마다 멈춰서 근처 타워를 부리로 집어 4초 동안 머리에 이고 걸어가요(그동안 공격 불가). Lv.2 이하는 근처 빈칸으로 옮겨 놓고(미로는 절대 안 막아요), 더 높거나 빈칸이 없으면 제자리에 돌려놔요'},
@@ -76,10 +76,10 @@ const U=[
 {id:'plague',combo:['fire','dark'],n:'역병 까마귀',c:600,hp:300,sp:1.8,t:'A',dm:3,inc:36,stealth:.75,split:2,ic:'🦠',col:0x5a7a2e,x:'3/4까지 은신 · 분열'},
 {id:'auroraowl',combo:['ice','thunder'],n:'오로라 올빼미',c:850,hp:1105,sp:2,t:'A',dm:4,inc:50,imm:['stun','slow'],shield:340,ic:'🌠',col:0x93c5fd,x:'기절·감속 면역 · 보호막'},
 {id:'blizgull',combo:['ice','wind'],n:'눈보라 갈매기',c:600,hp:630,sp:2.2,t:'A',dm:3,inc:36,count:2,imm:['kb','slow'],ic:'⛄',col:0xf0fdfa,x:'2마리 · 넉백·감속 면역'},
-{id:'frostpeng',combo:['ice','dark'],n:'빙독 펭귄',c:550,hp:352,sp:1.3,t:'G',dm:1,inc:33,count:4,imm:['slow','poison'],ic:'🥶',col:0x9a8fe8,x:'4마리 무리 · 감속·독 면역'},
+{id:'frostpeng',mat:'ice',combo:['ice','dark'],n:'빙독 펭귄',c:550,hp:352,sp:1.3,t:'G',dm:1,inc:33,count:4,imm:['slow','poison'],ic:'🥶',col:0x9a8fe8,x:'4마리 무리 · 감속·독 면역'},
 {id:'stormeagle',combo:['thunder','wind'],n:'폭풍 독수리',c:1000,hp:1530,sp:1.8,t:'A',dm:5,inc:62,imm:['stun','kb'],ic:'💫',col:0x6366f1,x:'기절·넉백 면역'},
-{id:'voltbat',combo:['thunder','dark'],n:'전기 박쥐',c:750,hp:880,sp:1.9,t:'A',dm:3,inc:45,drain:3,zap:1,ic:'🔌',col:0x5f8f1f,x:'타워 마비 · 라이프 흡수 3'},
-{id:'ghostcrow',combo:['wind','dark'],n:'유령 까마귀',c:700,hp:488,sp:2.2,t:'A',dm:3,inc:42,stealth:.7,imm:['kb'],ic:'👻',col:0x94a3b8,x:'진영 70%까지 은신 · 넉백 면역'},
+{id:'voltbat',mat:'elec',combo:['thunder','dark'],n:'전기 박쥐',c:750,hp:880,sp:1.9,t:'A',dm:3,inc:45,drain:3,zap:1,ic:'🔌',col:0x5f8f1f,x:'타워 마비 · 라이프 흡수 3'},
+{id:'ghostcrow',mat:'ghost',combo:['wind','dark'],n:'유령 까마귀',c:700,hp:488,sp:2.2,t:'A',dm:3,inc:42,stealth:.7,imm:['kb'],ic:'👻',col:0x94a3b8,x:'진영 70%까지 은신 · 넉백 면역'},
 // 🥚 수상한 알 연구소: 부화 병아리(상점에 없음, hidden) + 전설의 새(누적 100알 해금, secret)
 {id:'hatch_chick',hidden:1,n:'갓깬 삐약이',c:60,hp:200,sp:1.7,t:'G',dm:1,inc:0,ic:'🐣',col:0xfde68a,x:'알에서 막 깨어났어요'},
 {id:'hatch_fire',hidden:1,n:'맥반석 병아리',c:60,hp:260,sp:2,t:'G',dm:1,inc:0,imm:['burn'],ic:'🍳',col:0xfb923c,x:'화상 면역 · 빠름'},
@@ -87,7 +87,7 @@ const U=[
 {id:'hatch_thunder',hidden:1,n:'찌릿 병아리',c:60,hp:260,sp:1.8,t:'G',dm:1,inc:0,imm:['stun'],zap:1,ic:'🔋',col:0xfef08a,x:'기절 면역 · 타워 마비'},
 {id:'hatch_wind',hidden:1,n:'풍선 병아리',c:60,hp:220,sp:1.8,t:'A',dm:1,inc:0,imm:['kb'],ic:'🎈',col:0x5eead4,x:'둥실 날아가요 · 넉백 면역'},
 {id:'hatch_dark',hidden:1,n:'방귀 병아리',c:60,hp:260,sp:1.7,t:'G',dm:1,inc:0,imm:['poison'],stealth:.8,ic:'💨',col:0xa3e635,x:'독 면역 · 냄새로 은신'},
-{id:'hatch_gold',hidden:1,n:'황금 병아리',c:120,hp:280,sp:1.9,t:'G',dm:1,inc:0,steal:4,ic:'🌟',col:0xfacc15,x:'탈출하면 내 인컴 +4'},
+{id:'hatch_gold',mat:'gold',hidden:1,n:'황금 병아리',c:120,hp:280,sp:1.9,t:'G',dm:1,inc:0,steal:4,ic:'🌟',col:0xfacc15,x:'탈출하면 내 인컴 +4'},
 {id:'hatch_dino',hidden:1,n:'티라노 병아리',c:400,hp:2500,sp:.9,t:'G',dm:4,inc:0,ic:'🦖',col:0x65a30d,x:'고대 유전자가 깨어났어요'},
 {id:'eggchief',secret:'chief',n:'알통 대장닭',c:1600,hp:1800,sp:.9,t:'G',dm:5,inc:110,lay:1,ic:'🎩',col:0xfef3c7,x:'걸으며 3초마다 수상한 알을 낳아요 (한 판에 알 100개 보내면 해금)'}];
 // ---------- 🏰 종족전: 오리지널 새 종족 4종 (전용 타워 2 + 전용 새 2 + 고유 특성) ----------
@@ -232,7 +232,7 @@ Object.assign(NM,{priest:['아~ 해봐요 사제새','아프면 부리 벌려요
 
 // 🔌 스튜디오 모듈 연결 지점: 사운드팀은 sfx.js에서 SFX를, 아트팀은 art.js에서 ART를 구현해요. 없으면 조용히 넘어가요.
 const sfx=(n,a)=>{try{if(S&&S.sim)return;if(typeof SFX!=='undefined'&&SFX.play)SFX.play(n,a||{})}catch(e){}};
-const artFx=(n,a)=>{try{if(S&&S.sim)return;if(typeof ART!=='undefined'&&ART[n]){const r=ART[n](a||{});if(n==='bird'&&a&&a.b&&a.b.stone)stoneify(a.m,a.b.stone===2);return r}}catch(e){}};
+const artFx=(n,a)=>{try{if(S&&S.sim)return;if(typeof ART!=='undefined'&&ART[n]){const r=ART[n](a||{});if(n==='bird'&&a&&a.b&&a.b.stone)stoneify(a.m,a.b.stone===2);if(n==='bird'&&a&&a.b&&a.b.mat)matFx(a.m,a.b.mat,a.b);return r}}catch(e){}};
 // 🧬 타워 진화 이름: 강화 Lv.1~4마다 이름이 바뀌어요(작가팀). 없으면 Ⅱ·Ⅲ·Ⅳ
 const EVO=/*EVO*/{"wall":["월세 둥지","월세 둥지","월세 둥지","월세 둥지"],"egg":["알까기 새총","새권총","새개틀링건","알마게돈 새대포"],"air":["깃털 미사일","간질간질 유도탄","깃털 다연장포","대륙간 간지럼탄"],"acorn":["다람쥐 대포","볼빵빵 곡사포","다람쥐 자주포","도토리묵 요새포"],"snack":["과자 뿌리개","과자 분사기","과자 스프링클러","무한리필 과자탑"],"pylon":["참새 전봇대","참새 변압기","참새 송전탑","만볼트 참새철탑"],"cctv":["부엉이 CCTV","4K 부엉이캠","야간투시 부엉이","부엉이 첩보위성"],"net":["잠자리채 그물포","왕잠자리채","꽁치잡이 투망포","곤충채집 끝판왕"],"ember":["바베큐 둥지","숯불구이 둥지","통닭 회전 둥지","전설의 치킨집"],"lava":["찜질방 분화구","불가마 분화구","황토 불가마 화산","용암 찜질 궁전"],"sun":["자외선 등대","땡볕 등대","돋보기 등대","폭염 태양신전"],"ice":["냉동 달걀","꽁꽁 언 달걀","냉동실 계란판","만년설 황금알"],"frost":["얼음땡 결정","얼음땡 고드름","얼음땡 술래탑","땡 없는 빙하"],"bliz":["에어컨 18도 탑","에어컨 16도 탑","냉장고 4도 탑","남극 영하40도 탑"],"static":["겨울 니트 깃털","털스웨터 깃털","수면바지 깃털","문고리 대마왕"],"thunder":["찌릿찌릿 피뢰침","뽀글뽀글 피뢰침","번개 파마 탑","전설의 벼락파마"],"storm":["월요병 먹구름","출근길 먹구름","야근 먹구름","월요일 무한반복"],"breeze":["미풍 선풍기","미풍 회전 선풍기","미풍이라던 선풍기","미풍 탈 쓴 태풍"],"wind":["비눗방울 막대","비눗방울 기계","비눗방울 대포","거품 목욕탕 대왕"],"twister":["회오리 감자","치즈 회오리 감자","왕꼬치 회오리","휴게소의 전설"],"bat":["박쥐 고시원","박쥐 원룸","박쥐 오피스텔","박쥐 펜트하우스"],"flu":["조류독감 AI","조류독감 AI2.0","조류독감 AI 프로","조류독감 초지능"],"acid":["식초 늪","사과식초 늪","피클 절임 늪","전설의 초절임 늪"],"steam":["불한증막 사우나","냉온탕 사우나","때밀이 사우나","목욕탕 대왕궁"],"plasma":["전자레인지 포","해동모드 레인지포","땡땡땡 레인지포","우주 전자레인지"],"firestorm":["불맛 회오리","웍질 회오리","불쇼 대회오리","중화요리 신의 웍"],"pyre":["마라탕 화로","맵기 5단계 화로","맵기 10단계 화로","맵기 측정불가"],"aurora":["냉동 전기장판","배신의 전기장판","북극 전기장판","오로라 대장판"],"whiteout":["빙수 블렌더","팥빙수 블렌더","눈꽃빙수 믹서","전설의 빙수장인"],"frostbane":["유통기한 아이스크림","세기말 아이스크림","빙하기산 아이스크림","공룡시대 아이스크림"],"tempest":["태풍경보 탑","재난문자 송신탑","슈퍼태풍 경보탑","태풍의 눈 관제탑"],"venomvolt":["문어발 콘센트","대왕문어발 콘센트","멀티탭의 멀티탭","전설의 문어발왕"],"miasma":["방귀 선풍기","고구마 방귀 선풍기","청국장 방귀 선풍기","범인 없는 방귀폭풍"]}/*EVOEND*/;
 const CBM=/*CBM*/{}/*CBMEND*/;T.forEach(t=>{if(CBM[t.id])t.d=Math.round(t.d*CBM[t.id])});
@@ -697,17 +697,17 @@ function birdMesh2(b,oc){const g=new THREE.Group(),id=b.id,A=b.t==='A',c=b.col,w
   const featherWing=(s,P)=>{const bat=id==='vampire'||id==='voltbat',T=WTIP[id],n=big?5:id==='hatch_wind'?3:4,tc2=i=>Array.isArray(T)?T[i%2]:(T??dkn3(wc,.68)),go=id==='phoenix'||id==='plasmabird'||id==='comet'?GL(0xf97316):{};
    const W=SP(1,bat?dkn3(wc,.8):wc,go);W.scale.set(wl*.62,bat?.17:.2,.05);W.position.set(s*wl*.6,.03,0);P.add(W);
    if(!bat){const cv=SP(1,ltn3(wc));cv.scale.set(wl*.5,.09,.056);cv.position.set(s*wl*.56,-.07,.008);cv.name='cv';P.add(cv)}
-   const tb=SP(1,oc);tb.scale.set(wl*.62,.03,.054);tb.position.set(s*wl*.62,.175,.004);P.add(tb);
+   const tb=SP(1,oc);tb.userData.noStone=1;tb.scale.set(wl*.62,.03,.054);tb.position.set(s*wl*.62,.175,.004);P.add(tb);
    for(let i=0;i<n;i++){const t=n>1?i/(n-1):0,a=-.12+t*.8,len=wl*(bat?.62:.46)*(1-.18*t),F=SP(1,bat?0x1c1917:tc2(i),go);F.scale.set(len,bat?.022:.058,bat?.02:.026);F.rotation.z=s*a;
     F.position.set(s*(wl*1.02+Math.cos(a)*len*.78),.02+t*.1+Math.sin(a)*len*.78,-.004*i);P.add(F);
     if(bat&&i<n-1){const M=SP(1,wc);M.scale.set(len*.85,.1,.018);M.rotation.z=s*(a+.4);M.position.set(s*(wl*1.0+Math.cos(a+.4)*len*.55),.06+t*.1+Math.sin(a+.4)*len*.55,-.01);P.add(M)}}
    w.push(P)};
   [-1,1].forEach(s=>{const P=new THREE.Group();P.position.set(s*.2,0,z0+.06);g.add(P);if(A&&id!=='swan'){featherWing(s,P);return}const W=SP(1,A?wc:(WINGC[id]??dkn3(c,.88)),id==='phoenix'?GL(0xf97316):{});if(A){W.scale.set(wl,.25,.045);W.position.set(s*wl*.95,.04,0)}else{W.scale.set(.06,.19,.12);W.position.set(s*.05,.03,-.02);W.rotation.y=s*.25}if(A)W.rotation.z=s*.2;if(id==='swan'){W.rotation.y=-s*.4;W.position.set(s*wl*.9,.04,wl*.39)}P.add(W);
    if(A&&id!=='vampire'){const cv=SP(1,ltn3(wc));cv.scale.set(wl*.55,.16,.05);cv.position.set(s*wl*.55,-.03,id==='swan'?wl*.22+.012:.012);if(id==='swan')cv.rotation.y=-s*.4;P.add(cv)}
-   if(A){const tp=SP(1,oc);tp.scale.set(wl*.5,.15,.035);tp.rotation.z=s*.45;tp.position.set(s*wl*1.6,.16,id==='swan'?wl*.72:0);if(id==='swan')tp.rotation.y=-s*.4;P.add(tp);w.push(P)}})}
+   if(A){const tp=SP(1,oc);tp.userData.noStone=1;tp.scale.set(wl*.5,.15,.035);tp.rotation.z=s*.45;tp.position.set(s*wl*1.6,.16,id==='swan'?wl*.72:0);if(id==='swan')tp.rotation.y=-s*.4;P.add(tp);w.push(P)}})}
  /* 팀 색 목 고리는 디자인을 해쳐서 뺐음(2026-11-11) — 팀 표시는 나중에 다른 방식으로 */
  const tc=(n,len,col,sp,o)=>{for(let i=0;i<n;i++){const a=(i-(n-1)/2)*sp,t=KO(.07,len,col[i%col.length],o);t.rotation.z=a;at(t,-Math.sin(a)*len/2,.3+Math.cos(a)*len/2,z0+.1)}};
- if(id==='turkey');else if(id==='phoenix')tc(5,.8,[0xf97316,0xfde047,0xef4444],.3,GL(0xf97316));else if(id==='plasmabird')tc(5,.7,[0xfb923c,0xfde047,0x60a5fa],.3,GL(0xfb923c));else if(id==='comet')tc(3,.6,[0xf43f5e,0xfb923c],.2,GL(0xf43f5e));else if(id==='parrot')tc(3,.5,[0xe53935,0x1e88e5,0xe53935],.22);else if(id==='rooster')tc(3,.5,[0x16a34a,0x111827],.3);else if(A&&id!=='swan'&&id!=='hatch_wind')[-.42,0,.42].forEach((a,i)=>{const f=SP(1,i===1?oc:dkn3(WINGC[id]??c,.85));f.scale.set(.065,.2,.018);f.rotation.z=a;const ty=.26*((BODYS[id]||[1,1.25])[1])*.86;at(f,-Math.sin(a)*.17,ty+Math.cos(a)*.17,z0+.04)});// 🪶 공중 새 꼬리깃 부채(가운데는 팀 색)
+ if(id==='turkey');else if(id==='phoenix')tc(5,.8,[0xf97316,0xfde047,0xef4444],.3,GL(0xf97316));else if(id==='plasmabird')tc(5,.7,[0xfb923c,0xfde047,0x60a5fa],.3,GL(0xfb923c));else if(id==='comet')tc(3,.6,[0xf43f5e,0xfb923c],.2,GL(0xf43f5e));else if(id==='parrot')tc(3,.5,[0xe53935,0x1e88e5,0xe53935],.22);else if(id==='rooster')tc(3,.5,[0x16a34a,0x111827],.3);else if(A&&id!=='swan'&&id!=='hatch_wind')[-.42,0,.42].forEach((a,i)=>{const f=SP(1,i===1?oc:dkn3(WINGC[id]??c,.85));if(i===1)f.userData.noStone=1;f.scale.set(.065,.2,.018);f.rotation.z=a;const ty=.26*((BODYS[id]||[1,1.25])[1])*.86;at(f,-Math.sin(a)*.17,ty+Math.cos(a)*.17,z0+.04)});// 🪶 공중 새 꼬리깃 부채(가운데는 팀 색)
  else if(id!=='kiwi'&&id!=='egg_legs'&&!PENG[id])tc(1,.3,[A?oc:c],0);
  const up=(r,h,col,x,y,z,o)=>{const e=KO(r,h,col,o);e.rotation.x=PI/2;at(e,x,y,z)};
  if(id==='rooster'){[0,1,2].forEach(i=>at(SP(.05,0xef4444),0,hy-.02+i*.06,hz+.15-i*.02));at(SP(.04,0xef4444),0,hy-.15,hz-.1)}
@@ -809,8 +809,35 @@ const WHT3=new THREE.Color(0xffffff);let STX=null;function stoneTex(){if(STX)ret
  x.strokeStyle='#6b6b6b';x.lineWidth=1;for(let i=0;i<5;i++){x.beginPath();let px=Math.random()*64,py=Math.random()*64;x.moveTo(px,py);for(let k=0;k<4;k++){px+=Math.random()*16-8;py+=Math.random()*16-8;x.lineTo(px,py)}x.stroke()}
  STX=new THREE.CanvasTexture(c);STX.wrapS=STX.wrapT=THREE.RepeatWrapping;STX.repeat.set(2,2);return STX}
 function stoneify(g,half){const R=[0x34312d,0x4c4842,0x67625a,0x827c72,0x9c968b],tmp=new THREE.Color();g.traverse(o=>{if(!o.isMesh||!o.material||o.name==='artOutl'||o.userData.noStone)return;
-  const mats=Array.isArray(o.material)?o.material:[o.material];o.material=mats.map(m=>{if(!m.color||PC.includes('#'+m.color.getHexString()))return m;/* 팀 색(고리·꼬리깃)은 그대로 */const L=m.color.r*.3+m.color.g*.59+m.color.b*.11;const sat=Math.max(m.color.r,m.color.g,m.color.b)-Math.min(m.color.r,m.color.g,m.color.b);if(L<.06||L>.97||(!half&&m.color.g>m.color.r*1.2&&m.color.g>m.color.b*1.2)||(half&&sat>.12&&L>.75))return m;
+  const mats=Array.isArray(o.material)?o.material:[o.material];o.material=mats.map(m=>{if(!m.color)return m;/* 팀 색 부품은 userData.noStone으로 건너뜀 */const L=m.color.r*.3+m.color.g*.59+m.color.b*.11;const sat=Math.max(m.color.r,m.color.g,m.color.b)-Math.min(m.color.r,m.color.g,m.color.b);if(L<.06||L>.97||(!half&&m.color.g>m.color.r*1.2&&m.color.g>m.color.b*1.2)||(half&&sat>.12&&L>.75))return m;
    const n=m.clone();if(!half||sat<=.12){tmp.setHex(R[Math.min(4,Math.floor(L*5.2))]);n.color.copy(tmp)}else n.color.multiplyScalar(1.12);if('roughness'in n){n.roughness=1;n.metalness=0;n.bumpMap=stoneTex();n.bumpScale=.035}if(!n.map&&o.geometry&&o.geometry.attributes.uv)n.map=stoneTex();if('flatShading'in n)n.flatShading=true;if(n.emissive)n.emissive.setHex(0);n.needsUpdate=true;return n});if(o.material.length===1)o.material=o.material[0]})}
+/* 🎨 새 재질(질감) 상자: U의 mat:'fire'|'ice'|'ghost'|'elec'|'gold'. 코드로 그린 작은 무늬 그림 + 빛·투명도. 움직이는 재질은 m.userData.fxm에 담아 sync3에서 깜빡임 */
+const MTX={};function matTex(k){if(MTX[k])return MTX[k];const N=128,c=document.createElement('canvas');c.width=c.height=N;const x=c.getContext('2d'),R=Math.random,line=(n,w,col,j)=>{x.strokeStyle=col;x.lineWidth=w;for(let i=0;i<n;i++){x.beginPath();let px=R()*N,py=R()*N;x.moveTo(px,py);for(let s=0;s<6;s++){px+=(R()-.5)*j;py+=(R()-.5)*j;x.lineTo(px,py)}x.stroke()}};
+ if(k==='fireMap'){x.fillStyle='#d9d9d9';x.fillRect(0,0,N,N);for(let i=0;i<160;i++){const v=110+R()*120|0;x.fillStyle=`rgb(${v},${v*.8|0},${v*.7|0})`;x.beginPath();x.arc(R()*N,R()*N,2+R()*6,0,7);x.fill()}line(16,5,'#2a1810',30)}
+ else if(k==='fireGlow'){x.fillStyle='#000';x.fillRect(0,0,N,N);x.shadowColor='#ffb000';x.shadowBlur=6;line(16,3,'#fff',30);x.shadowBlur=0;for(let i=0;i<40;i++){x.fillStyle='#ffd27a';x.fillRect(R()*N|0,R()*N|0,2,2)}}
+ else if(k==='ice'){x.fillStyle='#d8eef8';x.fillRect(0,0,N,N);for(let i=0;i<30;i++){const px=R()*N,py=R()*N,r=6+R()*14;x.strokeStyle='rgba(255,255,255,.9)';x.lineWidth=1;for(let a=0;a<6;a++){x.beginPath();x.moveTo(px,py);x.lineTo(px+Math.cos(a*1.047)*r,py+Math.sin(a*1.047)*r);x.stroke()}}line(10,1,'#9cc8de',40)}
+ else if(k==='ghost'){const g=x.createLinearGradient(0,0,0,N);g.addColorStop(0,'#fff');g.addColorStop(1,'#8a90a0');x.fillStyle=g;x.fillRect(0,0,N,N);x.globalAlpha=.35;for(let i=0;i<14;i++){x.fillStyle='#fff';x.beginPath();x.ellipse(R()*N,R()*N,4+R()*10,10+R()*20,0,0,7);x.fill()}x.globalAlpha=1}
+ else if(k==='elec'){x.fillStyle='#000';x.fillRect(0,0,N,N);x.shadowColor='#fff';x.shadowBlur=6;line(6,4,'#fff',46);line(10,2,'#e0f0ff',26)}
+ else if(k==='gold'){x.fillStyle='#e8e8e8';x.fillRect(0,0,N,N);for(let i=0;i<N;i+=4){x.fillStyle=`rgba(255,255,255,${.15+R()*.25})`;x.fillRect(0,i,N,2)}for(let i=0;i<25;i++){x.fillStyle='#fff';const px=R()*N,py=R()*N;x.fillRect(px-3,py,7,1);x.fillRect(px,py-3,1,7)}}
+ const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(2,2);return MTX[k]=t}
+const MATK={fire:{em:0xffc23a,ei:1.4},ice:{em:0x7dd3fc,ei:.25},ghost:{em:0xc7d2fe,ei:.4},elec:{em:0xfde047,ei:.35},gold:{em:0xfacc15,ei:.25}};
+/* 무늬 좌표(uv)가 없는 몸통 모양에는 공 모양으로 감싸는 좌표를 만들어 줌 */function ensureUV(geo){if(!geo||geo.attributes.uv||!geo.attributes.position)return!!(geo&&geo.attributes.uv);const p=geo.attributes.position,n=p.count,a=new Float32Array(n*2);geo.computeBoundingBox();const c=geo.boundingBox.getCenter(new THREE.Vector3());for(let i=0;i<n;i++){const x=p.getX(i)-c.x,y=p.getY(i)-c.y,z=p.getZ(i)-c.z,r=Math.hypot(x,y,z)||1;a[i*2]=.5+Math.atan2(y,x)/(2*PI);a[i*2+1]=.5+Math.asin(Math.max(-1,Math.min(1,z/r)))/PI}geo.setAttribute('uv',new THREE.BufferAttribute(a,2));return true}
+function matFx(g,k,b){const K=MATK[k];if(!K)return;const fx=[];g.traverse(o=>{if(!o.isMesh||!o.material||o.name==='artOutl'||o.name==='f'||o.userData.noStone||!o.material.color||!('roughness'in o.material))return;
+  const c=o.material.color,L=c.r*.3+c.g*.59+c.b*.11;if(L<.06||L>.97)return;
+  if(k==='fire'&&!(c.r>c.b*1.3&&c.r>.5))return;const uv=ensureUV(o.geometry),n=o.material.clone();
+  if(k==='fire'){if(uv){n.map=matTex('fireMap');n.emissiveMap=matTex('fireGlow');n.map.repeat.set(1.5,1.5);n.emissiveMap.repeat.set(1.5,1.5)}n.emissive.setHex(K.em);n.emissiveIntensity=K.ei;n.roughness=.85;fx.push([n,'fire',Math.random()*9])}
+  else if(k==='ice'){if(uv){n.map=matTex('ice');n.bumpMap=matTex('ice');n.bumpScale=.02}n.transparent=true;n.opacity=.82;n.roughness=.12;n.metalness=.15;n.emissive.setHex(K.em);n.emissiveIntensity=K.ei;n.flatShading=true;fx.push([n,'ice',Math.random()*9])}
+  else if(k==='ghost'){if(uv)n.map=matTex('ghost');n.transparent=true;n.opacity=.62;n.depthWrite=false;n.emissive.setHex(K.em);n.emissiveIntensity=K.ei;fx.push([n,'ghost',Math.random()*9])}
+  else if(k==='elec'){if(uv)n.emissiveMap=matTex('elec');n.emissive.setHex(K.em);n.emissiveIntensity=K.ei;n.roughness=.4;fx.push([n,'elec',Math.random()*9])}
+  else if(k==='gold'){if(uv){n.map=matTex('gold');n.bumpMap=matTex('gold');n.bumpScale=.01}n.metalness=.55;n.roughness=.28;n.emissive.setHex(K.em);n.emissiveIntensity=K.ei;fx.push([n,'gold',Math.random()*9])}
+  n.needsUpdate=true;o.material=n});g.userData.fxm=fx}
+/* 매 프레임: 불은 일렁, 전기는 가끔 번쩍, 유령은 숨쉬듯, 금은 반짝, 얼음은 은은하게 */
+function matTick(m,t){const fx=m.userData.fxm;if(!fx||!fx.length)return;for(const[n,k,ph]of fx){const q=t+ph;
+  if(k==='fire'){n.emissiveIntensity=1.2+.5*Math.sin(q*7)+.3*Math.sin(q*17.3);if(n.emissiveMap)n.emissiveMap.offset.y=(q*.08)%1}
+  else if(k==='elec'){const z=(q*1.7)%2.2;n.emissiveIntensity=z<.08||(z>.18&&z<.24)?3:.35+.15*Math.sin(q*30)}
+  else if(k==='ghost')n.emissiveIntensity=.3+.25*Math.sin(q*2.2);
+  else if(k==='gold')n.emissiveIntensity=.2+.35*Math.max(0,Math.sin(q*3))**8;
+  else if(k==='ice')n.emissiveIntensity=.22+.08*Math.sin(q*1.5)}}
 function birdMesh3(b,oc){const g=birdMesh2(b,oc),id=b.id,at=(m,x,y,z,s)=>{m.position.set(x,y,z);if(s)m.scale.set(s[0],s[1],s[2]);g.add(m);return m},up=m=>{m.rotation.x=PI/2;return m};
  if(b.race){raceBird(b,g,at,up);return g}
  if(b.combo){const c1=TECH[b.combo[0]].col,c2=TECH[b.combo[1]].col;// 조합 새: 안쪽 덮깃이 두 속성 색으로 은은하게 빛나요
@@ -841,7 +868,7 @@ let talkN=0;function sync3(dt){sync3.talkOn=talkN;talkN=0;try{heroBoard(dt)}catc
   (m.userData.sp||[]).forEach(o=>o.rotation.z+=dt*o.userData.v*(t.dis>0?0:1))}));
  tm.forEach((m,k)=>{if(!seen.has(k)){rmM(m);tm.delete(k)}});craneCone(null);
  const us=new Set();
- p.units.forEach(u=>{us.add(u.id);let m=um.get(u.id);if(m&&m.userData.bp!==u.bp){rmM(m);um.delete(u.id);m=null}if(!m){m=birdMesh3(u.bp,parseInt(PC[u.owner].slice(1),16));artFx('bird',{m,b:u.bp,u});m.userData.bp=u.bp;Sc.add(m);um.set(u.id,m)}
+ p.units.forEach(u=>{us.add(u.id);let m=um.get(u.id);if(m&&m.userData.bp!==u.bp){rmM(m);um.delete(u.id);m=null}if(!m){m=birdMesh3(u.bp,parseInt(PC[u.owner].slice(1),16));artFx('bird',{m,b:u.bp,u});m.userData.bp=u.bp;Sc.add(m);um.set(u.id,m)}if(m.userData.fxm)matTick(m,S.t);
   m.visible=!(u.popT&&S.t<u.popT);m.position.set(u.x,BH-u.y,u.bp.t==='A'?(u.gr>0?.35:1.4):u.fl>0?.75+Math.sin(S.t*5)*.06:.05);{let bb=m.userData.bub;if(u.fl>0&&!bb){bb=m.userData.bub=new THREE.Mesh(new THREE.SphereGeometry(.42,16,12),new THREE.MeshStandardMaterial({color:0xbae6fd,emissive:0x7dd3fc,emissiveIntensity:.5,transparent:true,opacity:.42,roughness:.1,depthWrite:false}));bb.position.z=.28;const hl=new THREE.Mesh(new THREE.SphereGeometry(.07,8,6),new THREE.MeshBasicMaterial({color:0xffffff}));hl.position.set(-.18,-.2,.2);bb.add(hl);m.add(bb)}if(bb)bb.visible=u.fl>0}m.scale.x=m.scale.y/XK;
   // 💬 말하는 새: 끝까지 가는 동안 진행 25%·50%·75%에서 딱 한 마디씩(3번), 1.6초. 화면에 동시에 최대 3개
   if(u.bp.talk){let sp=m.userData.talk;const prog=u.y/BH,nx=u.tkN||0;

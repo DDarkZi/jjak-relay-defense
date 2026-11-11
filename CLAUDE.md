@@ -35,6 +35,7 @@
   7. 마지막에 `renderTitle()` 호출
 
 ## 꼭 알아둘 규칙
+- 🎨 새 재질 상자(2026-11-11): U 데이터에 `mat:'fire'|'ice'|'ghost'|'elec'|'gold'` → `matFx`(코드로 그린 무늬 `matTex` + 빛·투명도, uv 없는 몸통은 `ensureUV`), 움직임은 `matTick`(sync3 유닛 루프, `m.userData.fxm`). 돌은 따로 `stone:1|2`(`stoneify`). 팀 색 부품은 `userData.noStone`으로 건너뜀(색 비교 금지: 불사조 몸 #f97316이 팀 색과 같았음). 1차 6마리: phoenix·frostpeng·ghostcrow·thunderbird·voltbat·hatch_gold. 다음 후보: 해골 까마귀·근위 황새·맥반석 병아리·이끼 두루미·망령 올빼미 → 혜성 매·오로라 올빼미·그림자 부엉이·역병 까마귀·눈보라 갈매기 (사용자 허락 받고 진행).
 - 🎨 팀 표시: 지상 새의 팀 색 목 고리는 사용자 요청으로 뺌(2026-11-11, '디자인을 망침'). 남은 팀 색은 공중 새 날개 끝·꼬리 깃(`birdMesh2`의 `oc`). → 대신 **새 체력바 색 = 보낸 사람 팀 색**(`PC[u.owner]`, 길이가 체력, 보호막이면 흰색 쪽으로 밝힘, sync3).
 - 새 좌표계: 새는 **-y 방향**을 바라보고 z가 위. 몸통 중심 (0,0,0.26), 머리 (0,-0.3,0.46) 반지름 0.15(부엉이 0.2, 병아리 0.17), 타조만 키가 큼(z0 0.6, 머리 z 1.3).
 - 🐥 게임 속 미니 영웅(v13.0, 롤토체스 꼬마 전설이 방식): `p.hero`(0번=SV.hero, AI=`heroRand`, 온라인 손님=hello의 hero를 `heroSafe`로 검사), `heroBoard(dt)`(sync3 맨 앞): 보고 있는 판 주인은 왼쪽 아래(x .5), 그 판을 구경 중인 사람은 왼쪽 위부터 1.5칸 간격으로 위에서 걸어 들어오고 '👀 N번/나' 이름표(`tagTex`). 크기 1.3·카메라 쪽 -0.75 기울임(래퍼 그룹 안 `e.h`에 birdAnim). `visitorsOf(v)`: 나(view)·온라인 손님(`NET._st.gview`)·AI(`p.visit`, 30~90초마다 5초 아무 판). 손님은 스냅샷 `vz`(회전된 번호)·시작 메시지 `heroes`. `heroReset`은 새 게임 시작 때.
