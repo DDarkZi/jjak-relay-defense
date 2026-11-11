@@ -2632,18 +2632,16 @@ $('racex').onclick=()=>{if(!SV.races.includes(raceSel))return tmsg('🏰 먼저 
 $('rc').onclick=e=>{const b=e.target.closest('button');if(!b||!b.dataset.k)return;const k=b.dataset.k;raceView=k;if(SV.races.includes(k))raceSel=k;renderTitle()};
 $('mode').onclick=e=>{const b=e.target.closest('button');if(b&&b.dataset.m)setMode(b.dataset.m)};
 function tryStart(){if(gameMode==='race'){if(!SV.modeOK){openMode();return setMode('race')}if(!SV.races.includes(raceSel)){openMode();ovl('racem',1);return tmsg('🏰 먼저 종족을 하나 골라 주세요')}}start()}
-function rewardUI(win){const e=$('ew');if(!e)return;if(S.sim){e.innerHTML='';return}
- let h='';
- if(win){const c=COIN_WIN[diff]||3;SV.coins+=c;SV.wins++;svSave();
-  h=`<div class="rw">🪶 깃털 코인 +${c} <small>(보유 ${SV.coins})</small></div>`+(SV.modeOK?'':`<div class="m">종족 모드 해금까지 ${Math.min(SV.coins,MODE_COST)}/${MODE_COST}</div>`)}
- else h=`<div class="m">승리하면 🪶 깃털 코인을 얻어요 (보유 ${SV.coins})</div>`;
+function rewardUI(win){const e=$('ew');if(!e)return;if(S.sim){e.innerHTML='';return}if(S.rwd){return}S.rwd=1;
+ /* 🪶 깃털: 우승은 난이도별(E2·N3·M4·H6·X8), 진 판도 등수대로 2~4등 2개 · 5~8등 1개 */
+ const rank=win?1:S.pl.filter(p=>p.alive).length+1,c=win?(COIN_WIN[diff]||3):rank<=4?2:1;SV.coins+=c;if(win)SV.wins++;svSave();
+ let h=`<div class="rw">🪶 깃털 +${c} <small>(${win?'우승':rank+'등'} · 보유 ${SV.coins})</small></div>`;
+ if(win&&!SV.modeOK)h+=`<div class="m">종족 모드 해금까지 ${Math.min(SV.coins,MODE_COST)}/${MODE_COST}</div>`;
  e.innerHTML=h}
 $('tipo').onclick=()=>{$('tipm').style.display='flex'};$('tipx').onclick=()=>{$('tipm').style.display='none'};
 
 // ---------- 🏠 로비 · 🎨 영웅 꾸미기 · 🏞 광장 ----------
-const HATS=[['none','없음','🚫'],['crown','왕관','👑'],['beanie','털모자','🧶'],['cap','야구모자','🧢'],['party','파티모자','🥳'],['ribbon','리본','🎀'],['flower','꽃핀','🌸'],['halo','천사링','😇'],['horns','악마뿔','😈']];
-const FACES=[['none','없음','🙂'],['shades','선글라스','😎'],['pink','핑크안경','🥰'],['mono','외알안경','🧐']];
-const HCOL=[null,0xfde047,0xf97316,0xef4444,0xf472b6,0xa78bfa,0x6366f1,0x38bdf8,0x2dd4bf,0x84cc16,0xf8fafc,0x94a3b8,0x3f3f46];
+/* 🎨 꾸미기(색·모자·얼굴)는 2026-11-11 사용자 요청으로 완전히 뺌 — 영웅은 새 종류 + 이름만 */
 const NICKS=['깃털장인','짹짹대장','먹이도둑','둥지부자','부리부리','날개짱','삐약대장','구구구','꽥꽥이','새벽수탉','모이왕','하늘산책'];
 const heroPool=()=>U.filter(u=>!u.hidden&&u.id!=='egg_legs'&&!u.race);
 /* 🪶 영웅 해금: 기본 3마리 무료, 나머지는 깃털로. 테스트 기간엔 HERO_ALL_OPEN=true로 전부 열어 둠(출시 때 false) */
@@ -2651,28 +2649,10 @@ const HERO_ALL_OPEN=true,HERO_FREE=['chick','duck','penguin'];
 const heroPrice=u=>u.c<300?10:u.c<700?20:u.c<2000?30:50;
 const heroOwn=id=>HERO_ALL_OPEN||HERO_FREE.includes(id)||(SV.heroes||[]).includes(id);
 let hOwned=null;/* 꾸미기 창을 열 때 마지막으로 가진 영웅(잠긴 새를 구경만 하고 닫으면 되돌림) */
-if(!SV.hero||!UB[SV.hero.id])SV.hero={id:'chick',col:null,hat:'crown',face:'none',name:'짹짹이'};
+if(!SV.hero||!UB[SV.hero.id])SV.hero={id:'chick',name:'짹짹이'};delete SV.hero.col;delete SV.hero.hat;delete SV.hero.face;
 function heroTag(){try{return UB[SV.hero.id].ic+SV.hero.name}catch(e){return '나'}}
 const hexS=c=>'#'+c.toString(16).padStart(6,'0');
 function headPos(id){const tall=id==='ostrich',z0=tall?.6:.26+(LIFT[id]||0);if(HEADX[id])return HEADX[id];return{hz:tall?1.3:z0+.2,hy:tall?-.28:-.3,hr:id==='owl'?.2:id==='chick'?.17:.15}}
-const HOWN=new Set(['turkey','pirate','duck','eggchief','comet','thunderbird','ghostcrow','seagull','stormeagle','pelican','blizgull']);
-function heroDeco(m,b,cfg,hp){const{hz,hy,hr}=hp||headPos(b.id),top=hz+hr,g=new THREE.Group();g.name='heroDeco';g.position.y=hy;m.add(g);
- const put=(o,x,y,z,rx,ry,rz,s)=>{o.position.set(x,y,z);o.rotation.set(rx||0,ry||0,rz||0);if(s)o.scale.set(s[0],s[1],s[2]);g.add(o);return o};
- const dome=(r,c)=>M(GC('hdome'+r,()=>new THREE.SphereGeometry(r,22,10,0,PI*2,0,PI/2)),c),GLD={metalness:.55,roughness:.3};
- const h=HOWN.has(b.id)?'none':cfg.hat,f=cfg.face,s1=hr/.15;// 전용 모자가 있는 새는 겹치지 않게 영웅 모자를 안 씌워요
- if(h==='crown'){put(TR(.1*s1,.022,0xfacc15,GLD),0,0,top-.015);for(let i=0;i<5;i++){const a=i*PI*2/5;put(KO(.032,.1,0xfacc15,GLD),Math.cos(a)*.1*s1,Math.sin(a)*.1*s1,top+.035,PI/2)}put(SP(.026,0xef4444),0,-.1*s1,top+.01)}
- else if(h==='beanie'){put(dome(hr*1.06,0xef4444),0,0,hz+hr*.22,PI/2);put(TR(hr*1.0,.032,0xf8fafc),0,0,hz+hr*.25);put(SP(.045,0xf8fafc),0,0,hz+hr*1.3)}
- else if(h==='cap'){put(dome(hr*1.05,0x2563eb),0,0,hz+hr*.25,PI/2);put(BX(.17*s1,.16*s1,.018,0x1d4ed8),0,-hr*.9,hz+hr*.32,-.18);put(SP(.018,0xfde047),0,0,hz+hr*1.3)}
- else if(h==='party'){put(KO(.07,.22,0xa855f7),0,0,top+.08,PI/2,0,0);put(TR(.05,.013,0xfde047),0,0,top+.05);put(SP(.032,0xfde047),0,0,top+.2)}
- else if(h==='ribbon'){put(SP(.03,0xf472b6),hr*.55,0,top-.03);put(KO(.045,.1,0xf472b6),hr*.55-.06,0,top-.03,0,0,-PI/2);put(KO(.045,.1,0xf472b6),hr*.55+.06,0,top-.03,0,0,PI/2)}
- else if(h==='flower'){const cx=hr*.5;for(let i=0;i<5;i++){const a=i*PI*2/5;put(SP(.032,0xf9a8d4),cx+Math.cos(a)*.042,Math.sin(a)*.042,top-.02,0,0,0,[1,1,.5])}put(SP(.026,0xfde047),cx,0,top-.005)}
- else if(h==='halo')put(TR(.11*s1,.017,0xfde047,{emissive:0xfacc15,emissiveIntensity:.9}),0,0,top+.13);
- else if(h==='horns')[-1,1].forEach(s=>put(KO(.032,.12,0xdc2626),s*hr*.5,0,top-.01,PI/2,0,-s*.45));
- const ey=hp?hp.ey:-.09-.055,ez=hp?hp.ez:hz+.06,ex=hp?hp.ex:.08;
- if(f==='shades'){[-1,1].forEach(s=>put(BX(.08,.02,.055,0x111827,{metalness:.5,roughness:.2}),s*ex,ey,ez));put(BX(.06,.015,.012,0x111827),0,ey-.004,ez+.012)}
- else if(f==='pink'){[-1,1].forEach(s=>put(SP(.045,0xf43f5e,{transparent:true,opacity:.8}),s*ex,ey,ez,0,0,0,[1,.3,.85]));put(BX(.06,.015,.012,0xbe123c),0,ey,ez+.01)}
- else if(f==='mono')put(TR(.04,.009,0xfacc15,GLD),ex,ey,ez,PI/2);
- return g}
 // 🧸 AI 3D 영웅 모델(Hyper3D Rodin → assets/models/*.glb, 1.2만 면·512 텍스처). 로비·꾸미기·광장에서만 써요(게임판은 가벼운 기존 모델)
 // h: 키, hp: 모자·안경 위치(머리 높이 hz·앞뒤 hy·반지름 hr, 눈 ey·ez·간격 ex)
 const HGLB={chick:{f:'assets/models/chick_anim.glb',h:.75,hp:{hz:.45,hy:-.02,hr:.2,ey:-.21,ez:.38,ex:.1}}},HG={};
@@ -2687,12 +2667,11 @@ function skinClone(src){const c=src.clone(true),sL=new Map(),cL=new Map();const 
  c.traverse(o=>{if(!o.isSkinnedMesh)return;const so=sL.get(o),sk=so.skeleton.clone();sk.bones=so.skeleton.bones.map(b=>cL.get(b));o.bind(sk,so.bindMatrix)});return c}
 function heroMeshAI(cfg,b0){const src=hglbGet(cfg.id);if(!src)return null;const m=new THREE.Group(),c=skinClone(src);m.add(c);
  if(src.userData.clips.length){const mx=new THREE.AnimationMixer(c),A={};src.userData.clips.forEach(k=>A[k.name]=mx.clipAction(k));m.userData.mix={mx,A,cur:null,t:null,ft:3+Math.random()*3}}
- if(cfg.col!=null)c.traverse(o=>{if(o.isMesh){o.material=o.material.clone();o.material.color.setHex(cfg.col).lerp(new THREE.Color(0xffffff),.45)}});
- m.userData.w=[];heroDeco(m,b0,cfg,HGLB[cfg.id].hp);m.userData.b=b0;m.userData.ai=1;return m}
+ m.userData.w=[];m.userData.b=b0;m.userData.ai=1;return m}
 function heroMesh(cfg){const b0=UB[cfg.id]||UB.chick,ai=heroMeshAI(cfg,b0);if(ai)return ai;const b=b0.t==='A'?Object.assign({},b0,{t:'G'}):b0,m=birdMesh3(b,0x60a5fa);artFx('bird',{m,b,dex:true});// 영웅은 받침대 위에 서 있으니 공중 새도 날개 접고 발로 서게
  m.traverse(o=>{if(o.name==='artOutl'||(o.geometry&&o.geometry.type==='TorusGeometry'&&o.material&&o.material.color&&o.material.color.getHex()===0x60a5fa))o.visible=false;});// 영웅은 가까이 보니까 게임판용 외곽선·팀 고리는 숨겨요
- m.traverse(o=>{if(o.geometry&&o.geometry.type==='PlaneGeometry')o.visible=false;else if(cfg.col!=null&&o.material&&o.material.color&&!(o.name||'').startsWith('art')&&o.material.color.getHex()===b.col)o.material.color.setHex(cfg.col)});
- heroDeco(m,b,cfg);m.userData.b=b0;return m}
+ m.traverse(o=>{if(o.geometry&&o.geometry.type==='PlaneGeometry')o.visible=false;});
+ m.userData.b=b0;return m}
 /* 3D 영웅 애니메이션(idle·walk·flap): 걸으면 walk, 서 있으면 idle, 가끔 flap 한 번 */
 function heroPlay(X,n,fade){const a=X.A[n];if(!a||X.cur===n)return;const o=X.A[X.cur];a.reset();if(n==='flap'){a.setLoop(THREE.LoopRepeat,2)}a.play();if(o)a.crossFadeFrom(o,fade||.2,false);X.cur=n}
 function heroClip(X,t,walk){const dt=X.t==null?0:Math.min(.1,Math.max(0,t-X.t));X.t=t;X.ft-=dt;
@@ -2730,7 +2709,7 @@ function pzBuild(){const sc=new THREE.Scene();lobLights(sc);PZ={sc,b:[],t:0,nt:2
  for(let i=0;i<7;i++){const a=i*PI*2/7+.3,x=Math.cos(a)*6.6,y=Math.sin(a)*6.6;S3(cy(.09,.12,.6),0x92400e,x,y,.25);const k=new THREE.ConeGeometry(.55,1.1,18);k.rotateX(PI/2);S3(k,i%2?0x16a34a:0x22c55e,x,y,1.05);const k2=new THREE.ConeGeometry(.42,.8,18);k2.rotateX(PI/2);S3(k2,0x4ade80,x,y,1.55)}
  PZ.cam=new THREE.PerspectiveCamera(42,1,.1,100);PZ.cam.up.set(0,0,1);
  PZ.me=pzBird(SV.hero,SV.hero.name,1);PZ.b.push(PZ.me);
- const pool=heroPool();for(let i=0;i<7;i++){const u=pool[Math.floor(Math.random()*pool.length)];PZ.b.push(pzBird({id:u.id,col:Math.random()<.35?HCOL[1+Math.floor(Math.random()*12)]:null,hat:HATS[Math.floor(Math.random()*HATS.length)][0],face:Math.random()<.3?FACES[1+Math.floor(Math.random()*3)][0]:'none'},NICKS[(i*5+Math.floor(Math.random()*12))%12]+'_'+(100+Math.floor(Math.random()*900)),0))}
+ const pool=heroPool();for(let i=0;i<7;i++){const u=pool[Math.floor(Math.random()*pool.length)];PZ.b.push(pzBird({id:u.id},NICKS[(i*5+Math.floor(Math.random()*12))%12]+'_'+(100+Math.floor(Math.random()*900)),0))}
  try{aiPlazaAdd()}catch(e){}
  $('pzn').textContent=`👥 ${PZ.b.length}명 · 지금은 AI 친구들 (온라인 준비 중)`;
  const ray=new THREE.Raycaster(),pl=new THREE.Plane(new THREE.Vector3(0,0,1),0),v=new THREE.Vector3();
@@ -2755,21 +2734,17 @@ function lobUI(){try{$('lwin').textContent=SV.wins||0;$('lhic').textContent=UB[S
  $('lmodet').innerHTML=(gameMode==='race'?'🏰 종족 모드'+(SV.races.includes(raceSel)?' · '+RACE[raceSel].ic+RACE[raceSel].n:''):'🐥 일반 모드')+'<small class="lmd">난이도 '+DIFF[diff].n.split(' ').pop()+'</small>'}catch(e){}}
 const ovl=(id,on)=>{$(id).style.display=on?'flex':'none'};
 function openMode(){ovl('modem',1);renderTitle()}
-let hTab='sp';
-function heroOpt(){const h=SV.hero,o=$('hopt');[...$('htab').children].forEach(b=>b.className=b.dataset.h===hTab?'on':'');
- if(hTab==='sp'){const cu=UB[h.id],lk=!heroOwn(h.id);
+function heroOpt(){const h=SV.hero,o=$('hopt');
+ {const cu=UB[h.id],lk=!heroOwn(h.id);
   o.innerHTML=(HERO_ALL_OPEN?'<div class="hnote">🧪 테스트 기간: 모든 영웅이 열려 있어요</div>':lk?`<div class="hbuy">🔒 <b>${cu.sn||cu.n}</b> 구경 중 · 🪶${heroPrice(cu)}로 해금 <button id="hbuyb">🔓 해금</button></div>`:'')+
    heroPool().map(u=>{const own=heroOwn(u.id);return `<button data-v="${u.id}" class="${h.id===u.id?'on':''}${own?'':' hlk'}"><i>${u.ic}</i>${u.sn||u.n}${own?'':`<small>🔒🪶${heroPrice(u)}</small>`}</button>`}).join('');
-  const bb=$('hbuyb');if(bb)bb.onclick=e=>{e.stopPropagation();const p=heroPrice(cu);if(SV.coins<p){$('hbuyb').textContent=`🪶 ${SV.coins}/${p} 부족`;return}SV.coins-=p;(SV.heroes=SV.heroes||[]).push(h.id);hOwned=h.id;svSave();heroOpt();lobUI();renderTitle()}}
- else if(hTab==='col')o.innerHTML=HCOL.map((c,i)=>`<button data-v="${i}" class="sw ${h.col===c?'on':''}" style="background:${c==null?'linear-gradient(135deg,#64748b,#cbd5e1)':hexS(c)}">${c==null?'기본':''}</button>`).join('');
- else{const L=hTab==='hat'?HATS:FACES,cur=hTab==='hat'?h.hat:h.face;o.innerHTML=L.map(([k,n,ic])=>`<button data-v="${k}" class="${cur===k?'on':''}"><i>${ic}</i>${n}</button>`).join('')}}
+  const bb=$('hbuyb');if(bb)bb.onclick=e=>{e.stopPropagation();const p=heroPrice(cu);if(SV.coins<p){$('hbuyb').textContent=`🪶 ${SV.coins}/${p} 부족`;return}SV.coins-=p;(SV.heroes=SV.heroes||[]).push(h.id);hOwned=h.id;svSave();heroOpt();lobUI();renderTitle()}}}
 function openHero(){hOwned=heroOwn(SV.hero.id)?SV.hero.id:HERO_FREE[0];lobMode='hero';ovl('herom',1);lobAttach($('hpv'));$('hname').value=SV.hero.name;heroOpt()}
 function closeHero(){const n=$('hname').value.trim();if(n)SV.hero.name=n.slice(0,10);if(!heroOwn(SV.hero.id))SV.hero.id=hOwned&&heroOwn(hOwned)?hOwned:HERO_FREE[0];svSave();ovl('herom',0);lobMode='lobby';lobAttach($('lstage'));lobUI()}
 function openPlaza(){lobMode='plaza';ovl('plaza',1);lobAttach($('plv'));if(PZ){PZ.me.x=0;PZ.me.y=-2.6;PZ.me.go=0}}
 function closePlaza(){ovl('plaza',0);lobMode='lobby';lobAttach($('lstage'))}
-$('htab').onclick=e=>{const b=e.target.closest('button');if(b&&b.dataset.h){hTab=b.dataset.h;heroOpt()}};
-$('hopt').onclick=e=>{const b=e.target.closest('button');if(!b)return;const v=b.dataset.v,h=SV.hero;if(hTab==='sp'){h.id=v;if(heroOwn(v))hOwned=v}else if(hTab==='col')h.col=HCOL[+v];else if(hTab==='hat')h.hat=v;else h.face=v;svSave();heroOpt();lobUI()};
-$('hrand').onclick=()=>{const p=heroPool().filter(u=>heroOwn(u.id));Object.assign(SV.hero,{id:p[Math.floor(Math.random()*p.length)].id,col:HCOL[Math.floor(Math.random()*HCOL.length)],hat:HATS[Math.floor(Math.random()*HATS.length)][0],face:FACES[Math.floor(Math.random()*FACES.length)][0]});svSave();heroOpt();lobUI()};
+$('hopt').onclick=e=>{const b=e.target.closest('button');if(!b)return;const v=b.dataset.v,h=SV.hero;h.id=v;if(heroOwn(v))hOwned=v;svSave();heroOpt();lobUI()};
+$('hrand').onclick=()=>{const p=heroPool().filter(u=>heroOwn(u.id));SV.hero.id=p[Math.floor(Math.random()*p.length)].id;svSave();heroOpt();lobUI()};
 $('herox').onclick=closeHero;$('heroo').onclick=openHero;$('lhero').onclick=openHero;$('lhint').onclick=openHero;
 $('modeb').onclick=openMode;$('modex').onclick=()=>{ovl('modem',0);lobUI()};
 $('plz').onclick=openPlaza;$('pzx').onclick=closePlaza;
@@ -2795,7 +2770,7 @@ function tutOpen(){if(!S||S.net||S.sim||$('tut'))return;const pv=paused;paused=t
 // ---------- 📢 마스코트 AI(Avian Influencer) 출연: 로비 · 튜토리얼 · 게임 속보 · 광장 · 결과 화면 ----------
 const AIL={
  intro:['안녕! 난 AI야 📢','인공지능 아니고 Avian Influencer, 조류 인플루언서의 줄임말!','짹튜브 「짹짹 뉴스」 구독자 800만 새! 나를 누르면 또 말해 줄게 🚨'],
- lobby:['📢 속보: 도도새 또 살아 돌아옴. 아무도 안 놀람','꿀팁! 새를 막으면 그 새 값의 20%가 내 돈이야 💰','프로펠러가 4개인데 날개는 왜 있냐고? …패션이야','7분이 되면 피해 2배! 그 전에 수비를 튼튼히 🛡','옆 사람이 무너지면 그 새들이 나한테 와. 릴레이니까!','타조 발레 공연, 이번 주도 매진이래 🩰','영웅을 눌러서 꾸며 봐. 왕관 강추 👑','구독·좋아요·알림 설정! …여긴 버튼이 없구나','광장에 자주 놀러 가. 거기서도 생방송 중이야 🎥','미로를 길게 만들수록 새가 오래 맞아. 이건 과학이야','속성 2개를 고르면 조합 스킬이 열려! 해금하면 내가 특종 낼게','오늘의 운세: 깡패 거위 조심 🪿'],
+ lobby:['📢 속보: 도도새 또 살아 돌아옴. 아무도 안 놀람','꿀팁! 새를 막으면 그 새 값의 20%가 내 돈이야 💰','프로펠러가 4개인데 날개는 왜 있냐고? …패션이야','7분이 되면 피해 2배! 그 전에 수비를 튼튼히 🛡','옆 사람이 무너지면 그 새들이 나한테 와. 릴레이니까!','타조 발레 공연, 이번 주도 매진이래 🩰','영웅을 눌러서 다른 새로 바꿔 봐 🐦','구독·좋아요·알림 설정! …여긴 버튼이 없구나','광장에 자주 놀러 가. 거기서도 생방송 중이야 🎥','미로를 길게 만들수록 새가 오래 맞아. 이건 과학이야','속성 2개를 고르면 조합 스킬이 열려! 해금하면 내가 특종 낼게','오늘의 운세: 깡패 거위 조심 🪿'],
  plaza:['📢 광장 생중계 중! 다들 손 흔들어 👋','방금 들어온 제보: 펭귄 삼형제 또 줄 서서 다님','누가 내 사진 찍었어? 초상권 있다!','오늘의 인기 검색어 1위: 「도도새 안 죽는 법」','짹짹 뉴스 AI였습니다~ 다음 소식!','여기 분수대 물 마시지 마세요. 갈매기가 씻었어요','8인 온라인 대전이 열리면 제일 먼저 중계할게!'],
  chat:['불렀어? 📢 조류 인플루언서 AI 등장!','구독자 800만 새, 오늘도 생방송 중이야','AI는 인공지능 아니고 Avian Influencer라니까~','제보는 언제나 환영! 특종이면 1면에 실어 줄게'],
  win:['🎉 특종! {n} 우승! 내일 아침 1면이야','구독자 800만 새가 박수 치는 중 👏👏','오늘의 MVP 인터뷰 잡아 놨어. 한마디 해 줘!'],
@@ -2823,8 +2798,8 @@ function aiPlazaAdd(){if(!PZ||PZ.ai||!aiMascotGet())return;const w=new THREE.Gro
 /* 결과 화면: AI 기자의 한마디 */
 function aiEnd(win){const e=$('ew');if(!e||!S||S.sim)return;const k=win===null?'spec':win?(SV.wins===1?'first':'win'):'lose';const d=document.createElement('div');d.className='aiend';d.innerHTML='<img src="assets/ui/ai.png" alt="AI"><p></p>';d.lastChild.textContent=aiPick(k);e.prepend(d)}
 // ---------- 🐥 게임 속 미니 영웅(롤토체스 꼬마 전설이처럼): 판 주인은 왼쪽 아래, 정찰 온 영웅은 왼쪽 위로 걸어 들어와요 ----------
-function heroRand(){const P=heroPool(),u=P[Math.floor(Math.random()*P.length)];return{id:u.id,col:Math.random()<.3?HCOL[1+Math.floor(Math.random()*(HCOL.length-1))]:null,hat:Math.random()<.65?HATS[1+Math.floor(Math.random()*(HATS.length-1))][0]:'none',face:Math.random()<.25?FACES[1+Math.floor(Math.random()*(FACES.length-1))][0]:'none'}}
-function heroSafe(h){/* 온라인으로 받은 영웅 설정 검사 */if(!h||!UB[h.id]||!heroPool().some(u=>u.id===h.id))return heroRand();return{id:h.id,col:typeof h.col==='number'?h.col:null,hat:HATS.some(x=>x[0]===h.hat)?h.hat:'none',face:FACES.some(x=>x[0]===h.face)?h.face:'none'}}
+function heroRand(){const P=heroPool(),u=P[Math.floor(Math.random()*P.length)];return{id:u.id}}
+function heroSafe(h){/* 온라인으로 받은 영웅 설정 검사 */if(!h||!UB[h.id]||!heroPool().some(u=>u.id===h.id))return heroRand();return{id:h.id}}
 const HB=new Map();
 function heroReset(){HB.forEach(e=>{if(e.m&&e.m.parent)e.m.parent.remove(e.m);if(e.tag&&e.tag.parent)e.tag.parent.remove(e.tag)});HB.clear()}
 {const st2=start;start=function(gs,p0h){const r=st2.apply(this,arguments);if(!gs&&S){heroReset();S.pl.forEach((p,i)=>{p.hero=i===0?Object.assign({},SV.hero):heroRand();p.vt=15+Math.random()*40})}return r}}
