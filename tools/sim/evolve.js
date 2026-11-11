@@ -2,7 +2,7 @@
 // 사용: node tools/sim/evolve.js 상태.json 세대수 [판수/후보=8] [개체수=14]   (이어서 돌리면 상태 파일에서 계속)
 // 마지막 결과: 상태.json 의 best(가장 강한 유전자)·hist(세대별 점수)
 const {chromium}=require('playwright'),fs=require('fs'),path=require('path');const root=path.resolve(__dirname,'../..');
-const [stf,G0,K0,P0]=process.argv.slice(2);const SELF=+(process.env.SELF||0),GENS=+G0||3,K=+K0||8,POP=+P0||14,PAR=4,DK='X';
+const [stf,G0,K0,P0]=process.argv.slice(2);const OLD=process.env.OLD?JSON.parse(fs.readFileSync(process.env.OLD)):null,SELF=+(process.env.SELF||0),GENS=+G0||3,K=+K0||8,POP=+P0||14,PAR=4,DK='X';
 const STUB="const __mk=()=>new Proxy(function(){},{get:(t,p)=>p===Symbol.toPrimitive?(()=>0):__mk(),apply:()=>__mk(),construct:()=>__mk(),set:()=>true});window.THREE=__mk();";
 const FAVK=['pelican','phoenix','archaeo','duck','kiwi','egg_legs','humbee','ghostcrow','crane','peacock','ostrich','eagle'];
 const PAGEFN=`window.evalCand=function(cand,dk,seat,opp){opp=opp||[];R=R||__mk();Sc=Sc||__mk();Cam=Cam||__mk();diff=dk;
@@ -23,7 +23,7 @@ function cross(pg,a,b){return pg.evaluate(([a,b])=>{const g=crossG(a,b);g.tech=M
   const pick=seeds.sort(()=>Math.random()-.5).slice(0,POP-4);const hell=seeds.filter(s=>s.fl&&(s.fl.scout||s.fl.kz||s.fl.jug));const pop=[...pick,...hell];
   while(pop.length<POP)pop.push(await mutate(pages[0],pick[pop.length%pick.length],.25));st={gen:0,pop:pop.map(g=>{delete g.n;return g}),hist:[],best:null,games:0}}
  if(process.env.VAL){/* 검증: 개체마다 실제 AI 풀하고만 VAL판 → 우승률·평균 점수 순위 */const N=+process.env.VAL,tasks=[];st.pop.forEach((c,ci)=>{for(let k=0;k<N;k++)tasks.push([ci,k%8])});const res=st.pop.map(()=>({s:0,n:0,w:0}));let ti=0;
-  await Promise.all(pages.map(async pg=>{while(ti<tasks.length){const [ci,seat]=tasks[ti++];try{const r=await pg.evaluate(([c,dk,s])=>evalCand(c,dk,s,[]),[st.pop[ci],process.env.DK||DK,seat]);res[ci].s+=r.sc;res[ci].n++;res[ci].w+=r.win}catch(e){}}}));
+  await Promise.all(pages.map(async pg=>{while(ti<tasks.length){const [ci,seat]=tasks[ti++];try{const opp=OLD?OLD.slice().sort(()=>Math.random()-.5).slice(0,7):[];const r=await pg.evaluate(([c,dk,s,op])=>evalCand(c,dk,s,op),[st.pop[ci],process.env.DK||DK,seat,opp]);res[ci].s+=r.sc;res[ci].n++;res[ci].w+=r.win}catch(e){}}}));
   st.val=res.map((r,i)=>({i,f:+(r.s/r.n).toFixed(2),w:+(r.w/r.n).toFixed(2)})).sort((a,b)=>b.w-a.w||b.f-a.f);console.log(JSON.stringify(st.val));fs.writeFileSync(stf,JSON.stringify(st));await br.close();return}
  for(let G=0;G<GENS;G++){const tasks=[];st.pop.forEach((c,ci)=>{for(let k=0;k<K;k++)tasks.push([ci,k%8])});const res=st.pop.map(()=>({s:0,n:0,w:0}));let ti=0;
   await Promise.all(pages.map(async pg=>{while(ti<tasks.length){const [ci,seat]=tasks[ti++];try{const opp=SELF?st.pop.filter((_,k)=>k!==ci).sort(()=>Math.random()-.5).slice(0,SELF):[];const r=await pg.evaluate(([c,dk,s,op])=>evalCand(c,dk,s,op),[st.pop[ci],DK,seat,opp]);res[ci].s+=r.sc;res[ci].n++;res[ci].w+=r.win}catch(e){}}}));
