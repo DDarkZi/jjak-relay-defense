@@ -64,9 +64,9 @@ const U=[
 {id:'phoenix',n:'불사조',c:1300,hp:1950,sp:1.4,t:'A',dm:6,inc:85,revive:1,tech:'fire',ic:'🔥',col:0xf97316,x:'한 번 부활'},
 {id:'humbee',n:'벌새',c:360,hp:125,sp:1.9,t:'G',dm:1,inc:19,count:6,cntR:[5,7],swarm:1,ic:'🐝',col:0xfacc15,x:'5~7마리 떼 · 너무 작아서 강타형 타워(공격 간격 1.5초 이상)의 피해를 절반만 받아요'},
 {id:'pelican',n:'펠리컨',c:3000,hp:5200,sp:.8,t:'A',dm:10,inc:190,carry:8,ic:'🚌',col:0xf8fafc,x:'쓰러지면 부리 주머니에서 승객 새 8마리가 쏟아져 지상으로 걸어가요'},
-{id:'demcrane',n:'철거반장 두루미',c:4800,hp:8200,sp:.75,t:'G',dm:14,inc:250,grab:1,ic:'🏗️',col:0xf1f5f9,talk:['이거 불법 건축물이에요~','철거 들어갑니다!','민원 접수됐습니다'],x:'6초마다 길가 타워 하나를 부리로 번쩍 들어 4초 동안 들고 다녀요(그동안 그 타워는 공격 못 해요)'},
-{id:'archaeo',n:'시조새',c:5000,hp:8600,sp:.75,t:'A',dm:21,inc:300,fossil:1,ic:'🦖',col:0x8b6b4a,talk:['요즘 타워는 처음 보네…','1억 5천만 년 만의 외출!','깃털… 내 깃털…'],x:'체력이 절반이 되면 깃털이 빠져 땅에 쿵! 착지해요(주변 타워 2초 기절). 그 뒤로는 공룡처럼 땅으로 달려요'},
-{id:'archaeo_g',hidden:1,n:'털 빠진 시조새',c:5000,hp:8600,sp:1.05,t:'G',dm:21,inc:0,ic:'🦖',col:0xf3b4a4,x:'깃털이 다 빠져 공룡처럼 달려요'},
+{id:'demcrane',n:'철거반장 두루미',c:4800,hp:8200,sp:.75,t:'G',dm:14,inc:250,grab:1,ic:'🏗️',col:0xf1f5f9,talk:['이거 불법 건축물이에요~','철거 들어갑니다!','민원 접수됐습니다'],x:'6초마다 멈춰서 근처 타워를 부리로 집어 4초 동안 머리에 이고 걸어가요(그동안 공격 불가). Lv.2 이하는 근처 빈칸으로 옮겨 놓고(미로는 절대 안 막아요), 더 높거나 빈칸이 없으면 제자리에 돌려놔요'},
+{id:'archaeo',n:'시조새',c:5500,hp:8600,sp:.75,t:'A',dm:21,inc:330,fossil:1,ic:'🦖',col:0x8b6b4a,talk:['요즘 타워는 처음 보네…','1억 5천만 년 만의 외출!','깃털… 내 깃털…'],x:'체력이 절반이 되면 깃털이 빠져 땅에 쿵! 착지해요(주변 타워 2초 기절). 그 뒤로는 공룡처럼 땅으로 달려요'},
+{id:'archaeo_g',hidden:1,n:'털 빠진 시조새',c:5500,hp:8600,sp:1.05,t:'G',dm:21,inc:0,ic:'🦖',col:0xf3b4a4,x:'깃털이 다 빠져 공룡처럼 달려요'},
 {id:'crocbird',n:'악어새',c:1600,hp:3300,sp:.75,t:'G',dm:6,inc:110,rage:1,ic:'🐊',col:0xb8bec9,x:'악어를 타고 와요 · 체력이 35% 아래로 떨어지면 악어가 화나서 1.6배 빨라져요'},
 {id:'ostrich',n:'타조타이탄',c:1900,hp:4500,sp:.7,t:'G',dm:8,inc:130,ic:'🦩',col:0x292524,x:'발레를 하며 빙글빙글 돌아요(능력은 없음)'},
 // ✨ 조합 새
@@ -291,7 +291,9 @@ const rOf=p=>p&&p.race?RACE[p.race]:null,raceOK=(p,x)=>{const r=rOf(p);return(!x
  tcost=(p,b)=>Math.max(1,Math.round(b.c*((rOf(p)&&rOf(p).tc)||1))),ucost=(p,b)=>Math.max(1,Math.round(b.c*((rOf(p)&&rOf(p).uc)||1))),refR=p=>(rOf(p)&&rOf(p).ref)||.7,
  mkR=(b,p)=>{const t=mk(b),r=rOf(p);if(r&&r.tr&&b.r)t.r+=r.tr;return t};
 function raceAssign(gs){if(gs&&gs.races)return gs.races;if(!gs&&gameMode==='normal')return Array(8).fill(null);const a=[];RK_KEYS.forEach(k=>{a.push(k,k)});for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}if(!gs){const j=a.indexOf(raceSel);[a[0],a[j]]=[a[j],a[0]]}return a}
-const banOf=(p,x)=>{const r=rOf(p);return !!(r&&r.ban&&r.ban.includes(x.id))},banMsg=(p,x)=>{const r=rOf(p);return `🚫 ${r.ic} ${r.n}은(는) ${x.n}을(를) 쓸 수 없어요 (종족 규칙)`};
+/* 한국어 조사: 마지막 글자 받침이 있으면 a(을·은·이), 없으면 b(를·는·가) */
+const jo=(w,a,b)=>{const c=String(w).replace(/[^가-힣0-9A-Za-z]+$/,'').slice(-1),k=c.charCodeAt(0);if(k>=0xAC00&&k<=0xD7A3)return w+((k-0xAC00)%28?a:b);return w+(/[136780LMNRlmnr]$/.test(c)?a:b)};
+const banOf=(p,x)=>{const r=rOf(p);return !!(r&&r.ban&&r.ban.includes(x.id))},banMsg=(p,x)=>{const r=rOf(p);return `🚫 ${r.ic} ${jo(r.n,'은','는')} ${jo(x.n,'을','를')} 쓸 수 없어요 (종족 규칙)`};
 const has=(p,k)=>p.tech===k||p.tech2===k,techOK=(p,x)=>(!x.tech||has(p,x.tech))&&(!x.combo||(has(p,x.combo[0])&&has(p,x.combo[1])))&&raceOK(p,x),hasBat=p=>has(p,'dark');
 const im=(u,k)=>!!(u.bp.imm&&u.bp.imm.includes(k)),comboOf=(a,b)=>COMBO.find(c=>c.k.includes(a)&&c.k.includes(b)),tIcons=p=>(p.tech?TECH[p.tech].ic:'')+(p.tech2?TECH[p.tech2].ic:'');
 const cnt=g=>g.flat().filter(Boolean).length;
@@ -310,6 +312,18 @@ const gainInc=(p,b)=>Math.max(1,Math.round(b.inc*BAL.ui*BAL.incS/(BAL.incS+p.inc
 function kbU(u,n,force){if(!force&&(im(u,'kb')||u.kbt>0))return;if(u.bp.t==='G'&&u.pi>1)u.pi=Math.max(0,u.pi-2*n);else u.y=Math.max(cellY(0),u.y-1.1*n);u.kbt=7+Math.random()*3}
 function addPois(u,pv,src){u.pst=Math.min(BAL.pmax,(u.pst||0)+1);u.ps=BAL.pdur;if(pv>=(u.pv||0)){u.pv=pv;u.psrc=src}}
 function dmgU(u,d){if(u.amp>0)d*=1.35;const h0=Math.max(0,u.hp)+Math.max(0,u.sh||0),d0=d;if(u.sh>0){const a=Math.min(u.sh,d);u.sh-=a;d-=a}u.hp-=d;u.hit=.1;return Math.min(h0,d0)}
+/* 🏗 공사 고깔: 두루미가 타워를 이고 간 동안 원래 자리에 세워 둬요(그 칸은 여전히 막혀 있어요) */
+const CONE=new Map();function craneCone(t,x,y){if(!t){CONE.forEach((c,tt)=>{if(!tt.carrier||!c.on){Sc.remove(c.m);CONE.delete(tt)}else c.on=0});return}
+ let c=CONE.get(t);if(!c){const g=new THREE.Group(),o=new THREE.Mesh(new THREE.ConeGeometry(.16,.42,10),new THREE.MeshStandardMaterial({color:0xf97316}));o.rotation.x=PI/2;o.position.z=.21;g.add(o);
+  const w=new THREE.Mesh(new THREE.CylinderGeometry(.12,.135,.06,10),new THREE.MeshStandardMaterial({color:0xffffff}));w.rotation.x=PI/2;w.position.z=.2;g.add(w);Sc.add(g);c={m:g};CONE.set(t,c)}c.on=1;c.m.position.set(x,y,0)}
+/* 🏗 철거반장이 든 타워 내려놓기: Lv.2 이하면 두루미 근처 빈칸 중 미로·새 길을 막지 않는 곳으로, 아니면 제자리 */
+function craneDrop(p,u,move){const c=u.carry;if(!c)return;u.carry=null;const t=c.t;t.carrier=null;t.dis=.6;if(!p.grid[c.oy]||p.grid[c.oy][c.ox]!==t)return;
+ if(move&&t.lv<=2){const cs=[];for(let y=1;y<ROWS-1;y++)for(let x=0;x<COLS;x++){if(p.grid[y][x])continue;const d=Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y);if(d<=2.6&&!(x===c.ox&&y===c.oy))cs.push([d,x,y])}cs.sort((a,b)=>a[0]-b[0]);
+  for(const[,x,y]of cs){if(p.units.some(o=>Math.hypot(o.x-cellX(x,y),o.y-cellY(y))<.6))continue;p.grid[c.oy][c.ox]=null;p.grid[y][x]=t;
+   const ok=allOK(p.grid)&&p.units.every(o=>{if(o.bp.t!=='G'||o===u&&false)return true;const n=nearCell(o.x,o.y);return !!bfs(p.grid,n.x,n.y)});
+   if(ok){refreshPaths(p);if(p.id===view&&!S.sim){sfx('build');artFx('smoke',{x:cellX(x,y),y:BH-cellY(y),r:.7,col:0xfacc15});if(p.id===0)toast(`🏗 철거반장이 ${jo(t.bp.n,'을','를')} 옮겼어요! "불법 건축물이에요~"`)}return}
+   p.grid[y][x]=null;p.grid[c.oy][c.ox]=t}}
+ if(p.id===view&&!S.sim)artFx('smoke',{x:cellX(c.ox,c.oy),y:BH-cellY(c.oy),r:.5,col:0xd6c7a1})}
 /* 🦖 시조새 착지: 가장 가까운 빈칸에 내려와 지상형으로 바뀌고, 주변 타워 2초 기절 */
 function fossilLand(p,u){const cs=[];for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)if(!p.grid[y][x])cs.push([Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y),x,y]);cs.sort((a,b)=>a[0]-b[0]);
  for(const[,x,y]of cs.slice(0,12)){const np=bfs(p.grid,x,y);if(!np)continue;const r=u.hp/u.bp.hp;u.bp=UB.archaeo_g;u.hp=u.bp.hp*r;u.path=np;u.pi=0;u.gr=0;u.x=cellX(x,y);u.y=cellY(y);
@@ -510,7 +524,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
     if(p.id===view&&!S.sim&&b.c>=600)killBanner(b);p.gold+=Math.ceil(b.c/(b.count||1)*BAL.kr);p.kills=(p.kills||0)+1;if(p.id===0)S.kills++;if(u.owner===0&&p.id!==0){S.kl=S.kl||{};S.kl[p.id]=(S.kl[p.id]||0)+1}if(u.owner!==p.id){const K=S.klA||(S.klA={}),q=u.owner*8+p.id;K[q]=(K[q]||0)+1}if(p.id===view){sfx('die',{unit:b.id});artFx('die',{u,col:b.col,air:b.t==='A'})}
     for(let k=0;k<(b.split||0);k++)born.push(u);
     if(b.carry)for(let k=0;k<b.carry;k++)drop.push(u);
-    if(b.grab)p.grid.forEach(r=>r.forEach(t=>{if(t&&t.lifter===u){t.dis=Math.min(t.dis,.2);t.lifter=null}}));
+    if(b.grab&&u.carry)craneDrop(p,u,false);
     return false}
    if(u.hit>0)u.hit-=dt;
    if(b.id==='egg_legs'&&u.hatch&&!u.hd&&u.y>BH*.45){u.hd=1;const nb=hatchOf(u),r=u.hp/b.hp;u.bp=nb;u.hp=nb.hp*r;u.col=0;if(nb.t==='A')u.path=null;
@@ -521,9 +535,10 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
      for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(!t||!t.bp.d)continue;const d=Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y);
       if(d<=R2){if(b.zap)t.dis=2;else if(d<nd){nd=d;near=t}}}
      if(near)near.dis=2;u.pk=b.peck?3:2.5}}
-   if(b.grab){u.gk=(u.gk===undefined?1.5:u.gk)-dt;if(u.gk<=0){let near=null,nd=1.8;/* 🏗 철거반장: 가장 가까운 공격 타워를 4초 들고 다녀요 */
-     for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(!t||!t.bp.d||t.dis>0)continue;const d=Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y);if(d<nd){nd=d;near=t}}
-     if(near){near.dis=Math.max(near.dis||0,4);near.lifter=u;u.gk=6;if(p.id===view&&!S.sim){sfx('build');artFx('smoke',{x:u.x,y:BH-u.y,r:.8,col:0xfacc15})}}else u.gk=.4}}
+   if(b.grab){u.gk=(u.gk===undefined?1.5:u.gk)-dt;/* 🏗 철거반장: 멈춰서 집고 → 4초 이고 걷기 → Lv.2 이하는 빈칸으로 옮기기(미로 안 막음), 아니면 제자리 */
+    if(u.carry){u.carry.ct-=dt;if(u.carry.ct<=0){craneDrop(p,u,true);u.gk=6}}
+    else if(u.gk<=0){let near=null,nd=1.8,nx=0,ny=0;for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(!t||!t.bp.d||t.dis>0||t.carrier)continue;const d=Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y);if(d<nd){nd=d;near=t;nx=x;ny=y}}
+     if(near){near.carrier=u;near.dis=99;u.carry={t:near,ox:nx,oy:ny,ct:4.6};u.stun=Math.max(u.stun||0,.6);if(p.id===view&&!S.sim){sfx('build');artFx('smoke',{x:cellX(nx,ny),y:BH-cellY(ny),r:.7,col:0xfacc15})}}else u.gk=.4}}
    if(b.fossil&&!u.fz&&u.hp<b.hp*.5){u.fz=1;fossilLand(p,u)}
    if(b.t==='A'&&!(u.gr>0)&&(u.eatN||0)<5&&p.snacks&&p.snacks.length){for(const s of p.snacks)if(!s.e&&Math.hypot(s.x-u.x,s.y-u.y)<.75){s.e=1;u.gr=1;u.eatN=(u.eatN||0)+1;if(p.id===view)sfx('eat');break}}
    if(u.gr>0){u.gr-=dt;if(u.gr<=0){u.gr=0;if(u.eatN<5&&p.snacks){const s=p.snacks.find(s=>!s.e&&Math.hypot(s.x-u.x,s.y-u.y)<1.3);if(s){s.e=1;u.x=s.x;u.y=s.y;u.gr=1;u.eatN++;if(p.id===view)sfx('eat')}}}}
@@ -810,13 +825,13 @@ function birdMesh3(b,oc){const g=birdMesh2(b,oc),id=b.id,at=(m,x,y,z,s)=>{m.posi
 let talkN=0;function sync3(dt){sync3.talkOn=talkN;talkN=0;if(typeof PFX!=='undefined')PFX.update(dt);PXS.update(dt);if(typeof newsUpd==='function')newsUpd(dt);const p=S.pl[view],seen=new Set();
  p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(!t)return;const k=y*8+x;seen.add(k);let m=tm.get(k);
   if(!m||m.userData.t!==t||m.userData.lv0!==t.lv){if(m)rmM(m);m=mkTowerMesh(t.bp,t.lv);m.userData.t=t;m.userData.lv0=t.lv;Sc.add(m);tm.set(k,m)}
-  m.position.set(cellX(x,y),BH-cellY(y),0);const s=1+(t.lv-1)*.15;if(t.lifter){if(t.dis>0){m.position.z=.75+Math.sin(S.t*7+k)*.08}else t.lifter=null}m.scale.set(s/XK,s,s);if(t.kick>0){t.kick=Math.max(0,t.kick-dt*7);const k=t.kick*t.kick;m.scale.set(s/XK*(1+.1*k),s*(1+.1*k),s*(1-.16*k))}/* 쏠 때 움찔 반동 */
-  m.rotation.z=t.dis>0?Math.sin(S.t*30)*.2:0;
+  m.position.set(cellX(x,y),BH-cellY(y),0);const s=1+(t.lv-1)*.15;if(t.carrier){const cu=t.carrier;m.position.set(cu.x,BH-cu.y,1.25+Math.sin(S.t*6)*.05);craneCone(t,cellX(x,y),BH-cellY(y))}m.scale.set(s/XK,s,s);if(t.kick>0){t.kick=Math.max(0,t.kick-dt*7);const k=t.kick*t.kick;m.scale.set(s/XK*(1+.1*k),s*(1+.1*k),s*(1-.16*k))}/* 쏠 때 움찔 반동 */
+  m.rotation.z=t.carrier?Math.sin(S.t*3)*.15:t.dis>0?Math.sin(S.t*30)*.2:0;if(t.carrier)m.scale.multiplyScalar(.62);
   if(t.bp.cctv){const r=t.r/s,a=m.getObjectByName('scan'),w=m.getObjectByName('scanw');if(a){a.scale.set(r,r,1);w.scale.set(r,r,1);w.rotation.z=S.t*1.6}}
   if(t.bp.id!=='wall'&&m.userData.lv!==t.lv){const old=m.getObjectByName('lvE');if(old){m.remove(old);old.traverse(o=>{if(o.material)o.material.dispose()})}const eg=new THREE.Group();eg.name='lvE';
    if(t.lv>=2){const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:starTex(t.lv),transparent:true,depthWrite:false}));sp.geometry.userData.cached=1;sp.scale.set(.5,.5,1);sp.position.set(.32,-.25,1.25);sp.renderOrder=6;eg.add(sp)}m.add(eg);m.userData.lv=t.lv}
   (m.userData.sp||[]).forEach(o=>o.rotation.z+=dt*o.userData.v*(t.dis>0?0:1))}));
- tm.forEach((m,k)=>{if(!seen.has(k)){rmM(m);tm.delete(k)}});
+ tm.forEach((m,k)=>{if(!seen.has(k)){rmM(m);tm.delete(k)}});craneCone(null);
  const us=new Set();
  p.units.forEach(u=>{us.add(u.id);let m=um.get(u.id);if(m&&m.userData.bp!==u.bp){rmM(m);um.delete(u.id);m=null}if(!m){m=birdMesh3(u.bp,parseInt(PC[u.owner].slice(1),16));artFx('bird',{m,b:u.bp,u});m.userData.bp=u.bp;Sc.add(m);um.set(u.id,m)}
   m.position.set(u.x,BH-u.y,u.bp.t==='A'?(u.gr>0?.35:1.4):u.fl>0?.75+Math.sin(S.t*5)*.06:.05);{let bb=m.userData.bub;if(u.fl>0&&!bb){bb=m.userData.bub=new THREE.Mesh(new THREE.SphereGeometry(.42,16,12),new THREE.MeshStandardMaterial({color:0xbae6fd,emissive:0x7dd3fc,emissiveIntensity:.5,transparent:true,opacity:.42,roughness:.1,depthWrite:false}));bb.position.z=.28;const hl=new THREE.Mesh(new THREE.SphereGeometry(.07,8,6),new THREE.MeshBasicMaterial({color:0xffffff}));hl.position.set(-.18,-.2,.2);bb.add(hl);m.add(bb)}if(bb)bb.visible=u.fl>0}m.scale.x=m.scale.y/XK;
