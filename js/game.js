@@ -2570,17 +2570,17 @@ try{const sv=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(sv&&typeof sv
 if(!Array.isArray(SV.races))SV.races=[];
 const svSave=()=>{try{localStorage.setItem(SAVE_KEY,JSON.stringify(SV))}catch(e){}};
 if(SV.races.length)raceSel=SV.races[0];
-let ttT=0;function tmsg(t){const e=$('tmsg'),l=$('ltmsg');e.textContent=t;if(l)l.textContent=t;clearTimeout(ttT);ttT=setTimeout(()=>{e.textContent='';if(l)l.textContent=''},3200)}
+let ttT=0;function tmsg(t){const E=[$('tmsg'),$('ltmsg'),$('rtmsg')].filter(Boolean);E.forEach(e=>e.textContent=t);clearTimeout(ttT);ttT=setTimeout(()=>E.forEach(e=>e.textContent=''),3200)}
 function setMode(m){
  if(m==='race'&&!SV.modeOK){if(SV.coins<MODE_COST)return tmsg(`🪶 깃털 코인이 부족해요 (${SV.coins}/${MODE_COST}) · 일반 모드에서 승리하면 얻어요`);
   SV.coins-=MODE_COST;SV.modeOK=1;svSave();tmsg('🏰 종족 모드 해금! 종족 1개를 무료로 골라요')}
- gameMode=m;renderTitle()}
+ gameMode=m;renderTitle();if(m==='race')ovl('racem',1)}
 function renderTitle(){
  $('fc').textContent=SV.coins;const mb=$('mode').children;
  mb[0].className='mcard mn'+(gameMode==='normal'?' on':'');mb[1].className='mcard mr'+(gameMode==='race'?' on':'')+(SV.modeOK?'':' lk');
  mb[1].lastChild.textContent=SV.modeOK?'종족 특성 · 전용 타워/새':(MODE_COST?`🔒 ${MODE_COST}🪶로 해금`:'🔒 눌러서 무료 해금');
- $('md').textContent=gameMode==='race'?'🏰 나와 AI가 각자 종족을 갖고 싸워요. 종족마다 전용 타워·새·특성이 달라요.':'🐥 종족 없이 모든 새·타워를 공용으로 쓰는 기본 규칙이에요.';
- $('rcard').style.display=gameMode==='race'?'block':'none';if(gameMode==='race')renderRaces();
+ $('md').innerHTML=gameMode==='race'?`🏰 종족 모드(베타) · ${SV.races.includes(raceSel)?RACE[raceSel].ic+' <b>'+RACE[raceSel].n+'</b>':'종족을 골라 주세요'} <button id="rpick" class="rpick">종족 고르기</button>`:'🐥 종족 없이 모든 새·타워를 공용으로 쓰는 기본 규칙이에요.';
+ {const rp=$('rpick');if(rp)rp.onclick=()=>ovl('racem',1)}if(gameMode==='race')renderRaces();
  $('go').textContent='플레이';lobUI()}
 function renderRaces(){const free=!SV.races.length,vk=raceView||(SV.races.includes(raceSel)?raceSel:RK_KEYS[0]);
  $('rc').innerHTML=RK_KEYS.map(k=>{const own=SV.races.includes(k);return `<button data-k="${k}" class="${own?(raceSel===k?'on':''):'lk'}"><i>${RACE[k].ic}</i><b>${RACE[k].n}</b><small>${own?RACE[k].tag:'🔒 '+(free||!RACE_COST?'무료 선택':RACE_COST+'🪶')}</small></button>`}).join('');
@@ -2590,9 +2590,10 @@ function renderRaces(){const free=!SV.races.length,vk=raceView||(SV.races.includ
 function buyRace(k){if(SV.races.includes(k))return;const free=!SV.races.length;
  if(!free&&SV.coins<RACE_COST)return tmsg(`🪶 깃털 코인이 부족해요 (${SV.coins}/${RACE_COST})`);
  if(!free)SV.coins-=RACE_COST;SV.races.push(k);raceSel=k;raceView=k;svSave();tmsg(`${RACE[k].ic} ${RACE[k].n} 해금!`);renderTitle()}
+$('racex').onclick=()=>{if(!SV.races.includes(raceSel))return tmsg('🏰 먼저 종족을 하나 골라 주세요');ovl('racem',0);renderTitle()};
 $('rc').onclick=e=>{const b=e.target.closest('button');if(!b||!b.dataset.k)return;const k=b.dataset.k;raceView=k;if(SV.races.includes(k))raceSel=k;renderTitle()};
 $('mode').onclick=e=>{const b=e.target.closest('button');if(b&&b.dataset.m)setMode(b.dataset.m)};
-function tryStart(){if(gameMode==='race'){if(!SV.modeOK){openMode();return setMode('race')}if(!SV.races.includes(raceSel)){openMode();return tmsg('🏰 먼저 종족을 하나 골라 주세요')}}start()}
+function tryStart(){if(gameMode==='race'){if(!SV.modeOK){openMode();return setMode('race')}if(!SV.races.includes(raceSel)){openMode();ovl('racem',1);return tmsg('🏰 먼저 종족을 하나 골라 주세요')}}start()}
 function rewardUI(win){const e=$('ew');if(!e)return;if(S.sim){e.innerHTML='';return}
  let h='';
  if(win){const c=COIN_WIN[diff]||3;SV.coins+=c;SV.wins++;svSave();
