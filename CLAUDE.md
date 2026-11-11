@@ -22,21 +22,7 @@
 - 🧠 AI 밸런스 v12.2(2026-11-10) 끝: 스타일별 승률 고르게 맞춤(아래 '경제 밸런스' 참고). 새 성향을 넣으면 같은 방식으로 다시 시뮬.
 - 🦤 Tripo로 만든 도도새 3D: 약관 확인함(2026-11-10, 2025-07-11판). **무료 사용자 결과물은 Tripo가 모든 권리를 가짐(5.2.1)** → 게임에 쓰지 않기로. 유료 사용자는 권리를 가짐(5.2.2). 쓰려면 유료 기간에 다시 생성하거나, 제한 없는 Hyper3D Rodin으로 만들기.
 
-- 🃏 **대기 중인 작업 묶음**(2026-11-11 사용자 확정, '수정사항 더 모아서 같이 시작' — 아직 시작하지 말 것):
-  1. 🦜 앵무새 '욕쟁이': 말할 때 근처 타워 1개 1.5초 삐짐(공격 멈춤), 말풍선 '삐-!' 처리 + 타워 위 💢·눈물
-  2. 🦤 도도새 '멸종 거부': 쓰러지면 30% 확률로 체력 30% 부활(최대 2번), 깃털 펑 + '멸종 거부!' 배너
-  3. 🦅 송골매 '과속 매': 공격 30% 회피('MISS!'), 🦉 부엉이 CCTV 범위면 과속 단속(회피 불가 + 수비 쪽 벌금 +15G, 📸 플래시)
-  4. 🦩 타조타이탄 '그랑 주떼': 4초마다 점프해 길 3칸 건너뜀, 착지 시 주변 타워 1초 흔들림(무대 조명·땅 내려찍기 픽셀)
-  5. 🐦 폭격갈매기 똥 폭격 수정(지나가면 타워에 하얀 얼룩 + 1초 느려짐 — 세부는 사용자와 다시 정하기)
-  6. 🤖 AI가 공중 새도 사게: 560판 시뮬에서 공용 공중 새(비둘기·앵무·도둑갈매기·폭격갈매기·송골매·올빼미·까마귀)와 흡혈박쥐·천둥새·역병/유령 까마귀·눈보라 갈매기·전기 박쥐 구매 0회. 상대(다음 사람) 대공이 약하면 공중 새를 고르게(`buyU`, `scoutOf` 참고)
-  7. 🤖 AI 도도새 과소비 고치기: 판당 481회로 1등인데 효율 0.04(거의 다 막힘). 타조타이탄도 130회·0.43
-  8. 🏴‍☠️ 도둑갈매기(`pirate`, 도감 '펭귄알 소매치기') → **북극해적갈매기**로 이름·도감 수정, 해적 모자 + 칼 하나 든 모습으로(능력 steal은 유지)
-  9. 🦉 올빼미(`owl`, 도감 '야근 올빼미') → **지상 유닛**으로, 느린 대신 **보호막 많이** + **커피를 마시며 보호막이 차오름**(머그컵 소품·마시는 동작, 보호막 회복). 보호막 규칙(독·화상·감속 면역, 번개 2배)과 엮임
-  10. 🦅 제왕독수리(`eagle`, 도감 '대머리 독수리') **'가발 날리기'**(사용자 선택 ①): 체력 50%가 되면 가발이 팔랑 날아가 진짜 대머리 공개 → 머리가 번쩍 빛나 근처 타워 **2초 눈부심(공격 멈춤)**, 타워 위 😵 + 머리 빛줄기. 도감 개그 '흰머리래요. 본인 주장'과 연결
-  11. 🤖 AI가 보호막 새 쓰기: 상대(다음 사람) 수비가 독·화염 위주이고 뇌전이 약하면 보호막 새(백조·혜성 매·오로라 올빼미·커피 올빼미)를 고르게(`buyU`·`scoutOf`)
-  12. 🧹 안 쓰는 파일 정리: `assets/models/chick.glb`(게임에서 안 씀) 삭제, `art_src/models/dodo_tripo_showcase.mp4`(Tripo 무료 결과물=권리가 Tripo) 공개 저장소에서 빼기
-  13. 🐝 AI 벌새 떼 폭탄: 벌새(`humbee`, 5~7마리 떼, 강타형 타워 피해 절반)를 AI가 정찰 후 자주 씀 — 다음 사람 수비가 강타형(공격 간격 1.5초+) 위주이고 광역(splash)이 약하면 돈을 모았다가 벌새 떼를 한꺼번에 몰아 보내기(폭탄 러시). 지금 시뮬에선 판당 0.02회로 거의 안 씀
-  → 사용자가 수정사항을 더 주면 여기에 추가하고, 시작 신호가 오면 구현 후 새별 효율 시뮬(`unit_an.py`)로 맞추기.
+- ✅ **새 개편 묶음 v13.1**(2026-11-11 완료): 앵무새 `sulk`(2.2초마다 1.8칸 안 타워 1.5초 `dis`+💢, 말 '삐-!') · 도도새 `extinct:2`(쓰러지면 30% 체력 30% 부활, `u.ext` 다음 판에도 유지) · 송골매 `dodge:.3`(MISS!, CCTV 범위 `u.cam`이면 못 피하고 한 번 벌금 +15G `u.fined`) · 타조 `leap:8`(8초마다 0.5초 속도 5 대시 + 점프 높이, 착지 1.5칸 타워 0.6초 흔들림·ground-slam; 4초·3칸은 효율 3.3이라 너프) · 폭격갈매기 `poop`(2.5초마다 1.2칸 안 타워 3초 공격 간격 ×1.6 + 흰 똥 얼룩 `t.poop`) · 북극해적갈매기(이름·도감·칼) · 올빼미 지상(`t:'G'`, 체력 700·보호막 900, `coffee` 4초마다 보호막 25% 회복 ☕) · 제왕독수리 `wig`(체력 50% 미만 가발 `wig` 숨기고 `glare` 번쩍, 2칸 안 타워 2초 `dis`+😵). 타워 머리 위 이모지 `t.emo{i,u}`(`emoTexC`), 새 위 글자 `popTxt`(#dmgl `.t`). AI: `scoutOf`에 gonly·heavy·dot·zap 추가, 모든 AI가 정찰(공중 +1.4·보호막 +2.4·벌새 +3.4 ×0.75), 원래 정찰 보정(무리·은신 등)은 지능형만(모두에게 주면 은신 새 효율 8·게임 13.9분), `AIPEN`(도도 -2.6·타조 -.4, 개그 새 +0.5~0.9), 🐝 벌새 떼 폭탄(광역<.6이고 골드≥2팩이면 12~25% 확률로 고르고 2팩 더, 상대가 나면 토스트). 시뮬 160판: 평균 14.8분, 스타일 10~14%, 도도 487→0.1회, 벌새 0→175회(효율은 낮음), 공중·보호막 새 사용 시작. 커피 올빼미 효율 0.04로 약함(나중에 조정 후보). 시조새 착지의 뼈 화석 돌판(fossil-imprint)은 사용자 요청으로 뺌(타이밍 안 맞음) — 하늘의 돌 공 깨짐만 남김. chick.glb·Tripo 도도 영상 삭제.
 
 ## 파일 구조
 - `index.html` — 화면 마크업(로비, 모드 선택, 영웅 꾸미기, 광장, 게임, 도감, 설명, 결과)
@@ -77,7 +63,7 @@
 - `S.sim`일 때는 사운드·이펙트를 건너뛴다. 통계 훅은 `S.st`가 있을 때만 동작.
 - 🦴 병아리 영웅은 Blender로 뼈대·애니메이션(idle·walk·flap)을 넣은 `assets/models/chick_anim.glb`(사용자 컴퓨터의 Claude Code+Blender 5.x에서 제작). 복제는 `skinClone`(그냥 clone하면 뼈 공유), 크기는 `skinBox`, 재생은 `heroClip`(걸으면 walk·서 있으면 idle·5~9초마다 flap). ⚠️ 뼈대 GLB는 위치·가중치를 quantize하지 말 것(크기 계산이 깨짐) — `--pattern "{NORMAL,TEXCOORD_0}"`만. 클라우드 세션에서 컴퓨터 폴더 연결은 이 계정에서 아직 안 됨(2026-11-10).
 - AI 3D 영웅 모델: Hyper3D Rodin으로 만든 GLB를 gltf-transform+meshoptimizer로 1.2만 면·512 JPEG·quantize로 줄여 `assets/models/`에. `HGLB`(키·모자/안경 위치)·`hglbGet`·`heroMeshAI`, 로비·꾸미기·광장 영웅에만(게임판은 기존 모델). 약관 메모 `art_src/models/README.md`(Rodin은 상업 이용 제한 없음, ChatAvatar는 개인용만).
-- 🎞 pixelfx 시트(`PXS`, 2026-11-11): Claude Code 플러그인 `pixelfx@pixelfx`(MIT) 설치함. `tools/pfx/add.py`로 효과를 15fps·256색 시트로 가져와 `assets/pfx/`·`js/pfx_sheets.js`(index.html에서 game.js 앞에 로드), `PXS.play(id,x,BH-y,z,{sc,delay,add,loop})`. 사용법 `tools/pfx/README.md`. `fit`=가로 몇 칸 크기, `PXS.some(id,새들,n,o)`·`PXS.towers(id,p,n,o)`·`PXS.has(id)`. 색 바꾸기는 add.py에 `id@{"palette":[...]}`. 붙인 곳(사용자 선택 2026-11-11): 시조새 착지=nature/fossil-crack(하늘의 돌 공이 금 가며 깨짐, 직접 만듦)→nature/fossil-imprint(착지 칸 뼈 화석 돌판, 0.35초 뒤)+지상형 0.5초 숨김 `u.popT`(시트 없으면 impacts/ground-slam), 원본 tools/pfx/custom/nature · 화염 폭풍=fire/flame-pillar(새 8마리 위) · 폭풍의 눈=nature/tornado(타워 4개 위 3초) · 빙결 순간(0.15초 간격)·절대영도 풀릴 때=ice/ice-shatter · 광역 독구름 `p.clouds`=nature/toxic-gas(사용자 요청 '둥근·작은·반투명 보라 가스'로 직접 만든 효과, 크기 fit=반경×1.35, 불투명도 op:.5(시트만으론 공이 겹쳐 불투명해 보여서 PXS 재질 투명도로), 원본 `tools/pfx/custom/nature/toxic-gas.js`) · 플라즈마 낙뢰=lightning/lightning-strike(없으면 옛 `PFX.strike`). 6개 합 564KB.
+- 🎞 pixelfx 시트(`PXS`, 2026-11-11): Claude Code 플러그인 `pixelfx@pixelfx`(MIT) 설치함. `tools/pfx/add.py`로 효과를 15fps·256색 시트로 가져와 `assets/pfx/`·`js/pfx_sheets.js`(index.html에서 game.js 앞에 로드), `PXS.play(id,x,BH-y,z,{sc,delay,add,loop})`. 사용법 `tools/pfx/README.md`. `fit`=가로 몇 칸 크기, `PXS.some(id,새들,n,o)`·`PXS.towers(id,p,n,o)`·`PXS.has(id)`. 색 바꾸기는 add.py에 `id@{"palette":[...]}`. 붙인 곳(사용자 선택 2026-11-11): 시조새 착지=nature/fossil-crack(하늘의 돌 공이 금 가며 깨짐, 직접 만듦)+(뼈 화석 돌판 fossil-imprint는 2026-11-11 사용자 요청으로 뺌)+지상형 0.5초 숨김 `u.popT`(시트 없으면 impacts/ground-slam), 원본 tools/pfx/custom/nature · 화염 폭풍=fire/flame-pillar(새 8마리 위) · 폭풍의 눈=nature/tornado(타워 4개 위 3초) · 빙결 순간(0.15초 간격)·절대영도 풀릴 때=ice/ice-shatter · 광역 독구름 `p.clouds`=nature/toxic-gas(사용자 요청 '둥근·작은·반투명 보라 가스'로 직접 만든 효과, 크기 fit=반경×1.35, 불투명도 op:.5(시트만으론 공이 겹쳐 불투명해 보여서 PXS 재질 투명도로), 원본 `tools/pfx/custom/nature/toxic-gas.js`) · 플라즈마 낙뢰=lightning/lightning-strike(없으면 옛 `PFX.strike`). 6개 합 564KB.
 - 픽셀 이펙트 `PFX`(game.js 끝, pixelfx 방식을 참고해 직접 구현, 외부 코드 실행·복사 없음): 작은 캔버스에 점을 찍어 NearestFilter 스프라이트로 띄움. `PFX.strike(x,y,z,delay)`=플라즈마 낙뢰 시제품, `sync3`에서 `PFX.update(dt)`. 다른 조합 스킬은 아직 기존 파티클(`A.skill`).
 - 💬 말하는 새(도도·앵무, `talk`): 끝까지 가는 동안 진행 25·50·75%에서 한 마디씩 3번(1.6초), 화면 동시 최대 3개(`sync3.tA`). 타조는 말 안 함(피루엣만).
 - 🗞 뉴스새 마스코트 'AI'(NPC, 조류 인플루언서): **드론 메카 병아리**. 정식 3D `assets/models/ai_mascot.glb`(Hyper3D Rodin, 341면·52KB, 원본·시안 `art_src/mascot/`) — `aiMascotGet`(게임 시작 때 미리 불러옴)·`aiMascotMesh`(사이렌 빛 + 프로펠러 4곳 회전 잔상 `blurTex`), 못 불러오면 코드 모델 `mechaChickMesh`. `newsBird(txt)`·`newsUpd`(sync3)·`bannerTex`('AI 속보 · 짹짹 뉴스'). 카메라 쪽으로 숙여(rotation.x -1.05) 얼굴을 보이며 현수막을 끌고 판을 가로지름. 6분30초·8분30초 '30초 뒤 피해 N배!' 예고 + 7·9분 '돌파'.

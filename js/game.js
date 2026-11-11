@@ -68,7 +68,7 @@ const U=[
 {id:'archaeo',n:'시조새',c:5500,hp:8600,sp:.75,t:'A',dm:21,inc:330,fossil:1,stone:1,ic:'🦖',col:0xa8a08f,talk:['요즘 타워는 처음 보네…','1억 5천만 년 만의 외출!','깃털… 내 깃털…'],x:'체력이 절반이 되면 화석이 깨지며 땅에 쿵! 착지해요(주변 타워 2초 기절). 그 뒤로는 공룡처럼 땅으로 달려요'},
 {id:'archaeo_g',hidden:1,n:'갓 깨어난 시조새',c:5500,hp:8600,sp:1.05,t:'G',dm:21,inc:0,stone:2,ic:'🦖',col:0x0f9488,x:'화석 껍질을 깨고 나와 공룡처럼 땅으로 달려요'},
 {id:'crocbird',n:'악어새',c:1600,hp:3300,sp:.75,t:'G',dm:6,inc:110,rage:1,ic:'🐊',col:0xb8bec9,x:'악어를 타고 와요 · 체력이 35% 아래로 떨어지면 악어가 화나서 1.6배 빨라져요'},
-{id:'ostrich',n:'타조타이탄',c:1900,hp:4500,sp:.7,t:'G',dm:8,inc:130,ic:'🦩',col:0x292524,leap:4,x:'그랑 주떼: 4초마다 길을 따라 3칸을 훌쩍 점프 · 착지하면 주변 타워 1초 흔들림'},
+{id:'ostrich',n:'타조타이탄',c:1900,hp:4500,sp:.7,t:'G',dm:8,inc:130,ic:'🦩',col:0x292524,leap:8,x:'그랑 주떼: 8초마다 길을 따라 2칸 반을 훌쩍 점프 · 착지하면 주변 타워 0.6초 흔들림'},
 // ✨ 조합 새
 {id:'crane',combo:['fire','ice'],n:'온천 두루미',c:650,hp:900,sp:1.4,t:'G',dm:3,inc:38,imm:['slow','burn'],heal:1,ic:'🌡️',col:0xfecdd3,x:'화상·감속 면역 · 주변 치유'},
 {id:'plasmabird',combo:['fire','thunder'],n:'번개불새',c:900,hp:935,sp:2.3,t:'A',dm:4,inc:55,zap:1,imm:['stun'],ic:'🌟',col:0xfb923c,x:'기절 면역 · 타워 마비 · 고속'},
@@ -329,7 +329,7 @@ function craneDrop(p,u,move){const c=u.carry;if(!c)return;u.carry=null;const t=c
 function fossilLand(p,u){const cs=[];for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)if(!p.grid[y][x])cs.push([Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y),x,y]);cs.sort((a,b)=>a[0]-b[0]);
  for(const[,x,y]of cs.slice(0,12)){const np=bfs(p.grid,x,y);if(!np)continue;const ax=u.x,ay=u.y,r=u.hp/u.bp.hp;u.bp=UB.archaeo_g;u.hp=u.bp.hp*r;u.path=np;u.pi=0;u.gr=0;u.x=cellX(x,y);u.y=cellY(y);
   p.grid.forEach((row,ty)=>row.forEach((t,tx)=>{if(t&&t.bp.d&&Math.hypot(cellX(tx,ty)-u.x,cellY(ty)-u.y)<1.8)t.dis=Math.max(t.dis||0,2)}));
-  if(p.id===view&&!S.sim){sfx('hatch',{to:'hatch_dino'});u.popT=S.t+.5;/* 1) 하늘의 돌 화석이 금 가며 깨짐 → 2) 내려온 칸에 뼈 화석 돌판 → 3) 그 위에서 깨어난 시조새 */if(PXS.has('nature/fossil-crack')){PXS.play('nature/fossil-crack',ax,BH-ay,.6,{fit:3});PXS.play('nature/fossil-imprint',u.x,BH-u.y-.7,0,{fit:2.1,delay:.35})}else PXS.play('impacts/ground-slam',u.x,BH-u.y,0,{fit:3.6});artFx('smoke',{x:u.x,y:BH-u.y,r:1.8,col:0xd6c7a1});setTimeout(()=>artFx('hatch',{u}),500);if(p.id===0)toast('🦖 화석이 깨지고 시조새가 깨어났어요! · 주변 타워 2초 기절')}return}}
+  if(p.id===view&&!S.sim){sfx('hatch',{to:'hatch_dino'});u.popT=S.t+.5;/* 1) 하늘의 돌 화석이 금 가며 깨짐 → 2) 내려온 칸에 뼈 화석 돌판 → 3) 그 위에서 깨어난 시조새 */if(PXS.has('nature/fossil-crack')){PXS.play('nature/fossil-crack',ax,BH-ay,.6,{fit:3})}else PXS.play('impacts/ground-slam',u.x,BH-u.y,0,{fit:3.6});artFx('smoke',{x:u.x,y:BH-u.y,r:1.8,col:0xd6c7a1});setTimeout(()=>artFx('hatch',{u}),500);if(p.id===0)toast('🦖 화석이 깨지고 시조새가 깨어났어요! · 주변 타워 2초 기절')}return}}
 function refreshPaths(p){p.units.forEach(u=>{if(u.bp.t!=='G')return;const c=nearCell(u.x,u.y),np=bfs(p.grid,c.x,c.y);if(np){u.path=np;u.pi=0}})}
 function toast(m){const e=$('toast');e.textContent=m;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2400)}
 
@@ -456,12 +456,14 @@ function buildT(p,g,wall){const b=wall?TB.wall:pickTower(p,g);if(!b||p.gold<tcos
 // 🔍 정찰: 다음 사람 판의 대공 비율·광역 비율·CCTV 유무(2초마다 갱신)
 function scoutOf(p,n){const c=p.sc;if(c&&c.n===n&&S.t-c.t<2)return c;let air=0,gr=0,spl=0,all=0,cc=0,go=0,hv=0,dot=0,zp=0;S.pl[n].grid.flat().forEach(t=>{if(!t||!t.bp||!t.bp.d)return;const b=t.bp,d=t.d/b.cd;all+=d;if(b.t!=='G')air+=d;if(b.t!=='A')gr+=d;if(b.t==='G')go+=d;if(b.splash||b.self||b.chain)spl+=d;if(b.cctv)cc++;if(b.cd>=1.5)hv+=d;if(b.poison||b.burn)dot+=d;if(b.zap)zp+=d});
  const r=v=>all?v/all:0;return p.sc={n,t:S.t,air:r(air),spl:r(spl),cc,gonly:r(go),heavy:r(hv),dot:r(dot),zap:r(zp)}}
-/* AI 새 고르기 보정: 도도새 과소비(효율 0.04) 줄이기 */const AIPEN={dodo:-1.6,ostrich:-.4};
+/* AI 새 고르기 보정: 도도새 과소비(효율 0.04) 줄이기 */const AIPEN={dodo:-2.6,ostrich:-.4,parrot:.9,falcon:.9,seagull:.9,pirate:.7,pigeon:.5,swan:.7};/* +는 개그 능력 새를 AI도 가끔 쓰게 */
 function buyU(p,g,dump){const n=nextAlive(p.id);if(n===null)return false;const hs=g.fl&&g.fl.scout,sc=scoutOf(p,n),kq=hs?1:.75;/* 모든 AI가 다음 사람 수비를 살펴봄(지능형은 더 강하게) */
  const cap=p.gold*(dump?1:g.uTier),l=U.filter(u=>ucost(p,u)<=cap&&techOK(p,u)&&!u.hidden&&!u.secret);if(!l.length)return false;
- let b=null,bs=-1e9;for(const u of l){const sc_=(1-g.uHeavy)*u.inc/u.c*40+g.uHeavy*u.hp/u.c*.8+(u.t==='A'?g.uAir:1-g.uAir)*1.2+(u.x?(g.uSpec??.5)*1.4:0)+(u.tech?.6:0)+(u.combo?1.2:0)+(dump?u.c/400:0)+(g.fav&&g.fav[u.id]||0)+(sc?kq*((u.t==='A'?(sc.air<.4||sc.gonly>.35?2.4:-.6):0)+((u.count||1)>1&&sc.spl<.3?2:0)+(sc.spl>.5?u.hp/u.c*1.5:0)+(u.stealth&&!sc.cc?2:0)+(u.shield&&sc.zap<.15&&sc.dot>.3?2.4:0)+(u.swarm&&sc.heavy>.45&&sc.spl<.35?2.8:0)):0)+(AIPEN[u.id]||0)+Math.random()*.8;if(sc_>bs){bs=sc_;b=u}}
+ let b=null,bs=-1e9;/* 🐝 벌새 떼 폭탄: 광역이 아주 세지 않으면 가끔 돈을 모아 한꺼번에 */const HB=UB.humbee;if(HB&&techOK(p,HB)&&sc.spl<.6&&p.gold>=ucost(p,HB)*2&&Math.random()<(sc.heavy>.3?.25:.12)){b=HB;bs=1e9;p.bomb=1}
+ for(const u of l){if(bs>=1e9)break;const sc_=(1-g.uHeavy)*u.inc/u.c*40+g.uHeavy*u.hp/u.c*.8+(u.t==='A'?g.uAir:1-g.uAir)*1.2+(u.x?(g.uSpec??.5)*1.4:0)+(u.tech?.6:0)+(u.combo?1.2:0)+(dump?u.c/400:0)+(g.fav&&g.fav[u.id]||0)+(hs?(u.t==='A'?(sc.air<.4?2.2:-.8):0)+((u.count||1)>1&&sc.spl<.3?2:0)+(sc.spl>.5?u.hp/u.c*1.5:0)+(u.stealth&&!sc.cc?2:0):0)/* 지능형만: 원래 정찰 보정 */
+  +kq*((u.t==='A'&&(sc.air<.4||sc.gonly>.35)?1.4:0)+(u.shield&&sc.zap<.15&&sc.dot>.3?2.4:0)+(u.swarm&&sc.heavy>.3&&sc.spl<.45?3.4:0))/* 모든 AI: 공중·보호막·벌새 */+(AIPEN[u.id]||0)+Math.random()*.8;if(sc_>bs){bs=sc_;b=u}}
  if(!b)return false;p.gold-=ucost(p,b);if(S.st){S.st.us[b.id]=(S.st.us[b.id]||0)+ucost(p,b);S.st.un[b.id]=(S.st.un[b.id]||0)+1}p.income+=gainInc(p,b);{const cn=cntOf(b);for(let k=0;k<cn;k++)spawn(S.pl[n],b,p.id)}
- /* 🐝 벌새 떼 폭탄: 강타형 위주·광역 약한 상대면 한꺼번에 몰아 보내기 */if(b.swarm&&sc.heavy>.45&&sc.spl<.35){let ex=0;while(ex<3&&p.gold>=ucost(p,b)){ex++;p.gold-=ucost(p,b);if(S.st){S.st.us[b.id]+=ucost(p,b);S.st.un[b.id]++}p.income+=gainInc(p,b);const cn=cntOf(b);for(let k=0;k<cn;k++)spawn(S.pl[n],b,p.id)}if(ex&&n===0&&!S.sim)toast('🐝 벌새 떼 습격! 광역 타워로 막으세요')}
+ /* 🐝 벌새 떼 폭탄: 강타형 위주·광역 약한 상대면 한꺼번에 몰아 보내기 */if(b.swarm&&p.bomb){p.bomb=0;let ex=0;while(ex<2&&p.gold>=ucost(p,b)){ex++;p.gold-=ucost(p,b);if(S.st){S.st.us[b.id]+=ucost(p,b);S.st.un[b.id]++}p.income+=gainInc(p,b);const cn=cntOf(b);for(let k=0;k<cn;k++)spawn(S.pl[n],b,p.id)}if(ex&&n===0&&!S.sim)toast('🐝 벌새 떼 습격! 광역 타워로 막으세요')}
  return true}
 function aiUp(p,c){for(const t of p.grid.flat()){if(t&&t.bp.id!=='wall'&&t.lv<c.up&&p.gold>=upc(t,p)){const k=upc(t,p);p.gold-=k;t.lv++;t.d=Math.floor(t.d*1.6);t.r+=.25;t.inv+=k;if(S.st){S.st.ti[t.bp.id]=(S.st.ti[t.bp.id]||0)+k;S.st.up++}return true}}return false}
 function aiTick(p){if(p.cfg&&p.cfg.fl&&p.cfg.fl.jug&&jugTick(p))return;if(p.tech2plan&&!p.tech2&&S.t>45&&p.gold>=TECH2C){p.gold-=TECH2C;p.tech2=p.tech2plan;return}
@@ -556,8 +558,8 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
    if(u.gr>0){u.gr-=dt;if(u.gr<=0){u.gr=0;if(u.eatN<5&&p.snacks){const s=p.snacks.find(s=>!s.e&&Math.hypot(s.x-u.x,s.y-u.y)<1.3);if(s){s.e=1;u.x=s.x;u.y=s.y;u.gr=1;u.eatN++;if(p.id===view)sfx('eat')}}}}
    else if(u.fl>0){}else if(u.stun>0)u.stun-=dt;else{let sp=b.sp*(u.spm||1);if(u.slow>0){u.slow-=dt;sp*=.55}
     if(b.rage&&u.hp<b.hp*.35)sp*=1.6;
-    if(b.leap){u.lp=(u.lp??2)-dt;if(u.lp<=0&&u.path&&u.pi<u.path.length-1){u.lp=b.leap;u.jt=.6}}
-    if(u.jt>0){u.jt-=dt;sp=Math.max(sp,5);if(u.jt<=0){u.jt=0;/* 🩰 착지: 주변 타워 1초 흔들림 */for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(t&&t.bp.d&&Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y)<1.5)t.dis=Math.max(t.dis||0,1)}if(p.id===view&&!S.sim)PXS.play('impacts/ground-slam',u.x,BH-u.y,0,{fit:2})}}
+    if(b.leap){u.lp=(u.lp??2)-dt;if(u.lp<=0&&u.path&&u.pi<u.path.length-1){u.lp=b.leap;u.jt=.5}}
+    if(u.jt>0){u.jt-=dt;sp=Math.max(sp,5);if(u.jt<=0){u.jt=0;/* 🩰 착지: 주변 타워 1초 흔들림 */for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(t&&t.bp.d&&Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y)<1.5)t.dis=Math.max(t.dis||0,.6)}if(p.id===view&&!S.sim)PXS.play('impacts/ground-slam',u.x,BH-u.y,0,{fit:2})}}
     if(b.t==='A'||b.over)u.y+=sp*dt*(b.over?BAL.ovs:.9);
     else if(u.path&&u.pi<u.path.length){const n=u.path[u.pi],tx=cellX(n.x,n.y),ty=cellY(n.y),d=Math.hypot(tx-u.x,ty-u.y),s=sp*dt;
      if(d<=s){u.x=tx;u.y=ty;u.pi++}else{u.x+=(tx-u.x)/d*s;u.y+=(ty-u.y)/d*s}}}
@@ -891,7 +893,7 @@ let talkN=0;function sync3(dt){sync3.talkOn=talkN;talkN=0;try{heroBoard(dt)}catc
  const us=new Set();
  p.units.forEach(u=>{us.add(u.id);let m=um.get(u.id);if(m&&m.userData.bp!==u.bp){rmM(m);um.delete(u.id);m=null}if(!m){m=birdMesh3(u.bp,parseInt(PC[u.owner].slice(1),16));artFx('bird',{m,b:u.bp,u});m.userData.bp=u.bp;Sc.add(m);um.set(u.id,m)}if(m.userData.fxm)matTick(m,S.t);
   if(u.bp.wig){const w=m.getObjectByName('wig'),gl=m.getObjectByName('glare');if(w)w.visible=!u.wg;if(gl){gl.visible=!!u.wg;gl.material.emissiveIntensity=.7+.8*Math.abs(Math.sin(S.t*4))}if(u.wgfx){u.wgfx=0;if(!S.sim){artFx('smoke',{x:u.x,y:BH-u.y,r:.6,col:0x6b4423});artFx('crit',{u})}}}
-  m.visible=!(u.popT&&S.t<u.popT);m.position.set(u.x,BH-u.y,u.bp.t==='A'?(u.gr>0?.35:1.4):u.fl>0?.75+Math.sin(S.t*5)*.06:.05+(u.jt>0?Math.sin(PI*(1-u.jt/.6))*.9:0));{let bb=m.userData.bub;if(u.fl>0&&!bb){bb=m.userData.bub=new THREE.Mesh(new THREE.SphereGeometry(.42,16,12),new THREE.MeshStandardMaterial({color:0xbae6fd,emissive:0x7dd3fc,emissiveIntensity:.5,transparent:true,opacity:.42,roughness:.1,depthWrite:false}));bb.position.z=.28;const hl=new THREE.Mesh(new THREE.SphereGeometry(.07,8,6),new THREE.MeshBasicMaterial({color:0xffffff}));hl.position.set(-.18,-.2,.2);bb.add(hl);m.add(bb)}if(bb)bb.visible=u.fl>0}m.scale.x=m.scale.y/XK;
+  m.visible=!(u.popT&&S.t<u.popT);m.position.set(u.x,BH-u.y,u.bp.t==='A'?(u.gr>0?.35:1.4):u.fl>0?.75+Math.sin(S.t*5)*.06:.05+(u.jt>0?Math.sin(PI*(1-u.jt/.5))*.9:0));{let bb=m.userData.bub;if(u.fl>0&&!bb){bb=m.userData.bub=new THREE.Mesh(new THREE.SphereGeometry(.42,16,12),new THREE.MeshStandardMaterial({color:0xbae6fd,emissive:0x7dd3fc,emissiveIntensity:.5,transparent:true,opacity:.42,roughness:.1,depthWrite:false}));bb.position.z=.28;const hl=new THREE.Mesh(new THREE.SphereGeometry(.07,8,6),new THREE.MeshBasicMaterial({color:0xffffff}));hl.position.set(-.18,-.2,.2);bb.add(hl);m.add(bb)}if(bb)bb.visible=u.fl>0}m.scale.x=m.scale.y/XK;
   // 💬 말하는 새: 끝까지 가는 동안 진행 25%·50%·75%에서 딱 한 마디씩(3번), 1.6초. 화면에 동시에 최대 3개
   if(u.bp.talk){let sp=m.userData.talk;const prog=u.y/BH,nx=u.tkN||0;
    if(nx<3&&prog>=(nx+1)*.25){u.tkN=nx+1;const A=sync3.tA=(sync3.tA||[]).filter(t=>t>S.t);if(A.length<3){u.tkI=nx%u.bp.talk.length;u.tkT=S.t+1.6;A.push(u.tkT)}}
