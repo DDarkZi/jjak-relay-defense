@@ -53,7 +53,7 @@ const NET=(()=>{
  function host(){if(st.role)return;st.role='host';st.code=Array.from({length:5},()=>CODE_CH[Math.floor(Math.random()*CODE_CH.length)]).join('');
   st.slots=Array(8).fill(null);st.slots[0]=Object.assign({kind:'host'},myHello());st.me=0;st.started=false;st.ended=false;
   panel('r');$n('ncd').textContent=st.code;status('방을 여는 중…');renderSlots();
-  st.tr=hostT(st.code,{ready:()=>status('친구에게 방 코드나 초대 링크를 보내 주세요! 📌 방장은 게임 내내 앱을 화면에 켜 두세요(방장 폰이 게임을 계산해요)'),err:e=>{if(e==='taken'){leave();return host()}status('⚠️ 연결 오류: '+e+' (잠시 후 다시 시도해 주세요)')},
+  st.tr=hostT(st.code,{ready:()=>status('친구에게 방 코드나 초대 링크를 보내 주세요! 📌 방장은 게임 내내 앱을 화면에 켜 두세요(방장 폰이 게임을 유지해요)'),err:e=>{if(e==='taken'){leave();return host()}status('⚠️ 연결 오류: '+e+' (잠시 후 다시 시도해 주세요)')},
    join:cid=>{},leave:cid=>hLeave(cid),msg:(cid,d)=>hMsg(cid,d)})}
  function hBroadcastLobby(){Object.keys(st.cid2slot).forEach(cid=>st.tr.send(cid,{t:'lobby',slots:st.slots,you:st.cid2slot[cid],tok:st.tok[st.cid2slot[cid]],code:st.code,diff}));renderSlots()}
  function hMsg(cid,d){if(!d||!d.t)return;
