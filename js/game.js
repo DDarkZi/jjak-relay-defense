@@ -65,8 +65,8 @@ const U=[
 {id:'humbee',n:'벌새',c:360,hp:125,sp:1.9,t:'G',dm:1,inc:19,count:6,cntR:[5,7],swarm:1,ic:'🐝',col:0xfacc15,x:'5~7마리 떼 · 너무 작아서 강타형 타워(공격 간격 1.5초 이상)의 피해를 절반만 받아요'},
 {id:'pelican',n:'펠리컨',c:3000,hp:5200,sp:.8,t:'A',dm:10,inc:190,carry:8,ic:'🚌',col:0xf8fafc,x:'쓰러지면 부리 주머니에서 승객 새 8마리가 쏟아져 지상으로 걸어가요'},
 {id:'demcrane',n:'철거반장 두루미',c:4800,hp:8200,sp:.75,t:'G',dm:14,inc:250,grab:1,ic:'🏗️',col:0xf1f5f9,talk:['이거 불법 건축물이에요~','철거 들어갑니다!','민원 접수됐습니다'],x:'6초마다 멈춰서 근처 타워를 부리로 집어 4초 동안 머리에 이고 걸어가요(그동안 공격 불가). Lv.2 이하는 근처 빈칸으로 옮겨 놓고(미로는 절대 안 막아요), 더 높거나 빈칸이 없으면 제자리에 돌려놔요'},
-{id:'archaeo',n:'시조새',c:5500,hp:8600,sp:.75,t:'A',dm:21,inc:330,fossil:1,stone:1,ic:'🦖',col:0xa8a08f,talk:['요즘 타워는 처음 보네…','1억 5천만 년 만의 외출!','깃털… 내 깃털…'],x:'체력이 절반이 되면 깃털이 빠져 땅에 쿵! 착지해요(주변 타워 2초 기절). 그 뒤로는 공룡처럼 땅으로 달려요'},
-{id:'archaeo_g',hidden:1,n:'털 빠진 시조새',c:5500,hp:8600,sp:1.05,t:'G',dm:21,inc:0,ic:'🦖',col:0xf3b4a4,x:'깃털이 다 빠져 공룡처럼 달려요'},
+{id:'archaeo',n:'시조새',c:5500,hp:8600,sp:.75,t:'A',dm:21,inc:330,fossil:1,stone:1,ic:'🦖',col:0xa8a08f,talk:['요즘 타워는 처음 보네…','1억 5천만 년 만의 외출!','깃털… 내 깃털…'],x:'체력이 절반이 되면 화석이 깨지며 땅에 쿵! 착지해요(주변 타워 2초 기절). 그 뒤로는 공룡처럼 땅으로 달려요'},
+{id:'archaeo_g',hidden:1,n:'갓 깨어난 시조새',c:5500,hp:8600,sp:1.05,t:'G',dm:21,inc:0,stone:2,ic:'🦖',col:0x0f9488,x:'화석 껍질을 깨고 나와 공룡처럼 땅으로 달려요'},
 {id:'crocbird',n:'악어새',c:1600,hp:3300,sp:.75,t:'G',dm:6,inc:110,rage:1,ic:'🐊',col:0xb8bec9,x:'악어를 타고 와요 · 체력이 35% 아래로 떨어지면 악어가 화나서 1.6배 빨라져요'},
 {id:'ostrich',n:'타조타이탄',c:1900,hp:4500,sp:.7,t:'G',dm:8,inc:130,ic:'🦩',col:0x292524,x:'발레를 하며 빙글빙글 돌아요(능력은 없음)'},
 // ✨ 조합 새
@@ -162,8 +162,8 @@ phoenix:['부활절 불사조','한 번 죽는 건 그냥 준비운동이에요.
 humbee:['윙윙 벌새 떼','벌인지 새인지 본인들도 몰라요. 너무 작고 빨라서 느린 대포로는 맞히기 어려워요. 꿀은 안 줘요.','벌새 떼'],
 pelican:['만원 버스 펠리컨','부리 주머니에 승객을 꽉꽉 태운 하늘 버스. 격추되면 승객들이 "여기서 내릴게요!" 하고 우르르 쏟아져요.','만원 펠리컨'],
 demcrane:['철거반장 두루미','구청에서 나왔습니다. 허가 안 받은 타워는 부리로 번쩍 들어서 치워 버려요. 안전모는 필수!','철거 두루미'],
-archaeo:['1억 5천만 년 만의 외출 시조새','박물관 화석에서 깨어난 할아버지 새. 요즘 타워가 신기해서 자꾸 쳐다보다가, 많이 맞으면 깃털이 다 빠져 버려요.','시조새'],
-archaeo_g:['털 빠진 시조새','깃털이 다 빠져서 부끄럽지만 다리는 아직 쌩쌩해요. 공룡 시절처럼 쿵쿵 달려요.','털 빠진 시조새'],
+archaeo:['1억 5천만 년 만의 외출 시조새','박물관 화석에서 깨어난 할아버지 새. 요즘 타워가 신기해서 자꾸 쳐다보다가, 많이 맞으면 돌 껍질이 깨지고 진짜 모습으로 깨어나요.','시조새'],
+archaeo_g:['갓 깨어난 시조새','화석 껍질을 모자처럼 쓰고 깨어났어요. 깃털엔 아직 돌 무늬가 남았지만 다리는 쌩쌩, 공룡 시절처럼 쿵쿵 달려요.','갓 깨어난 시조새'],
 crocbird:['악어 치과의사 악어새','악어 이빨 청소를 해 주는 대가로 공짜로 타고 다녀요. 진료 중에 건드리면 악어가 엄청 화내요!','악어새'],
 ostrich:['발레리나 지망생 타조','백조의 호수 주인공을 꿈꾸며 발끝으로 사뿐사뿐… 걸을 때마다 지진이 나요.','발레 타조'],
 crane:['온천욕 두루미','뜨끈한 물에 몸 담그고 와서 불도 얼음도 안 통해요.'],
@@ -232,7 +232,7 @@ Object.assign(NM,{priest:['아~ 해봐요 사제새','아프면 부리 벌려요
 
 // 🔌 스튜디오 모듈 연결 지점: 사운드팀은 sfx.js에서 SFX를, 아트팀은 art.js에서 ART를 구현해요. 없으면 조용히 넘어가요.
 const sfx=(n,a)=>{try{if(S&&S.sim)return;if(typeof SFX!=='undefined'&&SFX.play)SFX.play(n,a||{})}catch(e){}};
-const artFx=(n,a)=>{try{if(S&&S.sim)return;if(typeof ART!=='undefined'&&ART[n]){const r=ART[n](a||{});if(n==='bird'&&a&&a.b&&a.b.stone)stoneify(a.m);return r}}catch(e){}};
+const artFx=(n,a)=>{try{if(S&&S.sim)return;if(typeof ART!=='undefined'&&ART[n]){const r=ART[n](a||{});if(n==='bird'&&a&&a.b&&a.b.stone)stoneify(a.m,a.b.stone===2);return r}}catch(e){}};
 // 🧬 타워 진화 이름: 강화 Lv.1~4마다 이름이 바뀌어요(작가팀). 없으면 Ⅱ·Ⅲ·Ⅳ
 const EVO=/*EVO*/{"wall":["월세 둥지","월세 둥지","월세 둥지","월세 둥지"],"egg":["알까기 새총","새권총","새개틀링건","알마게돈 새대포"],"air":["깃털 미사일","간질간질 유도탄","깃털 다연장포","대륙간 간지럼탄"],"acorn":["다람쥐 대포","볼빵빵 곡사포","다람쥐 자주포","도토리묵 요새포"],"snack":["과자 뿌리개","과자 분사기","과자 스프링클러","무한리필 과자탑"],"pylon":["참새 전봇대","참새 변압기","참새 송전탑","만볼트 참새철탑"],"cctv":["부엉이 CCTV","4K 부엉이캠","야간투시 부엉이","부엉이 첩보위성"],"net":["잠자리채 그물포","왕잠자리채","꽁치잡이 투망포","곤충채집 끝판왕"],"ember":["바베큐 둥지","숯불구이 둥지","통닭 회전 둥지","전설의 치킨집"],"lava":["찜질방 분화구","불가마 분화구","황토 불가마 화산","용암 찜질 궁전"],"sun":["자외선 등대","땡볕 등대","돋보기 등대","폭염 태양신전"],"ice":["냉동 달걀","꽁꽁 언 달걀","냉동실 계란판","만년설 황금알"],"frost":["얼음땡 결정","얼음땡 고드름","얼음땡 술래탑","땡 없는 빙하"],"bliz":["에어컨 18도 탑","에어컨 16도 탑","냉장고 4도 탑","남극 영하40도 탑"],"static":["겨울 니트 깃털","털스웨터 깃털","수면바지 깃털","문고리 대마왕"],"thunder":["찌릿찌릿 피뢰침","뽀글뽀글 피뢰침","번개 파마 탑","전설의 벼락파마"],"storm":["월요병 먹구름","출근길 먹구름","야근 먹구름","월요일 무한반복"],"breeze":["미풍 선풍기","미풍 회전 선풍기","미풍이라던 선풍기","미풍 탈 쓴 태풍"],"wind":["비눗방울 막대","비눗방울 기계","비눗방울 대포","거품 목욕탕 대왕"],"twister":["회오리 감자","치즈 회오리 감자","왕꼬치 회오리","휴게소의 전설"],"bat":["박쥐 고시원","박쥐 원룸","박쥐 오피스텔","박쥐 펜트하우스"],"flu":["조류독감 AI","조류독감 AI2.0","조류독감 AI 프로","조류독감 초지능"],"acid":["식초 늪","사과식초 늪","피클 절임 늪","전설의 초절임 늪"],"steam":["불한증막 사우나","냉온탕 사우나","때밀이 사우나","목욕탕 대왕궁"],"plasma":["전자레인지 포","해동모드 레인지포","땡땡땡 레인지포","우주 전자레인지"],"firestorm":["불맛 회오리","웍질 회오리","불쇼 대회오리","중화요리 신의 웍"],"pyre":["마라탕 화로","맵기 5단계 화로","맵기 10단계 화로","맵기 측정불가"],"aurora":["냉동 전기장판","배신의 전기장판","북극 전기장판","오로라 대장판"],"whiteout":["빙수 블렌더","팥빙수 블렌더","눈꽃빙수 믹서","전설의 빙수장인"],"frostbane":["유통기한 아이스크림","세기말 아이스크림","빙하기산 아이스크림","공룡시대 아이스크림"],"tempest":["태풍경보 탑","재난문자 송신탑","슈퍼태풍 경보탑","태풍의 눈 관제탑"],"venomvolt":["문어발 콘센트","대왕문어발 콘센트","멀티탭의 멀티탭","전설의 문어발왕"],"miasma":["방귀 선풍기","고구마 방귀 선풍기","청국장 방귀 선풍기","범인 없는 방귀폭풍"]}/*EVOEND*/;
 const CBM=/*CBM*/{}/*CBMEND*/;T.forEach(t=>{if(CBM[t.id])t.d=Math.round(t.d*CBM[t.id])});
@@ -808,9 +808,9 @@ let STX=null;function stoneTex(){if(STX)return STX;const c=document.createElemen
  for(let i=0;i<900;i++){const v=150+Math.floor(Math.random()*100);x.fillStyle=`rgb(${v},${v},${v})`;x.fillRect(Math.random()*64|0,Math.random()*64|0,1+(Math.random()*2|0),1+(Math.random()*2|0))}
  x.strokeStyle='#6b6b6b';x.lineWidth=1;for(let i=0;i<5;i++){x.beginPath();let px=Math.random()*64,py=Math.random()*64;x.moveTo(px,py);for(let k=0;k<4;k++){px+=Math.random()*16-8;py+=Math.random()*16-8;x.lineTo(px,py)}x.stroke()}
  STX=new THREE.CanvasTexture(c);STX.wrapS=STX.wrapT=THREE.RepeatWrapping;STX.repeat.set(2,2);return STX}
-function stoneify(g){const R=[0x34312d,0x4c4842,0x67625a,0x827c72,0x9c968b],tmp=new THREE.Color();g.traverse(o=>{if(!o.isMesh||!o.material||o.name==='artOutl'||o.userData.noStone)return;
-  const mats=Array.isArray(o.material)?o.material:[o.material];o.material=mats.map(m=>{if(!m.color)return m;const L=m.color.r*.3+m.color.g*.59+m.color.b*.11;if(L<.06||L>.97||(m.color.g>m.color.r*1.2&&m.color.g>m.color.b*1.2))return m;
-   const n=m.clone();tmp.setHex(R[Math.min(4,Math.floor(L*5.2))]);n.color.copy(tmp);if('roughness'in n){n.roughness=1;n.metalness=0;n.bumpMap=stoneTex();n.bumpScale=.035}if(!n.map&&o.geometry&&o.geometry.attributes.uv)n.map=stoneTex();if('flatShading'in n)n.flatShading=true;if(n.emissive)n.emissive.setHex(0);n.needsUpdate=true;return n});if(o.material.length===1)o.material=o.material[0]})}
+function stoneify(g,half){const R=[0x34312d,0x4c4842,0x67625a,0x827c72,0x9c968b],tmp=new THREE.Color();g.traverse(o=>{if(!o.isMesh||!o.material||o.name==='artOutl'||o.userData.noStone)return;
+  const mats=Array.isArray(o.material)?o.material:[o.material];o.material=mats.map(m=>{if(!m.color)return m;const L=m.color.r*.3+m.color.g*.59+m.color.b*.11;const sat=Math.max(m.color.r,m.color.g,m.color.b)-Math.min(m.color.r,m.color.g,m.color.b);if(L<.06||L>.97||(!half&&m.color.g>m.color.r*1.2&&m.color.g>m.color.b*1.2)||(half&&sat>.12&&L>.75))return m;
+   const n=m.clone();if(!half||sat<=.12){tmp.setHex(R[Math.min(4,Math.floor(L*5.2))]);n.color.copy(tmp)}else n.color.multiplyScalar(1.12);if('roughness'in n){n.roughness=1;n.metalness=0;n.bumpMap=stoneTex();n.bumpScale=.035}if(!n.map&&o.geometry&&o.geometry.attributes.uv)n.map=stoneTex();if('flatShading'in n)n.flatShading=true;if(n.emissive)n.emissive.setHex(0);n.needsUpdate=true;return n});if(o.material.length===1)o.material=o.material[0]})}
 function birdMesh3(b,oc){const g=birdMesh2(b,oc),id=b.id,at=(m,x,y,z,s)=>{m.position.set(x,y,z);if(s)m.scale.set(s[0],s[1],s[2]);g.add(m);return m},up=m=>{m.rotation.x=PI/2;return m};
  if(b.race){raceBird(b,g,at,up);return g}
  if(b.combo){const c1=TECH[b.combo[0]].col,c2=TECH[b.combo[1]].col;// 조합 새: 안쪽 덮깃이 두 속성 색으로 은은하게 빛나요
@@ -1627,11 +1627,8 @@ const ART=(()=>{
     for(let i=-2;i<=2;i++)K(i*.026,hy-hr-.06,hz-.04,.014,.05,DN,0xffffff);[-2,-1,0,1,2].forEach(i=>K(i*.03,hy+.04-Math.abs(i)*.02,zt+.02,.026,.15-Math.abs(i)*.03,[PI/2-.3,0,i*.35],i%2?0x8f8676:0xb0a793));
     for(let i=0;i<6;i++){const y=.3+i*.085,z=z0+.04-i*.012;S(0,y,z,.028,.045,.026,c);sides(sd=>S(sd*.055,y,z,.055,.022,.012,i%2?0x6e665a:0x8f8676,0,[0,0,sd*.35]))}
     sides(sd=>[0,1,2].forEach(i=>K(sd*(.31+i*.02),-.08-i*.03,z0+.12,.01,.05,[0,0,sd*1.2],0xf5f5f4)))},
-   // 🦖 털 빠진 시조새: 분홍 맨살 + 남은 깃털 몇 가닥 + 짧은 팔 발톱 + 식은땀
-   archaeo_g(){for(let i=-2;i<=2;i++)K(i*.022,hy-hr-.045,hz-.035,.009,.03,DN,0xffffff);[-1,1].forEach(i=>K(i*.03,hy+.02,zt+.005,.012,.07,[PI/2,0,i*.5],0x8b6b4a));
-    for(let i=0;i<5;i++)S(0,.28+i*.08,z0+.02-i*.02,.03-i*.003,.045,.026,c);S(0,.7,z0-.06,.05,.03,.012,0x8b6b4a);
-    sides(sd=>{Y(sd*.15,-.22,z0+.04,.022,.1,[1.1,0,0],c);[0,1].forEach(i=>K(sd*(.15+i*.02),-.29,z0-.01,.008,.035,DN,0xf5f5f4))});
-    belly(0xfbd5cc,.85);Su(.17,hy+.04,hz+.1,.022,0x7dd3fc,1)},
+   // 🦖 갓 깨어난 시조새: 청록 깃털(돌 무늬가 남음) + 깨진 화석 껍질 모자 + 등에 돌조각
+   archaeo_g(){for(let i=-2;i<=2;i++)K(i*.024,hy-hr-.05,hz-.035,.011,.035,DN,0xffffff);/* 화석 껍질 모자 */S(0,hy+.03,hz+.07,.17,.17,.1,0x827c72);for(let i=0;i<9;i++){const a=i/9*PI*2;K(Math.cos(a)*.155,hy+.03+Math.sin(a)*.155,hz+.1,.03,.07,O,i%2?0x9c968b:0x67625a)}Bx(.05,hy+.06,hz+.15,.07,.01,.01,[0,0,.6],0x2f2a24);S(-.06,hy-.02,hz+.14,.03,.03,.012,0x6b8e3a);/* 등에 붙은 돌 조각 */[[.1,.08,.4],[-.09,.2,-.5],[.02,-.08,1.2]].forEach(([x,y,r])=>Bx(x,y,z0+.2,.09,.07,.03,[0,.3,r],0x827c72));Bx(.1,.08,z0+.22,.06,.008,.008,[0,0,1],0x2f2a24);/* 새 깃털 꼬리 */for(let i=0;i<6;i++){const y=.3+i*.085,z=z0+.04-i*.012;S(0,y,z,.028,.045,.026,c);sides(sd=>S(sd*.06,y,z,.06,.024,.012,i%2?0xf59e0b:0x14b8a6,0,[0,0,sd*.35]))}sides(sd=>[0,1,2].forEach(i=>K(sd*(.31+i*.02),-.08-i*.03,z0+.12,.01,.05,[0,0,sd*1.2],0xf5f5f4)));belly(0xfde68a,.85);Su(.15,hy+.06,hz+.02,.03,0xffffff,1)},
    // 온천욕 두루미: 머리 수건 + 김
    crane(){Bx(0,hy,zt+.0,.2,.14,.05,O,0xffffff);Bx(0,hy-.04,zt+.0,.202,.025,.052,O,0x38bdf8);S(0,hy-.1,hz+.05,.05,.025,.035,0xdc2626);
     [[.18,-.1,zt+.2,.04],[-.15,-.05,zt+.3,.05],[.1,.05,zt+.42,.035]].forEach(([x,y,z,r])=>Su(x,y,z,r,0xffffff,1));K(0,.36,z0+.02,.08,.22,[-.3,0,0],0x1f2937)},
