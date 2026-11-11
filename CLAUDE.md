@@ -36,6 +36,7 @@
 
 ## 꼭 알아둘 규칙
 - 새 좌표계: 새는 **-y 방향**을 바라보고 z가 위. 몸통 중심 (0,0,0.26), 머리 (0,-0.3,0.46) 반지름 0.15(부엉이 0.2, 병아리 0.17), 타조만 키가 큼(z0 0.6, 머리 z 1.3).
+- 🪶 영웅 해금: `HERO_FREE`=병아리·튜브 오리·황제펭귄 무료, 나머지 `heroPrice`(새 가격 <300:10·<700:20·<2000:30·그 이상 50🪶), `SV.heroes`, `heroOwn`. **`HERO_ALL_OPEN=true`(테스트 기간 전부 열림) → 출시 때 false로**. 꾸미기에서 잠긴 새는 구경 가능, 닫으면 마지막 보유 영웅으로 되돌림(`hOwned`).
 - 세이브: localStorage 키 `jjj_save_v1` (`SV` 객체: coins, wins, races, hero …). 종족 해금 30코인(종족 모드 자체 해금은 0, 첫 종족 무료). 코인은 승리 때만(난이도별 E2·N3·M4·H6·X8).
 - 모드별 밸런스: `applyModeBal(k)`가 `start()` 때 `BAL.mode[normal|race]`의 `uh`(새 체력)·`td`(타워 공격력)·`as`(공격 간격) 배율을 적용. 원래 값은 `u.hp0`, `b.d0`, `b.cd0`.
 - 타워 성격(자동 태그): 공격 간격 ≤0.8초 `rapid`(연사 가속, `BAL.rh/rs`), ≥1.5초 `heavy`(3타 치명타 `BAL.hcr` + 최대체력 `BAL.hmx`), 독 중첩(`addPois`, `BAL.pk/pmax/pdur`, 광역 독은 독연기 `p.clouds`), 화상(`u.bn/u.bv`, 쓰러지면 번짐 `BAL.bsp`).

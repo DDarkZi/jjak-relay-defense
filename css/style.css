@@ -255,3 +255,5 @@ html{-webkit-tap-highlight-color:transparent}
 /* 🤖 온라인 방 AI 난이도 */
 .ndifw{margin:8px 0}.ndifw .row button{flex:1;min-width:0;font-size:11px;padding:6px 2px}.ndifw .row button:disabled{opacity:.55}.ndifw .row button.on{opacity:1}
 .rpick{margin-left:6px;padding:4px 10px;font-size:12px;border-radius:99px}#racem .mbox{max-height:92vh;overflow:auto}#racem .mhd .soon{font-size:12px;vertical-align:middle}
+/* 🪶 영웅 해금 */
+.hopt .hnote,.hopt .hbuy{grid-column:1/-1;font-size:12px;padding:6px 8px;border-radius:10px;background:#0006;text-align:center}.hopt .hbuy button{margin-left:6px;padding:4px 10px;font-size:12px}.hopt button.hlk{opacity:.6}.hopt button small{display:block;font-size:9px;color:#fde68a}

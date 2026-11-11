@@ -2567,6 +2567,7 @@ $('dif').onclick=e=>{if(e.target.dataset.k)setDiff(e.target.dataset.k)};setDiff(
 const SAVE_KEY='jjj_save_v1',MODE_COST=0,RACE_COST=30,COIN_WIN={E:2,N:3,M:4,H:6,X:8};
 let SV={coins:0,modeOK:0,races:[],wins:0},gameMode='normal',raceView=null;
 try{const sv=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(sv&&typeof sv==='object')SV=Object.assign(SV,sv)}catch(e){}
+SV.heroes=SV.heroes||[];if(SV.hero&&SV.hero.id&&!SV.heroes.includes(SV.hero.id)&&!['chick','duck','penguin'].includes(SV.hero.id))SV.heroes.push(SV.hero.id);
 if(!Array.isArray(SV.races))SV.races=[];
 const svSave=()=>{try{localStorage.setItem(SAVE_KEY,JSON.stringify(SV))}catch(e){}};
 if(SV.races.length)raceSel=SV.races[0];
@@ -2608,6 +2609,11 @@ const FACES=[['none','없음','🙂'],['shades','선글라스','😎'],['pink','
 const HCOL=[null,0xfde047,0xf97316,0xef4444,0xf472b6,0xa78bfa,0x6366f1,0x38bdf8,0x2dd4bf,0x84cc16,0xf8fafc,0x94a3b8,0x3f3f46];
 const NICKS=['깃털장인','짹짹대장','먹이도둑','둥지부자','부리부리','날개짱','삐약대장','구구구','꽥꽥이','새벽수탉','모이왕','하늘산책'];
 const heroPool=()=>U.filter(u=>!u.hidden&&u.id!=='egg_legs'&&!u.race);
+/* 🪶 영웅 해금: 기본 3마리 무료, 나머지는 깃털로. 테스트 기간엔 HERO_ALL_OPEN=true로 전부 열어 둠(출시 때 false) */
+const HERO_ALL_OPEN=true,HERO_FREE=['chick','duck','penguin'];
+const heroPrice=u=>u.c<300?10:u.c<700?20:u.c<2000?30:50;
+const heroOwn=id=>HERO_ALL_OPEN||HERO_FREE.includes(id)||(SV.heroes||[]).includes(id);
+let hOwned=null;/* 꾸미기 창을 열 때 마지막으로 가진 영웅(잠긴 새를 구경만 하고 닫으면 되돌림) */
 if(!SV.hero||!UB[SV.hero.id])SV.hero={id:'chick',col:null,hat:'crown',face:'none',name:'짹짹이'};
 function heroTag(){try{return UB[SV.hero.id].ic+SV.hero.name}catch(e){return '나'}}
 const hexS=c=>'#'+c.toString(16).padStart(6,'0');
@@ -2714,16 +2720,19 @@ const ovl=(id,on)=>{$(id).style.display=on?'flex':'none'};
 function openMode(){ovl('modem',1);renderTitle()}
 let hTab='sp';
 function heroOpt(){const h=SV.hero,o=$('hopt');[...$('htab').children].forEach(b=>b.className=b.dataset.h===hTab?'on':'');
- if(hTab==='sp')o.innerHTML=heroPool().map(u=>`<button data-v="${u.id}" class="${h.id===u.id?'on':''}"><i>${u.ic}</i>${u.sn||u.n}</button>`).join('');
+ if(hTab==='sp'){const cu=UB[h.id],lk=!heroOwn(h.id);
+  o.innerHTML=(HERO_ALL_OPEN?'<div class="hnote">🧪 테스트 기간: 모든 영웅이 열려 있어요</div>':lk?`<div class="hbuy">🔒 <b>${cu.sn||cu.n}</b> 구경 중 · 🪶${heroPrice(cu)}로 해금 <button id="hbuyb">🔓 해금</button></div>`:'')+
+   heroPool().map(u=>{const own=heroOwn(u.id);return `<button data-v="${u.id}" class="${h.id===u.id?'on':''}${own?'':' hlk'}"><i>${u.ic}</i>${u.sn||u.n}${own?'':`<small>🔒🪶${heroPrice(u)}</small>`}</button>`}).join('');
+  const bb=$('hbuyb');if(bb)bb.onclick=e=>{e.stopPropagation();const p=heroPrice(cu);if(SV.coins<p){$('hbuyb').textContent=`🪶 ${SV.coins}/${p} 부족`;return}SV.coins-=p;(SV.heroes=SV.heroes||[]).push(h.id);hOwned=h.id;svSave();heroOpt();lobUI();renderTitle()}}
  else if(hTab==='col')o.innerHTML=HCOL.map((c,i)=>`<button data-v="${i}" class="sw ${h.col===c?'on':''}" style="background:${c==null?'linear-gradient(135deg,#64748b,#cbd5e1)':hexS(c)}">${c==null?'기본':''}</button>`).join('');
  else{const L=hTab==='hat'?HATS:FACES,cur=hTab==='hat'?h.hat:h.face;o.innerHTML=L.map(([k,n,ic])=>`<button data-v="${k}" class="${cur===k?'on':''}"><i>${ic}</i>${n}</button>`).join('')}}
-function openHero(){lobMode='hero';ovl('herom',1);lobAttach($('hpv'));$('hname').value=SV.hero.name;heroOpt()}
-function closeHero(){const n=$('hname').value.trim();if(n)SV.hero.name=n.slice(0,10);svSave();ovl('herom',0);lobMode='lobby';lobAttach($('lstage'));lobUI()}
+function openHero(){hOwned=heroOwn(SV.hero.id)?SV.hero.id:HERO_FREE[0];lobMode='hero';ovl('herom',1);lobAttach($('hpv'));$('hname').value=SV.hero.name;heroOpt()}
+function closeHero(){const n=$('hname').value.trim();if(n)SV.hero.name=n.slice(0,10);if(!heroOwn(SV.hero.id))SV.hero.id=hOwned&&heroOwn(hOwned)?hOwned:HERO_FREE[0];svSave();ovl('herom',0);lobMode='lobby';lobAttach($('lstage'));lobUI()}
 function openPlaza(){lobMode='plaza';ovl('plaza',1);lobAttach($('plv'));if(PZ){PZ.me.x=0;PZ.me.y=-2.6;PZ.me.go=0}}
 function closePlaza(){ovl('plaza',0);lobMode='lobby';lobAttach($('lstage'))}
 $('htab').onclick=e=>{const b=e.target.closest('button');if(b&&b.dataset.h){hTab=b.dataset.h;heroOpt()}};
-$('hopt').onclick=e=>{const b=e.target.closest('button');if(!b)return;const v=b.dataset.v,h=SV.hero;if(hTab==='sp')h.id=v;else if(hTab==='col')h.col=HCOL[+v];else if(hTab==='hat')h.hat=v;else h.face=v;svSave();heroOpt();lobUI()};
-$('hrand').onclick=()=>{const p=heroPool();Object.assign(SV.hero,{id:p[Math.floor(Math.random()*p.length)].id,col:HCOL[Math.floor(Math.random()*HCOL.length)],hat:HATS[Math.floor(Math.random()*HATS.length)][0],face:FACES[Math.floor(Math.random()*FACES.length)][0]});svSave();heroOpt();lobUI()};
+$('hopt').onclick=e=>{const b=e.target.closest('button');if(!b)return;const v=b.dataset.v,h=SV.hero;if(hTab==='sp'){h.id=v;if(heroOwn(v))hOwned=v}else if(hTab==='col')h.col=HCOL[+v];else if(hTab==='hat')h.hat=v;else h.face=v;svSave();heroOpt();lobUI()};
+$('hrand').onclick=()=>{const p=heroPool().filter(u=>heroOwn(u.id));Object.assign(SV.hero,{id:p[Math.floor(Math.random()*p.length)].id,col:HCOL[Math.floor(Math.random()*HCOL.length)],hat:HATS[Math.floor(Math.random()*HATS.length)][0],face:FACES[Math.floor(Math.random()*FACES.length)][0]});svSave();heroOpt();lobUI()};
 $('herox').onclick=closeHero;$('heroo').onclick=openHero;$('lhero').onclick=openHero;$('lhint').onclick=openHero;
 $('modeb').onclick=openMode;$('modex').onclick=()=>{ovl('modem',0);lobUI()};
 $('plz').onclick=openPlaza;$('pzx').onclick=closePlaza;
