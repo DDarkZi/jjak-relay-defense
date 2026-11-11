@@ -5,7 +5,8 @@
 // 자리 번호: 손님 화면에선 항상 자기가 0번이 되도록 돌려서(회전) 기존 1인용 화면 코드를 그대로 써요.
 const NET=(()=>{
  const CODE_CH='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',HZ=.1;
- const st={role:null,code:'',tr:null,slots:[],me:-1,started:false,gview:{},cid2slot:{},slot2cid:{},acc:0,ended:false,lost:false,lastView:0,nameT:0};
+ const st={role:null,code:'',tr:null,slots:[],me:-1,started:false,gview:{},cid2slot:{},slot2cid:{},acc:0,ended:false,lost:false,lastView:0,nameT:0,tok:{},myTok:'',lastG:{},bytes:0,retry:0};
+ const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302','stun:stun.cloudflare.com:3478']},{urls:['turn:eu-0.turn.peerjs.com:3478','turn:us-0.turn.peerjs.com:3478'],username:'peerjs',credential:'peerjsp'}]};// 직접 연결이 안 되면 PeerJS 무료 중계(TURN)로
  const UIX={};U.forEach((u,i)=>UIX[u.id]=i);const TIX={};T.forEach((t,i)=>TIX[t.id]=i);
  const myHello=()=>{let ic='🐥',n='짹짹이';try{ic=UB[SV.hero.id].ic;n=SV.hero.name||n}catch(e){}return{nick:String(n).slice(0,10),ic}};
  const rot=(i,k)=>((i-k)%8+8)%8;// 방장 번호 i → 손님 k 화면의 번호
@@ -18,7 +19,7 @@ const NET=(()=>{
   if(local){const bc=new BroadcastChannel('jjak-'+code);bc.onmessage=e=>{const m=e.data;if(m.to!=='H')return;if(m.k==='open')h.join(m.from);else if(m.k==='close')h.leave(m.from);else h.msg(m.from,m.d)};setTimeout(h.ready,0);
    return{send:(cid,d)=>bc.postMessage({to:cid,from:'H',k:'d',d}),close:()=>{try{bc.postMessage({to:'*',from:'H',k:'close'});bc.close()}catch(e){}}}}
   const conns={};let peer=null;const o={send:(cid,d)=>{const c=conns[cid];if(c&&c.open)try{c.send(d)}catch(e){}},close:()=>{try{peer&&peer.destroy()}catch(e){}}};
-  loadPeer(()=>{peer=new Peer('jjak-'+code,{debug:0});peer.on('open',()=>h.ready());peer.on('error',e=>h.err(e&&e.type==='unavailable-id'?'taken':(e&&e.type)||'error'));
+  loadPeer(()=>{peer=new Peer('jjak-'+code,{debug:0,config:ICE});peer.on('open',()=>h.ready());peer.on('error',e=>h.err(e&&e.type==='unavailable-id'?'taken':(e&&e.type)||'error'));
    peer.on('connection',c=>{c.on('open',()=>{conns[c.peer]=c;h.join(c.peer)});c.on('data',d=>h.msg(c.peer,d));c.on('close',()=>{delete conns[c.peer];h.leave(c.peer)});c.on('error',()=>{})})},m=>h.err(m));
   return o}
  function guestT(code,h){
@@ -27,8 +28,8 @@ const NET=(()=>{
    setTimeout(()=>{bc.postMessage({to:'H',from:id,k:'open'});h.ready()},50);return{send:d=>bc.postMessage({to:'H',from:id,k:'d',d}),close:()=>{try{bc.postMessage({to:'H',from:id,k:'close'});bc.close()}catch(e){}}}}
   let peer=null,c=null;const o={send:d=>{if(c&&c.open)try{c.send(d)}catch(e){}},close:()=>{try{peer&&peer.destroy()}catch(e){}}};
   addEventListener('pagehide',()=>{try{peer&&peer.destroy()}catch(e){}});
-  loadPeer(()=>{peer=new Peer({debug:0});peer.on('error',e=>h.err(e&&e.type==='peer-unavailable'?'noroom':(e&&e.type)||'error'));
-   peer.on('open',()=>{c=peer.connect('jjak-'+code,{reliable:true,serialization:'json'});c.on('open',()=>h.ready());c.on('data',d=>h.msg(d));c.on('close',()=>h.close());c.on('error',()=>{})})},m=>h.err(m));
+  loadPeer(()=>{peer=new Peer({debug:0,config:ICE});peer.on('error',e=>h.err(e&&e.type==='peer-unavailable'?'noroom':(e&&e.type)||'error'));
+   peer.on('open',()=>{c=peer.connect('jjak-'+code,{reliable:true,serialization:'json'});const to=setTimeout(()=>{if(!c.open)h.slow&&h.slow()},12000);c.on('open',()=>{clearTimeout(to);h.ready()});c.on('data',d=>h.msg(d));c.on('close',()=>h.close());c.on('error',()=>{})})},m=>h.err(m));
   return o}
 
  // ---------- 로비 화면 ----------
@@ -48,48 +49,58 @@ const NET=(()=>{
  function host(){if(st.role)return;st.role='host';st.code=Array.from({length:5},()=>CODE_CH[Math.floor(Math.random()*CODE_CH.length)]).join('');
   st.slots=Array(8).fill(null);st.slots[0]=Object.assign({kind:'host'},myHello());st.me=0;st.started=false;st.ended=false;
   panel('r');$n('ncd').textContent=st.code;status('방을 여는 중…');renderSlots();
-  st.tr=hostT(st.code,{ready:()=>status('친구에게 방 코드나 초대 링크를 보내 주세요!'),err:e=>{if(e==='taken'){leave();return host()}status('⚠️ 연결 오류: '+e+' (잠시 후 다시 시도해 주세요)')},
+  st.tr=hostT(st.code,{ready:()=>status('친구에게 방 코드나 초대 링크를 보내 주세요! 📌 방장은 게임 내내 앱을 화면에 켜 두세요(방장 폰이 게임을 계산해요)'),err:e=>{if(e==='taken'){leave();return host()}status('⚠️ 연결 오류: '+e+' (잠시 후 다시 시도해 주세요)')},
    join:cid=>{},leave:cid=>hLeave(cid),msg:(cid,d)=>hMsg(cid,d)})}
- function hBroadcastLobby(){Object.keys(st.cid2slot).forEach(cid=>st.tr.send(cid,{t:'lobby',slots:st.slots,you:st.cid2slot[cid],code:st.code}));renderSlots()}
+ function hBroadcastLobby(){Object.keys(st.cid2slot).forEach(cid=>st.tr.send(cid,{t:'lobby',slots:st.slots,you:st.cid2slot[cid],tok:st.tok[st.cid2slot[cid]],code:st.code}));renderSlots()}
  function hMsg(cid,d){if(!d||!d.t)return;
+  if(d.t==='hello'&&d.rejoin&&st.started){const i=d.slot|0,p=S&&S.pl[i];if(i<1||i>7||st.tok[i]!==d.rejoin||st.slot2cid[i]||!p){st.tr.send(cid,{t:'full',m:'다시 들어갈 수 없어요 (게임이 끝났거나 자리가 없어요)'});return}
+   st.cid2slot[cid]=i;st.slot2cid[i]=cid;delete st.lastG[cid];if(p.alive&&p.ai){p.ai=false;p.cfg=null;p.name=p.name.replace(/ 🤖$/,'')}st.gview[i]=i;
+   st.tr.send(cid,{t:'start',k:i,hoff:S.off,names:S.pl.map(q=>q.name),diff,re:1});toast(`📶 ${st.slots[i].nick} 님이 다시 연결됐어요`);return}
   if(d.t==='hello'){if(st.started){st.tr.send(cid,{t:'full',m:'이미 시작한 방이에요'});return}if(st.cid2slot[cid]!=null)return;let i=st.slots.findIndex((s,j)=>j>0&&!s);if(i<0){st.tr.send(cid,{t:'full',m:'방이 꽉 찼어요 (8명)'});return}
-   st.slots[i]={kind:'guest',nick:String(d.nick||'손님').slice(0,10),ic:String(d.ic||'🐦').slice(0,4)};st.cid2slot[cid]=i;st.slot2cid[i]=cid;hBroadcastLobby();if(!S)toast(`👋 ${st.slots[i].nick} 님이 들어왔어요`);return}
+   st.slots[i]={kind:'guest',nick:String(d.nick||'손님').slice(0,10),ic:String(d.ic||'🐦').slice(0,4)};st.cid2slot[cid]=i;st.slot2cid[i]=cid;st.tok[i]=Math.random().toString(36).slice(2,10);hBroadcastLobby();if(!S)toast(`👋 ${st.slots[i].nick} 님이 들어왔어요`);return}
   const pid=st.cid2slot[cid];if(pid==null||!S||S.net!=='host')return;
   if(d.t==='view'){if(d.v>=0&&d.v<8)st.gview[pid]=d.v;return}
   if(d.t==='cmd'&&d.c){const c=d.c;try{if(c.a==='send')actSend(pid,String(c.b));else if(c.a==='build')actBuild(pid,c.x|0,c.y|0,String(c.t));else if(c.a==='upg')actUpg(pid,c.x|0,c.y|0);
    else if(c.a==='dem')actDem(pid,c.x|0,c.y|0);else if(c.a==='tech')actTech(pid,String(c.k));else if(c.a==='skill')actSkill(pid)}catch(e){console.log(e)}}}
- function hLeave(cid){const i=st.cid2slot[cid];if(i==null)return;delete st.cid2slot[cid];delete st.slot2cid[i];
+ function hLeave(cid){const i=st.cid2slot[cid];if(i==null)return;delete st.cid2slot[cid];delete st.slot2cid[i];delete st.lastG[cid];
   if(!st.started){st.slots[i]=null;hBroadcastLobby();return}
-  const p=S&&S.pl[i];if(p&&p.alive){const a=AIS[Math.floor(Math.random()*AIS.length)];p.cfg=Object.assign({},a.g);p.ai=true;p.aiT=0;if(!p.tech)p.tech=TK[Math.floor(Math.random()*5)];if(!p.tech2plan)p.tech2plan=TK[(TK.indexOf(p.tech)+1)%5];p.name+=' 🤖';toast(`📴 ${st.slots[i].nick} 님 연결이 끊겨 AI가 대신해요`)}}
+  const p=S&&S.pl[i];if(p&&p.alive){const a=AIS[Math.floor(Math.random()*AIS.length)];p.cfg=Object.assign({},a.g);p.ai=true;p.aiT=0;if(!p.tech)p.tech=TK[Math.floor(Math.random()*5)];if(!p.tech2plan)p.tech2plan=TK[(TK.indexOf(p.tech)+1)%5];if(!/ 🤖$/.test(p.name))p.name+=' 🤖';toast(`📴 ${st.slots[i].nick} 님 연결이 끊겨 AI가 대신해요 (다시 들어오면 돌려줘요)`)}}
  function hStart(){if(st.role!=='host'||st.started)return;st.started=true;ovl('netm',0);gameMode='normal';start();S.net='host';
   for(let i=1;i<8;i++){const s=st.slots[i];if(!s||s.kind!=='guest')continue;const p=S.pl[i];p.cfg=null;p.ai=false;p.gold=500;p.income=30;p.tech=null;p.tech2=null;p.tech2plan=null;p.name=`${(i+S.off)%8+1}번 ${s.ic}${s.nick}`;st.gview[i]=i}
   ui();Object.keys(st.cid2slot).forEach(cid=>{const k=st.cid2slot[cid];st.tr.send(cid,{t:'start',k,hoff:S.off,names:S.pl.map(p=>p.name),diff})})}
  const gridEnc=p=>{const o=[];p.grid.forEach((r,y)=>r.forEach((t,x)=>{if(t)o.push([y*COLS+x,TIX[t.bp.id],t.lv,t.d,Math.round(t.r*100),t.dis>0?1:0,t.inv])}));return o};
  function snap(k){const pl=Array(8);S.pl.forEach(p=>{pl[rot(p.id,k)]=[Math.floor(p.gold),p.income,Math.round(p.life),p.alive?1:0,p.tech||'',p.tech2||'',p.skU?1:0,Math.ceil(p.skCD||0),p.boost>0?1:0,p.reveal>0?1:0,p.dieT?Math.round(p.dieT):0,Math.round(p.dealt||0),p.kills||0]});
   const vb=st.gview[k]??k,v=S.pl[vb],hid=u=>u.bp.stealth&&u.y<BH*u.bp.stealth&&!(v.reveal>0)&&!u.seen;
-  const us=v.units.map(u=>[u.id,UIX[u.bp.id],Math.round(u.x*100),Math.round(u.y*100),Math.round(Math.max(0,u.hp)/u.bp.hp*1000),rot(u.owner,k),(u.sh>0?1:0)|(u.fl>0?2:0)|(u.gr>0?4:0)|(u.stun>0?8:0)|(u.slow>0?16:0)|(u.bn>0?32:0)|((u.pois>0||u.ps>0)?64:0)|(u.hit>0?128:0)|(hid(u)?0:256)|(u.amp>0?512:0),u.col||0]);
-  const g={};g[rot(vb,k)]=gridEnc(v);if(vb!==k)g[0]=gridEnc(S.pl[k]);
+  const us=v.units.map(u=>[u.id,UIX[u.bp.id],Math.round(u.x*100),Math.round(u.y*100),Math.round(Math.max(0,u.hp)/u.bp.hp*1000),rot(u.owner,k),(u.sh>0?1:0)|(u.fl>0?2:0)|(u.gr>0?4:0)|(u.stun>0?8:0)|(u.slow>0?16:0)|(u.bn>0?32:0)|((u.pois>0||u.ps>0)?64:0)|(u.hit>0?128:0)|(hid(u)?0:256)|(u.amp>0?512:0)].concat(u.col?[u.col]:[]));
+  const g={},cid=st.slot2cid[k],L=st.lastG[cid]||(st.lastG[cid]={}),full=st.nameT<=0,addG=(b,p)=>{const e=gridEnc(p),js=JSON.stringify(e);if(full||L[b]!==js){g[rot(b,k)]=e;L[b]=js}};addG(vb,v);if(vb!==k)addG(k,S.pl[k]);
   const o={t:'s',T:Math.round(S.t*10)/10,c:Math.round(S.cdn*10)/10,i:Math.round(S.inc*10)/10,v:rot(vb,k),pl,g,u:us};if(st.nameT<=0)o.n=S.pl.map((p,i)=>S.pl[(i+k)%8].name);return o}
- function htick(dt){if(!st.tr||!st.started)return;st.acc+=dt;if(st.acc<HZ)return;st.acc=0;st.nameT-=HZ;Object.keys(st.cid2slot).forEach(cid=>{const k=st.cid2slot[cid];try{st.tr.send(cid,snap(k))}catch(e){}});if(st.nameT<=0)st.nameT=2}
+ function htick(dt){if(!st.tr||!st.started)return;st.acc+=dt;const hz=Object.keys(st.cid2slot).length>=4?.15:HZ;/* 손님이 많으면 조금 덜 자주(방장 폰 업로드 줄이기) */if(st.acc<hz)return;st.acc=0;st.nameT-=HZ;Object.keys(st.cid2slot).forEach(cid=>{const k=st.cid2slot[cid];try{const o=snap(k);st.bytes+=JSON.stringify(o).length;st.tr.send(cid,o)}catch(e){}});if(st.nameT<=0)st.nameT=2}
  function hOver(w){if(st.ended||st.role!=='host')return;st.ended=true;Object.keys(st.cid2slot).forEach(cid=>st.tr.send(cid,{t:'end',w:w<0?-1:rot(w,st.cid2slot[cid])}))}
  function tell(pid,m){const cid=st.slot2cid[pid];if(cid&&st.tr)st.tr.send(cid,{t:'msg',m})}
 
  // ---------- 손님 ----------
  function join(){if(st.role)return;const code=String($n('ncode').value||'').trim().toUpperCase().replace(/[^A-Z0-9]/g,'');if(code.length!==5)return status('방 코드 5자리를 입력해 주세요');
   st.role='guest';st.code=code;st.ended=false;st.lost=false;panel('r');$n('ncd').textContent=code;status('방에 연결하는 중…');st.slots=Array(8).fill(null);renderSlots();
-  st.tr=guestT(code,{ready:()=>{status('들어가는 중…');st.tr.send(Object.assign({t:'hello'},myHello()))},msg:d=>gMsg(d),
-   close:()=>{if(S&&S.net==='guest'&&!st.ended){st.ended=true;toast('📴 방장 연결이 끊겼어요');endLocal('📴','방장 연결이 끊겼어요')}else if(!S){status('📴 방이 닫혔어요');}},
-   err:e=>{status(e==='noroom'?'⚠️ 그런 방이 없어요. 코드를 확인해 주세요':'⚠️ 연결 오류: '+e);st.role=null;try{st.tr&&st.tr.close()}catch(x){}st.tr=null}})}
+  st.myTok='';st.retry=0;gConnect(false)}
+ function gConnect(re){const code=st.code;
+  st.tr=guestT(code,{ready:()=>{if(re){st.tr.send(Object.assign({t:'hello',rejoin:st.myTok,slot:st.k},myHello()));return}status('들어가는 중…');st.tr.send(Object.assign({t:'hello'},myHello()))},msg:d=>gMsg(d),
+   slow:()=>{if(re)return;status('⏳ 연결이 오래 걸려요… 방장 화면이 켜져 있는지 확인하고, 안 되면 와이파이↔데이터를 바꿔 다시 들어와 보세요')},
+   close:()=>gLost(),
+   err:e=>{if(re||(S&&S.net==='guest'&&st.myTok))return gLost();status(e==='noroom'?'⚠️ 그런 방이 없어요. 코드를 확인해 주세요':'⚠️ 연결 오류: '+e+' (와이파이↔데이터를 바꿔 보세요)');st.role=null;try{st.tr&&st.tr.close()}catch(x){}st.tr=null}})}
+ /* 게임 중 끊기면 3초마다 최대 6번 다시 연결해요. 그동안 내 자리는 AI가 잠깐 대신해요 */
+ function gLost(){if(!S||S.net!=='guest'){if(!S)status('📴 방이 닫혔어요');return}if(st.ended||st.lost)return;
+  try{st.tr&&st.tr.close()}catch(e){}st.tr=null;if(st.retry>=6||!st.myTok){st.ended=true;endLocal('📴','방장과 연결이 끊겼어요');return}
+  st.retry++;toast(`📶 연결이 끊겼어요… 다시 연결하는 중 (${st.retry}/6)`);setTimeout(()=>{if(!st.ended&&S&&S.net==='guest')gConnect(true)},3000)}
  function endLocal(ic,h){over=true;$n('eT').textContent=ic;$n('eH').textContent=h;$n('eP').textContent='';$n('ew').innerHTML='';$n('spec').style.display='none';$n('end').style.display='flex'}
  function gMsg(d){if(!d||!d.t)return;
-  if(d.t==='lobby'){st.slots=d.slots;st.me=d.you;renderSlots();return}
-  if(d.t==='full'){status('⚠️ '+d.m);try{st.tr.close()}catch(e){}st.tr=null;st.role=null;return}
+  if(d.t==='lobby'){st.slots=d.slots;st.me=d.you;if(d.tok)st.myTok=d.tok;renderSlots();return}
+  if(d.t==='full'){if(S&&S.net==='guest'){st.ended=true;try{st.tr.close()}catch(e){}st.tr=null;endLocal('📴',d.m);return}status('⚠️ '+d.m);try{st.tr.close()}catch(e){}st.tr=null;st.role=null;return}
   if(d.t==='start')return gStart(d);
   if(!S||S.net!=='guest')return;
   if(d.t==='s')return gApply(d);
   if(d.t==='msg')return toast(d.m);
   if(d.t==='end'){st.ended=true;const w=d.w;if(w===0)return finish(true);if(w>=0&&(S.spec||st.lost))return specEnd(S.pl[w]);if(w>=0){endLocal('👀',`${S.pl[w].name} 우승!`)}else endLocal('🏁','게임 종료')}}
- function gStart(d){st.k=d.k;diff=d.diff||'N';gameMode='normal';applyModeBal('normal');EGG.n=0;ovl('netm',0);
+ function gStart(d){st.k=d.k;if(d.re&&S&&S.net==='guest'){st.retry=0;S.pl.forEach(p=>{p.units=[]});toast('📶 다시 연결됐어요!');return}diff=d.diff||'N';gameMode='normal';applyModeBal('normal');EGG.n=0;ovl('netm',0);
   S={t:0,inc:0,kills:0,dealt:0,off:(d.hoff+d.k)%8,sim:false,cdn:5,lm:1,pl:[],net:'guest'};techPend=null;
   for(let i=0;i<8;i++)S.pl.push({id:i,name:d.names[(i+d.k)%8],tech:null,tech2:null,race:null,skU:0,skCD:0,boost:0,reveal:0,color:PC[i],gold:500,income:30,ai:i>0,life:100,alive:true,grid:Array.from({length:ROWS},()=>Array(COLS).fill(null)),units:[],cfg:null,dealt:0});
   sel=null;insp=null;view=0;st.lastView=0;paused=false;over=false;spd=1;document.querySelector('footer').style.opacity='';$n('pz').textContent='⏸';$n('sp').textContent='1x';$n('end').style.display='none';
@@ -115,7 +126,7 @@ const NET=(()=>{
 
  // ---------- 공통 ----------
  function leave(){try{if(st.role==='guest'&&st.tr)st.tr.close();if(st.role==='host'&&st.tr)st.tr.close()}catch(e){}
-  Object.assign(st,{role:null,code:'',tr:null,slots:[],me:-1,started:false,gview:{},cid2slot:{},slot2cid:{},acc:0,ended:false,lost:false});if($n('netm'))panel('a')}
+  Object.assign(st,{role:null,code:'',tr:null,slots:[],me:-1,started:false,gview:{},cid2slot:{},slot2cid:{},acc:0,ended:false,lost:false,tok:{},myTok:'',lastG:{},bytes:0,retry:0});if($n('netm'))panel('a')}
  function bind(){if(!$n('netm'))return;$n('nmk').onclick=host;$n('njoin').onclick=join;$n('ngo').onclick=hStart;$n('nx').onclick=close;
   $n('ncode').addEventListener('keydown',e=>{if(e.key==='Enter')join()});
   $n('ncopy').onclick=async()=>{const url=inviteURL(),txt=`🚨 새떼 주의보: 짹짹 디펜스 같이 해요! 방 코드: ${st.code}\n${url}`;try{if(navigator.share){await navigator.share({title:'새떼 주의보: 짹짹 디펜스',text:txt,url});return}}catch(e){}
@@ -123,4 +134,4 @@ const NET=(()=>{
   const nb=$n('netb');if(nb)nb.onclick=e=>{e.stopPropagation();ovl('modem',0);open()};
   if(new URLSearchParams(location.search).get('room'))setTimeout(open,400)}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
- return{open,cmd,tell,htick,gtick,over:hOver,leave,get role(){return st.role},_st:st}})();
+ return{open,cmd,tell,htick,gtick,over:hOver,leave,get role(){return st.role},_st:st,_drop:()=>{try{st.tr&&st.tr.close()}catch(e){}gLost()}}})();
