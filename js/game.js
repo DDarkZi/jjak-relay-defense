@@ -2761,18 +2761,26 @@ $('herox').onclick=closeHero;$('heroo').onclick=openHero;$('lhero').onclick=open
 $('modeb').onclick=openMode;$('modex').onclick=()=>{ovl('modem',0);lobUI()};
 /* 🛒 깃털 상점: 구글 Play 결제(TWA = Digital Goods API + Payment Request). 일반 웹 브라우저에서는 구매 불가 안내.
    상품은 플레이 콘솔 '인앱 상품'에 같은 id로 만들어야 해요(소모성). 받은 결제 토큰은 SV.ptok에 적어 두 번 지급을 막고, 지급 뒤 consume. 앱을 켤 때 남은 구매를 복원. */
-const SHOP_ITEMS=[{sku:'feather_30',ic:'☕',n:'개발자 응원 팩',f:30,p:'₩1,000',d:'1인 개발자를 도와주세요 🙏'}],PLAY_BILL='https://play.google.com/billing';
+const SHOP_ITEMS=[{sku:'feather_30',ic:'☕',n:'개발자 응원 팩',f:30,p:'₩1,000',d:'1인 개발자를 도와주세요 🙏'},
+ {sku:'hero_make',ic:'🎨',n:'영웅 제작권',make:1,p:'₩5,000',d:'내가 만든 3D 새가 게임 영웅으로! 제작자 이름도 표시돼요'}],MAKE_TERMS='2026-11-11',PLAY_BILL='https://play.google.com/billing';
 let DGS,DGP={};
 async function shopSvc(){if(DGS!==undefined)return DGS;DGS=null;if('getDigitalGoodsService'in window){try{DGS=await window.getDigitalGoodsService(PLAY_BILL)}catch(e){DGS=null}}return DGS}
-function shopGrant(tok,sku){const it=SHOP_ITEMS.find(x=>x.sku===sku);SV.ptok=SV.ptok||[];if(!it||!tok||SV.ptok.includes(tok))return 0;SV.ptok.push(tok);if(SV.ptok.length>60)SV.ptok.shift();SV.coins+=it.f;svSave();try{lobUI();renderTitle()}catch(e){}return it.f}
-async function shopRestore(){const s=await shopSvc();if(!s)return;try{for(const p of await s.listPurchases()){const g=shopGrant(p.purchaseToken,p.itemId);try{await s.consume(p.purchaseToken)}catch(e){}if(g)toast(`🪶 구매한 깃털 +${g}개를 받았어요`)}}catch(e){}}
-function shopUI(){$('shopn').textContent=SV.coins;$('shopl').innerHTML=SHOP_ITEMS.map(it=>`<div class="sitem"><span class="sic">${it.ic}</span><span class="sin"><b>${it.n}</b><em>🪶 깃털 ${it.f}개</em><small>${it.d}</small></span><button data-sku="${it.sku}" ${DGS?'':'disabled'}>${DGP[it.sku]||it.p}</button></div>`).join('')}
+function shopGrant(tok,sku){const it=SHOP_ITEMS.find(x=>x.sku===sku);SV.ptok=SV.ptok||[];if(!it||!tok||SV.ptok.includes(tok))return 0;SV.ptok.push(tok);if(SV.ptok.length>60)SV.ptok.shift();
+ if(it.make){/* 🎨 영웅 제작권: 주문 번호(결제 토큰 끝 8자리)를 보여 주고 메일에 적게 함 */(SV.orders=SV.orders||[]).push({code:tok.slice(-8).toUpperCase(),t:Date.now()});svSave();return 'make'}
+ SV.coins+=it.f;svSave();try{lobUI();renderTitle()}catch(e){}return it.f}
+async function shopRestore(){const s=await shopSvc();if(!s)return;try{for(const p of await s.listPurchases()){const g=shopGrant(p.purchaseToken,p.itemId);try{await s.consume(p.purchaseToken)}catch(e){}if(g)toast(g==='make'?'🎨 영웅 제작권을 받았어요 · 상점에서 주문 번호 확인':`🪶 구매한 깃털 +${g}개를 받았어요`)}}catch(e){}}
+function shopUI(){$('shopn').textContent=SV.coins;const ok=SV.makeOK===MAKE_TERMS,od=(SV.orders||[]).slice(-3);
+ $('shopl').innerHTML=SHOP_ITEMS.map(it=>`<div class="sitem${it.make?' smake':''}"><span class="sic">${it.ic}</span><span class="sin"><b>${it.n}</b>${it.make?'':`<em>🪶 깃털 ${it.f}개</em>`}<small>${it.d}</small>`+
+  (it.make?`<a href="hero_make.html" target="_blank" class="slink">📖 만드는 법 · 프롬프트 · 저작권 안내 · 약관</a><label class="sagree"><input type="checkbox" id="mkok" ${ok?'checked':''}><span>안내와 약관을 읽고 동의해요<small>저작권 등으로 5회 반려 시 환불</small></span></label>`+
+   (od.length?`<span class="sord">📨 주문 번호: ${od.map(o=>'<b>'+o.code+'</b>').join(' · ')}<br>메일 제목에 적어 .glb 파일을 보내 주세요</span>`:''):'')+
+  `</span><button data-sku="${it.sku}" ${DGS&&(!it.make||ok)?'':'disabled'}>${DGP[it.sku]||it.p}</button></div>`).join('');
+ const c=$('mkok');if(c)c.onchange=()=>{SV.makeOK=c.checked?MAKE_TERMS:null;svSave();shopUI()}}
 async function openShop(){ovl('shopm',1);$('shopmsg').textContent='';shopUI();const s=await shopSvc();
  if(!s){$('shopmsg').textContent='💡 구매는 플레이 스토어에서 받은 앱에서만 할 수 있어요';shopUI();return}
  try{for(const d of await s.getDetails(SHOP_ITEMS.map(x=>x.sku))){try{DGP[d.itemId]=new Intl.NumberFormat('ko-KR',{style:'currency',currency:d.price.currency}).format(+d.price.value)}catch(e){}}}catch(e){}shopUI()}
 async function shopBuy(sku){const s=await shopSvc();if(!s)return;const m=$('shopmsg');m.textContent='결제 창을 여는 중…';
  try{const rq=new PaymentRequest([{supportedMethods:PLAY_BILL,data:{sku}}],{total:{label:'합계',amount:{currency:'KRW',value:'0'}}});const rs=await rq.show(),tok=rs.details&&rs.details.purchaseToken;
-  const g=shopGrant(tok,sku);try{await s.consume(tok)}catch(e){}await rs.complete('success');m.textContent=g?`🎉 고마워요! 🪶 깃털 +${g}개`:'이미 받은 구매예요';shopUI();if(g)sfx('unlock',{k:'shop'})}
+  const g=shopGrant(tok,sku);try{await s.consume(tok)}catch(e){}await rs.complete('success');m.textContent=g==='make'?'🎨 영웅 제작권 구매 완료! 주문 번호를 메일에 적어 보내 주세요':g?`🎉 고마워요! 🪶 깃털 +${g}개`:'이미 받은 구매예요';shopUI();if(g)sfx('unlock',{k:'shop'})}
  catch(e){m.textContent=e&&e.name==='AbortError'?'구매를 취소했어요':'결제를 못 했어요. 잠시 뒤 다시 해 주세요'}}
 $('shopl').onclick=e=>{const b=e.target.closest('button');if(b&&b.dataset.sku&&!b.disabled)shopBuy(b.dataset.sku)};
 $('shopo').onclick=openShop;$('shopc').onclick=openShop;$('shopx').onclick=()=>{ovl('shopm',0);lobUI();renderTitle()};
