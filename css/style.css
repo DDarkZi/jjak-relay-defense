@@ -280,3 +280,4 @@ html{-webkit-tap-highlight-color:transparent}
 #pzn{display:flex;align-items:center;gap:6px;flex:1;min-width:0;flex-wrap:wrap}#pzn small{font-size:11px;opacity:.85}
 .pzc{background:#fde047;color:#000;border:2px solid #000;border-radius:8px;padding:1px 6px;font-size:12px}.pzc b{font:400 15px "Black Han Sans",system-ui;letter-spacing:1px}
 #pzn button{padding:3px 8px;font-size:12px;border-radius:8px}#pzinv{background:#22c55e;color:#fff}
+#dmgl b.t{color:#fff;font-size:17px;white-space:nowrap;-webkit-text-stroke:0}

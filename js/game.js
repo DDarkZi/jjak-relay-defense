@@ -45,22 +45,22 @@ const U=[
 {id:'rooster',n:'수탉',c:180,hp:218,sp:2.2,t:'G',dm:1,inc:9,ic:'🐔',col:0xf8fafc},
 {id:'pigeon',n:'비둘기',c:200,hp:182,sp:2.4,t:'A',dm:1,inc:10,ic:'🕊️',col:0x94a3b8},
 {id:'goose',n:'거위',c:220,hp:377,sp:1.2,t:'G',dm:1,inc:11,split:2,ic:'🪿',col:0xf5f5f4,x:'쓰러지면 다리 알 2개로 분열'},
-{id:'parrot',n:'앵무새',c:240,hp:170,sp:1.9,t:'A',dm:1,inc:11,ic:'🦜',col:0x43a047,talk:['이 썩을 타워야!','#$%&! 비켜라!','니 미로 꼬라지 봐라!'],x:'날아가며 세 마디를 쏘아붙여요(능력은 없음)'},
+{id:'parrot',n:'앵무새',c:240,hp:170,sp:1.9,t:'A',dm:1,inc:11,ic:'🦜',col:0x43a047,sulk:1,talk:['이 삐-! 타워야!','삐-삐-! 비켜라!','니 미로 꼬라지 삐-!'],x:'욕쟁이: 2.2초마다 근처 타워 하나에 욕을 해서 1.5초 삐지게 해요(공격 멈춤)'},
 {id:'crow',n:'까마귀',c:260,hp:221,sp:1.9,t:'A',dm:1,inc:13,stealth:.5,ic:'🐦‍⬛',col:0x4a4463,x:'진영 절반까지 은신'},
-{id:'pirate',n:'도둑갈매기',c:280,hp:341,sp:1.7,t:'A',dm:1,inc:12,steal:6,ic:'🏴‍☠️',col:0x6b5444,x:'탈출 시 내 인컴 +6'},
+{id:'pirate',n:'북극해적갈매기',c:280,hp:341,sp:1.7,t:'A',dm:1,inc:12,steal:6,ic:'🏴‍☠️',col:0x6b5444,x:'탈출 시 내 인컴 +6'},
 {id:'duck',n:'청둥오리',c:300,hp:747,sp:1,t:'G',dm:3,inc:16,ic:'🦆',col:0x9a8f7e},
 {id:'woodpecker',n:'딱따구리',c:320,hp:450,sp:1.5,t:'G',dm:2,inc:16,peck:1,ic:'🪵',col:0x1f2937,x:'근처 타워를 쪼아 2초 마비'},
-{id:'seagull',n:'폭격갈매기',c:360,hp:320,sp:1.3,t:'A',dm:2,inc:20,ic:'🪽',col:0xe2e8f0},
+{id:'seagull',n:'폭격갈매기',c:360,hp:320,sp:1.3,t:'A',dm:2,inc:20,poop:1,ic:'🪽',col:0xe2e8f0,x:'똥 폭격: 2.5초마다 아래 타워에 똥 → 3초 동안 공격이 느려져요(×1.6)'},
 {id:'swan',n:'백조',c:380,hp:377,sp:1.3,t:'A',dm:2,inc:19,shield:580,ic:'🦢',col:0xffffff,x:'보호막(체력 400 추가) · 보호막 동안 독·화상·감속 면역 · ⚡번개에 약함'},
 {id:'penguin',n:'황제펭귄',c:400,hp:390,sp:1.2,t:'G',dm:1,inc:22,count:3,imm:['slow'],tech:'ice',ic:'🐧',col:0x3f4d6e,x:'3마리 무리 · 감속 면역'},
 {id:'vampire',n:'흡혈박쥐새',c:420,hp:490,sp:1.5,t:'A',dm:2,inc:22,drain:2,tech:'dark',ic:'🦇',col:0x8b2f45,x:'탈출 시 내 라이프 +2'},
 {id:'peacock',n:'공작',c:460,hp:720,sp:1.1,t:'G',dm:2,inc:24,heal:1,ic:'🦚',col:0x1d6fd8,x:'주변 아군 치유'},
-{id:'dodo',n:'도도새',c:500,hp:1400,sp:.8,t:'G',dm:4,inc:30,ic:'🦤',col:0x7a4e2d,talk:['죽지도 않고 또 왔네!','얼씨구씨구 들어간다~','절씨구씨구 들어간다~'],x:'걸으며 각설이 타령을 불러요(능력은 없음)'},
-{id:'falcon',n:'송골매',c:560,hp:504,sp:3.4,t:'A',dm:3,inc:30,ic:'💨',col:0x78716c,x:'가장 빠른 새'},
+{id:'dodo',n:'도도새',c:500,hp:1400,sp:.8,t:'G',dm:4,inc:30,ic:'🦤',col:0x7a4e2d,talk:['죽지도 않고 또 왔네!','얼씨구씨구 들어간다~','절씨구씨구 들어간다~'],extinct:2,x:'멸종 거부: 쓰러지면 30% 확률로 체력 30%로 벌떡(최대 2번) · 각설이 타령'},
+{id:'falcon',n:'송골매',c:560,hp:504,sp:3.4,t:'A',dm:3,inc:30,dodge:.3,ic:'💨',col:0x78716c,x:'과속 매: 공격을 30% 피해요 · 🦉CCTV 범위에선 과속 단속(못 피함, 수비 쪽 벌금 +15G)'},
 {id:'albatross',n:'알바트로스',c:620,hp:770,sp:2.6,t:'A',dm:3,inc:36,imm:['kb'],tech:'wind',ic:'🌊',col:0xe0f2fe,x:'넉백 면역 · 고속'},
-{id:'owl',n:'올빼미',c:680,hp:1100,sp:2.1,t:'A',dm:3,inc:40,ic:'🦉',col:0x8d6e4c},
+{id:'owl',n:'올빼미',c:680,hp:700,sp:.85,t:'G',dm:3,inc:40,shield:900,coffee:1,ic:'🦉',col:0x8d6e4c,x:'야근 중(지상): 느리지만 보호막이 커요 · 4초마다 커피 한 모금 ☕ 보호막 25% 회복 · 보호막 동안 독·화상·감속 면역 · ⚡번개에 약함'},
 {id:'thunderbird',mat:'elec',n:'천둥새',c:700,hp:990,sp:1.8,t:'A',dm:3,inc:40,imm:['stun'],zap:1,tech:'thunder',ic:'⛈️',col:0x4338ca,x:'기절 면역 · 근처 타워 마비'},
-{id:'eagle',n:'제왕독수리',c:850,hp:1690,sp:1,t:'A',dm:4,inc:52,ic:'🦅',col:0x6b4f3a},
+{id:'eagle',n:'제왕독수리',c:850,hp:1690,sp:1,t:'A',dm:4,inc:52,wig:1,ic:'🦅',col:0x6b4f3a,x:'가발 날리기: 체력 절반이 되면 가발이 날아가고, 번쩍이는 머리에 근처 타워가 2초 눈부심(공격 멈춤)'},
 {id:'phoenix',mat:'fire',n:'불사조',c:1300,hp:1950,sp:1.4,t:'A',dm:6,inc:85,revive:1,tech:'fire',ic:'🔥',col:0xf97316,x:'한 번 부활'},
 {id:'humbee',n:'벌새',c:360,hp:125,sp:1.9,t:'G',dm:1,inc:19,count:6,cntR:[5,7],swarm:1,ic:'🐝',col:0xfacc15,x:'5~7마리 떼 · 너무 작아서 강타형 타워(공격 간격 1.5초 이상)의 피해를 절반만 받아요'},
 {id:'pelican',n:'펠리컨',c:3000,hp:5200,sp:.8,t:'A',dm:10,inc:190,carry:8,ic:'🚌',col:0xf8fafc,x:'쓰러지면 부리 주머니에서 승객 새 8마리가 쏟아져 지상으로 걸어가요'},
@@ -68,7 +68,7 @@ const U=[
 {id:'archaeo',n:'시조새',c:5500,hp:8600,sp:.75,t:'A',dm:21,inc:330,fossil:1,stone:1,ic:'🦖',col:0xa8a08f,talk:['요즘 타워는 처음 보네…','1억 5천만 년 만의 외출!','깃털… 내 깃털…'],x:'체력이 절반이 되면 화석이 깨지며 땅에 쿵! 착지해요(주변 타워 2초 기절). 그 뒤로는 공룡처럼 땅으로 달려요'},
 {id:'archaeo_g',hidden:1,n:'갓 깨어난 시조새',c:5500,hp:8600,sp:1.05,t:'G',dm:21,inc:0,stone:2,ic:'🦖',col:0x0f9488,x:'화석 껍질을 깨고 나와 공룡처럼 땅으로 달려요'},
 {id:'crocbird',n:'악어새',c:1600,hp:3300,sp:.75,t:'G',dm:6,inc:110,rage:1,ic:'🐊',col:0xb8bec9,x:'악어를 타고 와요 · 체력이 35% 아래로 떨어지면 악어가 화나서 1.6배 빨라져요'},
-{id:'ostrich',n:'타조타이탄',c:1900,hp:4500,sp:.7,t:'G',dm:8,inc:130,ic:'🦩',col:0x292524,x:'발레를 하며 빙글빙글 돌아요(능력은 없음)'},
+{id:'ostrich',n:'타조타이탄',c:1900,hp:4500,sp:.7,t:'G',dm:8,inc:130,ic:'🦩',col:0x292524,leap:4,x:'그랑 주떼: 4초마다 길을 따라 3칸을 훌쩍 점프 · 착지하면 주변 타워 1초 흔들림'},
 // ✨ 조합 새
 {id:'crane',combo:['fire','ice'],n:'온천 두루미',c:650,hp:900,sp:1.4,t:'G',dm:3,inc:38,imm:['slow','burn'],heal:1,ic:'🌡️',col:0xfecdd3,x:'화상·감속 면역 · 주변 치유'},
 {id:'plasmabird',combo:['fire','thunder'],n:'번개불새',c:900,hp:935,sp:2.3,t:'A',dm:4,inc:55,zap:1,imm:['stun'],ic:'🌟',col:0xfb923c,x:'기절 면역 · 타워 마비 · 고속'},
@@ -144,7 +144,7 @@ pigeon:['닭둘기','과자 부스러기만 보면 이성을 잃어요.'],
 goose:['깡패 거위','공원 최강자. 쓰러져도 알 두 개가 복수하러 와요.'],
 parrot:['욕쟁이 앵무새','욕쟁이 할머니 국밥집에서 자라서 말버릇이 험해요. 날아가면서 꼭 세 마디씩 쏘아붙여요.'],
 crow:['닌자 까마귀','반짝이는 건 다 훔치고, 절대 들키지 않아요.'],
-pirate:['펭귄알 소매치기','남극 펭귄 마을의 상습 알도둑 갈매기. 지나가는 김에 남의 인컴까지 슬쩍해요.'],
+pirate:['북극해적갈매기','북극해를 주름잡는 해적 선장. 칼 한 자루 휘두르며 지나가는 김에 남의 인컴까지 털어 가요.'],
 duck:['피서 중인 튜브 오리','여름휴가 중이라 튜브 끼고 둥둥 떠내려와요. 아무리 맞아도 "꽥?" 하고 말아요.','튜브 오리'],
 woodpecker:['헤드뱅 딱따구리','하루 12,000번 박치기. 두통은 타워가 느껴요.'],
 seagull:['똥폭격 갈매기','꼭 세차한 날만 골라서 와요.'],
@@ -155,7 +155,7 @@ peacock:['관종 뿜뿜 공작','"나 좀 봐!" 하고 꼬리 부채를 촤악 �
 dodo:['각설이 도도새','얼씨구씨구 들어간다~ 작년에 멸종했던 도도새가 죽지도 않고 또 왔네! 둔하지만 맷집 하나는 끝내줘요.'],
 falcon:['과속 송골매','시속 389km. 과속 카메라에 매일 찍혀요.'],
 albatross:['시급 알바트로스','날개는 길고 시급은 짧아요. 바람 정도로는 퇴근 안 해요.'],
-owl:['야근 올빼미','밤샘이 체질이에요. 다크서클은 화장이래요.'],
+owl:['야근 올빼미','밤샘이 체질이라 날 힘도 없어서 걸어서 출근해요. 커피 한 모금이면 보호막 충전 완료.'],
 thunderbird:['정전 천둥새','지나가면 타워 전원이 나가요. 관리비 폭탄 주의.'],
 eagle:['대머리 독수리','대머리가 아니라 흰머리래요. 본인 주장이에요.'],
 phoenix:['부활절 불사조','한 번 죽는 건 그냥 준비운동이에요.'],
@@ -454,12 +454,15 @@ function buildT(p,g,wall){const b=wall?TB.wall:pickTower(p,g);if(!b||p.gold<tcos
  if(!best||bs<-1e8)return false;
  p.grid[best[1]][best[0]]=mkR(b,p);p.gold-=tcost(p,b);if(S.st){S.st.ti[b.id]=(S.st.ti[b.id]||0)+tcost(p,b);S.st.tn[b.id]=(S.st.tn[b.id]||0)+1}refreshPaths(p);return true}
 // 🔍 정찰: 다음 사람 판의 대공 비율·광역 비율·CCTV 유무(2초마다 갱신)
-function scoutOf(p,n){const c=p.sc;if(c&&c.n===n&&S.t-c.t<2)return c;let air=0,gr=0,spl=0,all=0,cc=0;S.pl[n].grid.flat().forEach(t=>{if(!t||!t.bp||!t.bp.d)return;const d=t.d/t.bp.cd;all+=d;if(t.bp.t!=='G')air+=d;if(t.bp.t!=='A')gr+=d;if(t.bp.splash||t.bp.self||t.bp.chain)spl+=d;if(t.bp.cctv)cc++});
- return p.sc={n,t:S.t,air:all?air/all:0,spl:all?spl/all:0,cc}}
-function buyU(p,g,dump){const n=nextAlive(p.id);if(n===null)return false;const sc=g.fl&&g.fl.scout?scoutOf(p,n):null;
+function scoutOf(p,n){const c=p.sc;if(c&&c.n===n&&S.t-c.t<2)return c;let air=0,gr=0,spl=0,all=0,cc=0,go=0,hv=0,dot=0,zp=0;S.pl[n].grid.flat().forEach(t=>{if(!t||!t.bp||!t.bp.d)return;const b=t.bp,d=t.d/b.cd;all+=d;if(b.t!=='G')air+=d;if(b.t!=='A')gr+=d;if(b.t==='G')go+=d;if(b.splash||b.self||b.chain)spl+=d;if(b.cctv)cc++;if(b.cd>=1.5)hv+=d;if(b.poison||b.burn)dot+=d;if(b.zap)zp+=d});
+ const r=v=>all?v/all:0;return p.sc={n,t:S.t,air:r(air),spl:r(spl),cc,gonly:r(go),heavy:r(hv),dot:r(dot),zap:r(zp)}}
+/* AI 새 고르기 보정: 도도새 과소비(효율 0.04) 줄이기 */const AIPEN={dodo:-1.6,ostrich:-.4};
+function buyU(p,g,dump){const n=nextAlive(p.id);if(n===null)return false;const hs=g.fl&&g.fl.scout,sc=scoutOf(p,n),kq=hs?1:.75;/* 모든 AI가 다음 사람 수비를 살펴봄(지능형은 더 강하게) */
  const cap=p.gold*(dump?1:g.uTier),l=U.filter(u=>ucost(p,u)<=cap&&techOK(p,u)&&!u.hidden&&!u.secret);if(!l.length)return false;
- let b=null,bs=-1e9;for(const u of l){const sc_=(1-g.uHeavy)*u.inc/u.c*40+g.uHeavy*u.hp/u.c*.8+(u.t==='A'?g.uAir:1-g.uAir)*1.2+(u.x?(g.uSpec??.5)*1.4:0)+(u.tech?.6:0)+(u.combo?1.2:0)+(dump?u.c/400:0)+(g.fav&&g.fav[u.id]||0)+(sc?(u.t==='A'?(sc.air<.4?2.2:-.8):0)+((u.count||1)>1&&sc.spl<.3?2:0)+(sc.spl>.5?u.hp/u.c*1.5:0)+(u.stealth&&!sc.cc?2:0):0)+Math.random()*.8;if(sc_>bs){bs=sc_;b=u}}
- if(!b)return false;p.gold-=ucost(p,b);if(S.st){S.st.us[b.id]=(S.st.us[b.id]||0)+ucost(p,b);S.st.un[b.id]=(S.st.un[b.id]||0)+1}p.income+=gainInc(p,b);{const cn=cntOf(b);for(let k=0;k<cn;k++)spawn(S.pl[n],b,p.id)}return true}
+ let b=null,bs=-1e9;for(const u of l){const sc_=(1-g.uHeavy)*u.inc/u.c*40+g.uHeavy*u.hp/u.c*.8+(u.t==='A'?g.uAir:1-g.uAir)*1.2+(u.x?(g.uSpec??.5)*1.4:0)+(u.tech?.6:0)+(u.combo?1.2:0)+(dump?u.c/400:0)+(g.fav&&g.fav[u.id]||0)+(sc?kq*((u.t==='A'?(sc.air<.4||sc.gonly>.35?2.4:-.6):0)+((u.count||1)>1&&sc.spl<.3?2:0)+(sc.spl>.5?u.hp/u.c*1.5:0)+(u.stealth&&!sc.cc?2:0)+(u.shield&&sc.zap<.15&&sc.dot>.3?2.4:0)+(u.swarm&&sc.heavy>.45&&sc.spl<.35?2.8:0)):0)+(AIPEN[u.id]||0)+Math.random()*.8;if(sc_>bs){bs=sc_;b=u}}
+ if(!b)return false;p.gold-=ucost(p,b);if(S.st){S.st.us[b.id]=(S.st.us[b.id]||0)+ucost(p,b);S.st.un[b.id]=(S.st.un[b.id]||0)+1}p.income+=gainInc(p,b);{const cn=cntOf(b);for(let k=0;k<cn;k++)spawn(S.pl[n],b,p.id)}
+ /* 🐝 벌새 떼 폭탄: 강타형 위주·광역 약한 상대면 한꺼번에 몰아 보내기 */if(b.swarm&&sc.heavy>.45&&sc.spl<.35){let ex=0;while(ex<3&&p.gold>=ucost(p,b)){ex++;p.gold-=ucost(p,b);if(S.st){S.st.us[b.id]+=ucost(p,b);S.st.un[b.id]++}p.income+=gainInc(p,b);const cn=cntOf(b);for(let k=0;k<cn;k++)spawn(S.pl[n],b,p.id)}if(ex&&n===0&&!S.sim)toast('🐝 벌새 떼 습격! 광역 타워로 막으세요')}
+ return true}
 function aiUp(p,c){for(const t of p.grid.flat()){if(t&&t.bp.id!=='wall'&&t.lv<c.up&&p.gold>=upc(t,p)){const k=upc(t,p);p.gold-=k;t.lv++;t.d=Math.floor(t.d*1.6);t.r+=.25;t.inv+=k;if(S.st){S.st.ti[t.bp.id]=(S.st.ti[t.bp.id]||0)+k;S.st.up++}return true}}return false}
 function aiTick(p){if(p.cfg&&p.cfg.fl&&p.cfg.fl.jug&&jugTick(p))return;if(p.tech2plan&&!p.tech2&&S.t>45&&p.gold>=TECH2C){p.gold-=TECH2C;p.tech2=p.tech2plan;return}
  if(p.tech2&&!p.skU&&S.t>120&&p.gold>=SKC+200&&Math.random()<.5){p.gold-=SKC;p.skU=1;return}
@@ -502,7 +505,7 @@ function escape(p,u){const o=S.pl[u.owner];if(u.owner!==p.id){const E=S.escA||(S
  if(u.owner!==p.id){const dm=u.bp.dm*lateMul();p.life=Math.max(0,p.life-dm);if(S.st){const k=u.hatch?'egg_legs':u.bp.id;S.st.ue[k]=(S.st.ue[k]||0)+dm}o.dealt+=dm;if(u.owner===0)S.dealt+=dm;{const rm=rOf(o);if(rm&&rm.loot&&o.alive)o.gold+=rm.loot}
   if(u.bp.drain&&o.alive){o.life=Math.min(100,o.life+u.bp.drain);if(u.owner===0)toast('🦇 라이프 강탈 +'+u.bp.drain)}
   if(u.bp.steal&&o.alive){o.income+=u.bp.steal;if(u.owner===0)toast('🏴‍☠️ 인컴 약탈 +'+u.bp.steal)}}
- const n=nextAlive(p.id);if(n!==null&&n!==u.owner)spawn(S.pl[n],u.bp,u.owner,u.hp,{sh:u.sh,rv:u.rv,hatch:u.hatch,hd:u.hd,gold:u.gold,col:u.col})}
+ const n=nextAlive(p.id);if(n!==null&&n!==u.owner)spawn(S.pl[n],u.bp,u.owner,u.hp,{sh:u.sh,rv:u.rv,hatch:u.hatch,hd:u.hd,gold:u.gold,col:u.col,ext:u.ext,wg:u.wg})}
 function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
  {if(!S.sim&&typeof newsBird==='function'){const pw=[[BAL.late1-30,BAL.lm1],[BAL.late2-30,BAL.lm2]].find(([t])=>S.t>=t&&S.t<t+1&&S.pw!==t);if(pw){S.pw=pw[0];newsBird(`30초 뒤 탈출 피해 ${pw[1]}배!`)}}
   const lm=lateMul();if(lm!==S.lm){S.lm=lm;sfx('alarm',{mul:lm});if(!S.sim){if(typeof newsBird==='function'&&typeof Sc!=='undefined'&&Sc)newsBird(`${Math.floor(S.t/60)}분 돌파! 탈출 피해 ${lm}배!`);else toast(`⏰ ${Math.floor(S.t/60)}분 돌파! 이제 탈출한 새의 피해가 ${lm}배예요`)}}}
@@ -523,6 +526,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
    if(u.hp<=0){
     if(u.bn>0&&!u.rv){for(const o of p.units)if(o!==u&&o.hp>0&&!im(o,'burn')&&Math.hypot(o.x-u.x,o.y-u.y)<1.3&&(o.bn||0)<1){o.bn=2;o.bv=Math.max(o.bv||0,u.bv*BAL.bsp);o.bsrc=u.bsrc}if(p.id===view)artFx('ignite',{u})}
     if(u.rv){u.rv=0;u.hp=b.hp*.5;u.pois=0;u.ps=0;u.pst=0;u.bn=0;u.stun=0;if(p.id===view){sfx('revive');artFx('revive',{u})}if(p.id===0&&!S.sim)toast('🔥 불사조가 되살아났어요!');return true}
+    if(b.extinct&&(u.ext||0)<b.extinct&&Math.random()<.3){u.ext=(u.ext||0)+1;u.hp=b.hp*.3;u.pois=0;u.ps=0;u.pst=0;u.bn=0;u.stun=0;/* 🦤 멸종 거부 */if(p.id===view&&!S.sim){sfx('revive');artFx('revive',{u});popTxt(u,'🦤 멸종 거부!')}return true}
     if(p.id===view&&!S.sim&&b.c>=600)killBanner(b);p.gold+=Math.ceil(b.c/(b.count||1)*BAL.kr);p.kills=(p.kills||0)+1;if(p.id===0)S.kills++;if(u.owner===0&&p.id!==0){S.kl=S.kl||{};S.kl[p.id]=(S.kl[p.id]||0)+1}if(u.owner!==p.id){const K=S.klA||(S.klA={}),q=u.owner*8+p.id;K[q]=(K[q]||0)+1}if(p.id===view){sfx('die',{unit:b.id});artFx('die',{u,col:b.col,air:b.t==='A'})}
     for(let k=0;k<(b.split||0);k++)born.push(u);
     if(b.carry)for(let k=0;k<b.carry;k++)drop.push(u);
@@ -537,6 +541,12 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
      for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(!t||!t.bp.d)continue;const d=Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y);
       if(d<=R2){if(b.zap)t.dis=2;else if(d<nd){nd=d;near=t}}}
      if(near)near.dis=2;u.pk=b.peck?3:2.5}}
+   if(b.sulk||b.poop){/* 🦜 욕쟁이: 근처 타워 1.5초 삐짐 · 🐦 똥 폭격: 아래 타워 3초 느려짐 */const key=b.sulk?'sk':'pp';u[key]=(u[key]??1.2)-dt;if(u[key]<=0){u[key]=b.sulk?2.2:2.5;const R2=b.sulk?1.8:1.2;let nr=null,nd=R2;
+     for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(!t||!t.bp.d||t.carrier)continue;const d=Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y);if(d<nd){nd=d;nr=t}}
+     if(nr){if(b.sulk){nr.dis=Math.max(nr.dis||0,1.5);nr.emo={i:'💢',u:S.t+1.5}}else{nr.poop=S.t+3;if(p.id===view&&!S.sim)artFx('smoke',{x:u.x,y:BH-u.y,r:.35,col:0xffffff})}}}}
+   if(b.coffee&&u.sh<b.shield){u.cf=(u.cf??4)-dt;if(u.cf<=0){u.cf=4;u.sh=Math.min(b.shield,(u.sh||0)+b.shield*.25);/* ☕ 커피 한 모금 */if(p.id===view&&!S.sim)popTxt(u,'☕ 후루룩')}}
+   if(b.wig&&!u.wg&&u.hp<b.hp*.5){u.wg=1;u.wgfx=1;/* 🦅 가발 날리기: 번쩍이는 머리에 근처 타워 2초 눈부심 */for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(t&&t.bp.d&&Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y)<2){t.dis=Math.max(t.dis||0,2);t.emo={i:'😵',u:S.t+2}}}
+    if(p.id===view&&!S.sim)popTxt(u,'✨ 번쩍!')}
    if(b.grab){u.gk=(u.gk===undefined?1.5:u.gk)-dt;/* 🏗 철거반장: 멈춰서 집고 → 4초 이고 걷기 → Lv.2 이하는 빈칸으로 옮기기(미로 안 막음), 아니면 제자리 */
     if(u.carry){u.carry.ct-=dt;if(u.carry.ct<=0){craneDrop(p,u,true);u.gk=6}}
     else if(u.gk<=0){let near=null,nd=1.8,nx=0,ny=0;for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(!t||!t.bp.d||t.dis>0||t.carrier)continue;const d=Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y);if(d<nd){nd=d;near=t;nx=x;ny=y}}
@@ -546,6 +556,8 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
    if(u.gr>0){u.gr-=dt;if(u.gr<=0){u.gr=0;if(u.eatN<5&&p.snacks){const s=p.snacks.find(s=>!s.e&&Math.hypot(s.x-u.x,s.y-u.y)<1.3);if(s){s.e=1;u.x=s.x;u.y=s.y;u.gr=1;u.eatN++;if(p.id===view)sfx('eat')}}}}
    else if(u.fl>0){}else if(u.stun>0)u.stun-=dt;else{let sp=b.sp*(u.spm||1);if(u.slow>0){u.slow-=dt;sp*=.55}
     if(b.rage&&u.hp<b.hp*.35)sp*=1.6;
+    if(b.leap){u.lp=(u.lp??2)-dt;if(u.lp<=0&&u.path&&u.pi<u.path.length-1){u.lp=b.leap;u.jt=.6}}
+    if(u.jt>0){u.jt-=dt;sp=Math.max(sp,5);if(u.jt<=0){u.jt=0;/* 🩰 착지: 주변 타워 1초 흔들림 */for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(t&&t.bp.d&&Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y)<1.5)t.dis=Math.max(t.dis||0,1)}if(p.id===view&&!S.sim)PXS.play('impacts/ground-slam',u.x,BH-u.y,0,{fit:2})}}
     if(b.t==='A'||b.over)u.y+=sp*dt*(b.over?BAL.ovs:.9);
     else if(u.path&&u.pi<u.path.length){const n=u.path[u.pi],tx=cellX(n.x,n.y),ty=cellY(n.y),d=Math.hypot(tx-u.x,ty-u.y),s=sp*dt;
      if(d<=s){u.x=tx;u.y=ty;u.pi++}else{u.x+=(tx-u.x)/d*s;u.y+=(ty-u.y)/d*s}}}
@@ -554,7 +566,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
   if(drop.length){const PAX=['chick','turkey','rooster','kiwi','goose','duck'];drop.forEach(u=>spawnAt(p,UB[PAX[Math.floor(Math.random()*PAX.length)]],u.owner,undefined,Math.max(.3,Math.min(COLS+.2,u.x+(Math.random()-.5)*1.4)),u.y+(Math.random()-.5)*.8,u.tag?{tag:u.tag}:undefined));
    if(p.id===view&&!S.sim){toast('🚌 펠리컨 격추! 승객 새들이 우르르 쏟아져요');artFx('hatch',{u:drop[0]})}}
   lay.forEach(u=>{spawnAt(p,UB.egg_legs,u.owner,undefined,u.x,u.y,{hatch:eggHasP(S.pl[u.owner],'hatch')?1:0});if(p.id===view){sfx('lay');artFx('lay',{u})}});
-  {const cc=[];p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t&&t.bp&&t.bp.cctv&&!(t.dis>0))cc.push([cellX(x,y),cellY(y),t.r])}));p.units.forEach(u=>{u.seen=u.bp.stealth&&cc.some(c=>Math.hypot(u.x-c[0],u.y-c[1])<=c[2])})}
+  {const cc=[];p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t&&t.bp&&t.bp.cctv&&!(t.dis>0))cc.push([cellX(x,y),cellY(y),t.r])}));p.units.forEach(u=>{u.seen=u.bp.stealth&&cc.some(c=>Math.hypot(u.x-c[0],u.y-c[1])<=c[2]);if(u.bp.dodge){u.cam=cc.some(c=>Math.hypot(u.x-c[0],u.y-c[1])<=c[2]);if(u.cam&&!u.fined){u.fined=1;p.gold+=15;/* 📸 과속 단속 */if(p.id===view&&!S.sim)popTxt(u,'📸 과속 단속! +15G')}}})}
   if(p.snacks&&p.snacks.length)p.snacks=p.snacks.filter(s=>!s.e&&(s.life-=dt)>0);
   if(p.clouds&&p.clouds.length){p.clouds=p.clouds.filter(c=>(c.life-=dt)>0);for(const c of p.clouds){c.tk-=dt;if(c.tk>0)continue;c.tk=.5;for(const u of p.units)if(!im(u,'poison')&&Math.hypot(u.x-c.x,u.y-c.y)<=c.r)addPois(u,c.pv,c.src)}}
   p.pyT=(p.pyT||0)+dt;if(p.pyT>=.25){const dtp=p.pyT;p.pyT=0;const W=pyWires(p);let zapped=0,mx=1;
@@ -579,7 +591,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
    let tg=null,my=-1;for(const u of p.units){if(vis(u)&&Math.hypot(u.x-cx,u.y-cy)<=t.r&&u.y>my){my=u.y;tg=u}}
    if(!tg){if(t.heat)t.heat=Math.max(0,t.heat-dt*.6);continue}
    let crit=1;if(b.rapid)t.heat=Math.min(1,(t.heat||0)+BAL.rh);if(b.heavy){t.hc=(t.hc||0)+1;if(t.hc%3===0)crit=BAL.hcr}
-   t.cd=b.cd*(p.boost>0?.5:1)/(b.rapid?1+BAL.rs*t.heat:1);
+   t.cd=b.cd*(p.boost>0?.5:1)/(b.rapid?1+BAL.rs*t.heat:1)*(t.poop>S.t?1.6:1);
    if(b.trap){// 🪴 파리지옥: 머리 수(Lv1~3, 최대 3)만큼 지상 새를 물어 묶고 독. 덩치 큰 새(체력 2000+)는 절반만. Lv.4는 체력 12% 이하면 꿀꺽
     const heads=Math.min(3,t.lv),hold=t.lv>=3?1.8:1.6,lvm=1+(t.lv-1)*.5,C=p.units.filter(u=>vis(u)&&!(u.held>S.t)&&Math.hypot(u.x-cx,u.y-cy)<=t.r).sort((a,c)=>c.y-a.y).slice(0,heads);
     if(!C.length){t.cd=.2;continue}
@@ -594,7 +606,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
    if(p.id===view){t.kick=1;sfx('shoot',{tower:b.id});artFx('shoot',{tower:b.id,x:cx,y:BH-cy,tx:tg.x,ty:BH-tg.y,air:tg.bp.t==='A',col:b.col,b})}
    const lvm=1+(t.lv-1)*.5;if(crit>1&&p.id===view)artFx('crit',{u:tg});
    if(b.poison&&(b.splash||b.self)){p.clouds=p.clouds||[];if(p.clouds.length>=14)p.clouds.shift();const cx2=b.self?cx:tg.x,cy2=b.self?cy:tg.y,cr=b.self?Math.min(t.r,2.2):b.splash;p.clouds.push({x:cx2,y:cy2,r:cr,life:BAL.cl,tk:.5,pv:b.poison*BAL.pk*lvm,src:b.id});if(p.id===view&&!S.sim)PXS.play('nature/toxic-gas',cx2,BH-cy2,0,{loop:true,life:BAL.cl,fit:cr*1.35,op:.5});if(p.id===view)artFx('smoke',{x:cx2,y:BH-cy2,r:cr,col:b.col})}
-   hits.forEach((h,i)=>{const dd=(t.d*(b.chain&&i?.75:1)*(h===tg?crit:1)+(b.heavy&&h===tg?h.bp.hp*BAL.hmx:0))*(h.bp.swarm&&b.heavy?.5:1);const ef=dmgU(h,dd,b.zap);if(S.st)S.st.td[b.id]=(S.st.td[b.id]||0)+ef;if(p.id===view&&!S.sim)dmgPop(h,ef,h===tg&&crit>1);
+   hits.forEach((h,i)=>{if(h.bp.dodge&&!h.cam&&Math.random()<h.bp.dodge){if(p.id===view&&!S.sim)popTxt(h,'MISS!');return}/* 🦅 과속 매 회피 */const dd=(t.d*(b.chain&&i?.75:1)*(h===tg?crit:1)+(b.heavy&&h===tg?h.bp.hp*BAL.hmx:0))*(h.bp.swarm&&b.heavy?.5:1);const ef=dmgU(h,dd,b.zap);if(S.st)S.st.td[b.id]=(S.st.td[b.id]||0)+ef;if(p.id===view&&!S.sim)dmgPop(h,ef,h===tg&&crit>1);
     if(b.poison&&!im(h,'poison'))addPois(h,b.poison*BAL.pk*lvm,b.id);
     if(b.burn&&!im(h,'burn')){h.bn=BAL.bdur;const bv=b.burn*BAL.bk*lvm;if(bv>=(h.bv||0)){h.bv=bv;h.bsrc=b.id}}
     if(b.slow&&!im(h,'slow'))h.slow=Math.max(h.slow,2.2);
@@ -604,7 +616,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
    if(b.bubble&&!im(tg,'kb')&&!(tg.fl>0)&&!(tg.bbt>0)&&tg.hp>0){tg.fl=b.bubble;tg.bbt=b.bubble+2;tg.fpop=t.d*2*crit;tg.fsrc=b.id}
    if(b.freeze&&!im(tg,'stun')&&!im(tg,'slow')&&Math.random()<b.freeze){tg.stun=Math.max(tg.stun,1.2);if(p.id===view&&!S.sim&&S.t-(S.pxIce||-9)>.15){S.pxIce=S.t;PXS.play('ice/ice-shatter',tg.x,BH-tg.y,tg.bp.t==='A'?1:0,{sc:.75,delay:.9})}}}});
  S.pl.forEach(p=>{if(p.alive&&p.life<=0){p.alive=false;p.dieT=S.t;if(p.id!==0)sfx('elim',{id:p.id});if(p.id!==0&&!S.sim&&typeof NEWS!=='undefined'&&!NEWS){const k=S.pl.filter(q=>q.alive).length;if(k>=2)try{newsBird(`📢 속보! ${(p.id+S.off)%8+1}번 진영 탈락 · 남은 ${k}명`)}catch(e){}}const n=nextAlive(p.id);
-  if(n!==null)p.units.forEach(u=>spawn(S.pl[n],u.bp,u.owner,u.hp,{sh:u.sh,rv:u.rv,hatch:u.hatch,hd:u.hd,gold:u.gold,col:u.col}));
+  if(n!==null)p.units.forEach(u=>spawn(S.pl[n],u.bp,u.owner,u.hp,{sh:u.sh,rv:u.rv,hatch:u.hatch,hd:u.hd,gold:u.gold,col:u.col,ext:u.ext,wg:u.wg}));
   p.units=[];p.grid=Array.from({length:ROWS},()=>Array(COLS).fill(null))}});
  const al=S.pl.filter(p=>p.alive);if(S.spec&&!S.pl[view].alive&&al.length){const n=nextAlive(view);if(n!==null){view=n;sel=null;insp=null}}
  if(S.net==='host'&&!S.spec&&!S.pl[0].alive&&al.length>1){S.spec=1;$('spx').style.display='';document.querySelector('footer').style.opacity=.4;view=al[0].id;toast('💀 탈락! 방장은 끝까지 게임을 이어서 돌려요 · 관전 중')}
@@ -860,12 +872,17 @@ function birdMesh3(b,oc){const g=birdMesh2(b,oc),id=b.id,at=(m,x,y,z,s)=>{m.posi
  else if(id==='albatross')(g.userData.w||[]).forEach(P=>{P.scale.x=1.6;P.scale.y=.8});
  else if(id==='thunderbird'){const H=headPos(id);[-1,0,1].forEach(s=>at(up(KO(.035,.2,0xfde047,GL(0xfacc15))),s*.07,H.hy+.02,H.hz+H.hr))}
  else if(id==='crow')[-1,1].forEach(s=>at(SP(.03,0xfacc15,GL(0xfacc15)),s*.08,-.39,.52));
+ else if(id==='eagle'){/* 🦅 가발(체력 절반이면 날아감) + 숨은 번쩍 머리 */const wg=new THREE.Group();wg.name='wig';[[0,0,0,.17],[-.11,.05,-.05,.09],[.11,.05,-.05,.09],[0,.12,-.04,.1],[-.06,-.1,.02,.07],[.06,-.1,.02,.07]].forEach(([x,y,z,r])=>{const q=SP(r,0x6b4423);q.scale.z=.62;q.position.set(x,y,z);wg.add(q)});at(wg,0,-.3,.6);
+  const gl=SP(.165,0xfffbeb,{emissive:0xfff3b0,emissiveIntensity:1});gl.name='glare';gl.visible=false;at(gl,0,-.3,.5)}
  return g}
 let talkN=0;function sync3(dt){sync3.talkOn=talkN;talkN=0;try{heroBoard(dt)}catch(e){}if(typeof PFX!=='undefined')PFX.update(dt);PXS.update(dt);if(typeof newsUpd==='function')newsUpd(dt);const p=S.pl[view],seen=new Set();
  p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(!t)return;const k=y*8+x;seen.add(k);let m=tm.get(k);
   if(!m||m.userData.t!==t||m.userData.lv0!==t.lv){if(m)rmM(m);m=mkTowerMesh(t.bp,t.lv);m.userData.t=t;m.userData.lv0=t.lv;Sc.add(m);tm.set(k,m)}
   m.position.set(cellX(x,y),BH-cellY(y),0);const s=1+(t.lv-1)*.15;if(t.carrier){const cu=t.carrier;m.position.set(cu.x,BH-cu.y,1.25+Math.sin(S.t*6)*.05);craneCone(t,cellX(x,y),BH-cellY(y))}m.scale.set(s/XK,s,s);if(t.kick>0){t.kick=Math.max(0,t.kick-dt*7);const k=t.kick*t.kick;m.scale.set(s/XK*(1+.1*k),s*(1+.1*k),s*(1-.16*k))}/* 쏠 때 움찔 반동 */
   m.rotation.z=t.carrier?Math.sin(S.t*3)*.15:t.dis>0?Math.sin(S.t*30)*.2:0;if(t.carrier)m.scale.multiplyScalar(.62);
+  {const em=t.emo&&t.emo.u>S.t?t.emo.i:null;let es=m.userData.emoS;if(em&&(!es||es.userData.i!==em)){if(es)m.remove(es);es=new THREE.Sprite(new THREE.SpriteMaterial({map:emoTexC(em),depthWrite:false,depthTest:false,transparent:true}));es.scale.set(.6,.6,1);es.renderOrder=8;es.userData.i=em;m.add(es);m.userData.emoS=es}
+   if(es){es.visible=!!em;es.position.set(0,0,1.6+Math.sin(S.t*6)*.06)}/* 💢 삐짐 · 😵 눈부심 */
+   let pp=m.getObjectByName('poop');const on=t.poop>S.t;if(on&&!pp){pp=new THREE.Group();pp.name='poop';[[0,0,0,.17],[.11,.07,.02,.09],[-.09,.08,.03,.07],[.03,-.1,.01,.06]].forEach(([x,y,z,r])=>{const q=new THREE.Mesh(new THREE.SphereGeometry(r,10,6),new THREE.MeshStandardMaterial({color:0xffffff,roughness:.5}));q.scale.z=.35;q.position.set(x,y,z);pp.add(q)});pp.position.z=1.05;m.add(pp)}if(pp)pp.visible=on}/* 💩 똥 얼룩 */
   if(t.bp.cctv){const r=t.r/s,a=m.getObjectByName('scan'),w=m.getObjectByName('scanw');if(a){a.scale.set(r,r,1);w.scale.set(r,r,1);w.rotation.z=S.t*1.6}}
   if(t.bp.id!=='wall'&&m.userData.lv!==t.lv){const old=m.getObjectByName('lvE');if(old){m.remove(old);old.traverse(o=>{if(o.material)o.material.dispose()})}const eg=new THREE.Group();eg.name='lvE';
    if(t.lv>=2){const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:starTex(t.lv),transparent:true,depthWrite:false}));sp.geometry.userData.cached=1;sp.scale.set(.5,.5,1);sp.position.set(.32,-.25,1.25);sp.renderOrder=6;eg.add(sp)}m.add(eg);m.userData.lv=t.lv}
@@ -873,7 +890,8 @@ let talkN=0;function sync3(dt){sync3.talkOn=talkN;talkN=0;try{heroBoard(dt)}catc
  tm.forEach((m,k)=>{if(!seen.has(k)){rmM(m);tm.delete(k)}});craneCone(null);
  const us=new Set();
  p.units.forEach(u=>{us.add(u.id);let m=um.get(u.id);if(m&&m.userData.bp!==u.bp){rmM(m);um.delete(u.id);m=null}if(!m){m=birdMesh3(u.bp,parseInt(PC[u.owner].slice(1),16));artFx('bird',{m,b:u.bp,u});m.userData.bp=u.bp;Sc.add(m);um.set(u.id,m)}if(m.userData.fxm)matTick(m,S.t);
-  m.visible=!(u.popT&&S.t<u.popT);m.position.set(u.x,BH-u.y,u.bp.t==='A'?(u.gr>0?.35:1.4):u.fl>0?.75+Math.sin(S.t*5)*.06:.05);{let bb=m.userData.bub;if(u.fl>0&&!bb){bb=m.userData.bub=new THREE.Mesh(new THREE.SphereGeometry(.42,16,12),new THREE.MeshStandardMaterial({color:0xbae6fd,emissive:0x7dd3fc,emissiveIntensity:.5,transparent:true,opacity:.42,roughness:.1,depthWrite:false}));bb.position.z=.28;const hl=new THREE.Mesh(new THREE.SphereGeometry(.07,8,6),new THREE.MeshBasicMaterial({color:0xffffff}));hl.position.set(-.18,-.2,.2);bb.add(hl);m.add(bb)}if(bb)bb.visible=u.fl>0}m.scale.x=m.scale.y/XK;
+  if(u.bp.wig){const w=m.getObjectByName('wig'),gl=m.getObjectByName('glare');if(w)w.visible=!u.wg;if(gl){gl.visible=!!u.wg;gl.material.emissiveIntensity=.7+.8*Math.abs(Math.sin(S.t*4))}if(u.wgfx){u.wgfx=0;if(!S.sim){artFx('smoke',{x:u.x,y:BH-u.y,r:.6,col:0x6b4423});artFx('crit',{u})}}}
+  m.visible=!(u.popT&&S.t<u.popT);m.position.set(u.x,BH-u.y,u.bp.t==='A'?(u.gr>0?.35:1.4):u.fl>0?.75+Math.sin(S.t*5)*.06:.05+(u.jt>0?Math.sin(PI*(1-u.jt/.6))*.9:0));{let bb=m.userData.bub;if(u.fl>0&&!bb){bb=m.userData.bub=new THREE.Mesh(new THREE.SphereGeometry(.42,16,12),new THREE.MeshStandardMaterial({color:0xbae6fd,emissive:0x7dd3fc,emissiveIntensity:.5,transparent:true,opacity:.42,roughness:.1,depthWrite:false}));bb.position.z=.28;const hl=new THREE.Mesh(new THREE.SphereGeometry(.07,8,6),new THREE.MeshBasicMaterial({color:0xffffff}));hl.position.set(-.18,-.2,.2);bb.add(hl);m.add(bb)}if(bb)bb.visible=u.fl>0}m.scale.x=m.scale.y/XK;
   // 💬 말하는 새: 끝까지 가는 동안 진행 25%·50%·75%에서 딱 한 마디씩(3번), 1.6초. 화면에 동시에 최대 3개
   if(u.bp.talk){let sp=m.userData.talk;const prog=u.y/BH,nx=u.tkN||0;
    if(nx<3&&prog>=(nx+1)*.25){u.tkN=nx+1;const A=sync3.tA=(sync3.tA||[]).filter(t=>t>S.t);if(A.length<3){u.tkI=nx%u.bp.talk.length;u.tkT=S.t+1.6;A.push(u.tkT)}}
@@ -1559,7 +1577,8 @@ const ART=(()=>{
     [0,PI/2].forEach(a=>Bx(.3,-.02,.5,.2,.016,.04,[0,0,a+.6],0xcbd5e1));Su(.3,-.02,.5,.026,0xdc2626);belly(0x64748b,.85);[-1,0,1].forEach(i=>K(i*.07,.34,z0+.08,.045,.26,[.55,0,-i*.28],0x312e4a))},
    // 과자도둑 해적: 금귀걸이 + 훔친 과자 봉지
    pirate(){T(.15,hy,hz-.05,.035,.008,[0,PI/2,0],0xfacc15);S(0,-.02,z0-.22,.11,.13,.14,0xfffbeb);S(.03,-.06,z0-.15,.03,.02,.035,0x93c5fd);
-    sides(s=>{K(s*.06,-.03,z0-.13,.02,.07,[PI,0,s*.3],0xfacc15);Su(s*.13,hy+.06,hz+.1,.02,0x7dd3fc,1)});Bx(0,.02,z0+.3,.1,.06,.12,O,0x1e3a8a);Su(0,-.015,z0+.3,.025,0xfde047)},
+    sides(s=>{K(s*.06,-.03,z0-.13,.02,.07,[PI,0,s*.3],0xfacc15);Su(s*.13,hy+.06,hz+.1,.02,0x7dd3fc,1)});Bx(0,.02,z0+.3,.1,.06,.12,O,0x1e3a8a);Su(0,-.015,z0+.3,.025,0xfde047);
+    /* 🗡 해적 칼(오른쪽 날개에 치켜듦) */Bx(.31,-.16,z0+.28,.018,.05,.4,[-.55,0,.15],0xe5e7eb);Bx(.31,-.04,z0+.1,.022,.14,.025,[-.55,0,.15],0xfacc15);Bx(.31,.01,z0+.03,.03,.03,.1,[-.55,0,.15],0x78350f);Su(.31,.03,z0-.02,.025,0xfacc15)},
    // 꽥꽥 오리: 밤색 가슴 + 말린 꼬리 + 반짝 머리
    duck(){S(0,-.14,z0+.04,.21,.18,.18,0x7c2d12);K(0,.36,z0+.12,.03,.1,[-.9,0,0],0x111827);K(0,.39,z0+.17,.02,.07,[.6,0,0],0x111827);
     S(0,.02,z0-.05,.36,.42,.09,0xffffff);for(let i=0;i<4;i++){const a=i*PI/2+PI/4;S(Math.cos(a)*.34,Math.sin(a)*.4,z0-.05,.11,.11,.095,0xef4444,0,[0,0,a])}
@@ -2550,6 +2569,10 @@ function dmgPop(u,v,crit){if(!S||S.sim||!R||!Cam||v<1||pfS>=2)return;if(!crit&&v
  if(!DMGP.pool.length){const L=document.createElement('div');L.id='dmgl';$('cv').parentNode.appendChild(L);for(let i=0;i<28;i++){const d=document.createElement('b');L.appendChild(d);DMGP.pool.push(d)}}
  const z=u.bp.t==='A'&&!(u.gr>0)?1.7:1,v3=new THREE.Vector3(u.x,BH-u.y,z).applyMatrix4(Sc.matrixWorld).project(Cam);if(v3.z>1)return;const el=R.domElement,w=el.clientWidth,h=el.clientHeight;
  const d=DMGP.pool[DMGP.i++%DMGP.pool.length];d.style.left=((v3.x*.5+.5)*w+(Math.random()-.5)*16)+'px';d.style.top=((-v3.y*.5+.5)*h)+'px';d.textContent=Math.round(v);d.className=crit?'c':'';void d.offsetWidth;d.className=(crit?'c ':'')+'go'}
+/* 새 위에 짧은 글자(MISS!·멸종 거부! 등) */function popTxt(u,txt){if(!S||S.sim||!R||!Cam||pfS>=2)return;if(!DMGP.pool.length){const L=document.createElement('div');L.id='dmgl';$('cv').parentNode.appendChild(L);for(let i=0;i<28;i++){const d=document.createElement('b');L.appendChild(d);DMGP.pool.push(d)}}
+ const z=u.bp.t==='A'&&!(u.gr>0)?1.9:1.2,v3=new THREE.Vector3(u.x,BH-u.y,z).applyMatrix4(Sc.matrixWorld).project(Cam);if(v3.z>1)return;const el=R.domElement,w=el.clientWidth,h=el.clientHeight;
+ const d=DMGP.pool[DMGP.i++%DMGP.pool.length];d.style.left=((v3.x*.5+.5)*w)+'px';d.style.top=((-v3.y*.5+.5)*h)+'px';d.textContent=txt;d.className='t';void d.offsetWidth;d.className='t go'}
+const EMOX={};function emoTexC(t){if(EMOX[t])return EMOX[t];const cv=document.createElement('canvas');cv.width=cv.height=96;const x=cv.getContext('2d');x.font='76px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(t,48,54);return EMOX[t]=new THREE.CanvasTexture(cv)}
 function killBanner(b){if(!S||S.sim)return;const now=performance.now();if(now-(killBanner.t||0)<3000)return;killBanner.t=now;let e=$('killb');if(!e){e=document.createElement('div');e.id='killb';$('cv').parentNode.appendChild(e)}e.innerHTML=`<i>💥</i><b>격추!</b><small>${b.ic} ${b.n}</small>`;e.className='';void e.offsetWidth;e.className='go'}
 const STARX={};function starTex(lv){if(STARX[lv])return STARX[lv];const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');x.beginPath();
  for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,r=i%2?26:58;x.lineTo(64+Math.cos(a)*r,68+Math.sin(a)*r)}x.closePath();x.fillStyle=lv>=4?'#ffd23f':'#fde047';x.lineWidth=10;x.strokeStyle='#111';x.stroke();x.fill();
