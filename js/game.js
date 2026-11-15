@@ -406,7 +406,7 @@ function useSkill(p){const s=skillOf(p);if(!s||!p.skU||p.skCD>0)return false;s.f
 // ---------- AI: 전략 유전자 ----------
 const GK={tw0:[3,14],twRate:[0,4],inc0:[30,140],incRate:[0,60],uShare:[.2,1],uAir:[0,1],uHeavy:[0,1],uTier:[.2,1],uSpec:[0,1],wall:[0,.7],
  upAgg:[0,1],upMax:[2,4],def8:[.2,1.3],crisis:[20,70],rush:[150,900],keep:[100,800],tech:[0,4.999],tech2:[0,4.999],m_cx:[0,1],
- m_egg:[0,1],m_air:[0,1],m_acorn:[0,1],m_t1:[0,1],m_t2:[0,1],m_t3:[0,1]};
+ m_egg:[0,1],m_air:[0,1],big:[0,1],bigT:[240,720],m_acorn:[0,1],m_t1:[0,1],m_t2:[0,1],m_t3:[0,1]};
 function randG(){const g={};for(const k in GK)g[k]=GK[k][0]+Math.random()*(GK[k][1]-GK[k][0]);return g}
 function mutG(g,s){const o={};for(const k in GK){const[a,b]=GK[k];o[k]=Math.max(a,Math.min(b,(g[k]??(a+b)/2)+(Math.random()+Math.random()+Math.random()-1.5)*2*s*(b-a)))}return o}
 function crossG(a,b){const o={};for(const k in GK)o[k]=Math.random()<.5?a[k]:b[k];return o}
@@ -485,6 +485,9 @@ function aiTick(p){if(p.cfg&&p.cfg.fl&&p.cfg.fl.jug&&jugTick(p))return;if(p.tech
  if(p.tech2&&!p.skU&&S.t>120&&p.gold>=SKC+200&&Math.random()<.5){p.gold-=SKC;p.skU=1;return}
  if(p.skU&&p.skCD<=0&&(p.units.length>=5||(p.life<40&&p.units.length>=2)))useSkill(p);
  const g=p.cfg,t=S.t/60,crisis=p.life<=g.crisis,um={up:Math.round(g.upMax)};
+ /* 🦩 대형 새 모으기: bigT초 뒤 big 확률로 1500G+ 새를 목표로 정해 돈을 모았다가 삼(위기·60초 넘으면 포기) */
+ if(!crisis&&!p.bigTgt&&S.t>(g.bigT??420)&&Math.random()<(g.big??.4)*.05){const L=U.filter(u=>u.c>=1500&&techOK(p,u)&&!u.hidden&&!u.secret);if(L.length){p.bigTgt=L[Math.floor(Math.random()*L.length)];p.bigT0=S.t}}
+ if(p.bigTgt){const b=p.bigTgt,c=ucost(p,b);if(crisis||S.t-p.bigT0>60)p.bigTgt=null;else if(p.gold>=c){const n=nextAlive(p.id);p.bigTgt=null;if(n!==null){p.gold-=c;if(S.st){S.st.us[b.id]=(S.st.us[b.id]||0)+c;S.st.un[b.id]=(S.st.un[b.id]||0)+1}p.income+=gainInc(p,b);const cn=cntOf(b);for(let k=0;k<cn;k++)spawn(S.pl[n],b,p.id);return}}else return}
  const tgtT=Math.min(BAL.cap,g.tw0+g.twRate*t+(crisis?5:0)),tgtI=g.inc0+g.incRate*t,nT=cnt(p.grid),need=need8(S.t)*g.def8;
  const act=()=>{
   if(S.t>20&&defPow(p)<need){if(Math.random()<g.upAgg*.6&&aiUp(p,um))return 1;if(nT<BAL.cap&&buildT(p,g,false))return 1}
