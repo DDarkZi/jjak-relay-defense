@@ -531,7 +531,7 @@ function start(gs,p0h){const D=DIFF[diff];const cf=(diff==='A'?AIP.filter(a=>a.a
  $('title').style.display='none';$('game').style.display='flex';
  if(!R)init3();resize();ui();lanePick=null;try{laneFit()}catch(e){}if(!gs){try{$('t1').onclick&&$('t1').onclick()}catch(e){}S.cdl=6;cdnUI();sfx('start');toast((RK[0]?`${RACE[RK[0]].ic} ${RACE[RK[0]].n} · `:'')+'🔮 카운트다운 동안 타워 탭에서 속성을 골라요')}}
 function escape(p,u){const o=S.pl[u.owner];if(u.owner!==p.id){const E=S.escA||(S.escA={}),q=u.owner*8+p.id;E[q]=(E[q]||0)+1}if(u.owner===0&&p.id!==0){S.esc=S.esc||{};S.esc[p.id]=(S.esc[p.id]||0)+1}if(u.owner!==p.id){if(p.id===0)sfx('leak',{dm:u.bp.dm*lateMul()});if(p.id===view)artFx('leak',{u})}
- if(u.owner!==p.id){const dm=u.bp.dm*lateMul();p.life=Math.max(0,p.life-dm);if(S.st){const k=u.src||(u.hatch?'egg_legs':u.bp.id);/* 펠리컨 승객 피해는 펠리컨 몫 */S.st.ue[k]=(S.st.ue[k]||0)+dm}o.dealt+=dm;if(u.owner===0)S.dealt+=dm;{const rm=rOf(o);if(rm&&rm.loot&&o.alive)o.gold+=rm.loot}
+ if(u.owner!==p.id){const dm=u.bp.dm*lateMul();p.life=Math.max(0,p.life-dm);if(S.st){const k=u.src||(u.hatch?'egg_legs':u.bp.id);/* 펠리컨 승객 피해는 펠리컨 몫 */S.st.ue[k]=(S.st.ue[k]||0)+dm}o.dealt+=dm;if(u.owner===0)S.dealt+=dm;{const rm=rOf(o);if(rm&&rm.loot&&o.alive){o.gold+=rm.loot;o.earn=(o.earn||0)+rm.loot}}
   if(u.bp.drain&&o.alive){o.life=Math.min(100,o.life+u.bp.drain);if(u.owner===0)toast('🦇 라이프 강탈 +'+u.bp.drain)}
   if(u.bp.steal&&o.alive){o.income+=u.bp.steal;if(u.owner===0)toast('🏴‍☠️ 인컴 약탈 +'+u.bp.steal)}}
  const n=nextAlive(p.id);if(n!==null&&n!==u.owner)spawn(S.pl[n],u.bp,u.owner,u.hp,{sh:u.sh,rv:u.rv,hatch:u.hatch,hd:u.hd,gold:u.gold,col:u.col,ext:u.ext,wg:u.wg,src:u.src})}
@@ -540,7 +540,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
   const lm=lateMul();if(lm!==S.lm){S.lm=lm;sfx('alarm',{mul:lm});if(!S.sim){if(typeof newsBird==='function'&&typeof Sc!=='undefined'&&Sc)newsBird(`${Math.floor(S.t/60)}분 돌파! 탈출 피해 ${lm}배!`);else toast(`⏰ ${Math.floor(S.t/60)}분 돌파! 이제 탈출한 새의 피해가 ${lm}배예요`)}}}
  S.pl.forEach(p=>{if(p.skCD>0)p.skCD-=dt;if(p.boost>0)p.boost-=dt;if(p.reveal>0)p.reveal-=dt});
  if(S.t>=300&&!S.snap){S.snap=1;S.pl.forEach(q=>q.inc5=q.income)}
- if(S.inc>=TICK){S.inc-=TICK;S.pl.forEach(p=>{if(p.alive){p.gold+=p.income*(p.ai?(D.im||1):1);}})}
+ if(S.inc>=TICK){S.inc-=TICK;S.pl.forEach(p=>{if(p.alive){const v=p.income*(p.ai?(D.im||1):1);p.gold+=v;p.earn=(p.earn||0)+v}})}
  S.pl.forEach(p=>{if(p.alive&&p.cfg){p.aiT+=dt;if(p.aiT>=D.tick){p.aiT=0;aiTick(p)}}});
  S.pl.forEach(p=>{if(!p.alive)return;const born=[],lay=[];
   const drop=[];p.units=p.units.filter(u=>{const b=u.bp;
@@ -556,7 +556,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
     if(u.bn>0&&!u.rv){for(const o of p.units)if(o!==u&&o.hp>0&&!im(o,'burn')&&Math.hypot(o.x-u.x,o.y-u.y)<1.3&&(o.bn||0)<1){o.bn=2;o.bv=Math.max(o.bv||0,u.bv*BAL.bsp);o.bsrc=u.bsrc}if(p.id===view)artFx('ignite',{u})}
     if(u.rv){u.rv=0;u.hp=b.hp*.5;u.pois=0;u.ps=0;u.pst=0;u.bn=0;u.stun=0;if(p.id===view){sfx('revive');artFx('revive',{u})}if(p.id===0&&!S.sim)toast('🔥 불사조가 되살아났어요!');return true}
     if(b.extinct&&(u.ext||0)<b.extinct&&Math.random()<.3){u.ext=(u.ext||0)+1;u.hp=b.hp*.3;u.pois=0;u.ps=0;u.pst=0;u.bn=0;u.stun=0;/* 🦤 멸종 거부 */if(p.id===view&&!S.sim){sfx('revive');artFx('revive',{u});popTxt(u,'🦤 멸종 거부!')}return true}
-    if(p.id===view&&!S.sim&&b.c>=600)killBanner(b);p.gold+=Math.ceil(b.c/(b.count||1)*BAL.kr);p.kills=(p.kills||0)+1;if(p.id===0)S.kills++;if(u.owner===0&&p.id!==0){S.kl=S.kl||{};S.kl[p.id]=(S.kl[p.id]||0)+1}if(u.owner!==p.id){const K=S.klA||(S.klA={}),q=u.owner*8+p.id;K[q]=(K[q]||0)+1}if(p.id===view){sfx('die',{unit:b.id});artFx('die',{u,col:b.col,air:b.t==='A'})}
+    if(p.id===view&&!S.sim&&b.c>=600)killBanner(b);{const v=Math.ceil(b.c/(b.count||1)*BAL.kr);p.gold+=v;p.earn=(p.earn||0)+v}p.kills=(p.kills||0)+1;if(p.id===0)S.kills++;if(u.owner===0&&p.id!==0){S.kl=S.kl||{};S.kl[p.id]=(S.kl[p.id]||0)+1}if(u.owner!==p.id){const K=S.klA||(S.klA={}),q=u.owner*8+p.id;K[q]=(K[q]||0)+1}if(p.id===view){sfx('die',{unit:b.id});artFx('die',{u,col:b.col,air:b.t==='A'})}
     for(let k=0;k<(b.split||0);k++)born.push(u);
     if(b.carry)for(let k=0;k<b.carry;k++)drop.push(u);
     if(b.grab&&u.carry)craneDrop(p,u,false);
@@ -595,7 +595,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
   if(drop.length){const PAX=['chick','turkey','rooster','kiwi','goose','duck'];drop.forEach(u=>spawnAt(p,UB[PAX[Math.floor(Math.random()*PAX.length)]],u.owner,undefined,Math.max(.3,Math.min(COLS+.2,u.x+(Math.random()-.5)*1.4)),u.y+(Math.random()-.5)*.8,Object.assign({src:'pelican'},u.tag?{tag:u.tag}:{})));
    if(p.id===view&&!S.sim){toast('🚌 펠리컨 격추! 승객 새들이 우르르 쏟아져요');artFx('hatch',{u:drop[0]})}}
   lay.forEach(u=>{spawnAt(p,UB.egg_legs,u.owner,undefined,u.x,u.y,{hatch:eggHasP(S.pl[u.owner],'hatch')?1:0});if(p.id===view){sfx('lay');artFx('lay',{u})}});
-  {const cc=[];p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t&&t.bp&&t.bp.cctv&&!(t.dis>0))cc.push([cellX(x,y),cellY(y),t.r])}));p.units.forEach(u=>{u.seen=u.bp.stealth&&cc.some(c=>Math.hypot(u.x-c[0],u.y-c[1])<=c[2]);if(u.bp.dodge){u.cam=cc.some(c=>Math.hypot(u.x-c[0],u.y-c[1])<=c[2]);if(u.cam&&!u.fined){u.fined=1;p.gold+=15;/* 📸 과속 단속 */if(p.id===view&&!S.sim)popTxt(u,'📸 과속 단속! +15G')}}})}
+  {const cc=[];p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t&&t.bp&&t.bp.cctv&&!(t.dis>0))cc.push([cellX(x,y),cellY(y),t.r])}));p.units.forEach(u=>{u.seen=u.bp.stealth&&cc.some(c=>Math.hypot(u.x-c[0],u.y-c[1])<=c[2]);if(u.bp.dodge){u.cam=cc.some(c=>Math.hypot(u.x-c[0],u.y-c[1])<=c[2]);if(u.cam&&!u.fined){u.fined=1;p.gold+=15;p.earn=(p.earn||0)+15;/* 📸 과속 단속 */if(p.id===view&&!S.sim)popTxt(u,'📸 과속 단속! +15G')}}})}
   if(p.snacks&&p.snacks.length)p.snacks=p.snacks.filter(s=>!s.e&&(s.life-=dt)>0);
   if(p.clouds&&p.clouds.length){p.clouds=p.clouds.filter(c=>(c.life-=dt)>0);for(const c of p.clouds){c.tk-=dt;if(c.tk>0)continue;c.tk=.5;for(const u of p.units)if(!im(u,'poison')&&Math.hypot(u.x-c.x,u.y-c.y)<=c.r)addPois(u,c.pv,c.src)}}
   p.pyT=(p.pyT||0)+dt;if(p.pyT>=.25){const dtp=p.pyT;p.pyT=0;const W=pyWires(p);let zapped=0,mx=1;
@@ -653,16 +653,17 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
  if(over&&S.net==='host'&&typeof NET!=='undefined')NET.over(al[0]?al[0].id:-1)}
 // 🏁 게임 결과 표: 등수(살아남은 순 → 늦게 탈락한 순), 인컴, 상대에게 준 라이프 피해, 막은 새, 버틴 시간
 function resultUI(){const e=$('eres');if(!e||!S||S.sim)return;const L=S.pl.slice().sort((a,b)=>(b.alive-a.alive)||(b.alive?b.life-a.life:(b.dieT||0)-(a.dieT||0)));
- const md=['🥇','🥈','🥉'],nm=p=>p.name.replace(/^(\d+번) /,'$1 ');let h='<table><tr><th>등수</th><th>진영</th><th>인컴</th><th>준 피해</th><th>막은 새</th><th>버틴 시간</th></tr>';
- L.forEach((p,i)=>{const n=document.createElement('span');n.textContent=nm(p);h+=`<tr class="${p.id===0?'me':''}${p.alive?' win':''}"><td>${md[i]||i+1}</td><td class="nm">${n.innerHTML}</td><td>+${p.income}</td><td>${Math.round(p.dealt||0)}</td><td>${p.kills||0}</td><td>${p.alive?'끝까지':fmt(p.dieT||S.t)}</td></tr>`});
+ const md=['🥇','🥈','🥉'],nm=p=>p.name.replace(/^(\d+번) /,'$1 ');let h='<table><tr><th>등수</th><th>진영</th><th>인컴</th><th>💰 총 획득</th><th>준 피해</th><th>막은 새</th><th>버틴 시간</th></tr>';
+ L.forEach((p,i)=>{const n=document.createElement('span');n.textContent=nm(p);h+=`<tr class="${p.id===0?'me':''}${p.alive?' win':''}"><td>${md[i]||i+1}</td><td class="nm">${n.innerHTML}</td><td>+${p.income}</td><td>${Math.round(p.earn||0).toLocaleString()}G</td><td>${Math.round(p.dealt||0)}</td><td>${p.kills||0}</td><td>${p.alive?'끝까지':fmt(p.dieT||S.t)}</td></tr>`});
  e.innerHTML=h+'</table>'}
 function finish(win){over=true;sfx(win?'win':'lose');sfx('bgm_stop');$('eT').textContent=win?'🏆':'💀';$('eH').textContent=win?'최종 우승!':'탈락…';
- $('eP').textContent=`생존 시간 ${fmt(S.t)} · 처치 ${S.kills} · 가한 피해 ${S.dealt}`;try{rewardUI(win)}catch(e){}try{resultUI()}catch(e){}try{aiEnd(win)}catch(e){}
- $('spec').style.display=!win&&!S.sim&&S.pl.filter(p=>p.alive).length>=2?'block':'none';$('end').style.display='flex'}
+ $('eP').textContent=`생존 시간 ${fmt(S.t)} · 처치 ${S.kills} · 가한 피해 ${S.dealt} · 💰 총 획득 ${Math.round(S.pl[0].earn||0).toLocaleString()}G`;try{rewardUI(win)}catch(e){}try{resultUI()}catch(e){}try{aiEnd(win)}catch(e){}
+ $('spec').style.display=!win&&!S.sim&&S.pl.filter(p=>p.alive).length>=2?'block':'none';$('end').style.display='flex';endBtnDelay()}
+/* ⏳ 결과 화면 버튼은 4초 뒤에(결과를 먼저 보게, 잘못 눌러 바로 나가는 것 방지) */function endBtnDelay(){const B=['again','home','spec'].map($).filter(Boolean),sv=B.map(b=>b.style.visibility);B.forEach(b=>{b.style.visibility='hidden'});let w=$('ewait');if(!w){w=document.createElement('p');w.id='ewait';w.className='m';$('again').parentNode.insertBefore(w,$('spec'))}let n=4;w.style.display='';w.textContent=`⏳ ${n}초 뒤 버튼이 나와요`;clearInterval(endBtnDelay.t);endBtnDelay.t=setInterval(()=>{n--;if(n>0){w.textContent=`⏳ ${n}초 뒤 버튼이 나와요`;return}clearInterval(endBtnDelay.t);w.style.display='none';B.forEach((b,i)=>{b.style.visibility=sv[i]||''})},1000)}
 // 👀 탈락 후 관전: AI끼리 끝날 때까지 이어서 보기
 function specGo(){if(!S)return;S.spec=1;over=false;$('end').style.display='none';$('spx').style.display='';document.querySelector('footer').style.opacity=.4;const i=S.pl.findIndex(p=>p.alive);if(i>=0)view=i;sel=null;insp=null;sfx('bgm_start');toast('👀 관전 중 · 미니맵을 눌러 다른 진영을 볼 수 있어요');ui()}
 function specEnd(w){over=true;sfx('bgm_stop');sfx('win');$('spx').style.display='none';$('eT').textContent='👀';$('eH').textContent=w?`${w.name} 우승!`:'관전 종료';
- $('eP').textContent=`게임 시간 ${fmt(S.t)} · 내 생존 ${fmt(S.pl[0].dieT||S.t)} · 처치 ${S.kills}`;$('ew').innerHTML='';try{resultUI()}catch(e){}try{aiEnd(null)}catch(e){}$('spec').style.display='none';$('end').style.display='flex'}
+ $('eP').textContent=`게임 시간 ${fmt(S.t)} · 내 생존 ${fmt(S.pl[0].dieT||S.t)} · 처치 ${S.kills} · 💰 총 획득 ${Math.round(S.pl[0].earn||0).toLocaleString()}G`;$('ew').innerHTML='';try{resultUI()}catch(e){}try{aiEnd(null)}catch(e){}$('spec').style.display='none';$('end').style.display='flex';endBtnDelay()}
 const fmt=t=>String(Math.floor(t/60)).padStart(2,'0')+':'+String(Math.floor(t%60)).padStart(2,'0');
 
 // ---------- 3D ----------
