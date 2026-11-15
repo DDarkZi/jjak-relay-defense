@@ -14,7 +14,7 @@ const STUB="const __mk=()=>new Proxy(function(){},{get:(t,p)=>p===Symbol.toPrimi
     const cf=(d==='A'?AIP.filter(a=>a.alpha).sort((x,y)=>(y.a3||0)-(x.a3||0)):AIP.filter(a=>!a.hell||d==='X'||d==='Z')).sort(()=>Math.random()-.5);if(d==='Z')cf.sort((a,b)=>(b.hell&&!b.alpha?1:0)-(a.hell&&!a.alpha?1:0));
     {const seen=new Set(),A1=[],A2=[];cf.forEach(c=>{if(!c.alpha){A1.push(c);return}const k=Math.floor(c.g.tech??9)+'-'+Math.floor(c.g.tech2??9);(seen.has(k)?A2:A1).push(c);seen.add(k)});cf.splice(0,cf.length,...A1,...A2)}
     const pick=cf.slice(0,8).sort(()=>Math.random()-.5),un=new Set(TEACH?[0,1,2,3,4,5,6,7].sort(()=>Math.random()-.5).slice(0,4):[]);
-    const gs=pick.map((c,i)=>aiLearn({...mutG(c.g,.07),tech:c.g.tech,tech2:c.g.tech2,fav:c.fav,pn:c.n,fl:c.fl},c.alpha||un.has(i)?0:D.learn||0,c.n));gs.races=Array(8).fill(null);
+    const gs=pick.map((c,i)=>aiLearn({...mutG(c.g,.07),tech:c.g.tech,tech2:c.g.tech2,fav:c.fav,efav:c.g.efav,pn:c.n,fl:c.fl},c.alpha||un.has(i)?0:D.learn||0,c.n));gs.races=Array(8).fill(null);
     S=null;over=false;start(gs);/* start(gs)는 sim이라 돈이 D.g/D.i, 체력 배율 uh도 그대로 */S.st={td:{},ti:{},tn:{},us:{},un:{},ue:{},up:0};while(!over&&S.t<1800)step(.05);
     const al=S.pl.filter(p=>p.alive),die=S.pl.map(p=>p.alive?1e9:p.dieT||0),rank=die.map(x=>1+die.filter(y=>y>x).length);
     const GKK=Object.keys(GK);
