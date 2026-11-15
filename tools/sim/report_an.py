@@ -1,8 +1,8 @@
 # report.js 결과 분석: python3 tools/sim/report_an.py 결과.json [비교.json]
 import json,sys,re,statistics as st,collections as C
 src=open('js/game.js',encoding='utf8').read()
-NM={m[0]:m[1] for m in re.findall(r"\{id:'(\w+)',n:'([^']+)'",src)}
-TKN={'fire':'🔥화염','ice':'❄️빙결','thunder':'⚡뇌전','wind':'🌪폭풍','poison':'☠️독'}
+NM={m[0]:m[1] for m in re.findall(r"\{id:'(\w+)'[^\n]*?\bn:'([^']+)'",src)}
+TKN={'fire':'🔥화염','ice':'❄️빙결','thunder':'⚡뇌전','wind':'🌪폭풍','poison':'☠️독','dark':'☠️독'}
 R=json.load(open(sys.argv[1]));B=json.load(open(sys.argv[2])) if len(sys.argv)>2 else None
 def pr(*a):print(*a)
 pr('판수',len(R))
@@ -30,7 +30,12 @@ def units(R):
 un,us,ue=units(R);n=len(R)
 pr('\n== 새: 판당 구매 수 · 돈 비중 · 효율(탈출피해/1000G) ==')
 tot=sum(us.values())
-allU=[m for m in re.findall(r"\{id:'(\w+)',n:'[^']+',c:(\d+)",src)]
+L=src.split('\n');i0=L.index('const U=[')
+allU=[]
+for ln in L[i0+1:]:
+  if ln.startswith('// ----------') or ln.startswith('];'):break
+  m=re.match(r"\{id:'(\w+)'",ln);c=re.search(r"\bc:(\d+)",ln)
+  if m and c and 'hidden:1' not in ln and 'race:' not in ln:allU.append((m[1],c[1]))
 rows=[]
 for k,c in allU:
   if k=='archaeo_g':continue
