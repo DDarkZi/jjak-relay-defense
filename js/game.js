@@ -296,7 +296,7 @@ function bfs(g,sx,sy){const q=[[sx,sy]],par={},seen=new Set([sx+','+sy]),NB=Math
  for(let i=0;i<q.length;i++){const[x,y]=q[i];
   if(y===ROWS-1){const p=[];let c=[x,y];while(c){p.unshift({x:c[0],y:c[1]});c=par[c[0]+','+c[1]]}return p}
   for(const[dx,dy]of NB[y&1]){const nx=x+dx,ny=y+dy,k=nx+','+ny;
-   if(nx<0||nx>=COLS||ny<0||ny>=ROWS||seen.has(k)||g[ny][nx])continue;seen.add(k);par[k]=[x,y];q.push([nx,ny])}}
+   if(nx<0||nx>=COLS||ny<0||ny>=ROWS||seen.has(k)||(g[ny][nx]&&!g[ny][nx].carrier))continue;/* 두루미가 들고 간 타워 자리는 지나갈 수 있음 */seen.add(k);par[k]=[x,y];q.push([nx,ny])}}
  return null}
 const allOK=g=>{let s=0;for(let x=0;x<COLS;x++){const p=bfs(g,x,0);if(!p)return 0;s+=p.length}return s};
 const mk=b=>({bp:b,lv:1,d:b.d,r:b.r,inv:b.c,cd:0,dis:0});
@@ -332,11 +332,15 @@ const CONE=new Map();function craneCone(t,x,y){if(!t){CONE.forEach((c,tt)=>{if(!
   const w=new THREE.Mesh(new THREE.CylinderGeometry(.12,.135,.06,10),new THREE.MeshStandardMaterial({color:0xffffff}));w.rotation.x=PI/2;w.position.z=.2;g.add(w);Sc.add(g);c={m:g};CONE.set(t,c)}c.on=1;c.m.position.set(x,y,0)}
 /* 🏗 철거반장이 든 타워 내려놓기: Lv.2 이하면 두루미 근처 빈칸 중 미로·새 길을 막지 않는 곳으로, 아니면 제자리 */
 function craneDrop(p,u,move){const c=u.carry;if(!c)return;u.carry=null;const t=c.t;t.carrier=null;t.dis=.6;if(!p.grid[c.oy]||p.grid[c.oy][c.ox]!==t)return;
- if(move&&t.lv<=2){const cs=[];for(let y=1;y<ROWS-1;y++)for(let x=0;x<COLS;x++){if(p.grid[y][x])continue;const d=Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y);if(d<=2.6&&!(x===c.ox&&y===c.oy))cs.push([d,x,y])}cs.sort((a,b)=>a[0]-b[0]);
-  for(const[,x,y]of cs){if(p.units.some(o=>Math.hypot(o.x-cellX(x,y),o.y-cellY(y))<.6))continue;p.grid[c.oy][c.ox]=null;p.grid[y][x]=t;
-   const ok=allOK(p.grid)&&p.units.every(o=>{if(o.bp.t!=='G'||o===u&&false)return true;const n=nearCell(o.x,o.y);return !!bfs(p.grid,n.x,n.y)});
-   if(ok){refreshPaths(p);if(p.id===view&&!S.sim){sfx('build');artFx('smoke',{x:cellX(x,y),y:BH-cellY(y),r:.7,col:0xfacc15});if(p.id===0)toast(`🏗 철거반장이 ${jo(t.bp.n,'을','를')} 옮겼어요! "불법 건축물이에요~"`)}return}
-   p.grid[y][x]=null;p.grid[c.oy][c.ox]=t}}
+ /* 🏗 내려놓기: 들고 있는 동안 원래 칸은 길로 열려 있었으니, 다시 놓을 때 길이 막히거나 새가 그 칸에 서 있으면 다른 빈칸으로 옮김 */
+ const ok=()=>allOK(p.grid)&&p.units.every(o=>{if(o.bp.t!=='G')return true;const n=nearCell(o.x,o.y);return !!bfs(p.grid,n.x,n.y)}),busy=(x,y)=>p.units.some(o=>Math.hypot(o.x-cellX(x,y),o.y-cellY(y))<.6);
+ const tryCells=(cx,cy,R)=>{const cs=[];for(let y=1;y<ROWS-1;y++)for(let x=0;x<COLS;x++){if(p.grid[y][x])continue;const d=Math.hypot(cellX(x,y)-cx,cellY(y)-cy);if(d<=R&&!(x===c.ox&&y===c.oy))cs.push([d,x,y])}cs.sort((a,b)=>a[0]-b[0]);
+  for(const[,x,y]of cs){if(busy(x,y))continue;p.grid[c.oy][c.ox]=null;p.grid[y][x]=t;if(ok())return[x,y];p.grid[y][x]=null;p.grid[c.oy][c.ox]=t}return null};
+ let mv=null;if(move&&t.lv<=2)mv=tryCells(u.x,u.y,2.6);
+ if(!mv&&(busy(c.ox,c.oy)||!ok()))mv=tryCells(cellX(c.ox,c.oy),cellY(c.oy),99);
+ if(!mv&&(busy(c.ox,c.oy)||!ok())){p.grid[c.oy][c.ox]=null;p.gold+=Math.floor(t.inv||t.bp.c);refreshPaths(p);if(p.id===0&&!S.sim)toast(`🏗 ${jo(t.bp.n,'을','를')} 놓을 곳이 없어 돈으로 돌려받았어요`);return}
+ refreshPaths(p);
+ if(mv){const[x,y]=mv;if(p.id===view&&!S.sim){sfx('build');artFx('smoke',{x:cellX(x,y),y:BH-cellY(y),r:.7,col:0xfacc15});if(p.id===0)toast(`🏗 철거반장이 ${jo(t.bp.n,'을','를')} 옮겼어요! "불법 건축물이에요~"`)}return}
  if(p.id===view&&!S.sim)artFx('smoke',{x:cellX(c.ox,c.oy),y:BH-cellY(c.oy),r:.5,col:0xd6c7a1})}
 /* 🦖 시조새 착지: 가장 가까운 빈칸에 내려와 지상형으로 바뀌고, 주변 타워 2초 기절 */
 function fossilLand(p,u){const cs=[];for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)if(!p.grid[y][x])cs.push([Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y),x,y]);cs.sort((a,b)=>a[0]-b[0]);
@@ -488,7 +492,7 @@ function aiTick(p){if(p.cfg&&p.cfg.fl&&p.cfg.fl.jug&&jugTick(p))return;if(p.tech
  if(p.skU&&p.skCD<=0&&(p.units.length>=5||(p.life<40&&p.units.length>=2)))useSkill(p);
  const g=p.cfg,t=S.t/60,crisis=p.life<=g.crisis,um={up:Math.round(g.upMax)};
  /* 🦩 대형 새 모으기: bigT초 뒤 big 확률로 1500G+ 새를 목표로 정해 돈을 모았다가 삼(위기·60초 넘으면 포기) */
- if(!crisis&&!p.bigTgt&&S.t>(g.bigT??420)&&Math.random()<(g.big??.4)*.05){const L=U.filter(u=>u.c>=1500&&techOK(p,u)&&!u.hidden&&!u.secret);if(L.length){p.bigTgt=L[Math.floor(Math.random()*L.length)];p.bigT0=S.t}}
+ if(!crisis&&!p.bigTgt&&(S.t>(g.bigT??420)*.6||p.income>=110)&&S.t>150&&/* 인컴이 충분하거나 시간이 지나면 */Math.random()<(g.big??.4)*.05){const L=U.filter(u=>u.c>=1500&&techOK(p,u)&&!u.hidden&&!u.secret);if(L.length){p.bigTgt=L[Math.floor(Math.random()*L.length)];p.bigT0=S.t}}
  if(p.bigTgt){const b=p.bigTgt,c=ucost(p,b);if(crisis||S.t-p.bigT0>Math.min(150,30+c/(p.income/4+1)*1.3))p.bigTgt=null;/* 비쌀수록 오래 모음(최대 150초) */else if(p.gold>=c){const n=nextAlive(p.id);p.bigTgt=null;if(n!==null){p.gold-=c;if(S.st){S.st.us[b.id]=(S.st.us[b.id]||0)+c;S.st.un[b.id]=(S.st.un[b.id]||0)+1}p.income+=gainInc(p,b);const cn=cntOf(b);for(let k=0;k<cn;k++)spawn(S.pl[n],b,p.id);return}}else return}
  const tgtT=Math.min(BAL.cap,g.tw0+g.twRate*t+(crisis?5:0)),tgtI=g.inc0+g.incRate*t,nT=cnt(p.grid),need=need8(S.t)*g.def8;
  const act=()=>{
@@ -514,8 +518,9 @@ function applyModeBal(k){const m=BAL.mode[k]||BAL.mode.normal;S_MODE=k;
  U.forEach(u=>{if(u.hp0==null){u.hp0=u.hp;u.sh0=u.shield||0}u.hp=Math.round(u.hp0*m.uh);if(u.sh0)u.shield=Math.round(u.sh0*m.uh)});
  T.forEach(b=>{if(b.d0==null){b.d0=b.d;b.cd0=b.cd}b.d=Math.round(b.d0*m.td);b.cd=+(b.cd0*m.as).toFixed(3)})}
 let S_MODE='normal';
-/* 🎓 알파고가 다른 AI를 가르침: 성격(인컴·새 고르기·속성)은 그대로, 운영(업그레이드·벽·미로·수비·돈 쓰는 때)만 알파고 쪽으로 L만큼 */function aiLearn(g,L,n){/* 자기 성향 알파고에게 배움: 이자형→알파 이자형, 안정형→알파 안정형, 러시·올인→알파 러시, 나머지는 알파고 평균 */if(/신경독/.test(n||'')&&L>0)g.fl={...(g.fl||{}),pzt:1};/* 독+뇌전 AI는 독뇌전 배치법도 배움 */const T=/신경독/.test(n||'')?ALPHA_ARCH_SK.pzt:/증기|플라즈마|화염폭풍|역병/.test(n||'')?ALPHA_ARCH_SK.fire:/이자형/.test(n||'')?ALPHA_ARCH_SK.inc:/안정형/.test(n||'')?ALPHA_ARCH_SK.def:/러시|올인/.test(n||'')?ALPHA_ARCH_SK.rush:/조련사|공중/.test(n||'')?ALPHA_ARCH_SK.air:ALPHA_SKILL;let T2=T;if(g.tech!=null&&g.tech2!=null){const a=Math.min(4,Math.floor(g.tech)),b=Math.min(4,Math.floor(g.tech2)),ck='c'+Math.min(a,b)+Math.max(a,b),CS=ALPHA_COMBO_SK[ck];if(CS){T2={};for(const k in CS)T2[k]=T===ALPHA_SKILL?CS[k]:(CS[k]+(T[k]??CS[k]))/2}}/* 🎨 자기 속성 조합 알파고에게도 배움(성향 알파고와 반반) */
- if(L>0)for(const k in T2)if(g[k]!=null)g[k]+=(T2[k]-g[k])*L;return g}
+/* 🎓 알파고가 다른 AI를 가르침: 성격(인컴·새 고르기·속성)은 그대로, 운영(업그레이드·벽·미로·수비·돈 쓰는 때)만 알파고 쪽으로 L만큼 */var TEACH_KEYS=['tw0','twRate','wall','def8','crisis','rush','keep','m_cx','big','bigT'];/* 가르칠 운영 유전자: 업그레이드(upAgg·upMax)는 안 가르침 — 알파고처럼 업그레이드를 끊으면 그 돈이 다 새로 가서 게임이 5분에 끝났음(2026-11-12 실험) */
+function aiLearn(g,L,n){/* 자기 성향 알파고에게 배움: 이자형→알파 이자형, 안정형→알파 안정형, 러시·올인→알파 러시, 나머지는 알파고 평균 */if(/신경독/.test(n||'')&&L>0)g.fl={...(g.fl||{}),pzt:1};/* 독+뇌전 AI는 독뇌전 배치법도 배움 */const T=/신경독/.test(n||'')?ALPHA_ARCH_SK.pzt:/증기|플라즈마|화염폭풍|역병/.test(n||'')?ALPHA_ARCH_SK.fire:/이자형/.test(n||'')?ALPHA_ARCH_SK.inc:/안정형/.test(n||'')?ALPHA_ARCH_SK.def:/러시|올인/.test(n||'')?ALPHA_ARCH_SK.rush:/조련사|공중/.test(n||'')?ALPHA_ARCH_SK.air:ALPHA_SKILL;let T2=T;if(g.tech!=null&&g.tech2!=null){const a=Math.min(4,Math.floor(g.tech)),b=Math.min(4,Math.floor(g.tech2)),ck='c'+Math.min(a,b)+Math.max(a,b),CS=ALPHA_COMBO_SK[ck];if(CS){T2={};for(const k in CS)T2[k]=T===ALPHA_SKILL?CS[k]:(CS[k]+(T[k]??CS[k]))/2}}/* 🎨 자기 속성 조합 알파고에게도 배움(성향 알파고와 반반) */
+ if(L>0)for(const k in T2)if(g[k]!=null&&(!TEACH_KEYS||TEACH_KEYS.includes(k)))g[k]+=(T2[k]-g[k])*L;return g}
 function start(gs,p0h){const D=DIFF[diff];const cf=(diff==='A'?AIP.filter(a=>a.alpha).sort((x,y)=>(y.a3||0)-(x.a3||0)):AIP.filter(a=>!a.hell||diff==='X'||diff==='Z')).sort(()=>Math.random()-.5);if(diff==='Z')cf.sort((a,b)=>(b.hell&&!b.alpha?1:0)-(a.hell&&!a.alpha?1:0));{/* 🎨 알파 성향은 속성 조합이 다양하게: 같은 조합은 뒤로 */const seen=new Set(),A1=[],A2=[];cf.forEach(c=>{if(!c.alpha){A1.push(c);return}const k=Math.floor(c.g.tech??9)+'-'+Math.floor(c.g.tech2??9);(seen.has(k)?A2:A1).push(c);seen.add(k)});cf.splice(0,cf.length,...A1,...A2)}/* 알파고=진화 AI만, 헬=지능형 3종 우선 *//* 매 판 성향 무작위(지능형은 어려움·헬에서만, 헬은 지능형 3종이 꼭 나옴) */
  const RK=raceAssign(gs);applyModeBal(RK.some(Boolean)?'race':'normal');EGG.n=0;S={t:0,inc:0,kills:0,dealt:0,off:Math.floor(Math.random()*8),sim:!!gs,p0h:!!p0h,cdn:gs?0:5,lm:1,pl:[]};techPend=null;
  for(let i=0;i<8;i++){const g=Array.from({length:ROWS},()=>Array(COLS).fill(null));g[8][3]=mkR(TB.egg,{race:RK[i]});
@@ -574,7 +579,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
    if(b.grab){u.gk=(u.gk===undefined?1.5:u.gk)-dt;/* 🏗 철거반장: 멈춰서 집고 → 4초 이고 걷기 → Lv.2 이하는 빈칸으로 옮기기(미로 안 막음), 아니면 제자리 */
     if(u.carry){u.carry.ct-=dt;if(u.carry.ct<=0){craneDrop(p,u,true);u.gk=6}}
     else if(u.gk<=0){let near=null,nd=1.8,nx=0,ny=0;for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(!t||!t.bp.d||t.dis>0||t.carrier)continue;const d=Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y);if(d<nd){nd=d;near=t;nx=x;ny=y}}
-     if(near){near.carrier=u;near.dis=99;u.carry={t:near,ox:nx,oy:ny,ct:4.6};u.stun=Math.max(u.stun||0,.6);if(p.id===view&&!S.sim){sfx('build');artFx('smoke',{x:cellX(nx,ny),y:BH-cellY(ny),r:.7,col:0xfacc15})}}else u.gk=.4}}
+     if(near){near.carrier=u;near.dis=99;u.carry={t:near,ox:nx,oy:ny,ct:4.6};refreshPaths(p);/* 들어 올리면 그 칸이 길로 뚫림 */u.stun=Math.max(u.stun||0,.6);if(p.id===view&&!S.sim){sfx('build');artFx('smoke',{x:cellX(nx,ny),y:BH-cellY(ny),r:.7,col:0xfacc15})}}else u.gk=.4}}
    if(b.fossil&&!u.fz&&u.hp<b.hp*.5){u.fz=1;fossilLand(p,u)}
    if(b.t==='A'&&!(u.gr>0)&&(u.eatN||0)<5&&p.snacks&&p.snacks.length){for(const s of p.snacks)if(!s.e&&Math.hypot(s.x-u.x,s.y-u.y)<.75){s.e=1;u.gr=1;u.eatN=(u.eatN||0)+1;if(p.id===view)sfx('eat');break}}
    if(u.gr>0){u.gr-=dt;if(u.gr<=0){u.gr=0;if(u.eatN<5&&p.snacks){const s=p.snacks.find(s=>!s.e&&Math.hypot(s.x-u.x,s.y-u.y)<1.3);if(s){s.e=1;u.x=s.x;u.y=s.y;u.gr=1;u.eatN++;if(p.id===view)sfx('eat')}}}}
