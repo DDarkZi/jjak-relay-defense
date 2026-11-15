@@ -2,7 +2,7 @@
 // 사용: node tools/sim/evolve.js 상태.json 세대수 [판수/후보=8] [개체수=14]   (이어서 돌리면 상태 파일에서 계속)
 // 마지막 결과: 상태.json 의 best(가장 강한 유전자)·hist(세대별 점수)
 const {chromium}=require('playwright'),fs=require('fs'),path=require('path');const root=path.resolve(__dirname,'../..');
-const [stf,G0,K0,P0]=process.argv.slice(2);const OLD=process.env.OLD?JSON.parse(fs.readFileSync(process.env.OLD)):null,SELF=+(process.env.SELF||0),GENS=+G0||3,K=+K0||8,POP=+P0||14,PAR=4,DK='X';
+const [stf,G0,K0,P0]=process.argv.slice(2);const OLD=process.env.OLD?JSON.parse(fs.readFileSync(process.env.OLD)):null,SELF=+(process.env.SELF||0),GENS=+G0||3,K=+K0||8,POP=+P0||14,PAR=4,DK=process.env.DK||'X';
 const STUB="const __mk=()=>new Proxy(function(){},{get:(t,p)=>p===Symbol.toPrimitive?(()=>0):__mk(),apply:()=>__mk(),construct:()=>__mk(),set:()=>true});window.THREE=__mk();";
 const FAVK=['pelican','phoenix','archaeo','duck','kiwi','egg_legs','humbee','ghostcrow','crane','peacock','ostrich','eagle'];
 const PAGEFN=`window.evalCand=function(cand,dk,seat,opp){opp=opp||[];R=R||__mk();Sc=Sc||__mk();Cam=Cam||__mk();diff=dk;
