@@ -468,7 +468,7 @@ function laneCells(cx){const C=COLS,key=(x,y)=>x+','+y,corr=new Set(),o=[],seen=
  const add=(x,y)=>{const k=key(x,y);if(x<0||x>=C||y<1||y>ROWS-2||corr.has(k)||seen.has(k))return;seen.add(k);o.push([x,y])};for(let x=0;x<C;x++)add(x,1);
  let ring=[...corr].map(k=>k.split(',').map(Number));for(let r=0;r<3;r++){const nx=[];ring.sort((a,b)=>a[1]-b[1]).forEach(([x,y])=>NBR[y&1].forEach(([dx,dy])=>{const X=x+dx,Y=y+dy,k=key(X,Y);if(!corr.has(k)&&!seen.has(k)&&X>=0&&X<C&&Y>=1&&Y<=ROWS-2){add(X,Y);nx.push([X,Y])}}));ring=nx}
  o.corr=corr;return o}
-const MZ_TIER={M:['whsnake'],H:['wvsnake','diag','comb'],X:['hsnake','hsnake2','mix','vsnake'],Z:['hsnake','hsnake2','mix','vsnake'],A:['hsnake','hsnake2','mix','vsnake']};
+const MZ_TIER={M:['whsnake'],H:['wvsnake','diag','comb'],X:['hsnake','hsnake2','mix','vsnake'],Z:['hsnake','hsnake2','mix','vsnake'],A:['hsnake','hsnake2','mix','vsnake','hsnake','mix','snake3','snake3','snake23','mixlane','snake2']};/* 🤖 알파고: 긴 미로 6 + 타워 두께 미로 5(3줄 뱀 2배) — 배치 비교 80판: 긴 미로 3.48등·3줄 뱀 3.99·2·3줄 4.62·2줄+통로 4.62·2줄 4.75·직선 통로 4.97·대각선 6.06 */
 // 완성했을 때의 평균 길 길이(기본 알 타워를 남길 때/철거할 때)를 미리 계산해서, 더 길어지는 쪽을 골라요
 function mzLen(cells,keepEgg){const g=Array.from({length:ROWS},()=>Array(COLS).fill(null));let n=0;if(keepEgg){g[8][3]=1;n=1}
  for(const [x,y] of cells){if(n>=BAL.cap)break;if(x<0||x>=COLS||y<1||y>=ROWS-1||g[y][x])continue;g[y][x]=1;if(!allOK(g)){g[y][x]=null;continue}n++}
