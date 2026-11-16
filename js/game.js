@@ -414,7 +414,7 @@ function useSkill(p){const s=skillOf(p);if(!s||!p.skU||p.skCD>0)return false;s.f
 // ---------- AI: 전략 유전자 ----------
 const GK={tw0:[3,14],twRate:[0,4],inc0:[30,140],incRate:[0,60],uShare:[.2,1],uAir:[0,1],uHeavy:[0,1],uTier:[.2,1],uSpec:[0,1],wall:[0,.7],
  upAgg:[0,1],upMax:[2,4],def8:[.2,1.3],crisis:[20,70],rush:[150,900],keep:[100,800],tech:[0,4.999],tech2:[0,4.999],m_cx:[0,1],
- m_egg:[0,1],m_air:[0,1],big:[0,1],bigT:[240,720],m_acorn:[0,1],m_t1:[0,1],m_t2:[0,1],m_t3:[0,1],wrep:[0,1],tswap:[0,1],adapt:[0,1]};/* 🧠 2026-11-16: 벽→공격 타워 교체·약한 타워 철거 후 재건·들어오는 새 보고 타워 고르기 */
+ m_egg:[0,1],m_air:[0,1],big:[0,1],bigT:[240,720],m_acorn:[0,1],m_t1:[0,1],m_t2:[0,1],m_t3:[0,1],wrep:[0,1],tswap:[0,1],adapt:[0,1],sLead:[-.3,.3],sTrail:[-.3,.3],sLate:[-.3,.3],sDanger:[0,1],learnK:[0,1]};/* 🧠 2026-11-16 ② 상황별 전략(앞섬·뒤짐·후반·위험) ③ 새는 새 보고 배우기 *//* 🧠 2026-11-16: 벽→공격 타워 교체·약한 타워 철거 후 재건·들어오는 새 보고 타워 고르기 */
 function randG(){const g={};for(const k in GK)g[k]=GK[k][0]+Math.random()*(GK[k][1]-GK[k][0]);return g}
 function mutG(g,s){const o={};for(const k in GK){const[a,b]=GK[k];o[k]=Math.max(a,Math.min(b,(g[k]??(a+b)/2)+(Math.random()+Math.random()+Math.random()-1.5)*2*s*(b-a)))}return o}
 function crossG(a,b){const o={};for(const k in GK)o[k]=Math.random()<.5?a[k]:b[k];return o}
@@ -433,6 +433,15 @@ function pyWires(p){const c=pyComp(p);p.pyc=c;const W=[];for(let y=0;y<ROWS;y++)
  p.wires=W;return W}
 const segD=(px,py,w)=>{const dx=w.x2-w.x1,dy=w.y2-w.y1,l=dx*dx+dy*dy,t=Math.max(0,Math.min(1,((px-w.x1)*dx+(py-w.y1)*dy)/l));return Math.hypot(px-w.x1-t*dx,py-w.y1-t*dy)};
 const need8=t=>Math.max(0,Math.min(1,(t-90)/390))*27000*BAL.need;
+/* ② 상황별 전략: 5초마다 내 인컴 순위·후반·위험도를 보고 유전자를 잠깐 바꿔 씀(원래 유전자 p.cfg는 그대로) */
+function phaseG(p){const g=p.cfg;if(!g||g.sLead==null&&g.sTrail==null&&g.sDanger==null)return g;if(p.gE&&S.t-p.gET<5)return p.gE;
+ const al=S.pl.filter(q=>q.alive),rk=al.filter(q=>q.income>p.income).length/Math.max(1,al.length-1),lead=rk<.34,trail=rk>.66,late=S.t>480,lostR=p.lkT&&S.t-p.lkT<20?1:0,danger=Math.min(1,Math.max(0,(80-p.life)/60))*(.5+.5*lostR);
+ let us=g.uShare+(lead?g.sLead||0:0)+(trail?g.sTrail||0:0)+(late?g.sLate||0:0);us=Math.max(.1,Math.min(1,us-(g.sDanger||0)*danger*.5));
+ p.gE={...g,uShare:us,def8:g.def8*(1+(g.sDanger||0)*danger*.6),twRate:g.twRate*(1+(g.sDanger||0)*danger*.5)};p.gET=S.t;p.mode=danger>.4?'수비':lead?'굳히기':trail?'추격':late?'후반':'보통';return p.gE}
+/* ③ 새는 새 분류 → 막는 타워 */
+function leakCats(b,u){const c=[];if(b.t==='A')c.push('air');if(b.shield||(u&&u.sh>0))c.push('sh');if(b.hp>=1500)c.push('heavy');if((b.count||1)>1||b.swarm||b.cntR)c.push('swarm');if(b.stealth)c.push('st');if(b.sp>=1.6)c.push('fast');if(!c.length)c.push('gen');return c}
+function leakW(b,p,k){if(!k||!p.leak)return 1;const L=p.leak,tot=Object.values(L).reduce((a,v)=>a+v,0);if(tot<3)return 1;const f=c=>(L[c]||0)/tot;let m=1;
+ if(b.t==='A')m+=k*2.5*f('air');if(b.zap||b.tech==='thunder'||(b.combo&&b.combo.includes('thunder')))m+=k*2*f('sh');if(b.amp||b.d>=100||b.cd>=1.5)m+=k*2*f('heavy');if(b.splash||b.self||b.chain)m+=k*2*f('swarm');if(b.cctv)m+=k*4*f('st');if(b.slow||b.freeze||b.stun||b.bubble||b.trap)m+=k*2*f('fast');if(b.t==='G')m*=Math.max(.3,1-k*f('air'));return m}
 /* 🧠 똑똑한 수비 도우미(2026-11-16) */
 function pathCov(p,r,x,y,pa){pa=pa||bfs(p.grid,COLS>>1,0)||[];const px=cellX(x,y),py=cellY(y);let n=0;for(const q of pa)if(Math.hypot(cellX(q.x,q.y)-px,cellY(q.y)-py)<=r)n++;return n}
 function threatOf(p){const L=p.units.filter(u=>u.owner!==p.id&&u.hp>0),n=L.length||1;let air=0,sh=0,hp=0;for(const u of L){if(u.bp.t==='A')air++;if(u.sh>0)sh++;hp+=u.hp}return{n:L.length,air:air/n,sh:sh/n,avg:hp/n}}
@@ -440,7 +449,7 @@ function threatOf(p){const L=p.units.filter(u=>u.owner!==p.id&&u.hp>0),n=L.lengt
 function adaptW(b,th,a){if(!a||th.n<4)return 1;let m=1;if(b.t==='A')m*=1+a*3*th.air;else if(b.t==='G')m*=Math.max(.2,1-.8*a*th.air);
  if(b.tech==='thunder'||(b.combo&&b.combo.includes('thunder'))||b.pylon)m*=1+a*2.5*th.sh;if(b.splash||b.self||b.chain)m*=1+a*Math.min(1.5,th.n/25);if(b.amp||b.d>=100)m*=1+a*Math.min(1.5,th.avg/1500);return m}
 function pickTower(p,g,minC){const l=T.filter(b=>b.id!=='wall'&&techOK(p,b)&&tcost(p,b)<=p.gold&&(!minC||(tcost(p,b)>=minC&&b.d>0))&&(!b.cctv||(p.sawSt&&cctvOK(p))));if(!l.length)return null;const th=g.adapt?threatOf(p):null;
- let tot=0;const w=l.map(b=>{const v=((b.combo?(g.m_cx??.8):b.tech?g['m_t'+(TECH[b.tech].t.indexOf(b.id)+1)]:(g['m_'+b.id]??(b.pylon?.25:b.cctv?.9:.3)))+.02)*(th?adaptW(b,th,g.adapt):1);tot+=v;return v});let r=Math.random()*tot;
+ let tot=0;const w=l.map(b=>{const v=((b.combo?(g.m_cx??.8):b.tech?g['m_t'+(TECH[b.tech].t.indexOf(b.id)+1)]:(g['m_'+b.id]??(b.pylon?.25:b.cctv?.9:.3)))+.02)*(th?adaptW(b,th,g.adapt):1)*leakW(b,p,g.learnK||0);tot+=v;return v});let r=Math.random()*tot;
  for(let i=0;i<l.length;i++){r-=w[i];if(r<=0)return l[i]}return l[l.length-1]}
 // 🐍 AI 미로 설계도(숙련 이상): 칸 목록을 위에서부터 순서대로 지어요. 길이 막히는 칸은 건너뛰어요.
 //   길이(7개 입구 평균, 빈 판 16칸): 가로 뱀 48 · 혼합 44 · 넓은 세로 42 · 세로 40 · 대각선 36 · 빗살 35 · 넓은 가로 30
@@ -525,7 +534,8 @@ function aiTick(p){if(p.cfg&&p.cfg.fl&&p.cfg.fl.tdem&&!p.tdem){p.tdem=1;/* 🦃 
  if(p.cfg&&p.cfg.fl&&p.cfg.fl.jug&&jugTick(p))return;if(p.tech2plan&&!p.tech2&&S.t>45&&p.gold>=TECH2C){p.gold-=TECH2C;p.tech2=p.tech2plan;return}
  if(p.tech2&&!p.skU&&S.t>120&&p.gold>=SKC+200&&Math.random()<.5){p.gold-=SKC;p.skU=1;return}
  if(p.skU&&p.skCD<=0&&(p.units.length>=5||(p.life<40&&p.units.length>=2)))useSkill(p);
- const g=p.cfg,t=S.t/60,crisis=p.life<=g.crisis,um={up:Math.round(g.upMax)};
+ if(p.leak&&S.t-(p.lkD||0)>10){p.lkD=S.t;for(const k in p.leak)p.leak[k]*=.85}/* 기억은 천천히 잊음 */
+ const g=phaseG(p),t=S.t/60,crisis=p.life<=g.crisis,um={up:Math.round(g.upMax)};
  /* 🦩 대형 새 모으기는 2026-11-15 사용자 요청으로 없앰(모으는 동안 새·타워를 전혀 안 사서 1~2분씩 멈췄음) */
  const tgtT=Math.min(BAL.cap,g.tw0+g.twRate*t+(crisis?5:0)),tgtI=g.inc0+g.incRate*t,nT=cnt(p.grid),need=need8(S.t)*g.def8;
  const act=()=>{
@@ -555,7 +565,7 @@ function applyModeBal(k){const m=BAL.mode[k]||BAL.mode.normal;S_MODE=k;
  U.forEach(u=>{if(u.hp0==null){u.hp0=u.hp;u.sh0=u.shield||0}u.hp=Math.round(u.hp0*m.uh);if(u.sh0)u.shield=Math.round(u.sh0*m.uh)});
  T.forEach(b=>{if(b.d0==null){b.d0=b.d;b.cd0=b.cd}b.d=Math.round(b.d0*m.td);b.cd=+(b.cd0*m.as).toFixed(3)})}
 let S_MODE='normal';
-/* 🎓 알파고가 다른 AI를 가르침: 성격(인컴·새 고르기·속성)은 그대로, 운영(업그레이드·벽·미로·수비·돈 쓰는 때)만 알파고 쪽으로 L만큼 */var TEACH_KEYS=['tw0','twRate','wall','def8','crisis','rush','keep','m_cx','wrep','tswap','adapt'];/* 가르칠 운영 유전자: 업그레이드(upAgg·upMax)는 안 가르침 — 알파고처럼 업그레이드를 끊으면 그 돈이 다 새로 가서 게임이 5분에 끝났음(2026-11-12 실험) */
+/* 🎓 알파고가 다른 AI를 가르침: 성격(인컴·새 고르기·속성)은 그대로, 운영(업그레이드·벽·미로·수비·돈 쓰는 때)만 알파고 쪽으로 L만큼 */var TEACH_KEYS=['tw0','twRate','wall','def8','crisis','rush','keep','m_cx','wrep','tswap','adapt','sLead','sTrail','sLate','sDanger','learnK'];/* 가르칠 운영 유전자: 업그레이드(upAgg·upMax)는 안 가르침 — 알파고처럼 업그레이드를 끊으면 그 돈이 다 새로 가서 게임이 5분에 끝났음(2026-11-12 실험) */
 function aiLearn(g,L,n){/* 자기 성향 알파고에게 배움: 이자형→알파 이자형, 안정형→알파 안정형, 러시·올인→알파 러시, 나머지는 알파고 평균 */if(/신경독/.test(n||'')&&L>0)g.fl={...(g.fl||{}),pzt:1};/* 독+뇌전 AI는 독뇌전 배치법도 배움 */if(/이자형/.test(n||'')&&L>=1)g.fl={...(g.fl||{}),tdem:1};/* 🦃 어려움·헬의 이자형은 칠면조 철거 시작도 배움 */const T=/신경독/.test(n||'')?ALPHA_ARCH_SK.pzt:/수상한 알/.test(n||'')?ALPHA_ARCH_SK.egg:/공작/.test(n||'')?ALPHA_ARCH_SK.shield:/해적/.test(n||'')?ALPHA_ARCH_SK.tdem:/밸런스형/.test(n||'')&&!/증기|플라즈마|화염폭풍|역병/.test(n||'')?ALPHA_ARCH_SK.vary:/증기|플라즈마|화염폭풍|역병/.test(n||'')?ALPHA_ARCH_SK.fire:/이자형/.test(n||'')?Object.fromEntries(Object.keys(ALPHA_ARCH_SK.inc).map(k=>[k,(ALPHA_ARCH_SK.inc[k]+ALPHA_ARCH_SK.tdem[k])/2])):/안정형/.test(n||'')?ALPHA_ARCH_SK.def:/러시|올인/.test(n||'')?ALPHA_ARCH_SK.rush:/조련사|공중/.test(n||'')?ALPHA_ARCH_SK.air:ALPHA_SKILL;let T2=T;if(g.tech!=null&&g.tech2!=null){const a=Math.min(4,Math.floor(g.tech)),b=Math.min(4,Math.floor(g.tech2)),ck='c'+Math.min(a,b)+Math.max(a,b),CS=ALPHA_COMBO_SK[ck];if(CS){T2={};for(const k in CS)T2[k]=T===ALPHA_SKILL?CS[k]:(CS[k]+(T[k]??CS[k]))/2}}/* 🎨 자기 속성 조합 알파고에게도 배움(성향 알파고와 반반) */
  T2={...T2,wrep:ALPHA_ARCH_SK.smart.wrep,tswap:ALPHA_ARCH_SK.smart.tswap,adapt:ALPHA_ARCH_SK.smart.adapt};/* 🧠 수비 판단은 모두 '알파 전략가'에게 */if(L>0)for(const k in T2)if(g[k]!=null&&(!TEACH_KEYS||TEACH_KEYS.includes(k)))g[k]+=(T2[k]-g[k])*L;return g}
 function start(gs,p0h){const D=DIFF[diff];const cf=(diff==='A'?AIP.filter(a=>a.alpha).sort((x,y)=>(y.a3||0)-(x.a3||0)):AIP.filter(a=>!a.hell||diff==='X'||diff==='Z')).sort(()=>Math.random()-.5);if(diff==='Z')cf.sort((a,b)=>(b.hell&&!b.alpha?1:0)-(a.hell&&!a.alpha?1:0));{/* 🎨 알파 성향은 속성 조합이 다양하게: 같은 조합은 뒤로 */const seen=new Set(),A1=[],A2=[];cf.forEach(c=>{if(!c.alpha){A1.push(c);return}const k=Math.floor(c.g.tech??9)+'-'+Math.floor(c.g.tech2??9);(seen.has(k)?A2:A1).push(c);seen.add(k)});cf.splice(0,cf.length,...A1,...A2)}/* 알파고=진화 AI만, 헬=지능형 3종 우선 *//* 매 판 성향 무작위(지능형은 어려움·헬에서만, 헬은 지능형 3종이 꼭 나옴) */
@@ -568,7 +578,7 @@ function start(gs,p0h){const D=DIFF[diff];const cf=(diff==='A'?AIP.filter(a=>a.a
  $('title').style.display='none';$('game').style.display='flex';
  if(!R)init3();resize();ui();lanePick=null;try{laneFit()}catch(e){}if(!gs){try{$('t1').onclick&&$('t1').onclick()}catch(e){}S.cdl=6;cdnUI();sfx('start');toast((RK[0]?`${RACE[RK[0]].ic} ${RACE[RK[0]].n} · `:'')+'🔮 카운트다운 동안 타워 탭에서 속성을 골라요')}}
 function escape(p,u){const o=S.pl[u.owner];if(u.owner!==p.id){const E=S.escA||(S.escA={}),q=u.owner*8+p.id;E[q]=(E[q]||0)+1}if(u.owner===0&&p.id!==0){S.esc=S.esc||{};S.esc[p.id]=(S.esc[p.id]||0)+1}if(u.owner!==p.id){if(p.id===0)sfx('leak',{dm:u.bp.dm*lateMul()});if(p.id===view)artFx('leak',{u})}
- if(u.owner!==p.id){const dm=u.bp.dm*lateMul();p.life=Math.max(0,p.life-dm);if(S.st){const k=u.src||(u.hatch?'egg_legs':u.bp.id);/* 펠리컨 승객 피해는 펠리컨 몫 */S.st.ue[k]=(S.st.ue[k]||0)+dm}o.dealt+=dm;if(u.owner===0)S.dealt+=dm;{const rm=rOf(o);if(rm&&rm.loot&&o.alive){o.gold+=rm.loot;o.earn=(o.earn||0)+rm.loot}}
+ if(u.owner!==p.id){const dm=u.bp.dm*lateMul();p.life=Math.max(0,p.life-dm);if(p.ai){const L=p.leak=p.leak||{},b=u.bp;for(const c of leakCats(b,u))L[c]=(L[c]||0)+dm;p.lkT=S.t}/* ③ 어떤 새에 목숨을 잃었는지 기억 */if(S.st){const k=u.src||(u.hatch?'egg_legs':u.bp.id);/* 펠리컨 승객 피해는 펠리컨 몫 */S.st.ue[k]=(S.st.ue[k]||0)+dm}o.dealt+=dm;if(u.owner===0)S.dealt+=dm;{const rm=rOf(o);if(rm&&rm.loot&&o.alive){o.gold+=rm.loot;o.earn=(o.earn||0)+rm.loot}}
   if(u.bp.drain&&o.alive){o.life=Math.min(100,o.life+u.bp.drain);if(u.owner===0)toast('🦇 라이프 강탈 +'+u.bp.drain)}
   if(u.bp.steal&&o.alive){o.income+=u.bp.steal;if(u.owner===0)toast('🏴‍☠️ 인컴 약탈 +'+u.bp.steal)}}
  const n=nextAlive(p.id);if(n!==null&&n!==u.owner)spawn(S.pl[n],u.bp,u.owner,u.hp,{sh:u.sh,rv:u.rv,hatch:u.hatch,hd:u.hd,gold:u.gold,col:u.col,ext:u.ext,wg:u.wg,src:u.src})}
