@@ -454,15 +454,22 @@ const MZ=(()=>{const C=COLS,Y=ROWS,rng=(a,b)=>{const o=[];for(let i=a;i<=b;i++)o
   wvsnake:{n:'넓은 세로 뱀',f:()=>[...row(1,rng(1,6)),...col(1,rng(2,12)),...col(4,rng(3,13)),...row(14,rng(0,4))]},
   diag:{n:'대각선 뱀',f:()=>{const o=[];[1,4,7,10].forEach((y0,k)=>{const ch=[];let x=0,y=y0;ch.push([x,y]);while(true){x++;if(x>=C)break;ch.push([x,y]);const nx=y%2?x+1:x;y++;if(nx>=C||y>Y-2)break;x=nx;ch.push([x,y])}(k%2?ch.slice(1):ch.slice(0,-1)).forEach(c=>o.push(c))});return o}},
   comb:{n:'빗살 미로',f:()=>{const o=[];for(let r=0;r<7;r++){const y=2+r*2;(r%2?rng(2,6):rng(0,4)).forEach(x=>o.push([x,y]))}return o}},
-  whsnake:{n:'넓은 가로 뱀',f:()=>hs([2,5,8,11])}}})();
+  whsnake:{n:'넓은 가로 뱀',f:()=>hs([2,5,8,11])},
+  /* 🏹 짧은 길 + 타워 꽉 채우기(2026-11-16): 1번 줄을 막아 입구를 통로 하나로 모으고, 통로 둘레를 타워로 빼곡히 */
+  lane:{n:'직선 통로 꽉 채우기',fill:1,f:()=>laneCells(()=>3)},
+  dlane:{n:'대각선 통로 꽉 채우기',fill:1,f:()=>laneCells(y=>Math.round(6-6*(y-1)/13))}}})();
+function laneCells(cx){const C=COLS,key=(x,y)=>x+','+y,corr=new Set(),o=[],seen=new Set();for(let y=1;y<=ROWS-2;y++)corr.add(key(Math.max(0,Math.min(C-1,cx(y))),y));
+ const add=(x,y)=>{const k=key(x,y);if(x<0||x>=C||y<1||y>ROWS-2||corr.has(k)||seen.has(k))return;seen.add(k);o.push([x,y])};for(let x=0;x<C;x++)add(x,1);
+ let ring=[...corr].map(k=>k.split(',').map(Number));for(let r=0;r<3;r++){const nx=[];ring.sort((a,b)=>a[1]-b[1]).forEach(([x,y])=>NBR[y&1].forEach(([dx,dy])=>{const X=x+dx,Y=y+dy,k=key(X,Y);if(!corr.has(k)&&!seen.has(k)&&X>=0&&X<C&&Y>=1&&Y<=ROWS-2){add(X,Y);nx.push([X,Y])}}));ring=nx}
+ o.corr=corr;return o}
 const MZ_TIER={M:['whsnake'],H:['wvsnake','diag','comb'],X:['hsnake','hsnake2','mix','vsnake'],Z:['hsnake','hsnake2','mix','vsnake'],A:['hsnake','hsnake2','mix','vsnake']};
 // 완성했을 때의 평균 길 길이(기본 알 타워를 남길 때/철거할 때)를 미리 계산해서, 더 길어지는 쪽을 골라요
 function mzLen(cells,keepEgg){const g=Array.from({length:ROWS},()=>Array(COLS).fill(null));let n=0;if(keepEgg){g[8][3]=1;n=1}
  for(const [x,y] of cells){if(n>=BAL.cap)break;if(x<0||x>=COLS||y<1||y>=ROWS-1||g[y][x])continue;g[y][x]=1;if(!allOK(g)){g[y][x]=null;continue}n++}
  let s=0;for(let x=0;x<COLS;x++){const pa=bfs(g,x,0);s+=pa?pa.length:0}return s/COLS}
-function mazeOrder(p){if(p.mzo)return p.mzo;const L=MZ_TIER[diff];if(!L)return null;const k=L[Math.floor(Math.random()*L.length)],mr=Math.random()<.5;
+function mazeOrder(p){if(p.mzo)return p.mzo;const L=MZ_TIER[diff];if(!L)return null;const k=p.mzK||L[Math.floor(Math.random()*L.length)],mr=Math.random()<.5;p.mzK=k;
  let cells=MZ[k].f();if(mr)cells=cells.map(([x,y])=>[COLS-1-x,y]);
- const a=mzLen(cells,true),b=mzLen(cells,false);p.mzDem=b>a+1;p.mzName=MZ[k].n+(p.mzDem?' (알 타워 철거)':'');return p.mzo=cells}
+ const a=mzLen(cells,true),b=mzLen(cells,false);p.mzDem=b>a+1;if(MZ[k].fill){const cr=MZ[k].f().corr;let x8=3;if(mr)x8=COLS-1-3;p.mzDem=!!(cr&&cr.has((mr?COLS-1-3:3)+',8'))||p.mzDem;p.mzFill=1}/* 통로가 알 타워 자리를 지나면 철거 */p.mzName=MZ[k].n+(p.mzDem?' (알 타워 철거)':'');return p.mzo=cells}
 /* ☠️⚡ 독뇌전 배치법(fl.pzt): 길을 입구→출구 진행도 f로 나눠 독은 앞(f<.4)·파리지옥은 중간(.3~.65)·뇌전은 그 뒤(.45~.85)·과자는 앞~중간(<.6)을 덮는 칸을 고름 */
 function pzZone(p,b,x,y){const role=b.trap?'trap':b.snack?'snack':(b.zap||b.stun)?'zap':(b.poison||b.amp)?'pois':null;if(!role)return 0;const pa=bfs(p.grid,COLS>>1,0)||[],n=pa.length||1,px=cellX(x,y),py=cellY(y);
  const W={pois:f=>f<.4?1:f<.55?.3:0,trap:f=>f>.3&&f<.65?1:0,zap:f=>f>.45&&f<.85?1:f>.35?.3:0,snack:f=>f<.6?1:0}[role];let s=0;pa.forEach((q,i)=>{if(Math.hypot(cellX(q.x,q.y)-px,cellY(q.y)-py)<=(b.r||2))s+=W(i/n)});return s}
@@ -520,7 +527,7 @@ function aiTick(p){if(p.cfg&&p.cfg.fl&&p.cfg.fl.tdem&&!p.tdem){p.tdem=1;/* 🦃 
   if(S.t>20&&defPow(p)<need){if(upOK&&Math.random()<g.upAgg*.6&&aiUp(p,um))return 1;if(nT<BAL.cap&&buildT(p,g,false))return 1}
   if(upOK&&S.t>150&&nT>=tgtT*.8&&Math.random()<(g.wrep||0)*.35&&wallSwap(p,g))return 1;/* 🧱→🏹 */
   if(upOK&&S.t>240&&p.gold>450&&Math.random()<(g.tswap||0)*.2&&towerSwap(p,g))return 1;/* ♻️ */
-  if(nT<tgtT&&buildT(p,g,Math.random()<g.wall))return 1;
+  if(nT<tgtT&&buildT(p,g,Math.random()<g.wall*(p.mzFill?.15:1)))return 1;/* 꽉 채우기 배치는 벽 대신 타워 */
   if(!crisis&&p.income<tgtI&&Math.random()<g.uShare&&buyU(p,g))return 1;
   if(upOK&&Math.random()<g.upAgg&&aiUp(p,um))return 1;
   if((S.t>g.rush||p.gold>(g.keep??600))&&buyU(p,g,true))return 1;
