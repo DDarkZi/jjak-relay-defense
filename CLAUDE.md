@@ -43,7 +43,7 @@
 ## 🎬 개발 쇼츠 영상 (tools/video)
 - `node tools/video/make.js` → `python3 tools/video/mux.py` 로 3D 게임을 찍어 세로 쇼츠 MP4를 만들어요(README 참고). 장면·자막은 `make.js`의 `SC` 표. 게임 함수 이름(`start`, `actBuild`, `dxOpen`, `openPlaza` 등)을 직접 부르니, 이름을 바꾸면 영상 스크립트도 같이 고쳐야 해요.
 - 사용자는 나중에 주차별(1주차·2주차) 개발 일지 영상도 원해요. 주 끝에 `weekN` 태그를 남기면 좋아요.
-- 인스타 계정: **`@tree_null.vo`** (나무늘보 = Tree+null+vo 말장난). 콘셉트: "코딩 모르는 1인 개발자", 나무늘보처럼 느려도 매주 꾸준히, AI랑 게임 만들기. 'Avian Influencer'는 시리즈·캐릭터 이름 후보.
+- 인스타 계정: **`@tree_null.vo`** (나무늘보 = Tree+null+vo 말장난). 콘셉트: 코딩을 모르는 나무늘보가 AI로 게임·앱·영상·3D 캐릭터를 만들어 수익을 내며 **'빌딩늘보'**(건물주 + 무언가를 building하는 늘보)가 되는 걸 꿈꾸는 이야기. 느려도 매주 꾸준히. 'Avian Influencer'는 시리즈·캐릭터 이름 후보.
 - 영상 자막·마지막 화면을 이 콘셉트로 바꾸는 건 **사용자와 같이 보고 정하기로 함 — 먼저 수정하지 말 것.**
 
 ## 🌐 온라인 대전 구조 (js/net.js)
