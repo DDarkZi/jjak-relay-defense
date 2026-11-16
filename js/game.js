@@ -467,10 +467,13 @@ function mazeOrder(p){if(p.mzo)return p.mzo;const L=MZ_TIER[diff];if(!L)return n
 function pzZone(p,b,x,y){const role=b.trap?'trap':b.snack?'snack':(b.zap||b.stun)?'zap':(b.poison||b.amp)?'pois':null;if(!role)return 0;const pa=bfs(p.grid,COLS>>1,0)||[],n=pa.length||1,px=cellX(x,y),py=cellY(y);
  const W={pois:f=>f<.4?1:f<.55?.3:0,trap:f=>f>.3&&f<.65?1:0,zap:f=>f>.45&&f<.85?1:f>.35?.3:0,snack:f=>f<.6?1:0}[role];let s=0;pa.forEach((q,i)=>{if(Math.hypot(cellX(q.x,q.y)-px,cellY(q.y)-py)<=(b.r||2))s+=W(i/n)});return s}
 function buildT(p,g,wall){const b=wall?TB.wall:pickTower(p,g);if(!b||p.gold<tcost(p,b))return false;
- const mo=!b.cctv&&MZ_TIER[diff]&&mazeOrder(p);/* 🦉 CCTV는 미로 순서 말고 따로(서로 떨어지게) */if(mo){if(p.mzDem){const e=p.grid[8][3];if(e&&e.bp.id==='egg'){p.gold+=Math.floor(e.inv*refR(p));p.grid[8][3]=null;refreshPaths(p)}}
+ const mo=MZ_TIER[diff]&&mazeOrder(p);if(mo&&b.cctv){/* 🦉 CCTV는 미로 설계도의 '벽' 칸에만(통로 칸에 지으면 미로가 막힘) — 빈 칸이나 벽 자리 중 다른 CCTV와 떨어지고 길을 많이 보는 곳 */const pa=bfs(p.grid,COLS>>1,0)||[],cc=[];p.grid.forEach((row,yy)=>row.forEach((t2,xx)=>{if(t2&&t2.bp&&t2.bp.cctv)cc.push([cellX(xx,yy),cellY(yy)])}));let bc=null,bv=-1e9;
+  for(const [x,y] of mo){const t0=p.grid[y][x];if(t0&&t0.bp&&t0.bp.id!=='wall')continue;if(t0&&t0.carrier)continue;const px=cellX(x,y),py=cellY(y);let v=pathCov(p,b.r,x,y,pa)+Math.random()*.5;for(const[cx,cy]of cc)if(Math.hypot(cx-px,cy-py)<5)v-=60;if(!t0){p.grid[y][x]=1;const ok=allOK(p.grid);p.grid[y][x]=null;if(!ok)continue}if(v>bv){bv=v;bc=[x,y,t0]}}
+  if(!bc)return false;const[x,y,t0]=bc;if(t0)p.gold+=Math.floor(t0.inv*refR(p));p.grid[y][x]=mkR(b,p);p.gold-=tcost(p,b);if(S.st){S.st.ti[b.id]=(S.st.ti[b.id]||0)+tcost(p,b);S.st.tn[b.id]=(S.st.tn[b.id]||0)+1}refreshPaths(p);return true}
+ if(mo){if(p.mzDem){const e=p.grid[8][3];if(e&&e.bp.id==='egg'){p.gold+=Math.floor(e.inv*refR(p));p.grid[8][3]=null;refreshPaths(p)}}
   const kz=g.fl&&g.fl.kz&&b.r&&(b.slow||b.splash||b.freeze||b.self||b.chain);let mo2=mo;if(g.fl&&g.fl.pzt&&b.r){const cand=mo.filter(([x,y])=>!p.grid[y][x]).slice(0,10);mo2=cand.map(([x,y])=>{p.grid[y][x]=1;const v=pzZone(p,b,x,y);p.grid[y][x]=null;return[x,y,v]}).sort((a,c)=>c[2]-a[2]).concat(mo)}else if(kz){const pa=bfs(p.grid,COLS>>1,0)||[],cand=mo.filter(([x,y])=>!p.grid[y][x]).slice(0,6);// 🎯 킬존: 다음 후보 중 길을 가장 많이 덮는 칸부터
    mo2=cand.map(([x,y])=>[x,y,pa.filter(q=>Math.hypot(cellX(q.x,q.y)-cellX(x,y),cellY(q.y)-cellY(y))<=b.r).length]).sort((a,c)=>c[2]-a[2]).concat(mo)}
-  for(const [x,y] of mo2){if(p.grid[y][x])continue;p.grid[y][x]=mkR(b,p);if(allOK(p.grid)){p.gold-=tcost(p,b);if(S.st){S.st.ti[b.id]=(S.st.ti[b.id]||0)+tcost(p,b);S.st.tn[b.id]=(S.st.tn[b.id]||0)+1}refreshPaths(p);return true}p.grid[y][x]=null}return false}
+  for(const [x,y] of mo2){if(p.grid[y][x])continue;p.grid[y][x]=mkR(b,p);if(allOK(p.grid)){p.gold-=tcost(p,b);if(S.st){S.st.ti[b.id]=(S.st.ti[b.id]||0)+tcost(p,b);S.st.tn[b.id]=(S.st.tn[b.id]||0)+1}refreshPaths(p);return true}p.grid[y][x]=null}p.mzFull=1;/* 미로 설계도를 다 채움 */return false}
  let best=null,bs=-1e9;
  for(let k=0;k<24;k++){const x=Math.floor(Math.random()*COLS),y=1+Math.floor(Math.random()*(ROWS-2));
   if(p.grid[y][x])continue;p.grid[y][x]=1;let s=-1e9;const L=allOK(p.grid);
@@ -513,12 +516,13 @@ function aiTick(p){if(p.cfg&&p.cfg.fl&&p.cfg.fl.tdem&&!p.tdem){p.tdem=1;/* 🦃 
  /* 🦩 대형 새 모으기는 2026-11-15 사용자 요청으로 없앰(모으는 동안 새·타워를 전혀 안 사서 1~2분씩 멈췄음) */
  const tgtT=Math.min(BAL.cap,g.tw0+g.twRate*t+(crisis?5:0)),tgtI=g.inc0+g.incRate*t,nT=cnt(p.grid),need=need8(S.t)*g.def8;
  const act=()=>{
-  if(S.t>20&&defPow(p)<need){if(Math.random()<g.upAgg*.6&&aiUp(p,um))return 1;if(nT<BAL.cap&&buildT(p,g,false))return 1}
-  if(S.t>150&&nT>=tgtT*.8&&Math.random()<(g.wrep||0)*.35&&wallSwap(p,g))return 1;/* 🧱→🏹 */
-  if(S.t>240&&p.gold>450&&Math.random()<(g.tswap||0)*.2&&towerSwap(p,g))return 1;/* ♻️ */
+  const upOK=crisis||!MZ_TIER[diff]||p.mzFull||S.t>420;/* ⬆️ 미로를 다 쌓기 전엔 업그레이드 안 함(돈이 미로로 가게) */
+  if(S.t>20&&defPow(p)<need){if(upOK&&Math.random()<g.upAgg*.6&&aiUp(p,um))return 1;if(nT<BAL.cap&&buildT(p,g,false))return 1}
+  if(upOK&&S.t>150&&nT>=tgtT*.8&&Math.random()<(g.wrep||0)*.35&&wallSwap(p,g))return 1;/* 🧱→🏹 */
+  if(upOK&&S.t>240&&p.gold>450&&Math.random()<(g.tswap||0)*.2&&towerSwap(p,g))return 1;/* ♻️ */
   if(nT<tgtT&&buildT(p,g,Math.random()<g.wall))return 1;
   if(!crisis&&p.income<tgtI&&Math.random()<g.uShare&&buyU(p,g))return 1;
-  if(Math.random()<g.upAgg&&aiUp(p,um))return 1;
+  if(upOK&&Math.random()<g.upAgg&&aiUp(p,um))return 1;
   if((S.t>g.rush||p.gold>(g.keep??600))&&buyU(p,g,true))return 1;
   if(nT<BAL.cap&&p.gold>800&&buildT(p,g,false))return 1;
   if(nT>=BAL.cap&&p.gold>600&&((g.wrep&&wallSwap(p,g))||(g.tswap&&towerSwap(p,g))))return 1;/* 판이 꽉 차면 벽·약한 타워를 바꿈 */
