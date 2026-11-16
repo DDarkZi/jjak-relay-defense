@@ -10,5 +10,5 @@ const STUB="const __mk=()=>new Proxy(function(){},{get:(t,p)=>p===Symbol.toPrimi
    const lay=Array.from({length:8},(_,i)=>LAY[i%LAY.length]).sort(()=>Math.random()-.5);S.pl.forEach((p,i)=>{if(lay[i]!=='maze')p.mzK=lay[i];else{const L=MZ_TIER[d];p.mzK=L[Math.floor(Math.random()*L.length)]}});
    S.st={td:{},ti:{},tn:{},us:{},un:{},ue:{},up:0};let l5=null;while(!over&&S.t<1800){step(.05);if(!l5&&S.t>=300)l5=S.pl.map(p=>{const pa=bfs(p.grid,COLS>>1,0);return pa?pa.length:0})}
    const die=S.pl.map(p=>p.alive?1e9:p.dieT||0),rank=die.map(x=>1+die.filter(y=>y>x).length);
-   return{d,t:Math.round(S.t),pl:S.pl.map((p,i)=>({lay:lay[i],mz:p.mzK,rank:rank[i],inc:p.income,kills:p.kills||0,len:l5?l5[i]:0,dealt:Math.round(p.dealt||0),n:p.cfg&&p.cfg.pn}))}},[d,LAY]))}}));
+   return{d,t:Math.round(S.t),pl:S.pl.map((p,i)=>({lay:lay[i],mz:p.mzK,rank:rank[i],inc:p.income,kills:p.kills||0,len:l5?l5[i]:0,dealt:Math.round(p.dealt||0),n:p.cfg&&p.cfg.pn,mT:p.mT||[],mIn:p.mIn||[],mLk:p.mLk||[],mInc:p.mInc||[],dieT:p.dieT||0}))}},[d,LAY]))}}));
  fs.writeFileSync(OUT,JSON.stringify(res));console.log('ok',res.length);await br.close()})();
