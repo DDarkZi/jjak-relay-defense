@@ -413,7 +413,7 @@ function useSkill(p){const s=skillOf(p);if(!s||!p.skU||p.skCD>0)return false;s.f
 // ---------- AI: 전략 유전자 ----------
 const GK={tw0:[3,14],twRate:[0,4],inc0:[30,140],incRate:[0,60],uShare:[.2,1],uAir:[0,1],uHeavy:[0,1],uTier:[.2,1],uSpec:[0,1],wall:[0,.7],
  upAgg:[0,1],upMax:[2,4],def8:[.2,1.3],crisis:[20,70],rush:[150,900],keep:[100,800],tech:[0,4.999],tech2:[0,4.999],m_cx:[0,1],
- m_egg:[0,1],m_air:[0,1],big:[0,1],bigT:[240,720],m_acorn:[0,1],m_t1:[0,1],m_t2:[0,1],m_t3:[0,1]};
+ m_egg:[0,1],m_air:[0,1],big:[0,1],bigT:[240,720],m_acorn:[0,1],m_t1:[0,1],m_t2:[0,1],m_t3:[0,1],wrep:[0,1],tswap:[0,1],adapt:[0,1]};/* 🧠 2026-11-16: 벽→공격 타워 교체·약한 타워 철거 후 재건·들어오는 새 보고 타워 고르기 */
 function randG(){const g={};for(const k in GK)g[k]=GK[k][0]+Math.random()*(GK[k][1]-GK[k][0]);return g}
 function mutG(g,s){const o={};for(const k in GK){const[a,b]=GK[k];o[k]=Math.max(a,Math.min(b,(g[k]??(a+b)/2)+(Math.random()+Math.random()+Math.random()-1.5)*2*s*(b-a)))}return o}
 function crossG(a,b){const o={};for(const k in GK)o[k]=Math.random()<.5?a[k]:b[k];return o}
@@ -432,8 +432,14 @@ function pyWires(p){const c=pyComp(p);p.pyc=c;const W=[];for(let y=0;y<ROWS;y++)
  p.wires=W;return W}
 const segD=(px,py,w)=>{const dx=w.x2-w.x1,dy=w.y2-w.y1,l=dx*dx+dy*dy,t=Math.max(0,Math.min(1,((px-w.x1)*dx+(py-w.y1)*dy)/l));return Math.hypot(px-w.x1-t*dx,py-w.y1-t*dy)};
 const need8=t=>Math.max(0,Math.min(1,(t-90)/390))*27000*BAL.need;
-function pickTower(p,g){const l=T.filter(b=>b.id!=='wall'&&techOK(p,b)&&tcost(p,b)<=p.gold&&(!b.cctv||(p.sawSt&&cctvOK(p))));if(!l.length)return null;
- let tot=0;const w=l.map(b=>{const v=(b.combo?(g.m_cx??.8):b.tech?g['m_t'+(TECH[b.tech].t.indexOf(b.id)+1)]:(g['m_'+b.id]??(b.pylon?.25:b.cctv?.9:.3)))+.02;tot+=v;return v});let r=Math.random()*tot;
+/* 🧠 똑똑한 수비 도우미(2026-11-16) */
+function pathCov(p,r,x,y,pa){pa=pa||bfs(p.grid,COLS>>1,0)||[];const px=cellX(x,y),py=cellY(y);let n=0;for(const q of pa)if(Math.hypot(cellX(q.x,q.y)-px,cellY(q.y)-py)<=r)n++;return n}
+function threatOf(p){const L=p.units.filter(u=>u.owner!==p.id&&u.hp>0),n=L.length||1;let air=0,sh=0,hp=0;for(const u of L){if(u.bp.t==='A')air++;if(u.sh>0)sh++;hp+=u.hp}return{n:L.length,air:air/n,sh:sh/n,avg:hp/n}}
+/* 들어오는 새를 보고 타워 가중치: 공중이 많으면 대공, 보호막이면 뇌전, 떼면 광역, 튼튼하면 강타 */
+function adaptW(b,th,a){if(!a||th.n<4)return 1;let m=1;if(b.t==='A')m*=1+a*3*th.air;else if(b.t==='G')m*=Math.max(.2,1-.8*a*th.air);
+ if(b.tech==='thunder'||(b.combo&&b.combo.includes('thunder'))||b.pylon)m*=1+a*2.5*th.sh;if(b.splash||b.self||b.chain)m*=1+a*Math.min(1.5,th.n/25);if(b.amp||b.d>=100)m*=1+a*Math.min(1.5,th.avg/1500);return m}
+function pickTower(p,g,minC){const l=T.filter(b=>b.id!=='wall'&&techOK(p,b)&&tcost(p,b)<=p.gold&&(!minC||(tcost(p,b)>=minC&&b.d>0))&&(!b.cctv||(p.sawSt&&cctvOK(p))));if(!l.length)return null;const th=g.adapt?threatOf(p):null;
+ let tot=0;const w=l.map(b=>{const v=((b.combo?(g.m_cx??.8):b.tech?g['m_t'+(TECH[b.tech].t.indexOf(b.id)+1)]:(g['m_'+b.id]??(b.pylon?.25:b.cctv?.9:.3)))+.02)*(th?adaptW(b,th,g.adapt):1);tot+=v;return v});let r=Math.random()*tot;
  for(let i=0;i<l.length;i++){r-=w[i];if(r<=0)return l[i]}return l[l.length-1]}
 // 🐍 AI 미로 설계도(숙련 이상): 칸 목록을 위에서부터 순서대로 지어요. 길이 막히는 칸은 건너뛰어요.
 //   길이(7개 입구 평균, 빈 판 16칸): 가로 뱀 48 · 혼합 44 · 넓은 세로 42 · 세로 40 · 대각선 36 · 빗살 35 · 넓은 가로 30
@@ -460,7 +466,7 @@ function mazeOrder(p){if(p.mzo)return p.mzo;const L=MZ_TIER[diff];if(!L)return n
 function pzZone(p,b,x,y){const role=b.trap?'trap':b.snack?'snack':(b.zap||b.stun)?'zap':(b.poison||b.amp)?'pois':null;if(!role)return 0;const pa=bfs(p.grid,COLS>>1,0)||[],n=pa.length||1,px=cellX(x,y),py=cellY(y);
  const W={pois:f=>f<.4?1:f<.55?.3:0,trap:f=>f>.3&&f<.65?1:0,zap:f=>f>.45&&f<.85?1:f>.35?.3:0,snack:f=>f<.6?1:0}[role];let s=0;pa.forEach((q,i)=>{if(Math.hypot(cellX(q.x,q.y)-px,cellY(q.y)-py)<=(b.r||2))s+=W(i/n)});return s}
 function buildT(p,g,wall){const b=wall?TB.wall:pickTower(p,g);if(!b||p.gold<tcost(p,b))return false;
- const mo=MZ_TIER[diff]&&mazeOrder(p);if(mo){if(p.mzDem){const e=p.grid[8][3];if(e&&e.bp.id==='egg'){p.gold+=Math.floor(e.inv*refR(p));p.grid[8][3]=null;refreshPaths(p)}}
+ const mo=!b.cctv&&MZ_TIER[diff]&&mazeOrder(p);/* 🦉 CCTV는 미로 순서 말고 따로(서로 떨어지게) */if(mo){if(p.mzDem){const e=p.grid[8][3];if(e&&e.bp.id==='egg'){p.gold+=Math.floor(e.inv*refR(p));p.grid[8][3]=null;refreshPaths(p)}}
   const kz=g.fl&&g.fl.kz&&b.r&&(b.slow||b.splash||b.freeze||b.self||b.chain);let mo2=mo;if(g.fl&&g.fl.pzt&&b.r){const cand=mo.filter(([x,y])=>!p.grid[y][x]).slice(0,10);mo2=cand.map(([x,y])=>{p.grid[y][x]=1;const v=pzZone(p,b,x,y);p.grid[y][x]=null;return[x,y,v]}).sort((a,c)=>c[2]-a[2]).concat(mo)}else if(kz){const pa=bfs(p.grid,COLS>>1,0)||[],cand=mo.filter(([x,y])=>!p.grid[y][x]).slice(0,6);// 🎯 킬존: 다음 후보 중 길을 가장 많이 덮는 칸부터
    mo2=cand.map(([x,y])=>[x,y,pa.filter(q=>Math.hypot(cellX(q.x,q.y)-cellX(x,y),cellY(q.y)-cellY(y))<=b.r).length]).sort((a,c)=>c[2]-a[2]).concat(mo)}
   for(const [x,y] of mo2){if(p.grid[y][x])continue;p.grid[y][x]=mkR(b,p);if(allOK(p.grid)){p.gold-=tcost(p,b);if(S.st){S.st.ti[b.id]=(S.st.ti[b.id]||0)+tcost(p,b);S.st.tn[b.id]=(S.st.tn[b.id]||0)+1}refreshPaths(p);return true}p.grid[y][x]=null}return false}
@@ -469,12 +475,22 @@ function buildT(p,g,wall){const b=wall?TB.wall:pickTower(p,g);if(!b||p.gold<tcos
   if(p.grid[y][x])continue;p.grid[y][x]=1;let s=-1e9;const L=allOK(p.grid);
   if(L){const pa=bfs(p.grid,COLS>>1,0),px=cellX(x,y),py=cellY(y);
    s=L*(b.id==='wall'?3:1.6)-(b.id==='wall'?0:Math.min(...pa.map(q=>Math.hypot(cellX(q.x,q.y)-px,cellY(q.y)-py)))*6)+Math.random();
+   if(b.cctv){p.grid.forEach((row,yy)=>row.forEach((t2,xx)=>{if(t2&&t2.bp&&t2.bp.cctv&&Math.hypot(cellX(xx,yy)-px,cellY(yy)-py)<5)s-=60}));s+=pathCov(p,b.r,x,y,pa)*.8}/* 🦉 CCTV끼리 겹치지 않게 + 길을 많이 보게 */
    if(b.pylon)for(const[dx,dy]of NBR[y&1]){const q=p.grid[y+dy]&&p.grid[y+dy][x+dx];if(q&&q.bp&&q.bp.pylon)s+=9}
    if(g.fl&&g.fl.kz&&b.r&&(b.slow||b.splash||b.freeze||b.self||b.chain))s+=pa.filter(q=>Math.hypot(cellX(q.x,q.y)-px,cellY(q.y)-py)<=b.r).length*1.1;
    if(g.fl&&g.fl.pzt)s+=pzZone(p,b,x,y)*1.6}// 🎯 킬존 · ☠️⚡ 독뇌전 배치
   p.grid[y][x]=null;if(s>bs){bs=s;best=[x,y]}}
  if(!best||bs<-1e8)return false;
  p.grid[best[1]][best[0]]=mkR(b,p);p.gold-=tcost(p,b);if(S.st){S.st.ti[b.id]=(S.st.ti[b.id]||0)+tcost(p,b);S.st.tn[b.id]=(S.st.tn[b.id]||0)+1}refreshPaths(p);return true}
+/* 🧱→🏹 벽 교체: 미로를 다 쌓은 뒤 길을 많이 덮는 벽을 공격 타워로 바꿈(같은 칸이라 길은 그대로) */
+function wallSwap(p,g){const b=pickTower(p,g,150);if(!b||b.cctv||b.snack)return false;const pa=bfs(p.grid,COLS>>1,0)||[];let best=null,bc=2;
+ p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t&&t.bp.id==='wall'&&!t.carrier){const c=pathCov(p,b.r,x,y,pa);if(c>bc){bc=c;best=[x,y,t]}}}));if(!best)return false;
+ const[x,y,w]=best,ref=Math.floor(w.inv*refR(p));if(p.gold+ref<tcost(p,b))return false;p.gold+=ref-tcost(p,b);p.grid[y][x]=mkR(b,p);if(S.st){S.st.ti[b.id]=(S.st.ti[b.id]||0)+tcost(p,b);S.st.tn[b.id]=(S.st.tn[b.id]||0)+1;S.st.wsw=(S.st.wsw||0)+1}return true}
+/* ♻️ 철거 후 재건: 싸고 길을 거의 못 덮는 1레벨 타워를 철거하고 그 자리에 비싼 타워(같은 칸이라 길은 그대로) */
+function towerSwap(p,g){const pa=bfs(p.grid,COLS>>1,0)||[];let worst=null,wv=1e9;
+ p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(!t||!t.bp||t.bp.id==='wall'||t.carrier||t.lv>1||t.bp.cctv||t.bp.snack||t.bp.c>200||(y===8&&x===3&&!S.t))return;const v=pathCov(p,t.r||1,x,y,pa)*(t.d||1)/(t.bp.cd||1);if(v<wv){wv=v;worst=[x,y,t]}}));if(!worst)return false;
+ const[x,y,t]=worst,ref=Math.floor(t.inv*refR(p));const g0=p.gold;p.gold+=ref;const b=pickTower(p,g,Math.max(250,t.bp.c*2));if(!b||b.cctv||b.snack){p.gold=g0;return false}
+ const nv=pathCov(p,b.r,x,y,pa)*b.d/b.cd;if(nv<wv*1.8){p.gold=g0;return false}p.gold-=tcost(p,b);p.grid[y][x]=mkR(b,p);if(S.st){S.st.ti[b.id]=(S.st.ti[b.id]||0)+tcost(p,b);S.st.tn[b.id]=(S.st.tn[b.id]||0)+1;S.st.tsw=(S.st.tsw||0)+1}return true}
 // 🔍 정찰: 다음 사람 판의 대공 비율·광역 비율·CCTV 유무(2초마다 갱신)
 function scoutOf(p,n){const c=p.sc;if(c&&c.n===n&&S.t-c.t<2)return c;let air=0,gr=0,spl=0,all=0,cc=0,go=0,hv=0,dot=0,zp=0;S.pl[n].grid.flat().forEach(t=>{if(!t||!t.bp||!t.bp.d)return;const b=t.bp,d=t.d/b.cd;all+=d;if(b.t!=='G')air+=d;if(b.t!=='A')gr+=d;if(b.t==='G')go+=d;if(b.splash||b.self||b.chain)spl+=d;if(b.cctv)cc++;if(b.cd>=1.5)hv+=d;if(b.poison||b.burn)dot+=d;if(b.zap)zp+=d});
  const r=v=>all?v/all:0;return p.sc={n,t:S.t,air:r(air),spl:r(spl),cc,gonly:r(go),heavy:r(hv),dot:r(dot),zap:r(zp)}}
@@ -487,7 +503,7 @@ function buyU(p,g,dump){const n=nextAlive(p.id);if(n===null)return false;const h
  if(!b)return false;{const R=p.rec=p.rec||{};for(const k in R)R[k]*=.8;R[b.id]=(R[b.id]||0)+1}p.gold-=ucost(p,b);if(S.st){S.st.us[b.id]=(S.st.us[b.id]||0)+ucost(p,b);S.st.un[b.id]=(S.st.un[b.id]||0)+1}p.income+=gainInc(p,b);{const cn=cntOf(b),eg=b.id==='egg_legs',eb=eg?Math.min(BAL.eggCap,(p.egg||0)*BAL.eggHp):0;if(eg)p.egg=(p.egg||0)+1;/* 🥚 AI 알도 보낼수록 체력 +1 */for(let k=0;k<cn;k++){const u=spawn(S.pl[n],b,p.id);if(eb&&u){u.hp+=eb;u.mh=u.hp}}}
  /* 🐝 벌새 떼 폭탄: 강타형 위주·광역 약한 상대면 한꺼번에 몰아 보내기 */if(b.swarm&&p.bomb){p.bomb=0;let ex=0;while(ex<2&&p.gold>=ucost(p,b)){ex++;p.gold-=ucost(p,b);if(S.st){S.st.us[b.id]+=ucost(p,b);S.st.un[b.id]++}p.income+=gainInc(p,b);const cn=cntOf(b);for(let k=0;k<cn;k++)spawn(S.pl[n],b,p.id)}if(ex&&n===0&&!S.sim)toast('🐝 벌새 떼 습격! 광역 타워로 막으세요')}
  return true}
-function aiUp(p,c){for(const t of p.grid.flat()){if(t&&t.bp.id!=='wall'&&t.lv<c.up&&p.gold>=upc(t,p)){const k=upc(t,p);p.gold-=k;t.lv++;t.d=Math.floor(t.d*1.6);t.r+=.25;t.inv+=k;if(S.st){S.st.ti[t.bp.id]=(S.st.ti[t.bp.id]||0)+k;S.st.up++}return true}}return false}
+function aiUp(p,c){/* ⬆️ 길을 가장 많이 덮는(값어치 좋은) 타워부터 올림 */const pa=bfs(p.grid,COLS>>1,0)||[];let bt=null,bv=-1;p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t&&t.bp.id!=='wall'&&t.d>0&&t.lv<c.up&&p.gold>=upc(t,p)){const v=(pathCov(p,t.r,x,y,pa)+1)*t.d/t.bp.cd/upc(t,p);if(v>bv){bv=v;bt=t}}}));for(const t of bt?[bt]:[]){if(t&&t.bp.id!=='wall'&&t.lv<c.up&&p.gold>=upc(t,p)){const k=upc(t,p);p.gold-=k;t.lv++;t.d=Math.floor(t.d*1.6);t.r+=.25;t.inv+=k;if(S.st){S.st.ti[t.bp.id]=(S.st.ti[t.bp.id]||0)+k;S.st.up++}return true}}return false}
 function aiTick(p){if(p.cfg&&p.cfg.fl&&p.cfg.fl.tdem&&!p.tdem){p.tdem=1;/* 🦃 시작하자마자 처음 알 타워를 철거해 그 돈으로 칠면조부터 */const t0=p.grid[8]&&p.grid[8][3];if(t0&&t0.bp&&t0.bp.id==='egg'){p.gold+=Math.floor(t0.inv*refR(p));p.grid[8][3]=null;refreshPaths(p)}const TK_=UB.turkey;while(TK_&&p.gold>=ucost(p,TK_)&&nextAlive(p.id)!==null){const n=nextAlive(p.id);p.gold-=ucost(p,TK_);if(S.st){S.st.us.turkey=(S.st.us.turkey||0)+ucost(p,TK_);S.st.un.turkey=(S.st.un.turkey||0)+1}p.income+=gainInc(p,TK_);spawn(S.pl[n],TK_,p.id)}return}
  if(p.cfg&&p.cfg.fl&&p.cfg.fl.jug&&jugTick(p))return;if(p.tech2plan&&!p.tech2&&S.t>45&&p.gold>=TECH2C){p.gold-=TECH2C;p.tech2=p.tech2plan;return}
  if(p.tech2&&!p.skU&&S.t>120&&p.gold>=SKC+200&&Math.random()<.5){p.gold-=SKC;p.skU=1;return}
@@ -497,11 +513,14 @@ function aiTick(p){if(p.cfg&&p.cfg.fl&&p.cfg.fl.tdem&&!p.tdem){p.tdem=1;/* 🦃 
  const tgtT=Math.min(BAL.cap,g.tw0+g.twRate*t+(crisis?5:0)),tgtI=g.inc0+g.incRate*t,nT=cnt(p.grid),need=need8(S.t)*g.def8;
  const act=()=>{
   if(S.t>20&&defPow(p)<need){if(Math.random()<g.upAgg*.6&&aiUp(p,um))return 1;if(nT<BAL.cap&&buildT(p,g,false))return 1}
+  if(S.t>150&&nT>=tgtT*.8&&Math.random()<(g.wrep||0)*.35&&wallSwap(p,g))return 1;/* 🧱→🏹 */
+  if(S.t>240&&p.gold>450&&Math.random()<(g.tswap||0)*.2&&towerSwap(p,g))return 1;/* ♻️ */
   if(nT<tgtT&&buildT(p,g,Math.random()<g.wall))return 1;
   if(!crisis&&p.income<tgtI&&Math.random()<g.uShare&&buyU(p,g))return 1;
   if(Math.random()<g.upAgg&&aiUp(p,um))return 1;
   if((S.t>g.rush||p.gold>(g.keep??600))&&buyU(p,g,true))return 1;
   if(nT<BAL.cap&&p.gold>800&&buildT(p,g,false))return 1;
+  if(nT>=BAL.cap&&p.gold>600&&((g.wrep&&wallSwap(p,g))||(g.tswap&&towerSwap(p,g))))return 1;/* 판이 꽉 차면 벽·약한 타워를 바꿈 */
   return 0};
  for(let n=1+Math.min(3,Math.floor(p.gold/1500));n--;)if(!act())break}
 
@@ -518,7 +537,7 @@ function applyModeBal(k){const m=BAL.mode[k]||BAL.mode.normal;S_MODE=k;
  U.forEach(u=>{if(u.hp0==null){u.hp0=u.hp;u.sh0=u.shield||0}u.hp=Math.round(u.hp0*m.uh);if(u.sh0)u.shield=Math.round(u.sh0*m.uh)});
  T.forEach(b=>{if(b.d0==null){b.d0=b.d;b.cd0=b.cd}b.d=Math.round(b.d0*m.td);b.cd=+(b.cd0*m.as).toFixed(3)})}
 let S_MODE='normal';
-/* 🎓 알파고가 다른 AI를 가르침: 성격(인컴·새 고르기·속성)은 그대로, 운영(업그레이드·벽·미로·수비·돈 쓰는 때)만 알파고 쪽으로 L만큼 */var TEACH_KEYS=['tw0','twRate','wall','def8','crisis','rush','keep','m_cx'];/* 가르칠 운영 유전자: 업그레이드(upAgg·upMax)는 안 가르침 — 알파고처럼 업그레이드를 끊으면 그 돈이 다 새로 가서 게임이 5분에 끝났음(2026-11-12 실험) */
+/* 🎓 알파고가 다른 AI를 가르침: 성격(인컴·새 고르기·속성)은 그대로, 운영(업그레이드·벽·미로·수비·돈 쓰는 때)만 알파고 쪽으로 L만큼 */var TEACH_KEYS=['tw0','twRate','wall','def8','crisis','rush','keep','m_cx','wrep','tswap','adapt'];/* 가르칠 운영 유전자: 업그레이드(upAgg·upMax)는 안 가르침 — 알파고처럼 업그레이드를 끊으면 그 돈이 다 새로 가서 게임이 5분에 끝났음(2026-11-12 실험) */
 function aiLearn(g,L,n){/* 자기 성향 알파고에게 배움: 이자형→알파 이자형, 안정형→알파 안정형, 러시·올인→알파 러시, 나머지는 알파고 평균 */if(/신경독/.test(n||'')&&L>0)g.fl={...(g.fl||{}),pzt:1};/* 독+뇌전 AI는 독뇌전 배치법도 배움 */if(/이자형/.test(n||'')&&L>=1)g.fl={...(g.fl||{}),tdem:1};/* 🦃 어려움·헬의 이자형은 칠면조 철거 시작도 배움 */const T=/신경독/.test(n||'')?ALPHA_ARCH_SK.pzt:/수상한 알/.test(n||'')?ALPHA_ARCH_SK.egg:/공작/.test(n||'')?ALPHA_ARCH_SK.shield:/해적/.test(n||'')?ALPHA_ARCH_SK.tdem:/밸런스형/.test(n||'')&&!/증기|플라즈마|화염폭풍|역병/.test(n||'')?ALPHA_ARCH_SK.vary:/증기|플라즈마|화염폭풍|역병/.test(n||'')?ALPHA_ARCH_SK.fire:/이자형/.test(n||'')?Object.fromEntries(Object.keys(ALPHA_ARCH_SK.inc).map(k=>[k,(ALPHA_ARCH_SK.inc[k]+ALPHA_ARCH_SK.tdem[k])/2])):/안정형/.test(n||'')?ALPHA_ARCH_SK.def:/러시|올인/.test(n||'')?ALPHA_ARCH_SK.rush:/조련사|공중/.test(n||'')?ALPHA_ARCH_SK.air:ALPHA_SKILL;let T2=T;if(g.tech!=null&&g.tech2!=null){const a=Math.min(4,Math.floor(g.tech)),b=Math.min(4,Math.floor(g.tech2)),ck='c'+Math.min(a,b)+Math.max(a,b),CS=ALPHA_COMBO_SK[ck];if(CS){T2={};for(const k in CS)T2[k]=T===ALPHA_SKILL?CS[k]:(CS[k]+(T[k]??CS[k]))/2}}/* 🎨 자기 속성 조합 알파고에게도 배움(성향 알파고와 반반) */
  if(L>0)for(const k in T2)if(g[k]!=null&&(!TEACH_KEYS||TEACH_KEYS.includes(k)))g[k]+=(T2[k]-g[k])*L;return g}
 function start(gs,p0h){const D=DIFF[diff];const cf=(diff==='A'?AIP.filter(a=>a.alpha).sort((x,y)=>(y.a3||0)-(x.a3||0)):AIP.filter(a=>!a.hell||diff==='X'||diff==='Z')).sort(()=>Math.random()-.5);if(diff==='Z')cf.sort((a,b)=>(b.hell&&!b.alpha?1:0)-(a.hell&&!a.alpha?1:0));{/* 🎨 알파 성향은 속성 조합이 다양하게: 같은 조합은 뒤로 */const seen=new Set(),A1=[],A2=[];cf.forEach(c=>{if(!c.alpha){A1.push(c);return}const k=Math.floor(c.g.tech??9)+'-'+Math.floor(c.g.tech2??9);(seen.has(k)?A2:A1).push(c);seen.add(k)});cf.splice(0,cf.length,...A1,...A2)}/* 알파고=진화 AI만, 헬=지능형 3종 우선 *//* 매 판 성향 무작위(지능형은 어려움·헬에서만, 헬은 지능형 3종이 꼭 나옴) */

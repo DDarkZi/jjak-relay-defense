@@ -6,14 +6,15 @@ const [stf,G0,K0,P0]=process.argv.slice(2);const OLD=process.env.OLD?JSON.parse(
 const STUB="const __mk=()=>new Proxy(function(){},{get:(t,p)=>p===Symbol.toPrimitive?(()=>0):__mk(),apply:()=>__mk(),construct:()=>__mk(),set:()=>true});window.THREE=__mk();";
 const FAVK=['pigeon','crow','turkey','swan','owl','parrot','seagull','falcon','pelican','phoenix','archaeo','duck','kiwi','egg_legs','humbee','ghostcrow','crane','peacock','ostrich','eagle'];
 const PAGEFN=`window.evalCand=function(cand,dk,seat,opp){opp=opp||[];R=R||__mk();Sc=Sc||__mk();Cam=Cam||__mk();diff=dk;
- const pool=AIP.filter(a=>!a.hell||dk==='X'||dk==='Z').sort(()=>Math.random()-.5);const gs=[];let j=0;
+ const pool=(dk==='A'?AIP.filter(a=>a.alpha):AIP.filter(a=>!a.hell||dk==='X'||dk==='Z')).sort(()=>Math.random()-.5);/* 알파고 난이도면 상대도 알파고 */const gs=[];let j=0;
  let o=0;for(let i=0;i<8;i++){if(i===seat){gs.push(JSON.parse(JSON.stringify(cand)));continue}if(o<opp.length){gs.push(JSON.parse(JSON.stringify(opp[o++])));continue}const a=pool[j++%pool.length];gs.push({...mutG(a.g,.07),tech:a.g.tech,tech2:a.g.tech2,fav:a.fav,efav:a.g.efav,fl:a.fl})}
  gs.races=Array(8).fill(null);S=null;over=false;start(gs);while(!over&&S.t<1800)step(.05);
  const L=S.pl.slice().sort((a,b)=>(b.alive-a.alive)||((b.dieT||1e9)-(a.dieT||1e9)));const rk=L.findIndex(p=>p.id===seat);return{sc:7-rk,win:rk===0?1:0,t:S.t}}`;
 const rnd=(a,b)=>a+Math.random()*(b-a);
 /* 성향별 진화(ARCH=이름): 성향의 핵심 유전자 범위를 고정해서 그 성격 안에서만 최강을 찾음 */
 const ARCHS={inc:{inc0:[85,140],incRate:[45,60],uShare:[.65,1]},def:{def8:[1.05,1.3],tw0:[6,14],inc0:[30,60]},rush:{uShare:[.78,1],uTier:[.8,1],rush:[150,260],keep:[100,200],inc0:[30,70]},air:{uAir:[.78,1]},fire:{tech:[0,.99],uShare:[.72,1],uTier:[.75,1],keep:[100,300]},pzt:{tech:[4,4.99],tech2:[2,2.99],m_snack:[.5,1],m_t3:[.4,1]},up:{upAgg:[.6,1],upMax:[3,4]},
- /* 2026-11-15 특수 전략 6종 */pigeon:{uShare:[.7,1]},vary:{inc0:[80,140],uHeavy:[0,.4]},egg:{uShare:[.7,1],uTier:[.2,.6]},shield:{uTier:[.6,1]},spec:{uSpec:[.85,1]},tdem:{inc0:[90,140],uShare:[.75,1]}};
+ /* 2026-11-15 특수 전략 6종 */pigeon:{uShare:[.7,1]},vary:{inc0:[80,140],uHeavy:[0,.4]},egg:{uShare:[.7,1],uTier:[.2,.6]},shield:{uTier:[.6,1]},spec:{uSpec:[.85,1]},tdem:{inc0:[90,140],uShare:[.75,1]},
+ /* 2026-11-16 똑똑한 알파고: 업그레이드 조금·벽 교체·철거 재건·상황 판단·인컴 */smart:{upAgg:[.1,.45],adapt:[.5,1],wrep:[.3,1],tswap:[.3,1],incRate:[30,60]}};
 const AFIX={pigeon:{fav:{pigeon:2.2,crow:1.5}},vary:{fl:{vary:1}},egg:{fav:{egg_legs:2.2}},shield:{fav:{swan:2,owl:1.5}},spec:{fav:{parrot:1.5,seagull:1.5,falcon:1.5,eagle:1}},tdem:{fl:{tdem:1},efav:{t:150,w:{turkey:5}}}};
 const AQ=process.env.ARCH||'';/* ARCH=c03 → 속성 조합 고정(0화염 1빙결 2뇌전 3폭풍 4독) */if(/^c\d\d$/.test(AQ)){const a=+AQ[1],b=+AQ[2];ARCHS[AQ]={tech:[a,a+.99],tech2:[b,b+.99]}}
 const AC=AQ?ARCHS[AQ]:null;
@@ -26,8 +27,8 @@ async function cross(pg,a,b){return clampA(await pg.evaluate(([a,b])=>{const g=c
   await pg.route('**/fonts.googleapis.com/**',r=>r.fulfill({body:'',contentType:'text/css'}));await pg.route('**/*.glb',r=>r.abort());
   await pg.goto('file://'+root+'/index.html');await pg.waitForTimeout(300);await pg.addScriptTag({path:root+'/tools/sim/harness.js'});await pg.evaluate(()=>setTune({}));await pg.evaluate(PAGEFN);pages.push(pg)}
  let st=fs.existsSync(stf)?JSON.parse(fs.readFileSync(stf)):null;
- if(!st){/* 시작 개체: 실제 AI 풀의 좋은 성향 + 지능형 + 무작위 변형 */const seeds=await pages[0].evaluate(()=>AIP.map(a=>({...a.g,fav:a.fav||{},fl:a.fl||{},n:a.n})));
-  const pick=seeds.sort(()=>Math.random()-.5).slice(0,POP-4);const hell=seeds.filter(s=>s.fl&&(s.fl.scout||s.fl.kz||s.fl.jug));const pop=[...pick,...hell];
+ if(!st){/* 시작 개체: 실제 AI 풀의 좋은 성향 + 지능형 + 무작위 변형 */const seeds=await pages[0].evaluate((SA)=>AIP.filter(a=>!SA||a.alpha).map(a=>({...a.g,fav:a.fav||{},fl:a.fl||{},n:a.n})),!!process.env.SEEDA);/* SEEDA=1이면 알파고들에서 시작 */
+  const pick=seeds.sort(()=>Math.random()-.5).slice(0,POP-4);const hell=process.env.SEEDA?[]:seeds.filter(s=>s.fl&&(s.fl.scout||s.fl.kz||s.fl.jug));const pop=[...pick,...hell];
   while(pop.length<POP)pop.push(await mutate(pages[0],pick[pop.length%pick.length],.25));st={gen:0,pop:pop.map(g=>{delete g.n;return clampA(g)}),hist:[],best:null,games:0,arch:process.env.ARCH||null}}
  if(process.env.VAL){/* 검증: 개체마다 실제 AI 풀하고만 VAL판 → 우승률·평균 점수 순위 */const N=+process.env.VAL,tasks=[];st.pop.forEach((c,ci)=>{for(let k=0;k<N;k++)tasks.push([ci,k%8])});const res=st.pop.map(()=>({s:0,n:0,w:0}));let ti=0;
   await Promise.all(pages.map(async pg=>{while(ti<tasks.length){const [ci,seat]=tasks[ti++];try{const opp=OLD?OLD.slice().sort(()=>Math.random()-.5).slice(0,7):[];const r=await pg.evaluate(([c,dk,s,op])=>evalCand(c,dk,s,op),[st.pop[ci],process.env.DK||DK,seat,opp]);res[ci].s+=r.sc;res[ci].n++;res[ci].w+=r.win}catch(e){}}}));
