@@ -2,7 +2,9 @@
 
 인스타 `@tree_null.vo` 마스코트예요. 코딩 모르는 나무늘보가 AI로 게임·앱·영상·3D 캐릭터를 만들며 '빌딩늘보'를 꿈꾸는 콘셉트.
 
-- ⭐ `pixel_profile.png` / `pixel_sloth.png` — **현재 프로필 캐릭터**(도트 54×54칸 → 1080). 두 손으로 가지에 매달린 늘보 · 눈가 줄무늬 · 잔머리 두 가닥 · 발로 노트북 코딩 · 머리 옆 "?". 그림 코드 `pixel.js`, 다시 뽑기 `node brand/render-pixel.js`
+- ✅ **`profile_final.png` — 확정된 인스타 프로필 캐릭터** (2026-11-16, 제미나이 일러스트 v2: 두 손으로 가지에 매달린 늘보 · 눈가 무늬 · 잔머리 · 발로 노트북 코딩 · 노란 "?"). `profile_circle_preview.png`는 동그랗게 잘린 미리보기
+- `gemini/` — 제미나이로 만든 시안들(날짜_버전)
+- `pixel_profile.png` / `pixel_sloth.png` — **현재 프로필 캐릭터**(도트 54×54칸 → 1080). 두 손으로 가지에 매달린 늘보 · 눈가 줄무늬 · 잔머리 두 가닥 · 발로 노트북 코딩 · 머리 옆 "?". 그림 코드 `pixel.js`, 다시 뽑기 `node brand/render-pixel.js`
 - (연습 시안) `sloth_profile.png` — 1080×1080, 하늘·금빛 빌딩 배경 (인스타 프로필용, 동그랗게 잘려도 얼굴이 가운데)
 - `sloth_mascot.png` — 1024×1024, 투명 배경 (영상·썸네일에 얹기용)
 - `sloth.js` — 그림 코드(`drawSloth`). 색·소품을 바꾸려면 여기를 고치고 `node brand/render.js`로 다시 뽑아요.
