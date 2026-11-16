@@ -805,12 +805,12 @@ function birdMesh2(b,oc){const g=new THREE.Group(),id=b.id,A=b.t==='A',c=b.col,w
  else{const nk=NECK[id];if(nk){const[a,m,e,r0,r1,nc]=nk,n=tall?18:12;for(let i=0;i<n;i++){const t=i/(n-1),q=1-t;at(SP(r0+(r1-r0)*t,nc||c),0,q*q*a[0]+2*q*t*m[0]+t*t*e[0],q*q*a[1]+2*q*t*m[1]+t*t*e[1])}}
   at(SP(hr,hc),0,hy,hz);const ec=id==='owl'?0xfde047:id==='vampire'?0xff2020:0x111111;
   {const ek=id==='owl'?1:hr/.15;/* 머리가 크면 눈 위치·크기도 같이 */[-1,1].forEach(s=>at(SP((id==='owl'?.065:.035)*Math.sqrt(ek),ec,id==='vampire'?GL(0xff0000):{}),s*.08*ek,hy-.09*ek,hz+.06*ek))}
-  const bk={kiwi:[.025,.42,0xd97706],duck:[.08,.2,0xfacc15],dodo:[.004,.02,0xf4a259],swan:[.045,.14,0xf97316],penguin:[.035,.13,0x1f2937],frostpeng:[.035,.13,0x312e81],crane:[.035,.28,0xd6d3a0],blizgull:[.04,.22,0xf97316],stormeagle:[.07,.22,0xfacc15],comet:[.05,.14,0xfacc15],eagle:[.07,.22,0xfacc15],parrot:[.004,.02,0xf59e0b],owl:[.04,.1,0xca8a04],ostrich:[.06,.17,0xe0a088],knight:[.04,.34,0xef4444],humbee:[.016,.3,0x111827],pelican:[.07,.5,0xf59e0b],crocbird:[.035,.15,0x1f2937],woodpecker:[.035,.3,0x57534e],turkey:[.05,.14,0xf59e0b]}[id]||[.055,.16,0xf59e0b];
+  const bk={kiwi:[.025,.42,0xd97706],duck:[.08,.2,0xfacc15],dodo:[.004,.02,0xf4a259],swan:[.045,.14,0xf97316],penguin:[.035,.13,0x1f2937],frostpeng:[.035,.13,0x312e81],crane:[.035,.28,0xd6d3a0],blizgull:[.04,.22,0xf97316],stormeagle:[.07,.22,0xfacc15],comet:[.05,.14,0xfacc15],eagle:[.07,.22,0xfacc15],parrot:[.004,.02,0xf59e0b],owl:[.04,.1,0xca8a04],ostrich:[.06,.17,0xe0a088],knight:[.04,.34,0xef4444],humbee:[.016,.3,0x111827],pelican:[.07,.5,0xf59e0b],crocbird:[.035,.15,0x1f2937],woodpecker:[.035,.3,0x57534e],turkey:[.05,.14,0xf59e0b],pirate:[.06,.17,0x374151]}[id]||[.055,.16,0xf59e0b];
   const k=KO(bk[0],bk[1],bk[2]);k.rotation.z=PI;at(k,0,hy-hr-bk[1]/2+.04,hz-.03,id==='duck'?[1.8,1,.5]:tall?[1.6,1,.55]:null)}
  if(id!=='kiwi'&&id!=='egg_legs'&&!PENG[id]&&!tall){const big=['eagle','phoenix','owl','vampire','stormeagle','auroraowl','pelican'].includes(id),wl=A?(big?.46:id==='hatch_wind'?.17:.34):.15,wc=WINGC[id]??(A?dkn3(c,.85):c);
   // 🪶 공중 새 날개: 팔 부분 + 덮깃 + 팀 색 띠 + 부채꼴 첫째날개깃(새마다 끝 색), 박쥐는 뾰족한 손가락 + 막
-  const WTIP={seagull:0x1f2937,albatross:0x1f2937,blizgull:0x334155,pelican:0x1f2937,pigeon:0x475569,eagle:0x3b2414,stormeagle:0x312e81,falcon:0x44403c,crow:0x111827,ghostcrow:0x475569,plague:0x365314,pirate:0x3b2a1e,owl:0x5b3a1e,auroraowl:0x6366f1,lich:0x581c87,shadowowl:0x0f172a,bonecrow:0xe5e7eb,berserk:0x7f1d1d,thunderbird:0xfde047,parrot:[0xe53935,0x1e88e5],phoenix:[0xef4444,0xfde047],plasmabird:[0xfb923c,0x60a5fa],comet:[0xf43f5e,0xfde047],hatch_wind:0x5eead4};
-  const featherWing=(s,P)=>{const bat=id==='vampire'||id==='voltbat',T=WTIP[id],n=big?5:id==='hatch_wind'?3:4,tc2=i=>Array.isArray(T)?T[i%2]:(T??dkn3(wc,.68)),go=id==='phoenix'||id==='plasmabird'||id==='comet'?GL(0xf97316):{};
+  const WTIP={seagull:0x1f2937,albatross:0x1f2937,blizgull:0x334155,pelican:0x1f2937,pigeon:0x475569,eagle:0x3b2414,stormeagle:0x312e81,falcon:0x44403c,crow:0x111827,ghostcrow:0x475569,plague:0x365314,pirate:[0x3b2a1e,0xf1f5f9,0xe5e7eb,0x4a3a2e],owl:0x5b3a1e,auroraowl:0x6366f1,lich:0x581c87,shadowowl:0x0f172a,bonecrow:0xe5e7eb,berserk:0x7f1d1d,thunderbird:0xfde047,parrot:[0xe53935,0x1e88e5],phoenix:[0xef4444,0xfde047],plasmabird:[0xfb923c,0x60a5fa],comet:[0xf43f5e,0xfde047],hatch_wind:0x5eead4};
+  const featherWing=(s,P)=>{const bat=id==='vampire'||id==='voltbat',T=WTIP[id],n=big?5:id==='hatch_wind'?3:4,tc2=i=>Array.isArray(T)?T[i%T.length]:(T??dkn3(wc,.68)),go=id==='phoenix'||id==='plasmabird'||id==='comet'?GL(0xf97316):{};
    const W=SP(1,bat?dkn3(wc,.8):wc,go);W.scale.set(wl*.62,bat?.17:.2,.05);W.position.set(s*wl*.6,.03,0);P.add(W);
    if(!bat){const cv=SP(1,ltn3(wc));cv.scale.set(wl*.5,.09,.056);cv.position.set(s*wl*.56,-.07,.008);cv.name='cv';P.add(cv)}
    const tb=SP(1,oc);tb.userData.noStone=1;tb.scale.set(wl*.62,.03,.054);tb.position.set(s*wl*.62,.175,.004);P.add(tb);
@@ -830,7 +830,7 @@ function birdMesh2(b,oc){const g=new THREE.Group(),id=b.id,A=b.t==='A',c=b.col,w
  const up=(r,h,col,x,y,z,o)=>{const e=KO(r,h,col,o);e.rotation.x=PI/2;at(e,x,y,z)};
  if(id==='rooster'){[0,1,2].forEach(i=>at(SP(.05,0xef4444),0,hy-.02+i*.06,hz+.15-i*.02));at(SP(.04,0xef4444),0,hy-.15,hz-.1)}
  if(id==='owl'||id==='auroraowl')[-1,1].forEach(s=>up(.045,.15,c,s*.12,hy,hz+.22));
- if(id==='pirate'){at(SP(.2,0x111827),0,hy+.02,hz+.14,[1.2,1.2,.3]);at(SP(.035,0xffffff),0,hy-.15,hz+.2)}
+ /* 해적갈매기 모자는 ART accParts(D.pirate)의 삼각 모자로 옮김(2026-11-16) */
  
  if(id==='phoenix'){[-1,0,1].forEach(s=>up(.04,.2,0xfde047,s*.07,hy+.02,hz+.2,GL(0xfde047)))}
  if(id==='eagle'||id==='stormeagle')at(BX(.2,.04,.03,id==='eagle'?0x451a03:0x1e1b4b),0,hy-.08,hz+.1);
@@ -1678,9 +1678,18 @@ const ART=(()=>{
     sides(s=>Bx(s*.04,hy+hr+.09,hz+.01,.035,.13,.012,[0,0,s*.3],0xdc2626));
     [0,PI/2].forEach(a=>Bx(.3,-.02,.5,.2,.016,.04,[0,0,a+.6],0xcbd5e1));Su(.3,-.02,.5,.026,0xdc2626);belly(0x64748b,.85);[-1,0,1].forEach(i=>K(i*.07,.34,z0+.08,.045,.26,[.55,0,-i*.28],0x312e4a))},
    // 과자도둑 해적: 금귀걸이 + 훔친 과자 봉지
-   pirate(){T(.15,hy,hz-.05,.035,.008,[0,PI/2,0],0xfacc15);S(0,-.02,z0-.22,.11,.13,.14,0xfffbeb);S(.03,-.06,z0-.15,.03,.02,.035,0x93c5fd);
-    sides(s=>{K(s*.06,-.03,z0-.13,.02,.07,[PI,0,s*.3],0xfacc15);Su(s*.13,hy+.06,hz+.1,.02,0x7dd3fc,1)});Bx(0,.02,z0+.3,.1,.06,.12,O,0x1e3a8a);Su(0,-.015,z0+.3,.025,0xfde047);
-    /* 🗡 해적 칼(오른쪽 날개에 치켜듦) */Bx(.31,-.16,z0+.28,.018,.05,.4,[-.55,0,.15],0xe5e7eb);Bx(.31,-.04,z0+.1,.022,.14,.025,[-.55,0,.15],0xfacc15);Bx(.31,.01,z0+.03,.03,.03,.1,[-.55,0,.15],0x78350f);Su(.31,.03,z0-.02,.025,0xfacc15)},
+   // 북극해적갈매기(2026-11-16 재디자인, 사용자 제미나이 그림 기준): 삼각 모자(금테+물고기 뼈)·안대·하늘색 털목도리·허리띠(해골 버클+금화 주머니)·해적 칼·휜 부리
+   pirate(){const NV=0x1e2a4a,GD=0xeab308,WH=0xf8fafc,BKc=0x111827,hb=zt-.03;belly(0x8b7563,.85);
+    /* 모자: 둥근 머리통 + 챙 + 세 면을 접어 올린 삼각 모자(앞면 넓게) */Hm(0,hy+.01,hb-.03,.125,UP,NV);Y(0,hy+.01,hb,.2,.016,UP,NV);
+    Bx(0,hy-.165,hb+.042,.36,.022,.09,O,NV);Bx(0,hy-.165,hb+.09,.37,.03,.016,O,GD);
+    sides(s=>{Bx(s*.092,hy+.03,hb+.042,.022,.4,.09,[0,0,s*.47],NV);Bx(s*.092,hy+.03,hb+.09,.03,.41,.016,[0,0,s*.47],GD)});
+    /* 물고기 뼈 문양(앞면) */Bx(0,hy-.18,hb+.042,.15,.008,.013,O,WH);[-.035,0,.035].forEach((x,i)=>Bx(x,hy-.18,hb+.042,.012,.008,.046-i*.008,O,WH));Su(-.085,hy-.18,hb+.042,.02,WH);Su(-.092,hy-.192,hb+.047,.007,BKc);K(.085,hy-.18,hb+.042,.02,.035,[0,0,PI/2],WH);
+    /* 안대 + 끈 */S(.088,hy-.128,hz+.06,.052,.02,.046,BKc,0,[0,0,.6]);T(0,hy,hz+.075,hr*1.015,.009,[0,.18,0],BKc);
+    /* 휜 부리 끝 */S(0,hy-hr-.105,hz-.058,.022,.032,.032,0x1f2937);
+    /* 하늘색 털목도리 */for(let i=0;i<14;i++){const a=i*PI/7,r=.07+(i%2)*.014;S(Math.cos(a)*.225,-.2+Math.cos(a*2)*.012,z0+.03+Math.sin(a)*.21,r,r*1.15,r,i%2?0x8ecbf7:0x5fb0f0)}
+    /* 허리띠 + 해골 버클 + 금화 주머니 */T(0,.02,z0,.262,.026,UP,0x7c4a1e);Su(0,.02,z0+.275,.05,0xf1f5f9);sides(s=>Su(s*.02,-.022,z0+.288,.011,BKc));
+    S(.15,.02,z0+.225,.05,.05,.055,0xd6b98a);Y(.15,.02,z0+.275,.02,.014,O,0x7c4a1e);[[.135,.005,.287],[.16,.03,.29],[.15,.015,.305]].forEach(([x,y,z])=>S(x,y,z0+z,.02,.02,.008,0xfacc15));
+    /* 🗡 해적 칼(오른쪽 날개에 치켜듦): 넓은 휜 칼날 + 금 손잡이 가드 + 나무 손잡이 */Bx(.31,-.16,z0+.28,.02,.07,.38,[-.55,0,.15],0xcbd5e1);Bx(.31,-.04,z0+.1,.024,.15,.028,[-.55,0,.15],0xeab308);Bx(.31,.01,z0+.03,.03,.03,.1,[-.55,0,.15],0x92400e);Su(.31,.03,z0-.02,.025,0xeab308)},
    // 꽥꽥 오리: 밤색 가슴 + 말린 꼬리 + 반짝 머리
    duck(){S(0,-.14,z0+.04,.21,.18,.18,0x7c2d12);K(0,.36,z0+.12,.03,.1,[-.9,0,0],0x111827);K(0,.39,z0+.17,.02,.07,[.6,0,0],0x111827);
     S(0,.02,z0-.05,.36,.42,.09,0xffffff);for(let i=0;i<4;i++){const a=i*PI/2+PI/4;S(Math.cos(a)*.34,Math.sin(a)*.4,z0-.05,.11,.11,.095,0xef4444,0,[0,0,a])}
