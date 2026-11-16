@@ -444,7 +444,8 @@ function leakCats(b,u){const c=[];if(b.t==='A')c.push('air');if(b.shield||(u&&u.
 function leakW(b,p,k){if(!k||!p.leak)return 1;const L=p.leak,tot=Object.values(L).reduce((a,v)=>a+v,0);if(tot<3)return 1;const f=c=>(L[c]||0)/tot;let m=1;
  if(b.t==='A')m+=k*2.5*f('air');if(b.zap||b.tech==='thunder'||(b.combo&&b.combo.includes('thunder')))m+=k*2*f('sh');if(b.amp||b.d>=100||b.cd>=1.5)m+=k*2*f('heavy');if(b.splash||b.self||b.chain)m+=k*2*f('swarm');if(b.cctv)m+=k*4*f('st');if(b.slow||b.freeze||b.stun||b.bubble||b.trap)m+=k*2*f('fast');if(b.t==='G')m*=Math.max(.3,1-k*f('air'));return m}
 /* 🧠 똑똑한 수비 도우미(2026-11-16) */
-function pathCov(p,r,x,y,pa){pa=pa||bfs(p.grid,COLS>>1,0)||[];const px=cellX(x,y),py=cellY(y);let n=0;for(const q of pa)if(Math.hypot(cellX(q.x,q.y)-px,cellY(q.y)-py)<=r)n++;return n}
+function pathCov(p,r,x,y,pa){pa=pa||bfs(p.grid,COLS>>1,0)||[];const px=cellX(x,y),py=cellY(y),lk=leakHot(p),N=pa.length||1;let n=0;pa.forEach((q,i)=>{if(Math.hypot(cellX(q.x,q.y)-px,cellY(q.y)-py)<=r)n+=1+lk*2*i/N});return n}
+/* ③ 최근에 새가 샜으면 출구 쪽 길을 덮는 자리를 더 쳐줌(0~1) */function leakHot(p){const k=p.cfg&&p.cfg.learnK;if(!k||!p.lkT)return 0;return k*Math.max(0,1-(S.t-p.lkT)/30)}
 function threatOf(p){const L=p.units.filter(u=>u.owner!==p.id&&u.hp>0),n=L.length||1;let air=0,sh=0,hp=0;for(const u of L){if(u.bp.t==='A')air++;if(u.sh>0)sh++;hp+=u.hp}return{n:L.length,air:air/n,sh:sh/n,avg:hp/n}}
 /* 들어오는 새를 보고 타워 가중치: 공중이 많으면 대공, 보호막이면 뇌전, 떼면 광역, 튼튼하면 강타 */
 function adaptW(b,th,a){if(!a||th.n<4)return 1;let m=1;if(b.t==='A')m*=1+a*3*th.air;else if(b.t==='G')m*=Math.max(.2,1-.8*a*th.air);
