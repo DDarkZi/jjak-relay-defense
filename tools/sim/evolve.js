@@ -15,8 +15,9 @@ const rnd=(a,b)=>a+Math.random()*(b-a);
 const ARCHS={inc:{inc0:[85,140],incRate:[45,60],uShare:[.65,1]},def:{def8:[1.05,1.3],tw0:[6,14],inc0:[30,60]},rush:{uShare:[.78,1],uTier:[.8,1],rush:[150,260],keep:[100,200],inc0:[30,70]},air:{uAir:[.78,1]},fire:{tech:[0,.99],uShare:[.72,1],uTier:[.75,1],keep:[100,300]},pzt:{tech:[4,4.99],tech2:[2,2.99],m_snack:[.5,1],m_t3:[.4,1]},up:{upAgg:[.6,1],upMax:[3,4]},
  /* 2026-11-15 특수 전략 6종 */pigeon:{uShare:[.7,1]},vary:{inc0:[80,140],uHeavy:[0,.4]},egg:{uShare:[.7,1],uTier:[.2,.6]},shield:{uTier:[.6,1]},spec:{uSpec:[.85,1]},tdem:{inc0:[90,140],uShare:[.75,1]},
  /* 2026-11-16 똑똑한 알파고: 업그레이드 조금·벽 교체·철거 재건·상황 판단·인컴 */smart:{upAgg:[.1,.45],adapt:[.5,1],wrep:[.3,1],tswap:[.3,1],incRate:[30,60]},
- /* ②③ 상황별 전략·새는 새 배우기 */smart2:{learnK:[.2,1],sDanger:[.2,1]}};
-const AFIX={pigeon:{fav:{pigeon:2.2,crow:1.5}},vary:{fl:{vary:1}},egg:{fav:{egg_legs:2.2}},shield:{fav:{swan:2,owl:1.5}},spec:{fav:{parrot:1.5,seagull:1.5,falcon:1.5,eagle:1}},tdem:{fl:{tdem:1},efav:{t:150,w:{turkey:5}}}};
+ /* ②③ 상황별 전략·새는 새 배우기 */smart2:{learnK:[.2,1],sDanger:[.2,1]},
+ /* 🔀 유동 수비 */flex:{core:[3,6],mzInc:[120,450],tScale:[.7,1.3]}};
+const AFIX={pigeon:{fav:{pigeon:2.2,crow:1.5}},vary:{fl:{vary:1}},egg:{fav:{egg_legs:2.2}},shield:{fav:{swan:2,owl:1.5}},spec:{fav:{parrot:1.5,seagull:1.5,falcon:1.5,eagle:1}},tdem:{fl:{tdem:1},efav:{t:150,w:{turkey:5}}},flex:{fl:{flex:1}}};
 const AQ=process.env.ARCH||'';/* ARCH=c03 → 속성 조합 고정(0화염 1빙결 2뇌전 3폭풍 4독) */if(/^c\d\d$/.test(AQ)){const a=+AQ[1],b=+AQ[2];ARCHS[AQ]={tech:[a,a+.99],tech2:[b,b+.99]}}
 const AC=AQ?ARCHS[AQ]:null;
 function clampA(g){if(!AC)return g;const F=AFIX[AQ];if(F){if(F.fl)g.fl={...(g.fl||{}),...F.fl};if(F.efav)g.efav=F.efav;if(F.fav){g.fav={...(g.fav||{})};for(const k in F.fav)g.fav[k]=Math.max(F.fav[k],g.fav[k]||0)}}if(process.env.ARCH==='pzt')g.fl={...(g.fl||{}),pzt:1};if(process.env.ARCH==='fire'){g.fav={...(g.fav||{})};g.fav.phoenix=Math.max(2,g.fav.phoenix||0);if(Math.floor(g.tech2??0)===0)g.tech2=1+Math.random()*3.99}/* 🔥 불사조 테러 */for(const k in AC){const[a,b]=AC[k];const v=g[k]??(a+b)/2;g[k]=v<a||v>b?a+Math.random()*(b-a):v}return g}

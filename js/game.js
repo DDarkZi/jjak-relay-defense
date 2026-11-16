@@ -440,7 +440,7 @@ function phaseG(p){const g=p.cfg;if(!g||g.sLead==null&&g.sTrail==null&&g.sDanger
  let us=g.uShare+(lead?g.sLead||0:0)+(trail?g.sTrail||0:0)+(late?g.sLate||0:0);us=Math.max(.1,Math.min(1,us-(g.sDanger||0)*danger*.5));
  p.gE={...g,uShare:us,def8:g.def8*(1+(g.sDanger||0)*danger*.6),twRate:g.twRate*(1+(g.sDanger||0)*danger*.5)};p.gET=S.t;p.mode=danger>.4?'수비':lead?'굳히기':trail?'추격':late?'후반':'보통';return p.gE}
 /* 🔀 유동 수비(2026-11-16 사용자 전략): 초반 중앙 타워 4~5개 → 인컴 mzInc 넘으면 두께 미로 → 최근 샌 비율로 인컴/수비 선택, 분별 타워 목표는 통계로 학습한 FLEX_T */
-var FLEX_T=[5,9,14,19,24,29,34,38,41,43,44];var FLEX_LAY=['hvmix','snake3','mix','snake2'];
+/* 📊 분별 타워 목표 = 배치 통계 80판(A·X)의 1·2등 AI 중앙값 [1,7,15,26,36,40,42…] + 초반 중앙 타워 4개. 막은 비율: 1분 35~44%(타워 7개) → 2분 84%(15개) → 3분 98%(25개+). 계열 평균 등수: 가로 3.71·혼합 3.83·세로 4.72·3줄 4.78·혼합두께 4.89·2줄 5.64 */var FLEX_T=[4,8,15,25,34,39,42,42,42,42,42];var FLEX_LAY=['mix','hsnake','mix','hvmix'];
 function leakRate(p){const t=S.t;p.rIn=(p.rIn||[]).filter(x=>x>t-90);p.rLk=(p.rLk||[]).filter(x=>x>t-60);const inn=p.rIn.filter(x=>x<=t-25&&x>t-85).length;return inn<4?0:Math.min(1,p.rLk.length/inn)}
 function flexG(p,g){if(p.fxG&&S.t-p.fxT<3)return p.fxG;const lr=leakRate(p);p.flexLr=lr;if(!p.mzGo&&(p.income>=(g.mzInc??250)||S.t>200))p.mzGo=1;
  const def=lr>(g.lHi??.15),eco=S.t>60&&lr<(g.lLo??.05);p.mode=def?'수비':eco?'인컴':'균형';
