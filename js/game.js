@@ -456,8 +456,14 @@ const MZ=(()=>{const C=COLS,Y=ROWS,rng=(a,b)=>{const o=[];for(let i=a;i<=b;i++)o
   comb:{n:'빗살 미로',f:()=>{const o=[];for(let r=0;r<7;r++){const y=2+r*2;(r%2?rng(2,6):rng(0,4)).forEach(x=>o.push([x,y]))}return o}},
   whsnake:{n:'넓은 가로 뱀',f:()=>hs([2,5,8,11])},
   /* 🏹 짧은 길 + 타워 꽉 채우기(2026-11-16): 1번 줄을 막아 입구를 통로 하나로 모으고, 통로 둘레를 타워로 빼곡히 */
+  /* 🧱🏹 미로 + 타워 두께(2026-11-16): 벽 줄을 2~3겹 타워로 — 길도 길고 둘레 타워가 많음 */
+  snake2:{n:'타워 2줄 가로 뱀',thick:1,f:()=>hsT([[2,3],[5,6],[8,9],[11,12]])},
+  snake3:{n:'타워 3줄 가로 뱀',thick:1,f:()=>hsT([[2,3,4],[7,8,9],[12]])},
+  snake23:{n:'2·3줄 섞은 뱀',thick:1,f:()=>hsT([[2,3,4],[6,7],[9,10],[12,13]])},
+  mixlane:{n:'2줄 뱀 + 직선 통로',thick:1,f:()=>{const o=hsT([[2,3],[5,6]]);for(let x=0;x<COLS;x++)if(x!==3)o.push([x,9]);for(let y=10;y<=ROWS-2;y++)o.push([2,y],[4,y]);for(let y=10;y<=ROWS-2;y++)o.push([1,y],[5,y]);return o}},
   lane:{n:'직선 통로 꽉 채우기',fill:1,f:()=>laneCells(()=>3)},
   dlane:{n:'대각선 통로 꽉 채우기',fill:1,f:()=>laneCells(y=>Math.round(6-6*(y-1)/13))}}})();
+function hsT(G){const o=[];G.forEach((ys,r)=>{const gap=r%2?0:COLS-1;ys.forEach(y=>{for(let x=0;x<COLS;x++)if(x!==gap)o.push([x,y])})});return o}
 function laneCells(cx){const C=COLS,key=(x,y)=>x+','+y,corr=new Set(),o=[],seen=new Set();for(let y=1;y<=ROWS-2;y++)corr.add(key(Math.max(0,Math.min(C-1,cx(y))),y));
  const add=(x,y)=>{const k=key(x,y);if(x<0||x>=C||y<1||y>ROWS-2||corr.has(k)||seen.has(k))return;seen.add(k);o.push([x,y])};for(let x=0;x<C;x++)add(x,1);
  let ring=[...corr].map(k=>k.split(',').map(Number));for(let r=0;r<3;r++){const nx=[];ring.sort((a,b)=>a[1]-b[1]).forEach(([x,y])=>NBR[y&1].forEach(([dx,dy])=>{const X=x+dx,Y=y+dy,k=key(X,Y);if(!corr.has(k)&&!seen.has(k)&&X>=0&&X<C&&Y>=1&&Y<=ROWS-2){add(X,Y);nx.push([X,Y])}}));ring=nx}
@@ -469,7 +475,7 @@ function mzLen(cells,keepEgg){const g=Array.from({length:ROWS},()=>Array(COLS).f
  let s=0;for(let x=0;x<COLS;x++){const pa=bfs(g,x,0);s+=pa?pa.length:0}return s/COLS}
 function mazeOrder(p){if(p.mzo)return p.mzo;const L=MZ_TIER[diff];if(!L)return null;const k=p.mzK||L[Math.floor(Math.random()*L.length)],mr=Math.random()<.5;p.mzK=k;
  let cells=MZ[k].f();if(mr)cells=cells.map(([x,y])=>[COLS-1-x,y]);
- const a=mzLen(cells,true),b=mzLen(cells,false);p.mzDem=b>a+1;if(MZ[k].fill){const cr=MZ[k].f().corr;let x8=3;if(mr)x8=COLS-1-3;p.mzDem=!!(cr&&cr.has((mr?COLS-1-3:3)+',8'))||p.mzDem;p.mzFill=1}/* 통로가 알 타워 자리를 지나면 철거 */p.mzName=MZ[k].n+(p.mzDem?' (알 타워 철거)':'');return p.mzo=cells}
+ const a=mzLen(cells,true),b=mzLen(cells,false);p.mzDem=b>a+1;if(MZ[k].fill){const cr=MZ[k].f().corr;let x8=3;if(mr)x8=COLS-1-3;p.mzDem=!!(cr&&cr.has((mr?COLS-1-3:3)+',8'))||p.mzDem;p.mzFill=1}/* 통로가 알 타워 자리를 지나면 철거 */if(MZ[k].thick)p.mzThick=1;p.mzName=MZ[k].n+(p.mzDem?' (알 타워 철거)':'');return p.mzo=cells}
 /* ☠️⚡ 독뇌전 배치법(fl.pzt): 길을 입구→출구 진행도 f로 나눠 독은 앞(f<.4)·파리지옥은 중간(.3~.65)·뇌전은 그 뒤(.45~.85)·과자는 앞~중간(<.6)을 덮는 칸을 고름 */
 function pzZone(p,b,x,y){const role=b.trap?'trap':b.snack?'snack':(b.zap||b.stun)?'zap':(b.poison||b.amp)?'pois':null;if(!role)return 0;const pa=bfs(p.grid,COLS>>1,0)||[],n=pa.length||1,px=cellX(x,y),py=cellY(y);
  const W={pois:f=>f<.4?1:f<.55?.3:0,trap:f=>f>.3&&f<.65?1:0,zap:f=>f>.45&&f<.85?1:f>.35?.3:0,snack:f=>f<.6?1:0}[role];let s=0;pa.forEach((q,i)=>{if(Math.hypot(cellX(q.x,q.y)-px,cellY(q.y)-py)<=(b.r||2))s+=W(i/n)});return s}
@@ -527,7 +533,7 @@ function aiTick(p){if(p.cfg&&p.cfg.fl&&p.cfg.fl.tdem&&!p.tdem){p.tdem=1;/* 🦃 
   if(S.t>20&&defPow(p)<need){if(upOK&&Math.random()<g.upAgg*.6&&aiUp(p,um))return 1;if(nT<BAL.cap&&buildT(p,g,false))return 1}
   if(upOK&&S.t>150&&nT>=tgtT*.8&&Math.random()<(g.wrep||0)*.35&&wallSwap(p,g))return 1;/* 🧱→🏹 */
   if(upOK&&S.t>240&&p.gold>450&&Math.random()<(g.tswap||0)*.2&&towerSwap(p,g))return 1;/* ♻️ */
-  if(nT<tgtT&&buildT(p,g,Math.random()<g.wall*(p.mzFill?.15:1)))return 1;/* 꽉 채우기 배치는 벽 대신 타워 */
+  if(nT<tgtT&&buildT(p,g,Math.random()<g.wall*(p.mzFill?.15:p.mzThick?.35:1)))return 1;/* 꽉 채우기 배치는 벽 대신 타워 */
   if(!crisis&&p.income<tgtI&&Math.random()<g.uShare&&buyU(p,g))return 1;
   if(upOK&&Math.random()<g.upAgg&&aiUp(p,um))return 1;
   if((S.t>g.rush||p.gold>(g.keep??600))&&buyU(p,g,true))return 1;
