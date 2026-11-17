@@ -450,6 +450,7 @@ function flexG(p,g){if(p.fxG&&S.t-p.fxT<3)return p.fxG;const lr=leakRate(p);p.fl
 function flexTgt(p,g){if(!p.mzGo)return Math.round(g.core??4.5);const m=S.t/60,i=Math.min(FLEX_T.length-1,Math.floor(m)),f=m-i,v=FLEX_T[i]+(FLEX_T[Math.min(FLEX_T.length-1,i+1)]-FLEX_T[i])*f;return Math.min(capOf(),v*(g.tScale??1)*(p.mode==='수비'?1.15:1))}
 /* 🏗 두루미가 흐트러뜨린 미로 고치기(난이도별): 설계도 밖(통로)에 놓인 타워를 철거하고 비어 있는 설계도 칸에 다시 지음 */
 const REPAIR={N:0,M:0,H:.3,X:.8,Z:1,A:1};
+/* 🧱 빈칸 채우기 시작 시각은 AI 성향에 맡김: 수비형(def8 높음)일수록 일찍(3분), 공격·인컴형일수록 늦게(15분), 유전자 fillT가 있으면 그 값, 판마다 ±60초 흔들림(2026-11-17 사용자 요청) */function fillAt(p,g){if(p.fillAt==null){const d=Math.max(.2,Math.min(1.3,g.def8??.8));p.fillAt=(g.fillT??(900-(d-.2)/1.1*720))+(Math.random()-.5)*120}return p.fillAt}
 /* 🧱 AI 타워 개수 한도(난이도별): 플레이어는 한도가 없는데 AI만 44개라 헬에서 빈칸이 남았음(2026-11-16 사용자 캡처) */const AICAP={N:44,M:44,H:50,X:60,Z:98,A:98};const capOf=()=>AICAP[diff]||BAL.cap;
 function mzRepair(p,g){const R=REPAIR[diff]||0;if(!R||g.crRep===0||!p.mzo||Math.random()>R)return false;const plan=new Set(p.mzo.map(([x,y])=>x+','+y));let off=null,miss=null;
  p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t&&t.bp&&!t.carrier&&!plan.has(x+','+y)&&!(x===3&&y===8&&!p.mzDem)&&(t.mvd||t.bp.id!=='wall')){if(!off||t.mvd)off=[x,y,t]}}));if(!off)return false;
@@ -517,7 +518,7 @@ function buildT(p,g,wall){const b=wall?TB.wall:pickTower(p,g);if(!b||p.gold<tcos
   const kz=g.fl&&g.fl.kz&&b.r&&(b.slow||b.splash||b.freeze||b.self||b.chain);let mo2=mo;if(g.fl&&g.fl.pzt&&b.r){const cand=mo.filter(([x,y])=>!p.grid[y][x]).slice(0,10);mo2=cand.map(([x,y])=>{p.grid[y][x]=1;const v=pzZone(p,b,x,y);p.grid[y][x]=null;return[x,y,v]}).sort((a,c)=>c[2]-a[2]).concat(mo)}else if(kz){const pa=bfs(p.grid,COLS>>1,0)||[],cand=mo.filter(([x,y])=>!p.grid[y][x]).slice(0,6);// 🎯 킬존: 다음 후보 중 길을 가장 많이 덮는 칸부터
    mo2=cand.map(([x,y])=>[x,y,pa.filter(q=>Math.hypot(cellX(q.x,q.y)-cellX(x,y),cellY(q.y)-cellY(y))<=b.r).length]).sort((a,c)=>c[2]-a[2]).concat(mo)}
   if(g.fl&&g.fl.flex&&!p.mzGo){const cx=cellX(3,7),cy=cellY(7);mo2=mo.filter(([x,y])=>!p.grid[y][x]).sort((a,c)=>Math.hypot(cellX(a[0],a[1])-cx,cellY(a[1])-cy)-Math.hypot(cellX(c[0],c[1])-cx,cellY(c[1])-cy))}/* 🔀 초반엔 설계도 칸 중 가운데부터 */
-  for(const [x,y] of mo2){if(p.grid[y][x])continue;p.grid[y][x]=mkR(b,p);if(allOK(p.grid)){p.gold-=tcost(p,b);if(S.st){S.st.ti[b.id]=(S.st.ti[b.id]||0)+tcost(p,b);S.st.tn[b.id]=(S.st.tn[b.id]||0)+1}refreshPaths(p);return true}p.grid[y][x]=null}p.mzFull=1;/* 미로 설계도를 다 채움 */if(!(capOf()>BAL.cap)&&!(g.crFill&&p.crHit>=3&&Math.random()<g.crFill))return false}/* 🧱 헬·알파고는 미로를 다 채운 뒤 남은 빈칸도 길 옆부터 채움 *//* 🏗 두루미가 자주 오면 설계도 밖 빈칸도 채움(아래 자유 배치로) */
+  for(const [x,y] of mo2){if(p.grid[y][x])continue;p.grid[y][x]=mkR(b,p);if(allOK(p.grid)){p.gold-=tcost(p,b);if(S.st){S.st.ti[b.id]=(S.st.ti[b.id]||0)+tcost(p,b);S.st.tn[b.id]=(S.st.tn[b.id]||0)+1}refreshPaths(p);return true}p.grid[y][x]=null}p.mzFull=1;/* 미로 설계도를 다 채움 */if(!(capOf()>BAL.cap&&S.t>=fillAt(p,g))&&!(g.crFill&&p.crHit>=3&&Math.random()<g.crFill))return false}/* 🧱 헬·알파고는 미로를 다 채운 뒤 남은 빈칸도 길 옆부터 채움 *//* 🏗 두루미가 자주 오면 설계도 밖 빈칸도 채움(아래 자유 배치로) */
  let best=null,bs=-1e9;
  for(let k=0;k<24;k++){const x=Math.floor(Math.random()*COLS),y=1+Math.floor(Math.random()*(ROWS-2));
   if(p.grid[y][x])continue;p.grid[y][x]=1;let s=-1e9;const L=allOK(p.grid);
