@@ -1,6 +1,6 @@
 const {chromium}=require('playwright');const SP=process.argv[2];
-const L=[['s2_battle','타워를 세워 막아라!','육각 타일 위 3D 타워 디펜스','#ffcf3a'],['s3_kill','이상한 새 55종 출동','발레리나 타조부터 악어새까지','#ff7aa8'],
-['s4_units','새를 보내 상대를 공격!','보낼수록 인컴이 쑥쑥','#6fe0ff'],['s5_result','8명 중 최후의 1인','원형으로 이어 달리는 릴레이 대전','#9dff7a'],['s1_lobby','나만의 영웅 새 꾸미기','모자·표정·이름까지 내 맘대로','#ffb347'],['s6_codex','개성 만점 새 도감','새마다 웃긴 사연이 있어요','#c4b5fd']];
+const L=[['s2_battle','타워를 세워 막아라!','육각 타일 위 3D 타워 디펜스','#ffcf3a'],['s3_weird','이상한 새 55종 출동','만원 버스 펠리컨부터 시조새까지','#ff7aa8'],
+['s8_skill','속성 조합 필살기!','5속성 중 2개를 골라 터뜨려요','#fb923c'],['s4_units','새를 보내 상대를 공격!','보낼수록 인컴이 쑥쑥','#6fe0ff'],['s7_mode','진화하는 알파고 AI','수천 판 스스로 학습한 AI와 대결','#a5f3fc'],['s5_result','8명 중 최후의 1인','원형으로 이어 달리는 릴레이 대전','#9dff7a'],['s1_lobby','나만의 영웅 새','좋아하는 새를 골라 이름을 붙여요','#ffb347'],['s6_codex','개성 만점 새 도감','새마다 웃긴 사연이 있어요','#c4b5fd']];
 (async()=>{const b=await chromium.launch();const pg=await b.newPage({viewport:{width:1080,height:1920}});
 for(const [i,[f,t,s,c]] of L.entries()){await pg.setContent(`<html><head><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Jua&display=swap"></head>
 <body style="margin:0;width:1080px;height:1920px;overflow:hidden;background:radial-gradient(circle at 50% 0%,#5b3fc4,#1c1240 70%);font-family:'Black Han Sans',sans-serif;text-align:center">

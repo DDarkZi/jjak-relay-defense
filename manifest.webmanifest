@@ -43,21 +43,21 @@
       "label": "타워를 세워 막아라"
     },
     {
-      "src": "assets/store/screenshots/02_s3_kill.png",
+      "src": "assets/store/screenshots/02_s3_weird.png",
       "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "이상한 새 55종"
     },
     {
-      "src": "assets/store/screenshots/03_s4_units.png",
+      "src": "assets/store/screenshots/04_s4_units.png",
       "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "새를 보내 공격"
     },
     {
-      "src": "assets/store/screenshots/05_s1_lobby.png",
+      "src": "assets/store/screenshots/07_s1_lobby.png",
       "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",

@@ -16,7 +16,7 @@ h1{margin:0;font:400 104px/1.02 'Black Han Sans';color:#ffd43b;-webkit-text-stro
 .n{position:absolute;left:50%;bottom:-24px;transform:translateX(-50%);white-space:nowrap;background:#140b33;color:#fde68a;border-radius:99px;padding:5px 16px 3px;font-size:24px;border:3px solid #fff}
 </style></head><body><div class="bg"></div><div class="sh"></div>
 <div class="l"><div class="sir">🚨 AI 속보</div><h1>새떼 주의보</h1><div class="sub">짹짹 디펜스</div><div class="t">8명이 이어 달리는 <b>새떼 타워 디펜스</b></div>
-<div class="bd"><span>🐦 이상한 새 55종</span><span>🏹 타워 42종</span><span>✨ 조합 스킬 10종</span><span>👥 8인 대전</span></div></div>
+<div class="bd"><span>🐦 이상한 새 55종</span><span>🏹 타워 41종</span><span>🤖 알파고 AI</span><span>👥 8인 대전</span></div></div>
 <div class="cta">▶ 설치 없이 바로 플레이</div>
 <div class="c" style="left:672px;top:258px;transform:rotate(-12deg);background-image:url(${U('dodo')})"><div class="n">각설이 도도새</div></div>
 <div class="c" style="left:948px;top:300px;width:236px;height:236px;transform:rotate(11deg);background-image:url(${U('parrot')})"><div class="n">욕쟁이 앵무새</div></div>
