@@ -2743,14 +2743,14 @@ if(!Array.isArray(SV.races))SV.races=[];
 const svSave=()=>{try{localStorage.setItem(SAVE_KEY,JSON.stringify(SV))}catch(e){}};
 if(SV.races.length)raceSel=SV.races[0];
 let ttT=0;function tmsg(t){const E=[$('tmsg'),$('ltmsg'),$('rtmsg')].filter(Boolean);E.forEach(e=>e.textContent=t);clearTimeout(ttT);ttT=setTimeout(()=>E.forEach(e=>e.textContent=''),3200)}
-function setMode(m){
+function setMode(m){if(m==='race'&&!RACE_OPEN)return tmsg('🏰 종족 모드는 준비 중이에요');
  if(m==='race'&&!SV.modeOK){if(SV.coins<MODE_COST)return tmsg(`🪶 깃털 코인이 부족해요 (${SV.coins}/${MODE_COST}) · 일반 모드에서 승리하면 얻어요`);
   SV.coins-=MODE_COST;SV.modeOK=1;svSave();tmsg('🏰 종족 모드 해금! 종족 1개를 무료로 골라요')}
  gameMode=m;renderTitle();if(m==='race')ovl('racem',1)}
 function renderTitle(){
- $('fc').textContent=SV.coins;const mb=$('mode').children;
- mb[0].className='mcard mn'+(gameMode==='normal'?' on':'');mb[1].className='mcard mr'+(gameMode==='race'?' on':'')+(SV.modeOK?'':' lk');
- mb[1].lastChild.textContent=SV.modeOK?'종족 특성 · 전용 타워/새':(MODE_COST?`🔒 ${MODE_COST}🪶로 해금`:'🔒 눌러서 무료 해금');
+ $('fc').textContent=SV.coins;const mb=$('mode').children;if(!RACE_OPEN&&gameMode==='race')gameMode='normal';
+ mb[0].className='mcard mn'+(gameMode==='normal'?' on':'');const rb=$('raceb');if(rb&&RACE_OPEN){rb.disabled=false;rb.className='mcard mr'+(gameMode==='race'?' on':'')+(SV.modeOK?'':' lk');
+ rb.lastChild.textContent=SV.modeOK?'종족 특성 · 전용 타워/새':(MODE_COST?`🔒 ${MODE_COST}🪶로 해금`:'🔒 눌러서 무료 해금')}
  $('md').innerHTML=gameMode==='race'?`🏰 종족 모드(베타) · ${SV.races.includes(raceSel)?RACE[raceSel].ic+' <b>'+RACE[raceSel].n+'</b>':'종족을 골라 주세요'} <button id="rpick" class="rpick">종족 고르기</button>`:'🐥 종족 없이 모든 새·타워를 공용으로 쓰는 기본 규칙이에요.';
  {const rp=$('rpick');if(rp)rp.onclick=()=>ovl('racem',1)}if(gameMode==='race')renderRaces();
  $('go').textContent='플레이';lobUI()}
@@ -2764,8 +2764,8 @@ function buyRace(k){if(SV.races.includes(k))return;const free=!SV.races.length;
  if(!free)SV.coins-=RACE_COST;SV.races.push(k);raceSel=k;raceView=k;svSave();tmsg(`${RACE[k].ic} ${RACE[k].n} 해금!`);renderTitle()}
 $('racex').onclick=()=>{if(!SV.races.includes(raceSel))return tmsg('🏰 먼저 종족을 하나 골라 주세요');ovl('racem',0);renderTitle()};
 $('rc').onclick=e=>{const b=e.target.closest('button');if(!b||!b.dataset.k)return;const k=b.dataset.k;raceView=k;if(SV.races.includes(k))raceSel=k;renderTitle()};
-$('mode').onclick=e=>{const b=e.target.closest('button');if(b&&b.dataset.m)setMode(b.dataset.m)};
-function tryStart(){if(gameMode==='race'){if(!SV.modeOK){openMode();return setMode('race')}if(!SV.races.includes(raceSel)){openMode();ovl('racem',1);return tmsg('🏰 먼저 종족을 하나 골라 주세요')}}start()}
+$('mode').onclick=e=>{const b=e.target.closest('button');if(b&&b.dataset.m)setMode(b.dataset.m)};{const rb=$('raceb');if(rb)rb.onclick=()=>setMode('race')}
+function tryStart(){if(gameMode==='race'&&!RACE_OPEN)gameMode='normal';if(gameMode==='race'){if(!SV.modeOK){openMode();return setMode('race')}if(!SV.races.includes(raceSel)){openMode();ovl('racem',1);return tmsg('🏰 먼저 종족을 하나 골라 주세요')}}start()}
 function rewardUI(win){const e=$('ew');if(!e)return;if(S.sim){e.innerHTML='';return}if(S.rwd){return}S.rwd=1;
  /* 🪶 깃털: 우승은 난이도별(E2·N3·M4·H6·X8), 진 판도 등수대로 2~4등 2개 · 5~8등 1개 */
  const rank=win?1:S.pl.filter(p=>p.alive).length+1,c=win?(COIN_WIN[diff]||3):rank<=4?2:1;SV.coins+=c;if(win)SV.wins++;svSave();
@@ -2950,6 +2950,7 @@ $('herox').onclick=closeHero;$('heroo').onclick=openHero;$('lhero').onclick=open
 $('modeb').onclick=openMode;$('modex').onclick=()=>{ovl('modem',0);lobUI()};
 /* 🛒 깃털 상점: 구글 Play 결제(TWA = Digital Goods API + Payment Request). 일반 웹 브라우저에서는 구매 불가 안내.
    상품은 플레이 콘솔 '인앱 상품'에 같은 id로 만들어야 해요(소모성). 받은 결제 토큰은 SV.ptok에 적어 두 번 지급을 막고, 지급 뒤 consume. 앱을 켤 때 남은 구매를 복원. */
+/* 🔒 2026-11-17 사용자 요청: 종족 모드·상점 판매 잠시 닫음(다시 열 땐 true) */var RACE_OPEN=false,SHOP_OPEN=false;
 const SHOP_ITEMS=[{sku:'feather_30',ic:'☕',n:'개발자 응원 팩',f:30,p:'₩1,000',d:'1인 개발자를 도와주세요 🙏'},
  {sku:'hero_make',ic:'🎨',n:'영웅 제작권',make:1,p:'₩5,000',d:'내가 만든 3D 새가 게임 영웅으로! 제작자 이름도 표시돼요'}],MAKE_TERMS='2026-11-11',PLAY_BILL='https://play.google.com/billing';
 let DGS,DGP={};
@@ -2962,12 +2963,12 @@ function shopUI(){$('shopn').textContent=SV.coins;const ok=SV.makeOK===MAKE_TERM
  $('shopl').innerHTML=SHOP_ITEMS.map(it=>`<div class="sitem${it.make?' smake':''}"><span class="sic">${it.ic}</span><span class="sin"><b>${it.n}</b>${it.make?'':`<em>🪶 깃털 ${it.f}개</em>`}<small>${it.d}</small>`+
   (it.make?`<a href="hero_make.html" target="_blank" class="slink">📖 만드는 법 · 프롬프트 · 저작권 안내 · 약관</a><label class="sagree"><input type="checkbox" id="mkok" ${ok?'checked':''}><span>안내와 약관을 읽고 동의해요<small>저작권 등으로 5회 반려 시 환불</small></span></label>`+
    (od.length?`<span class="sord">📨 주문 번호: ${od.map(o=>'<b>'+o.code+'</b>').join(' · ')}<br>메일 제목에 적어 .glb 파일을 보내 주세요</span>`:''):'')+
-  `</span><button data-sku="${it.sku}" ${DGS&&(!it.make||ok)?'':'disabled'}>${DGP[it.sku]||it.p}</button></div>`).join('');
+  `</span><button data-sku="${it.sku}" ${SHOP_OPEN&&DGS&&(!it.make||ok)?'':'disabled'}>${SHOP_OPEN?(DGP[it.sku]||it.p):'준비 중'}</button></div>`).join('');
  const c=$('mkok');if(c)c.onchange=()=>{SV.makeOK=c.checked?MAKE_TERMS:null;svSave();shopUI()}}
-async function openShop(){ovl('shopm',1);$('shopmsg').textContent='';shopUI();const s=await shopSvc();
+async function openShop(){ovl('shopm',1);$('shopmsg').textContent='';shopUI();if(!SHOP_OPEN){$('shopmsg').textContent='🔒 지금은 판매를 잠시 닫아 두었어요';return}const s=await shopSvc();
  if(!s){$('shopmsg').textContent='💡 구매는 플레이 스토어에서 받은 앱에서만 할 수 있어요';shopUI();return}
  try{for(const d of await s.getDetails(SHOP_ITEMS.map(x=>x.sku))){try{DGP[d.itemId]=new Intl.NumberFormat('ko-KR',{style:'currency',currency:d.price.currency}).format(+d.price.value)}catch(e){}}}catch(e){}shopUI()}
-async function shopBuy(sku){const s=await shopSvc();if(!s)return;const m=$('shopmsg');m.textContent='결제 창을 여는 중…';
+async function shopBuy(sku){if(!SHOP_OPEN)return;const s=await shopSvc();if(!s)return;const m=$('shopmsg');m.textContent='결제 창을 여는 중…';
  try{const rq=new PaymentRequest([{supportedMethods:PLAY_BILL,data:{sku}}],{total:{label:'합계',amount:{currency:'KRW',value:'0'}}});const rs=await rq.show(),tok=rs.details&&rs.details.purchaseToken;
   const g=shopGrant(tok,sku);try{await s.consume(tok)}catch(e){}await rs.complete('success');m.textContent=g==='make'?'🎨 영웅 제작권 구매 완료! 주문 번호를 메일에 적어 보내 주세요':g?`🎉 고마워요! 🪶 깃털 +${g}개`:'이미 받은 구매예요';shopUI();if(g)sfx('unlock',{k:'shop'})}
  catch(e){m.textContent=e&&e.name==='AbortError'?'구매를 취소했어요':'결제를 못 했어요. 잠시 뒤 다시 해 주세요'}}

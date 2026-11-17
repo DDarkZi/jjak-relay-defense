@@ -282,3 +282,5 @@ html{-webkit-tap-highlight-color:transparent}
 #pzn button{padding:3px 8px;font-size:12px;border-radius:8px}#pzinv{background:#22c55e;color:#fff}
 #dmgl b.t{color:#fff;font-size:17px;white-space:nowrap;-webkit-text-stroke:0}
 #dif{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}#dif button{margin:0!important}
+
+/* 🔒 닫힌 종족 모드 카드(시작 버튼 아래) */#raceb{margin-top:12px;width:100%}.mcard.off{opacity:.45;filter:grayscale(1);pointer-events:none}
