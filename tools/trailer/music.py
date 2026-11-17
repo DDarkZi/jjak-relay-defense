@@ -1,5 +1,6 @@
-import numpy as np, wave
-SR=44100; BPM=150; B=60/BPM; DUR=29.1+0.6
+import numpy as np, wave, os
+ST=float(os.environ.get('ST','3.0'));END0=float(os.environ.get('END','25.6'))  # 본편 시작·끝(초): rec2 영상은 ST=2.5 END=23.57
+SR=44100; BPM=150; B=60/BPM; DUR=END0+4.1
 N=int(SR*DUR); out=np.zeros(N)
 def tone(f,d,kind='sq',duty=.5,vol=.2,att=.005,rel=.06):
     t=np.arange(int(SR*d))/SR
@@ -19,15 +20,15 @@ def hat(at):
     t=np.arange(int(SR*.04))/SR;n=np.random.uniform(-1,1,len(t));n=np.diff(n,prepend=0);add(n*np.exp(-t*80)*.08,at)
 nf=lambda m:440*2**((m-69)/12)
 # 0~3초: 사이렌 + 드럼 빌드업
-t=np.arange(int(SR*3.0))/SR;f=750+200*np.sin(2*np.pi*1.3*t);siren=np.sin(2*np.pi*np.cumsum(f)/SR)*.13*np.minimum(1,t/.2)*np.clip((3.0-t)/.4,0,1)
+t=np.arange(int(SR*ST))/SR;f=750+200*np.sin(2*np.pi*1.3*t);siren=np.sin(2*np.pi*np.cumsum(f)/SR)*.13*np.minimum(1,t/.2)*np.clip((ST-t)/.4,0,1)
 add(siren,0)
 start=3.0-4*B  # 3초에 본편 시작
-END=25.6
+END=END0
 prog=[(60,[60,64,67]),(57,[57,60,64]),(53,[53,57,60]),(55,[55,59,62])]  # C Am F G
 mel=[72,74,76,79,76,74,72,74, 72,76,79,81,79,76,74,72, 69,72,74,76,74,72,69,72, 71,74,79,77,76,74,71,74]
 # 드럼 롤 0~3초 (점점 빠르게)
-for i in range(12): snare(1.2+i*.15*(1-i/30))
-bar=0;t0=3.0
+for i in range(12): snare(ST-1.8+i*.15*(1-i/30))
+bar=0;t0=ST
 while t0<END-1e-6:
     root,ch=prog[bar%4]
     for b in range(4):
