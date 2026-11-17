@@ -453,7 +453,7 @@ const REPAIR={N:0,M:0,H:.3,X:.8,Z:1,A:1};
 /* 🧱 빈칸 채우기 시작 시각은 AI 성향에 맡김: 수비형(def8 높음)일수록 일찍(3분), 공격·인컴형일수록 늦게(15분), 유전자 fillT가 있으면 그 값, 판마다 ±60초 흔들림(2026-11-17 사용자 요청) */function fillAt(p,g){if(p.fillAt==null){const d=Math.max(.2,Math.min(1.3,g.def8??.8));p.fillAt=(g.fillT??(900-(d-.2)/1.1*720))+(Math.random()-.5)*120}return p.fillAt}
 /* 🧱 AI 타워 개수 한도(난이도별): 플레이어는 한도가 없는데 AI만 44개라 헬에서 빈칸이 남았음(2026-11-16 사용자 캡처) */const AICAP={N:44,M:44,H:50,X:60,Z:98,A:98};const capOf=()=>AICAP[diff]||BAL.cap;
 function mzRepair(p,g){const R=REPAIR[diff]||0;if(!R||g.crRep===0||!p.mzo||Math.random()>R)return false;const plan=new Set(p.mzo.map(([x,y])=>x+','+y));let off=null,miss=null;
- p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t&&t.bp&&!t.carrier&&!plan.has(x+','+y)&&!(x===3&&y===8&&!p.mzDem)&&(t.mvd||t.bp.id!=='wall')){if(!off||t.mvd)off=[x,y,t]}}));if(!off)return false;
+ p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t&&t.bp&&!t.carrier&&!plan.has(x+','+y)&&t.mvd){off=[x,y,t]}}));if(!off){p.crHit=0;return false}/* 🏗 두루미가 옮긴 타워(t.mvd)만 복구 — 빈칸 채우기로 일부러 지은 타워까지 부수던 버그 수정 */
  /* 알파고 판단: 두루미가 자주 오면(crFill) 복구 대신 그대로 두고 빈칸을 채워 버팀 */if(g.crFill&&p.crHit>=3&&Math.random()<g.crFill)return false;
  for(const[x,y]of p.mzo){if(!p.grid[y][x]){miss=[x,y];break}}const[ox,oy,t]=off,ref=Math.floor(t.inv*refR(p)),b=t.bp;
  p.grid[oy][ox]=null;p.gold+=ref;if(miss&&p.gold>=tcost(p,b)){const[mx,my]=miss;p.grid[my][mx]=mkR(b,p);if(allOK(p.grid)){p.gold-=tcost(p,b)}else p.grid[my][mx]=null}
@@ -510,7 +510,7 @@ function mazeOrder(p){if(p.mzo)return p.mzo;const L=MZ_TIER[diff];if(!L)return n
 /* ☠️⚡ 독뇌전 배치법(fl.pzt): 길을 입구→출구 진행도 f로 나눠 독은 앞(f<.4)·파리지옥은 중간(.3~.65)·뇌전은 그 뒤(.45~.85)·과자는 앞~중간(<.6)을 덮는 칸을 고름 */
 function pzZone(p,b,x,y){const role=b.trap?'trap':b.snack?'snack':(b.zap||b.stun)?'zap':(b.poison||b.amp)?'pois':null;if(!role)return 0;const pa=bfs(p.grid,COLS>>1,0)||[],n=pa.length||1,px=cellX(x,y),py=cellY(y);
  const W={pois:f=>f<.4?1:f<.55?.3:0,trap:f=>f>.3&&f<.65?1:0,zap:f=>f>.45&&f<.85?1:f>.35?.3:0,snack:f=>f<.6?1:0}[role];let s=0;pa.forEach((q,i)=>{if(Math.hypot(cellX(q.x,q.y)-px,cellY(q.y)-py)<=(b.r||2))s+=W(i/n)});return s}
-function buildT(p,g,wall){const b=wall?TB.wall:pickTower(p,g);if(!b||p.gold<tcost(p,b))return false;
+function buildT(p,g,wall){const fz=p.mzFull&&MZ_TIER[diff];/* 🧱 미로를 다 채운 뒤(빈칸 채우기)엔 벽 대신 공격 타워만 */const b=wall&&!fz?TB.wall:pickTower(p,g);if(!b||p.gold<tcost(p,b))return false;
  const mo=MZ_TIER[diff]&&mazeOrder(p);if(mo&&b.cctv){/* 🦉 CCTV는 미로 설계도의 '벽' 칸에만(통로 칸에 지으면 미로가 막힘) — 빈 칸이나 벽 자리 중 다른 CCTV와 떨어지고 길을 많이 보는 곳 */const pa=bfs(p.grid,COLS>>1,0)||[],cc=[];p.grid.forEach((row,yy)=>row.forEach((t2,xx)=>{if(t2&&t2.bp&&t2.bp.cctv)cc.push([cellX(xx,yy),cellY(yy)])}));let bc=null,bv=-1e9;
   for(const [x,y] of mo){const t0=p.grid[y][x];if(t0&&t0.bp&&t0.bp.id!=='wall')continue;if(t0&&t0.carrier)continue;const px=cellX(x,y),py=cellY(y);let v=pathCov(p,b.r,x,y,pa)+Math.random()*.5;for(const[cx,cy]of cc)if(Math.hypot(cx-px,cy-py)<5)v-=60;if(!t0){p.grid[y][x]=1;const ok=allOK(p.grid);p.grid[y][x]=null;if(!ok)continue}if(v>bv){bv=v;bc=[x,y,t0]}}
   if(!bc)return false;const[x,y,t0]=bc;if(t0)p.gold+=Math.floor(t0.inv*refR(p));p.grid[y][x]=mkR(b,p);p.gold-=tcost(p,b);if(S.st){S.st.ti[b.id]=(S.st.ti[b.id]||0)+tcost(p,b);S.st.tn[b.id]=(S.st.tn[b.id]||0)+1}refreshPaths(p);return true}
@@ -527,7 +527,7 @@ function buildT(p,g,wall){const b=wall?TB.wall:pickTower(p,g);if(!b||p.gold<tcos
    if(b.cctv){p.grid.forEach((row,yy)=>row.forEach((t2,xx)=>{if(t2&&t2.bp&&t2.bp.cctv&&Math.hypot(cellX(xx,yy)-px,cellY(yy)-py)<5)s-=60}));s+=pathCov(p,b.r,x,y,pa)*.8}/* 🦉 CCTV끼리 겹치지 않게 + 길을 많이 보게 */
    if(b.pylon)for(const[dx,dy]of NBR[y&1]){const q=p.grid[y+dy]&&p.grid[y+dy][x+dx];if(q&&q.bp&&q.bp.pylon)s+=9}
    if(g.fl&&g.fl.kz&&b.r&&(b.slow||b.splash||b.freeze||b.self||b.chain))s+=pa.filter(q=>Math.hypot(cellX(q.x,q.y)-px,cellY(q.y)-py)<=b.r).length*1.1;
-   if(g.fl&&g.fl.pzt)s+=pzZone(p,b,x,y)*1.6}// 🎯 킬존 · ☠️⚡ 독뇌전 배치
+   if(g.fl&&g.fl.pzt)s+=pzZone(p,b,x,y)*1.6;if(fz&&b.r&&pathCov(p,b.r,x,y,pa)<2)s=-1e9}/* 🎯 킬존 · ☠️⚡ 독뇌전 배치 · 🧱 빈칸 채우기는 길을 2칸 이상 덮는 곳만(뒷줄·구석 X) */
   p.grid[y][x]=null;if(s>bs){bs=s;best=[x,y]}}
  if(!best||bs<-1e8)return false;
  p.grid[best[1]][best[0]]=mkR(b,p);p.gold-=tcost(p,b);if(S.st){S.st.ti[b.id]=(S.st.ti[b.id]||0)+tcost(p,b);S.st.tn[b.id]=(S.st.tn[b.id]||0)+1}refreshPaths(p);return true}
@@ -554,7 +554,7 @@ function buyU(p,g,dump){const n=nextAlive(p.id);if(n===null)return false;const h
  return true}
 function aiUp(p,c){/* ⬆️ 길을 가장 많이 덮는(값어치 좋은) 타워부터 올림 */const pa=bfs(p.grid,COLS>>1,0)||[];let bt=null,bv=-1;p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t&&t.bp.id!=='wall'&&t.d>0&&t.lv<Math.max(c.up,p.crSeen&&p.cfg&&p.cfg.crUp>.3?3:0)&&p.gold>=upc(t,p)){let v=(pathCov(p,t.r,x,y,pa)+1)*t.d/t.bp.cd/upc(t,p);if(p.crSeen&&S.t-p.crSeen<150&&p.cfg&&p.cfg.crUp&&t.lv<=2)v*=1+3*p.cfg.crUp;/* 🏗 두루미가 오면 2레벨 이하부터 3레벨로(못 옮김) */if(v>bv){bv=v;bt=t}}}));for(const t of bt?[bt]:[]){if(t&&t.bp.id!=='wall'&&p.gold>=upc(t,p)){const k=upc(t,p);p.gold-=k;t.lv++;t.d=Math.floor(t.d*1.6);t.r+=.25;t.inv+=k;if(S.st){S.st.ti[t.bp.id]=(S.st.ti[t.bp.id]||0)+k;S.st.up++}return true}}return false}
 function aiTick(p){if(p.cfg&&p.cfg.fl&&p.cfg.fl.tdem&&!p.tdem){p.tdem=1;/* 🦃 시작하자마자 처음 알 타워를 철거해 그 돈으로 칠면조부터 */const t0=p.grid[8]&&p.grid[8][3];if(t0&&t0.bp&&t0.bp.id==='egg'){p.gold+=Math.floor(t0.inv*refR(p));p.grid[8][3]=null;refreshPaths(p)}const TK_=UB.turkey;while(TK_&&p.gold>=ucost(p,TK_)&&nextAlive(p.id)!==null){const n=nextAlive(p.id);p.gold-=ucost(p,TK_);if(S.st){S.st.us.turkey=(S.st.us.turkey||0)+ucost(p,TK_);S.st.un.turkey=(S.st.un.turkey||0)+1}p.income+=gainInc(p,TK_);spawn(S.pl[n],TK_,p.id)}return}
- if(p.cfg&&p.cfg.fl&&p.cfg.fl.jug&&jugTick(p))return;if(p.tech2plan&&!p.tech2&&S.t>45&&p.gold>=TECH2C){p.gold-=TECH2C;p.tech2=p.tech2plan;return}
+ if(p.cfg&&p.cfg.fl&&p.cfg.fl.jug&&(S.t<600||p.jug)&&jugTick(p))return;/* 🔄 재배치 미로는 10분까지만 */if(p.tech2plan&&!p.tech2&&S.t>45&&p.gold>=TECH2C){p.gold-=TECH2C;p.tech2=p.tech2plan;return}
  if(p.tech2&&!p.skU&&S.t>120&&p.gold>=SKC+200&&Math.random()<.5){p.gold-=SKC;p.skU=1;return}
  if(p.skU&&p.skCD<=0&&(p.units.length>=5||(p.life<40&&p.units.length>=2)))useSkill(p);
  {const m=Math.floor(S.t/60);if(!(p.mT||(p.mT=[]))[m]&&p.mT[m]!==0){p.mT[m]=cnt(p.grid);(p.mInc=p.mInc||[])[m]=p.income}}/* 📊 분별 타워 수·인컴 */
@@ -564,6 +564,7 @@ function aiTick(p){if(p.cfg&&p.cfg.fl&&p.cfg.fl.tdem&&!p.tdem){p.tdem=1;/* 🦃 
  const tgtT=g.fl&&g.fl.flex?flexTgt(p,g)+(crisis?4:0):Math.min(capOf(),g.tw0+g.twRate*t+(crisis?5:0)),tgtI=g.inc0+g.incRate*t,nT=cnt(p.grid),need=need8(S.t)*g.def8;
  const act=()=>{
   const upOK=crisis||!MZ_TIER[diff]||p.mzFull||S.t>420;
+  if(p.gold>20000&&!crisis&&Math.random()<.7&&buyU(p,g,true))return 1;/* 💰 돈이 넘치면 새 보내기부터 */
   if(p.crHit&&mzRepair(p,g))return 1;/* 🏗 미로 복구 */
   if(g.crUp&&p.crSeen&&S.t-p.crSeen<150&&Math.random()<g.crUp*.5&&aiUp(p,{up:Math.max(3,um.up)}))return 1;/* 🏗 두루미 대비 3레벨 *//* ⬆️ 미로를 다 쌓기 전엔 업그레이드 안 함(돈이 미로로 가게) */
   if(S.t>20&&defPow(p)<need){if(upOK&&Math.random()<g.upAgg*.6&&aiUp(p,um))return 1;if(nT<capOf()&&buildT(p,g,false))return 1}
