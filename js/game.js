@@ -53,7 +53,7 @@ const U=[
 {id:'seagull',n:'폭격갈매기',c:360,hp:320,sp:1.3,t:'A',dm:2,inc:20,poop:1,ic:'🪽',col:0xe2e8f0,x:'똥 폭격: 2.5초마다 아래 타워에 똥 → 3초 동안 공격이 느려져요(×1.6)'},
 {id:'swan',n:'백조',c:380,hp:377,sp:1.3,t:'A',dm:2,inc:19,shield:580,ic:'🦢',col:0xffffff,x:'보호막(체력 400 추가) · 보호막 동안 독·화상·감속 면역 · ⚡번개에 약함'},
 {id:'penguin',n:'황제펭귄',c:400,hp:390,sp:1.2,t:'G',dm:1,inc:22,count:3,imm:['slow'],tech:'ice',ic:'🐧',col:0x3f4d6e,x:'3마리 무리 · 감속 면역'},
-{id:'vampire',n:'흡혈박쥐새',c:420,hp:490,sp:1.5,t:'A',dm:2,inc:22,drain:2,tech:'dark',ic:'🦇',col:0x8b2f45,x:'탈출 시 내 라이프 +2'},
+{id:'flamingo',n:'플라맹독',c:540,hp:1200,sp:1.45,t:'G',dm:2,inc:30,acid:1,tech:'dark',ic:'🦩',col:0xf472b6,x:'4초마다 산성 침: 근처 타워 공격력 -30%(4초)'},/* 🦩 2026-11-17 흡혈박쥐새 대신(사용자 요청) */
 {id:'peacock',n:'공작',c:460,hp:720,sp:1.1,t:'G',dm:2,inc:24,heal:1,ic:'🦚',col:0x1d6fd8,x:'주변 아군 치유'},
 {id:'dodo',n:'도도새',c:500,hp:1400,sp:.8,t:'G',dm:4,inc:30,ic:'🦤',col:0x7a4e2d,talk:['죽지도 않고 또 왔네!','얼씨구씨구 들어간다~','절씨구씨구 들어간다~'],extinct:2,x:'멸종 거부: 쓰러지면 30% 확률로 체력 30%로 벌떡(최대 2번) · 각설이 타령'},
 {id:'falcon',n:'송골매',c:560,hp:504,sp:3.4,t:'A',dm:3,inc:30,dodge:.3,ic:'💨',col:0x78716c,x:'과속 매: 공격을 30% 피해요 · 🦉CCTV 범위에선 과속 단속(못 피함, 수비 쪽 벌금 +15G)'},
@@ -130,7 +130,7 @@ U.push(
 U.sort((a,b)=>a.c-b.c);
 const TECH={fire:{n:'화염',ic:'🔥',col:0xf97316,t:['ember','lava','sun'],u:'phoenix',d:'화상 지속 피해'},ice:{n:'빙결',ic:'❄️',col:0x67e8f9,t:['ice','frost','bliz'],u:'penguin',d:'감속·빙결'},
  thunder:{n:'뇌전',ic:'⚡',col:0xfacc15,t:['static','thunder','storm'],u:'thunderbird',d:'연쇄 번개·기절'},wind:{n:'폭풍',ic:'🌪️',col:0x2dd4bf,t:['breeze','wind','twister'],u:'albatross',d:'넉백·방울·대공'},
- dark:{n:'독',ic:'☠️',col:0x84cc16,t:['flu','acid','flytrap'],u:'vampire',d:'독·약화·흡혈'}},TK=Object.keys(TECH),TECH2C=300;
+ dark:{n:'독',ic:'☠️',col:0x84cc16,t:['flu','acid','flytrap'],u:'flamingo',d:'독·약화·산성'}},TK=Object.keys(TECH),TECH2C=300;
 const BAL=/*BAL*/{shz:2,hatchT:6,eggHp:1,eggCap:1e9,eggHatchK:2,upk:1.05,upg:.2,rh:.15,rs:0.5,hcr:2,hmx:0.03,pk:0.35,pmax:5,pdur:4,bk:1.1,bdur:3,bsp:.7,cl:2.5,mode:{normal:{uh:0.95,td:0.84,as:1.02},race:{uh:1,td:0.85,as:0.97}},cap:44,ovs:.9,airInc:.8,kr:.2,ui:.9,need:1,uhp:2.4,incS:805,late1:420,lm1:2,late2:540,lm2:3,py:{ar:.85,am:2.4,gr:1.1,gm:.8,lr:1.1,la:1.2,lg:.4}}/*BALEND*/;T.forEach(b=>{if(!b.d||b.pylon||b.snack||b.cctv)return;const tr=[];if(b.cd<=.8){b.rapid=1;tr.push('⚡연사 가속: 계속 쏘면 공속 최대 +50%')}else if(b.cd>=1.5){b.heavy=1;tr.push('💥강타: 3번째 공격마다 치명타 ×2 + 대상 최대체력 3% 추가 피해')}if(b.poison)tr.push('☠️독 중첩(최대 5)'+((b.splash||b.self)?' · 독연기 2.5초 잔류':''));if(b.burn)tr.push('🔥화상 번짐: 불탄 채 쓰러지면 옆으로 옮겨붙음');if(tr.length)b.x=(b.x?b.x+' · ':'')+tr.join(' · ')});U.forEach(u=>{u.inc=Math.round(u.inc*1.4*(u.t==='A'?BAL.airInc:1));u.hp=Math.round(u.hp*BAL.uhp);if(u.shield)u.shield*=BAL.uhp});const TICK=4;
 const COMBO=T.filter(t=>t.combo).map(t=>({k:t.combo,t:t.id,u:U.find(u=>u.combo&&u.combo.join()===t.combo.join()).id,n:t.combo.map(k=>TECH[k].n).join('+'),ic:t.combo.map(k=>TECH[k].ic).join('')}));
 // 🎭 웃긴 이름 + 한 줄 설명 (도감용)
@@ -150,7 +150,7 @@ woodpecker:['헤드뱅 딱따구리','하루 12,000번 박치기. 두통은 타�
 seagull:['똥폭격 갈매기','꼭 세차한 날만 골라서 와요.'],
 swan:['물밑 영혼 발장구 백조','우아하게 떠 있는 건 수면 위뿐! 물 아래선 영혼까지 갈아 넣어 발장구 치느라 식은땀이 줄줄. 그 정성으로 보호막을 둘러요.','발장구 백조'],
 penguin:['덜덜이 펭귄 삼형제','셋이 꼭 붙어 다녀야 체온이 유지돼요. 하루 종일 덜덜 떨어서 원래 느린데, 감속 디버프쯤은 그냥 무시합니다!','펭귄 삼형제'],
-vampire:['드라큘라 박쥐','마늘 타워는 아직 개발 중이에요.'],
+flamingo:['플라맹독','핑크 플라밍고가 독 칵테일을 원샷하고 이렇게 됐어요. 한 다리로 콩콩 뛰며 지나가는 타워에 산성 침을 퉤!'],
 peacock:['관종 뿜뿜 공작','"나 좀 봐!" 하고 꼬리 부채를 촤악 펼치면, 그 눈부신 자태에 감탄한 아군 새들의 체력이 사르르 회복돼요.','관종 공작'],
 dodo:['각설이 도도새','얼씨구씨구 들어간다~ 작년에 멸종했던 도도새가 죽지도 않고 또 왔네! 둔하지만 맷집 하나는 끝내줘요.'],
 falcon:['과속 송골매','시속 389km. 과속 카메라에 매일 찍혀요.'],
@@ -643,9 +643,9 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
      for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(!t||!t.bp.d)continue;const d=Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y);
       if(d<=R2){if(b.zap)t.dis=2;else if(d<nd){nd=d;near=t}}}
      if(near)near.dis=2;u.pk=b.peck?3:2.5}}
-   if(b.sulk||b.poop){/* 🦜 욕쟁이: 근처 타워 1.5초 삐짐 · 🐦 똥 폭격: 아래 타워 3초 느려짐 */const key=b.sulk?'sk':'pp';u[key]=(u[key]??1.2)-dt;if(u[key]<=0){u[key]=b.sulk?2.2:2.5;const R2=b.sulk?1.8:1.2;let nr=null,nd=R2;
+   if(b.sulk||b.poop||b.acid){/* 🦜 욕쟁이: 근처 타워 1.5초 삐짐 · 🐦 똥 폭격: 아래 타워 3초 느려짐 · 🦩 플라맹독: 4초마다 산성 침(타워 공격력 -30% 4초) */const key=b.sulk?'sk':b.acid?'ac':'pp';u[key]=(u[key]??1.2)-dt;if(u[key]<=0){u[key]=b.sulk?2.2:b.acid?4:2.5;const R2=b.sulk?1.8:b.acid?1.9:1.2;let nr=null,nd=R2;
      for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(!t||!t.bp.d||t.carrier)continue;const d=Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y);if(d<nd){nd=d;nr=t}}
-     if(nr){if(b.sulk){nr.dis=Math.max(nr.dis||0,1.5);nr.emo={i:'💢',u:S.t+1.5}}else{nr.poop=S.t+3;if(p.id===view&&!S.sim)artFx('smoke',{x:u.x,y:BH-u.y,r:.35,col:0xffffff})}}}}
+     if(nr){if(b.acid){nr.acid=S.t+4;nr.emo={i:'🤢',u:S.t+4};if(p.id===view&&!S.sim){artFx('smoke',{x:u.x,y:BH-u.y,r:.45,col:0x84cc16});popTxt(u,'퉤!')}}else if(b.sulk){nr.dis=Math.max(nr.dis||0,1.5);nr.emo={i:'💢',u:S.t+1.5}}else{nr.poop=S.t+3;if(p.id===view&&!S.sim)artFx('smoke',{x:u.x,y:BH-u.y,r:.35,col:0xffffff})}}}}
    if(b.coffee&&u.sh<b.shield){u.cf=(u.cf??4)-dt;if(u.cf<=0){u.cf=4;u.sh=Math.min(b.shield,(u.sh||0)+b.shield*.25);/* ☕ 커피 한 모금 */if(p.id===view&&!S.sim)popTxt(u,'☕ 후루룩')}}
    if(b.wig&&!u.wg&&u.hp<b.hp*.5){u.wg=1;u.wgfx=1;/* 🦅 가발 날리기: 번쩍이는 머리에 근처 타워 2초 눈부심 */for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(t&&t.bp.d&&Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y)<2){t.dis=Math.max(t.dis||0,2);t.emo={i:'😵',u:S.t+2}}}
     if(p.id===view&&!S.sim)popTxt(u,'✨ 번쩍!')}
@@ -692,7 +692,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;
    const b=t.bp,cx=cellX(x,y),cy=cellY(y),vis=o=>(!b.t||b.t===(o.gr>0?'G':o.fl>0?'A':o.bp.t))&&(p.reveal>0||o.seen||!(o.bp.stealth&&o.y<BH*o.bp.stealth));
    let tg=null,my=-1;for(const u of p.units){if(vis(u)&&Math.hypot(u.x-cx,u.y-cy)<=t.r&&u.y>my){my=u.y;tg=u}}
    if(!tg){if(t.heat)t.heat=Math.max(0,t.heat-dt*.6);continue}
-   let crit=1;if(b.rapid)t.heat=Math.min(1,(t.heat||0)+BAL.rh);if(b.heavy){t.hc=(t.hc||0)+1;if(t.hc%3===0)crit=BAL.hcr}
+   let crit=t.acid>S.t?.7:1;/* 🦩 산성 침 맞은 타워 공격력 -30% */if(b.rapid)t.heat=Math.min(1,(t.heat||0)+BAL.rh);if(b.heavy){t.hc=(t.hc||0)+1;if(t.hc%3===0)crit*=BAL.hcr}
    t.cd=b.cd*(p.boost>0?.5:1)/(b.rapid?1+BAL.rs*t.heat:1)*(t.poop>S.t?1.6:1);
    if(b.trap){// 🪴 파리지옥: 머리 수(Lv1~3, 최대 3)만큼 지상 새를 물어 묶고 독. 덩치 큰 새(체력 2000+)는 절반만. Lv.4는 체력 12% 이하면 꿀꺽
     const heads=Math.min(3,t.lv),hold=t.lv>=3?1.8:1.6,lvm=1+(t.lv-1)*.5,C=p.units.filter(u=>vis(u)&&!(u.held>S.t)&&Math.hypot(u.x-cx,u.y-cy)<=t.r).sort((a,c)=>c.y-a.y).slice(0,heads);
@@ -791,10 +791,10 @@ const BODYS={archaeo:[.9,1.62,.86],archaeo_g:[.95,1.5,.9],eagle:[.86,1.62,.84],s
  parrot:[.92,1.2,1.1],vampire:[.84,.9,.9],voltbat:[.86,.92,.92],phoenix:[.86,1.56,.88],plasmabird:[.86,1.56,.88],comet:[.8,1.64,.8],thunderbird:[.84,1.42,.8],pelican:[1.12,1.45,1.02],
  duck:[1.12,1.45,.86],goose:[1,1.42,1.02],turkey:[1.02,1.18,1],rooster:[1,1.18,1.14],dodo:[1.28,1.22,1.18],woodpecker:[.86,1.18,1.08],kiwi:[1.06,1.22,.98],peacock:[.96,1.3,.98]};
 const PENG={penguin:1,frostpeng:1},CHICKY={chick:1,hatch_chick:1,hatch_fire:1,hatch_ice:1,hatch_thunder:1,hatch_wind:1,hatch_dark:1,hatch_gold:1};
-const LIFT={crocbird:.26,knight:.3,egg_legs:.2,crane:.25,demcrane:.25};
-const HEADX={thunderbird:{hz:.52,hy:-.3,hr:.2},demcrane:{hz:.98,hy:-.3,hr:.13},archaeo_g:{hz:.6,hy:-.34,hr:.14},dodo:{hz:.74,hy:-.36,hr:.15},crocbird:{hz:.68,hy:-.2,hr:.12},hatch_chick:{hz:.56,hy:-.15,hr:.18},hatch_fire:{hz:.56,hy:-.15,hr:.18},hatch_ice:{hz:.56,hy:-.15,hr:.18},hatch_thunder:{hz:.56,hy:-.15,hr:.18},hatch_wind:{hz:.56,hy:-.15,hr:.18},hatch_dark:{hz:.56,hy:-.15,hr:.18},hatch_gold:{hz:.56,hy:-.15,hr:.18},frostpeng:{hz:.74,hy:-.08,hr:.15},auroraowl:{hz:.46,hy:-.3,hr:.2},crane:{hz:.98,hy:-.3,hr:.13},chick:{hz:.56,hy:-.15,hr:.18},penguin:{hz:.74,hy:-.08,hr:.15},swan:{hz:.86,hy:-.3,hr:.13},goose:{hz:.66,hy:-.36,hr:.14}};
+const LIFT={crocbird:.26,knight:.3,egg_legs:.2,crane:.25,demcrane:.25,flamingo:.32};
+const HEADX={thunderbird:{hz:.52,hy:-.3,hr:.2},demcrane:{hz:.98,hy:-.3,hr:.13},archaeo_g:{hz:.6,hy:-.34,hr:.14},dodo:{hz:.74,hy:-.36,hr:.15},crocbird:{hz:.68,hy:-.2,hr:.12},hatch_chick:{hz:.56,hy:-.15,hr:.18},hatch_fire:{hz:.56,hy:-.15,hr:.18},hatch_ice:{hz:.56,hy:-.15,hr:.18},hatch_thunder:{hz:.56,hy:-.15,hr:.18},hatch_wind:{hz:.56,hy:-.15,hr:.18},hatch_dark:{hz:.56,hy:-.15,hr:.18},hatch_gold:{hz:.56,hy:-.15,hr:.18},frostpeng:{hz:.74,hy:-.08,hr:.15},auroraowl:{hz:.46,hy:-.3,hr:.2},crane:{hz:.98,hy:-.3,hr:.13},flamingo:{hz:1.06,hy:-.3,hr:.13},chick:{hz:.56,hy:-.15,hr:.18},penguin:{hz:.74,hy:-.08,hr:.15},swan:{hz:.86,hy:-.3,hr:.13},goose:{hz:.66,hy:-.36,hr:.14}};
 // 긴 목: [시작, 조절점, 끝(y,z)], 굵기 시작→끝, 색(없으면 몸 색)
-const NECK={demcrane:[[-.2,.64],[-.08,.84],[-.27,.9],.06,.05,0xf1f5f9],archaeo_g:[[-.18,.4],[-.3,.5],[-.33,.56],.07,.06],dodo:[[-.16,.42],[-.34,.5],[-.34,.68],.125,.085,0x7385a8],crane:[[-.2,.64],[-.08,.84],[-.27,.9],.06,.05,0x1f2937],swan:[[-.2,.4],[-.04,.62],[-.27,.78],.07,.055],goose:[[-.22,.36],[-.3,.5],[-.35,.56],.07,.06],ostrich:[[-.18,.78],[-.08,1.06],[-.27,1.2],.07,.045,0xf5b8c8]};
+const NECK={demcrane:[[-.2,.64],[-.08,.84],[-.27,.9],.06,.05,0xf1f5f9],archaeo_g:[[-.18,.4],[-.3,.5],[-.33,.56],.07,.06],dodo:[[-.16,.42],[-.34,.5],[-.34,.68],.125,.085,0x7385a8],crane:[[-.2,.64],[-.08,.84],[-.27,.9],.06,.05,0x1f2937],flamingo:[[-.18,.7],[.06,.86],[-.3,.98],.065,.05,0xf9a8d4],swan:[[-.2,.4],[-.04,.62],[-.27,.78],.07,.055],goose:[[-.22,.36],[-.3,.5],[-.35,.56],.07,.06],ostrich:[[-.18,.78],[-.08,1.06],[-.27,1.2],.07,.045,0xf5b8c8]};
 // 나는 새 날개 색(없으면 몸 색을 살짝 어둡게)
 const WINGC={demcrane:0x1f2937,archaeo:0x8f8676,pelican:0xf1f5f9,humbee:0xca8a04,crocbird:0x64748b,pirate:0x4a3a2e,knight:0x1f2937,crane:0x1f2937,plague:0x3f5a1f,ghostcrow:0x64748b,voltbat:0x3f3f46,auroraowl:0x7aa2d6,plasmabird:0xf97316,stormeagle:0x4338ca,comet:0xbe123c,blizgull:0xe2e8f0,seagull:0x94a3b8,albatross:0xf1f5f9,eagle:0x5b4030,falcon:0x57534e,owl:0x6d4c33,crow:0x2e2a40,parrot:0x2e7d32,pigeon:0x7c8aa0,swan:0xffffff,phoenix:0xf97316,vampire:0x450a0a,thunderbird:0x3730a3};
 const ltn3=c=>{const m=v=>Math.round(v+(255-v)*.3);return(m((c>>16)&255)<<16)|(m((c>>8)&255)<<8)|m(c&255)},dkn3=(c,f)=>((Math.round(((c>>16)&255)*f)<<16)|(Math.round(((c>>8)&255)*f)<<8)|Math.round((c&255)*f));
@@ -806,7 +806,7 @@ function birdMesh2(b,oc){const g=new THREE.Group(),id=b.id,A=b.t==='A',c=b.col,w
  else{const nk=NECK[id];if(nk){const[a,m,e,r0,r1,nc]=nk,n=tall?18:12;for(let i=0;i<n;i++){const t=i/(n-1),q=1-t;at(SP(r0+(r1-r0)*t,nc||c),0,q*q*a[0]+2*q*t*m[0]+t*t*e[0],q*q*a[1]+2*q*t*m[1]+t*t*e[1])}}
   at(SP(hr,hc),0,hy,hz);const ec=id==='owl'?0xfde047:id==='vampire'?0xff2020:0x111111;
   {const ek=id==='owl'?1:hr/.15;/* 머리가 크면 눈 위치·크기도 같이 */[-1,1].forEach(s=>at(SP((id==='owl'?.065:.035)*Math.sqrt(ek),ec,id==='vampire'?GL(0xff0000):{}),s*.08*ek,hy-.09*ek,hz+.06*ek))}
-  const bk={kiwi:[.025,.42,0xd97706],duck:[.08,.2,0xfacc15],dodo:[.004,.02,0xf4a259],swan:[.045,.14,0xf97316],penguin:[.035,.13,0x1f2937],frostpeng:[.035,.13,0x312e81],crane:[.035,.28,0xd6d3a0],blizgull:[.04,.22,0xf97316],stormeagle:[.07,.22,0xfacc15],comet:[.05,.14,0xfacc15],eagle:[.07,.22,0xfacc15],parrot:[.004,.02,0xf59e0b],owl:[.04,.1,0xca8a04],ostrich:[.06,.17,0xe0a088],knight:[.04,.34,0xef4444],humbee:[.016,.3,0x111827],pelican:[.07,.5,0xf59e0b],crocbird:[.035,.15,0x1f2937],woodpecker:[.035,.3,0x57534e],turkey:[.05,.14,0xf59e0b],pirate:[.06,.17,0x374151]}[id]||[.055,.16,0xf59e0b];
+  const bk={kiwi:[.025,.42,0xd97706],duck:[.08,.2,0xfacc15],dodo:[.004,.02,0xf4a259],swan:[.045,.14,0xf97316],penguin:[.035,.13,0x1f2937],frostpeng:[.035,.13,0x312e81],crane:[.035,.28,0xd6d3a0],blizgull:[.04,.22,0xf97316],stormeagle:[.07,.22,0xfacc15],comet:[.05,.14,0xfacc15],eagle:[.07,.22,0xfacc15],parrot:[.004,.02,0xf59e0b],owl:[.04,.1,0xca8a04],ostrich:[.06,.17,0xe0a088],knight:[.04,.34,0xef4444],humbee:[.016,.3,0x111827],pelican:[.07,.5,0xf59e0b],crocbird:[.035,.15,0x1f2937],woodpecker:[.035,.3,0x57534e],turkey:[.05,.14,0xf59e0b],pirate:[.06,.17,0x374151],flamingo:[.05,.18,0x111827]}[id]||[.055,.16,0xf59e0b];
   const k=KO(bk[0],bk[1],bk[2]);k.rotation.z=PI;at(k,0,hy-hr-bk[1]/2+.04,hz-.03,id==='duck'?[1.8,1,.5]:tall?[1.6,1,.55]:null)}
  if(id!=='kiwi'&&id!=='egg_legs'&&!PENG[id]&&!tall){const big=['eagle','phoenix','owl','vampire','stormeagle','auroraowl','pelican'].includes(id),wl=A?(big?.46:id==='hatch_wind'?.17:.34):.15,wc=WINGC[id]??(A?dkn3(c,.85):c);
   // 🪶 공중 새 날개: 팔 부분 + 덮깃 + 팀 색 띠 + 부채꼴 첫째날개깃(새마다 끝 색), 박쥐는 뾰족한 손가락 + 막
@@ -837,7 +837,7 @@ function birdMesh2(b,oc){const g=new THREE.Group(),id=b.id,A=b.t==='A',c=b.col,w
  if(id==='eagle'||id==='stormeagle')at(BX(.2,.04,.03,id==='eagle'?0x451a03:0x1e1b4b),0,hy-.08,hz+.1);
  if(id==='vampire')[-1,1].forEach(s=>{const f=KO(.02,.07,0xffffff);f.rotation.z=PI;at(f,s*.03,hy-.22,hz-.1)});
  if(id==='duck')at(TR(.14,.025,0xffffff),0,hy+.1,hz-.1);
- if(!A&&!tall&&id!=='egg_legs'&&id!=='crocbird')[-1,1].forEach(s=>at(BX(LF?.03:.045,LF?.03:.045,z0,id==='knight'?0xef4444:id==='crane'?0x57534e:0xf97316),s*.1,-.02,z0/2-.04));
+ if(!A&&!tall&&id!=='egg_legs'&&id!=='crocbird')(id==='flamingo'?[0]:[-1,1]).forEach(s=>at(BX(LF?.03:.045,LF?.03:.045,z0,id==='knight'?0xef4444:id==='crane'?0x57534e:id==='flamingo'?0xec4899:0xf97316),s*.1,-.02,z0/2-.04));/* 🦩 플라맹독은 외다리 */
  const bz=tall?1.7:.85+LF,bg=new THREE.Mesh(new THREE.PlaneGeometry(.6,.09),new THREE.MeshBasicMaterial({color:0}));bg.position.set(0,.45,bz);
  const f=new THREE.Mesh(new THREE.PlaneGeometry(.56,.06),new THREE.MeshBasicMaterial({color:0x22c55e}));f.position.set(0,.45,bz+.01);f.name='f';g.add(bg,f);
  g.scale.setScalar(b.id==='crocbird'?1.2:.7+Math.min(.9,b.hp/3500));return g}
@@ -1709,6 +1709,13 @@ const ART=(()=>{
    penguin(){T(0,-.03,.6,.165,.04,O,0xdc2626);T(0,-.03,.63,.167,.012,O,0xffffff);Bx(.06,-.2,.47,.05,.03,.15,[0,.3,0],0xb91c1c);Bx(.06,-.215,.42,.052,.01,.03,O,0xffffff);S(0,hy-hr-.035,hz-.045,.028,.05,.014,0xf59e0b);[0,PI/3,-PI/3].forEach(a=>Bx(0,hy,zt+.11,.12,.012,.016,[0,a,0],0xbae6fd,1));Su(0,hy,zt+.11,.018,0xffffff,1)},
    // 드라큘라 박쥐: 뾰족 귀 + 높은 칼라 + 나비넥타이
    vampire(){sides(s=>{K(s*.1,hy+.02,zt+.0,.04,.16,[PI/2,0,-s*.25],0x450a0a);Bx(s*.13,hy+.16,hz-.1,.1,.02,.2,[0,s*.5,0],0x1f1020);K(s*.04,-.35,.36,.035,.06,[0,0,-s*PI/2],0xdc2626)});Su(0,-.35,.36,.025,0xdc2626)},
+   // 🦩 플라맹독: 핑크 몸에 독 반점·외다리(접은 다리)·휜 부리에서 똑똑 떨어지는 초록 침·짝짝이 눈·독 칵테일
+   flamingo(){const TX=0x84cc16,PK=0xec4899;[[.12,.08,.1],[-.14,.02,.06],[.04,-.12,.14],[-.06,.15,.12],[.17,-.05,-.04]].forEach(([x,y,dz])=>S(x,y,z0+dz+.17,.04,.04,.018,TX));
+    /* 접은 다리(ㄱ자) */Bx(-.08,.02,z0-.17,.025,.025,.17,[0,0,0],PK);Bx(-.08,.08,z0-.24,.025,.13,.025,[0,0,0],PK);Su(-.08,.14,z0-.24,.03,PK);
+    /* 짝짝이 눈: 한쪽 왕눈 */Su(.07,hy-.11,hz+.04,.05,0xffffff);Su(.075,hy-.155,hz+.04,.024,0x111827);
+    /* 휜 부리 끝 + 초록 침 방울 */K(0,hy-.255,hz-.085,.026,.08,[-PI/2,0,0],0x111827);[0,1,2].forEach(i=>Su(0,hy-.255,hz-.15-i*.045,.022-i*.004,TX));
+    /* 머리 위 독 거품 */[[-.03,.02],[.04,.05],[0,.09]].forEach(([x,z],i)=>Su(x,hy+.02,zt+z,.025-i*.004,0xbef264));
+    /* 독 칵테일(날개에 듦): 잔+초록 음료+분홍 우산 */K(.27,-.06,z0+.05,.07,.1,[0,0,0],0xe0f2fe);Y(.27,-.06,z0+.1,.065,.015,UP,TX);Bx(.29,-.06,z0+.13,.006,.006,.14,[0,.4,0],0x92400e);K(.31,-.06,z0+.2,.07,.035,[0,0,0],0xf472b6);Y(.27,-.06,z0-.01,.012,.07,UP,0xe0f2fe);Y(.27,-.06,z0-.05,.04,.01,UP,0xe0f2fe)},
    // 자뻑 공작: 티아라 + 반짝이 + 에메랄드 가슴
    peacock(){S(0,-.15,z0,.2,.18,.17,0x22d3ee);[-1,0,1].forEach(i=>{const a=-i*.32;Y(i*.03,hy+.02,zt+.05,.007,.12,[PI/2,0,a],0x0f766e);Su(i*.03-Math.sin(a)*.065,hy+.02,zt+.05+Math.cos(a)*.065,.026,0x22d3ee)});
     sides(s=>Bx(s*.075,hy-.1,hz+.0,.05,.012,.014,[0,s*.2,0],0xffffff))},
@@ -1856,7 +1863,7 @@ const ART=(()=>{
   return[P,G]}
  const BMAT=()=>mat('face',()=>basic(0xffffff,{vertexColors:true})),SMAT=()=>mat('soft',()=>basic(0xffffff,{vertexColors:true,transparent:true,opacity:.36,depthWrite:false})),
   AMAT=()=>mat('acc',()=>std(0xffffff,{vertexColors:true,roughness:.6,flatShading:false})),GMAT=()=>mat('accG',()=>basic(0xffffff,{vertexColors:true}));
- const OUTL={crow:1,vampire:1,plague:1,voltbat:1,pirate:1,woodpecker:1,frostpeng:1,eagle:1,ghostcrow:0};
+ const OUTL={crow:1,flamingo:1,plague:1,voltbat:1,pirate:1,woodpecker:1,frostpeng:1,eagle:1,ghostcrow:0};
  // ---------- 🎬 움직이는 시그니처 파츠(공작 부채·백조 발장구·도도 불꽃) + 펭귄 덜덜 ----------
  const ANP={};
  function animSet(id,H){if(id in ANP)return ANP[id];const z0=H.z0,L=[],SPH=()=>new THREE.SphereGeometry(1,16,12),CON=()=>new THREE.ConeGeometry(1,1,14),CYL=()=>new THREE.CylinderGeometry(1,1,1,12);
@@ -2697,7 +2704,7 @@ function dxThumbs(){if(DXC.done)return;const r=new THREE.WebGLRenderer({antialia
  r.dispose();if(r.forceContextLoss)r.forceContextLoss();DXC.done=1}
 const dxQ=f=>/^["“]/.test(f||'')?f:'“'+f+'”';const tier=c=>c>=1000?'lg':c>=500?'ep':c>=250?'rr':'cm',TIERN={cm:'일반',rr:'희귀',ep:'영웅',lg:'전설'};
 const dxBadge=x=>x.race?`<em>${RACE[x.race].ic} ${RACE[x.race].n} 전용</em>`:x.tech?`<em>${TECH[x.tech].ic} ${TECH[x.tech].n} 전용</em>`:x.combo?`<em>${x.combo.map(k=>TECH[k].ic).join('')} 조합</em>`:'';
-const DXTH={humbee:'meadow',pelican:'sky',crocbird:'water',penguin:'ice',frostpeng:'ice',blizgull:'ice',auroraowl:'aurora',dodo:'stage',phoenix:'fire',plasmabird:'fire',comet:'sky',swan:'water',duck:'water',seagull:'water',pirate:'ice',albatross:'sky',peacock:'stage',parrot:'stage',rooster:'stage',owl:'night',crow:'night',ghostcrow:'night',vampire:'night',plague:'night',voltbat:'storm',thunderbird:'storm',stormeagle:'storm',crane:'spa',falcon:'sky',eagle:'sky'};
+const DXTH={flamingo:'water',humbee:'meadow',pelican:'sky',crocbird:'water',penguin:'ice',frostpeng:'ice',blizgull:'ice',auroraowl:'aurora',dodo:'stage',phoenix:'fire',plasmabird:'fire',comet:'sky',swan:'water',duck:'water',seagull:'water',pirate:'ice',albatross:'sky',peacock:'stage',parrot:'stage',rooster:'stage',owl:'night',crow:'night',ghostcrow:'night',vampire:'night',plague:'night',voltbat:'storm',thunderbird:'storm',stormeagle:'storm',crane:'spa',falcon:'sky',eagle:'sky'};
 const dxTh=u=>DXTH[u.id]||(u.hidden||u.id==='egg_legs'?'lab':u.tech==='fire'?'fire':u.tech==='ice'?'ice':u.tech==='thunder'?'storm':u.tech==='wind'?'sky':u.tech==='dark'?'night':u.race?'stage':u.t==='A'?'sky':'meadow');
 const dxImg=k=>DXC[k]?`<img src="${DXC[k]}" alt="">`:'<i class="noimg">🐦</i>';
 function cardU(u){const k=tier(u.c);return `<div class="cd ${k}"><div class="ci" data-th="${dxTh(u)}">${dxImg('u_'+u.id)}<span class="tr ${k}">${TIERN[k]}</span>${dxBadge(u)}</div><div class="cn">${u.ic} ${u.n}</div><div class="cf">${dxQ(u.fl)}</div>
