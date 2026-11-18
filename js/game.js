@@ -1007,7 +1007,19 @@ function birdMesh3(b,oc){const g=birdMesh2(b,oc),id=b.id,at=(m,x,y,z,s)=>{m.posi
 function prevUpd(){let g=window.__pv;const on=pend&&sel&&sel.id===pend.id&&view===0&&S&&!over&&!S.sim;if(!on){if(g)g.visible=false;if(pend&&(!sel||sel.id!==pend.id))pend=null;return}
  if(!g){g=new THREE.Group();const M=(geo,c,o)=>new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:o,depthWrite:false}));const ring=M(new THREE.RingGeometry(.93,1,48),0x4ade80,.85);ring.name='r';const fill=M(new THREE.CircleGeometry(1,48),0x4ade80,.13);fill.name='f';const hex=M(new THREE.CircleGeometry(.5,6),0xfde047,.6);hex.name='h';hex.rotation.z=Math.PI/6;g.add(fill,ring,hex);g.renderOrder=5;Sc.add(g);window.__pv=g}
  g.visible=true;g.position.set(cellX(pend.x,pend.y),BH-cellY(pend.y),.07);const r=Math.max(.7,sel.r||.7);g.getObjectByName('r').scale.set(r,r,1);g.getObjectByName('f').scale.set(r,r,1);const k=1+.08*Math.sin(performance.now()/140);g.getObjectByName('h').scale.set(k,k,1)}
-let talkN=0;function sync3(dt){try{prevUpd()}catch(e){}sync3.talkOn=talkN;talkN=0;try{heroBoard(dt)}catch(e){}if(typeof PFX!=='undefined')PFX.update(dt);PXS.update(dt);if(typeof newsUpd==='function')newsUpd(dt);const p=S.pl[view],seen=new Set();
+/* 🗺 설치 안내(타워를 골랐을 때만): 초록 테두리=지을 수 있음 · 빨간 칸=지으면 길이 막힘 · 노란 점=지금 지상 새가 지나갈 길(2단계 미리보기 칸을 놓았을 때 길로 다시 계산) */
+const GUIDE={g:null,key:''};
+function guideUpd(){const on=sel&&!sel.cctv&&S&&!S.sim&&!over&&view===0&&S.pl[0].alive&&SV.guide!==0&&!(S.cdn>0);let g=GUIDE.g;
+ if(!on){if(g)g.visible=false;GUIDE.key='';return}
+ const me=S.pl[0],G=me.grid,key=sel.id+'|'+(pend?pend.x+','+pend.y:'')+'|'+G.map(r=>r.map(t=>t?(t.carrier?2:1):0).join('')).join('');
+ if(!g){g=GUIDE.g=new THREE.Group();g.renderOrder=4;Sc.add(g);const M=(c,o)=>new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:o,depthWrite:false});GUIDE.geo={ok:new THREE.RingGeometry(.39,.46,6),bad:new THREE.CircleGeometry(.44,6),dot:new THREE.CircleGeometry(.14,12)};GUIDE.mat={ok:M(0x4ade80,.6),bad:M(0xef4444,.42),dot:M(0xfde047,1),dot2:M(0x111827,.7)}}
+ g.visible=true;if(key===GUIDE.key)return;GUIDE.key=key;while(g.children.length)g.remove(g.children[0]);
+ const add=(geo,mat,x,y,z,rot,sc)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);if(rot)m.rotation.z=rot;if(sc)m.scale.set(sc,sc,1);g.add(m)};
+ for(let y=1;y<ROWS-1;y++)for(let x=0;x<COLS;x++){if(G[y][x])continue;if(pend&&pend.x===x&&pend.y===y)continue;G[y][x]=1;const ok=allOK(G);G[y][x]=null;
+  add(ok?GUIDE.geo.ok:GUIDE.geo.bad,ok?GUIDE.mat.ok:GUIDE.mat.bad,cellX(x,y),BH-cellY(y),.045,Math.PI/6)}
+ if(pend)G[pend.y][pend.x]=1;const pa=bfs(G,COLS>>1,0);if(pend)G[pend.y][pend.x]=null;
+ if(pa)for(let i=0;i<pa.length;i++){const a=pa[i],ax=cellX(a.x,a.y),ay=BH-cellY(a.y);add(GUIDE.geo.dot,GUIDE.mat.dot2,ax,ay,.05,0,1.35);add(GUIDE.geo.dot,GUIDE.mat.dot,ax,ay,.055);const b=pa[i+1];if(b){const bx=cellX(b.x,b.y),by=BH-cellY(b.y);add(GUIDE.geo.dot,GUIDE.mat.dot,(ax+bx)/2,(ay+by)/2,.055,0,.6)}}}
+let talkN=0;function sync3(dt){try{prevUpd()}catch(e){}try{guideUpd()}catch(e){}sync3.talkOn=talkN;talkN=0;try{heroBoard(dt)}catch(e){}if(typeof PFX!=='undefined')PFX.update(dt);PXS.update(dt);if(typeof newsUpd==='function')newsUpd(dt);const p=S.pl[view],seen=new Set();
  p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(!t)return;const k=y*8+x;seen.add(k);let m=tm.get(k);
   if(!m||m.userData.t!==t||m.userData.lv0!==t.lv){if(m)rmM(m);m=mkTowerMesh(t.bp,t.lv);m.userData.t=t;m.userData.lv0=t.lv;Sc.add(m);tm.set(k,m)}
   m.position.set(cellX(x,y),BH-cellY(y),0);const s=1+(t.lv-1)*.15;if(t.carrier){const cu=t.carrier;m.position.set(cu.x,BH-cu.y,1.25+Math.sin(S.t*6)*.05);craneCone(t,cellX(x,y),BH-cellY(y))}m.scale.set(s/XK,s,s);if(t.kick>0){t.kick=Math.max(0,t.kick-dt*7);const k=t.kick*t.kick;m.scale.set(s/XK*(1+.1*k),s*(1+.1*k),s*(1-.16*k))}/* 쏠 때 움찔 반동 */
@@ -1056,17 +1068,17 @@ const css=n=>'#'+n.toString(16).padStart(6,'0');
 function laneTargets(){if(S.net==='guest'&&S.laneNet)return Object.assign({},S.laneNet.c);const cnt={};S.pl.forEach(p=>{if(p.alive&&p.id!==0){const n=p.units.filter(u=>u.owner===0).length;if(n)cnt[p.id]=n}});return cnt}
 function lanePanel(dt){const box=$('lane');if(!box||!S)return;laneT+=dt;if(laneT<.12)return;laneT=0;
  const cnt=laneTargets(),ids=Object.keys(cnt).map(Number);let id=lanePick!==null&&S.pl[lanePick].alive&&(cnt[lanePick]||!ids.length)?lanePick:null;
- if(id===null)id=ids.length?ids.sort((a,b)=>cnt[b]-cnt[a])[0]:nextAlive(0);if(S.net==='guest'&&S.laneNet&&S.pl[S.laneNet.b]&&S.pl[S.laneNet.b].alive)id=S.laneNet.b;if(id===null||id===undefined){box.style.display='none';return}box.style.display='';
+ if(id===null)id=ids.length?ids.sort((a,b)=>cnt[b]-cnt[a])[0]:nextAlive(0);if(S.net==='guest'&&S.laneNet&&S.pl[S.laneNet.b]&&S.pl[S.laneNet.b].alive)id=S.laneNet.b;const myV=view!==0&&!!S.pl[0];if(myV)id=0;/* 👀 다른 판을 볼 때(관전)는 미니맵에 내 진영 */if(id===null||id===undefined){box.style.display='none';return}box.style.display='';
  const p=S.pl[id],cv=$('lanec'),c=cv.getContext('2d'),W=cv.width,H=cv.height,s=Math.min(W/(COLS+.6),H/(BH+.2)),ox=(W-(COLS+.5)*s)/2,oy=(H-BH*s)/2,X=x=>ox+x*s,Y=y=>oy+y*s;
  c.clearRect(0,0,W,H);
  for(let r=0;r<ROWS;r++)for(let q=0;q<COLS;q++){hx6(c,X(cellX(q,r)),Y(cellY(r)),s*.52);c.fillStyle=r===0?'#166534':r===ROWS-1?'#7f1d1d':(q+r)%2?'#14352a':'#10291f';c.fill()}
  const pa=bfs(p.grid,COLS>>1,0);if(pa){c.setLineDash([s*.25,s*.25]);c.strokeStyle='#38bdf899';c.lineWidth=Math.max(1,s*.12);c.beginPath();pa.forEach((n,i)=>{const x=X(cellX(n.x,n.y)),y=Y(cellY(n.y));i?c.lineTo(x,y):c.moveTo(x,y)});c.stroke();c.setLineDash([])}
  (p.wires||[]).forEach(w=>{c.strokeStyle=w.m>=2.5?'#f43f5e':w.m>=1.75?'#fb923c':'#fde047';c.lineWidth=Math.max(1,s*.14);c.beginPath();c.moveTo(X(w.x1),Y(w.y1));c.lineTo(X(w.x2),Y(w.y2));c.stroke()});
  p.grid.forEach((row,r)=>row.forEach((t,q)=>{if(!t||!t.bp)return;const x=X(cellX(q,r)),y=Y(cellY(r)),z=s*(t.bp.id==='wall'?.34:.4);c.fillStyle=t.bp.id==='wall'?'#a16207':css(t.bp.col);c.fillRect(x-z,y-z,z*2,z*2);if(t.lv>1){c.fillStyle='#fff';c.fillRect(x-z,y-z,z*2*(t.lv-1)/3,s*.12)}}));
- p.units.forEach(u=>{const mine=u.owner===0,x=X(u.x),y=Y(u.y),r=mine?Math.max(2,s*(.22+Math.min(.25,u.bp.hp/12000))):Math.max(1.2,s*.15),hp=Math.max(0,u.hp/u.bp.hp);
+ p.units.forEach(u=>{const mine=myV?true:u.owner===0,x=X(u.x),y=Y(u.y),r=mine?Math.max(2,s*(.22+Math.min(.25,u.bp.hp/12000))):Math.max(1.2,s*.15),hp=Math.max(0,u.hp/u.bp.hp);
   c.fillStyle=mine?`hsl(${Math.round(hp*120)},90%,55%)`:'#94a3b888';c.beginPath();
   if(u.bp.t==='A'&&!(u.gr>0)){c.moveTo(x,y+r*1.2);c.lineTo(x-r,y-r*.8);c.lineTo(x+r,y-r*.8);c.closePath()}else c.arc(x,y,r,0,6.283);c.fill();if(mine){c.strokeStyle='#0008';c.lineWidth=1;c.stroke()}});
- const nm=p.name.replace(/^(\d+번) /,'$1 ');setH($('lanet'),`🎯 ${nm}${ids.length>1?' 🔄':''}`);
+ const nm=p.name.replace(/^(\d+번) /,'$1 ');setH($('lanet'),myV?`🏠 내 진영${S.pl[0].alive?' · 눌러서 복귀':' (탈락)'}`:`🎯 ${nm}${ids.length>1?' 🔄':''}`);
  setH($('lanes'),`<span title="진행 중">🐦${cnt[id]||0}</span> <span title="탈출">💥${(S.esc||{})[id]||0}</span> <span title="격추">❌${(S.kl||{})[id]||0}</span>`);
  $('lane').dataset.id=id}
 function laneFit(){const m=document.querySelector('main'),sd=document.querySelector('.side'),cv=$('lanec');if(!m||!sd||!cv||!cv.style)return;const avail=m.clientHeight-sd.offsetHeight-56;const h=Math.max(90,Math.min(210,avail));cv.style.height=h+'px';cv.height=h*2;cv.width=192}
@@ -1111,7 +1123,7 @@ let pmArm=0,WL=null;
 function haptic(ms){try{if(SV.vib!==0&&navigator.vibrate)navigator.vibrate(ms)}catch(e){}}
 function inGame(){return !!(S&&!S.sim&&$('game').style.display!=='none'&&!over)}
 const VOLS=[1,.6,.3,0],vtx=v=>v>0?Math.round(v*100)+'%':'끔';
-function pmUI(){const V=SFX.vol||{s:1,b:1};$('pms').textContent=`🔊 효과음: ${vtx(V.s)}`;$('pmb').textContent=`🎵 배경음악: ${vtx(V.b)}`;$('pmt').textContent=`📢 알림 위치: ${({b:'아래',t:'위',off:'끄기'})[SV.toastPos||'b']}`;$('pm2').textContent=`👆 타워 2단계 설치: ${SV.two!==0?'켜짐':'꺼짐'}`;$('pmv').textContent=`📳 진동: ${SV.vib!==0?'켜짐':'꺼짐'}`;$('pmx').textContent='🚪 나가기';pmArm=0;$('pmn').textContent=S&&S.net?'🌐 온라인 대전은 멈추지 않아요 · 나가면 AI가 대신해요':'게임이 멈춰 있어요'}
+function pmUI(){const V=SFX.vol||{s:1,b:1};$('pmg').textContent=`🗺 설치 안내 표시: ${SV.guide!==0?'켜짐':'꺼짐'}`;$('pms').textContent=`🔊 효과음: ${vtx(V.s)}`;$('pmb').textContent=`🎵 배경음악: ${vtx(V.b)}`;$('pmt').textContent=`📢 알림 위치: ${({b:'아래',t:'위',off:'끄기'})[SV.toastPos||'b']}`;$('pm2').textContent=`👆 타워 2단계 설치: ${SV.two!==0?'켜짐':'꺼짐'}`;$('pmv').textContent=`📳 진동: ${SV.vib!==0?'켜짐':'꺼짐'}`;$('pmx').textContent='🚪 나가기';pmArm=0;$('pmn').textContent=S&&S.net?'🌐 온라인 대전은 멈추지 않아요 · 나가면 AI가 대신해요':'게임이 멈춰 있어요'}
 function pmOpen(){if(!inGame())return;if(!S.net){paused=true;$('pz').textContent='▶️'}pmUI();$('pm').style.display='flex'}
 function pmClose(){$('pm').style.display='none';pmArm=0;if(S&&!S.net&&$('dexm').style.display!=='flex'){paused=false;$('pz').textContent='⏸'}}
 $('pz').onclick=()=>{if($('pm').style.display==='flex')return pmClose();pmOpen()};
@@ -1121,6 +1133,7 @@ $('pms').onclick=()=>{const V=SFX.vol;SFX.setVol(vNext(V.s),V.b);pmUI();sfx('bui
 $('pmb').onclick=()=>{const V=SFX.vol;SFX.setVol(V.s,vNext(V.b));pmUI()};
 $('pmt').onclick=()=>{const o=['b','t','off'];SV.toastPos=o[(o.indexOf(SV.toastPos||'b')+1)%3];svSave();pmUI();if(SV.toastPos!=='off'){$('pm').style.zIndex=12;toast('📢 알림은 여기에 나와요')}};
 $('pm2').onclick=()=>{SV.two=SV.two!==0?0:1;svSave();pend=null;pmUI()};
+$('pmg').onclick=()=>{SV.guide=SV.guide!==0?0:1;svSave();pmUI()};
 $('pmv').onclick=()=>{SV.vib=SV.vib!==0?0:1;svSave();pmUI();haptic(25)};
 $('pmx').onclick=()=>{if(!pmArm){pmArm=1;$('pmx').textContent='❗ 한 번 더 누르면 나가요 (이번 판은 사라져요)';return}$('pm').style.display='none';pmArm=0;paused=false;wlRel();$('home').onclick()};
 function histPush(){try{history.pushState({jj:1},'')}catch(e){}}
