@@ -583,7 +583,7 @@ function aiTick(p){if(p.cfg&&p.cfg.fl&&p.cfg.fl.tdem&&!p.tdem){p.tdem=1;/* 🦃 
  /* 🛡💸 안전 송출(알파고): 들어온 새가 safeT초 넘게 살아 있거나 판 safeY까지 오지 않았고, safeL초 동안 목숨을 안 잃었으면 '안전' → 남는 돈으로 새를 계속 보내 인컴을 올림 / 위험하면 여윳돈을 수비에 */
  const sfOn=diff==='A'&&(g.safeK||0)>.1&&S.t>45,lk=p.rLk&&p.rLk.length?p.rLk[p.rLk.length-1]:-99,safe=sfOn&&S.t-lk>g.safeL&&!p.units.some(u=>u.owner!==p.id&&(S.t-u.t0>g.safeT||u.y>BH*g.safeY));if(sfOn)p.safe=safe;
  const tgtT=g.fl&&g.fl.hstg?hstgTgt(p,g)+(crisis?4:0):g.fl&&g.fl.flex?flexTgt(p,g)+(crisis?4:0):Math.min(capOf(),g.tw0+g.twRate*t+(crisis?5:0)),tgtI=g.inc0+g.incRate*t,nT=cnt(p.grid),need=need8(S.t)*g.def8;
- const bu=dump=>{const g0=p.gold;if(!buyU(p,g,dump))return false;const b=p.lastB,A=diff==='A',bf=A?(g.burstF||0):0,k=bf>.05?200:A?Math.round(g.burst||1):1,fl=Math.max(dump?0:(g.keep??600)*.5,g0*(1-bf));/* 👆 꾹 누르기 연속 전송: burst=마리 수, burstF=가진 돈의 이 비율까지 같은 새로(싼 알은 수십 마리, 사람 기록 알 최대 132·공작 28마리 연속) */for(let i=1;i<k&&b&&p.gold-ucost(p,b)>=fl&&buyOne(p,b);i++);return true};
+ const bu=dump=>{const g0=p.gold;if(!buyU(p,g,dump))return false;const b=p.lastB,A=diff==='A',bf=A?(g.burstF||0):0,k=bf>.05?200:A?Math.round(g.burst||1):1,fl=bf>=.99?0:Math.max(dump?0:(g.keep??600)*.5,g0*(1-bf));/* burstF 1 = 남는 돈 전부 *//* 👆 꾹 누르기 연속 전송: burst=마리 수, burstF=가진 돈의 이 비율까지 같은 새로(싼 알은 수십 마리, 사람 기록 알 최대 132·공작 28마리 연속) */for(let i=1;i<k&&b&&p.gold-ucost(p,b)>=fl&&buyOne(p,b);i++);return true};
  const act=()=>{
   const upOK=crisis||!MZ_TIER[diff]||p.mzFull||S.t>420;
   if(p.gold>20000&&!crisis&&Math.random()<.7&&bu(true))return 1;/* 💰 돈이 넘치면 새 보내기부터 */
