@@ -15,7 +15,7 @@ const PAGE=`window.replayGame=function(rec,dk){R=R||__mk();Sc=Sc||__mk();Cam=Cam
  const L=S.pl.slice().sort((a,b)=>(b.alive-a.alive)||((b.dieT||1e9)-(a.dieT||1e9)));return{rank:L.indexOf(me)+1,t:Math.round(S.t),left:q.length,miss,lk:me.lkN||0,inc5:(me.mInc||[])[5]||null}}`;
 (async()=>{const b=await chromium.launch();const jobs=[];recs.forEach((r,i)=>{for(let k=0;k<K;k++)jobs.push(i)});const res=[];
  await Promise.all([0,1,2,3].map(async()=>{const pg=await b.newPage();pg.setDefaultTimeout(0);await pg.route('**/three.min.js',r=>r.fulfill({body:STUB,contentType:'application/javascript'}));await pg.route('**/*.glb',r=>r.abort());await pg.route('**/fonts.googleapis.com/**',r=>r.fulfill({body:'',contentType:'text/css'}));
-  await pg.goto('file://'+root+'/index.html');await pg.waitForTimeout(300);await pg.evaluate(PAGE);
+  await pg.goto('file://'+root+'/index.html');await pg.waitForTimeout(300);await pg.evaluate(PAGE);if(process.env.PATCH)await pg.evaluate(process.env.PATCH);/* PATCH='JS' 비교 실험용 */
   while(jobs.length){const i=jobs.shift();const r=await pg.evaluate(([rec,d])=>replayGame(rec,d),[recs[i],D]);r.i=i;res.push(r)}}));
  recs.forEach((r,i)=>{const R=res.filter(x=>x.i===i);console.log(`기록${i+1}(실제 ${r.res.rank}등 ${Math.round(r.res.t/60)}분) → 재생 ${R.map(x=>x.rank).join(',')}등 · 놓친 새 ${R.map(x=>x.lk).join(',')} · 못한 행동 ${R.map(x=>x.miss+x.left).join(',')}`)});
  const m=a=>a.reduce((x,y)=>x+y,0)/a.length;console.log('재생 평균 등수',m(res.map(x=>x.rank)).toFixed(2),'우승',res.filter(x=>x.rank===1).length+'/'+res.length);await b.close()})();

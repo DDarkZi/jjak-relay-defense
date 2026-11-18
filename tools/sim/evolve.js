@@ -5,14 +5,14 @@ const {chromium}=require('playwright'),fs=require('fs'),path=require('path');con
 const [stf,G0,K0,P0]=process.argv.slice(2);const OLD=process.env.OLD?JSON.parse(fs.readFileSync(process.env.OLD)):null,SELF=+(process.env.SELF||0),GENS=+G0||3,K=+K0||8,POP=+P0||14,PAR=4,DK=process.env.DK||'X';
 const STUB="const __mk=()=>new Proxy(function(){},{get:(t,p)=>p===Symbol.toPrimitive?(()=>0):__mk(),apply:()=>__mk(),construct:()=>__mk(),set:()=>true});window.THREE=__mk();";
 const FAVK=['pigeon','crow','turkey','swan','owl','parrot','seagull','falcon','pelican','phoenix','archaeo','duck','kiwi','egg_legs','humbee','ghostcrow','crane','peacock','ostrich','eagle'];
-const PAGEFN=`window.evalCand=function(cand,dk,seat,opp,hum){opp=opp||[];hum=hum||[];R=R||__mk();Sc=Sc||__mk();Cam=Cam||__mk();diff=dk;
- const pool=(dk==='A'?AIP.filter(a=>a.alpha):AIP.filter(a=>!a.hell||dk==='X'||dk==='Z')).sort(()=>Math.random()-.5);/* 알파고 난이도면 상대도 알파고 */const gs=[];let j=0;
+const PAGEFN=`window.HUMFIT=${process.env.HUMFIT?1:0};window.evalCand=function(cand,dk,seat,opp,hum){opp=opp||[];hum=hum||[];R=R||__mk();Sc=Sc||__mk();Cam=Cam||__mk();diff=dk;
+ const pool=(dk==='A'?AIP.filter(a=>a.alpha):AIP.filter(a=>(!a.hell||dk==='X'||dk==='Z')&&!a.aonly)).sort(()=>Math.random()-.5);/* 알파고 난이도면 상대도 알파고 */const gs=[];let j=0;
  let o=0;for(let i=0;i<8;i++){if(i===seat){gs.push(JSON.parse(JSON.stringify(cand)));continue}if(o<opp.length){gs.push(JSON.parse(JSON.stringify(opp[o++])));continue}const a=pool[j++%pool.length];gs.push({...mutG(a.g,.07),tech:a.g.tech,tech2:a.g.tech2,fav:a.fav,efav:a.g.efav,fl:a.fl})}
  gs.races=Array(8).fill(null);S=null;over=false;start(gs);
  /* 👤 사람 재생 봇(HUM): 후보가 아닌 자리에 사람 기록을 그대로 재생 */const HS=[];for(const rec of hum){let h;do{h=Math.floor(Math.random()*8)}while(h===seat||HS.some(x=>x.h===h));const P=S.pl[h];P.ai=false;P.cfg=null;HS.push({h,q:rec.ev.slice()})}
  const run=(h,e)=>{const me=S.pl[h],a=e[1],g0=me.gold;if(a==='b'){actBuild(h,e[2],e[3],e[4]);const t=me.grid[e[3]][e[2]];return!!t&&t.bp.id===e[4]}if(a==='u'){const t0=me.grid[e[3]][e[2]],lv=t0&&t0.lv;actUpg(h,e[2],e[3]);const t=me.grid[e[3]][e[2]];return!t||t.lv>lv||t.lv>=4}if(a==='d'){actDem(h,e[2],e[3]);return true}if(a==='s'){actSend(h,e[2]);return me.gold<g0||!UB[e[2]]}if(a==='t'){actTech(h,e[2]);return me.tech===e[2]||me.tech2===e[2]}if(a==='ku'||a==='k'){actSkill(h);return true}return true};
  while(!over&&S.t<1800){step(.05);for(const H of HS){if(!S.pl[H.h].alive)continue;let n=0;while(H.q.length&&H.q[0][0]<=S.t&&n<40){if(run(H.h,H.q[0])){H.q.shift();n++}else{if(S.t-H.q[0][0]>90)H.q.shift();break}}}}
- const L=S.pl.slice().sort((a,b)=>(b.alive-a.alive)||((b.dieT||1e9)-(a.dieT||1e9)));const rk=L.findIndex(p=>p.id===seat);return{sc:7-rk,win:rk===0?1:0,t:S.t}}`;
+ const L=S.pl.slice().sort((a,b)=>(b.alive-a.alive)||((b.dieT||1e9)-(a.dieT||1e9)));const rk=L.findIndex(p=>p.id===seat);let hb=0;for(const H of HS)if(L.findIndex(p=>p.id===H.h)>rk)hb++;/* HUMFIT: 사람 재생 봇보다 오래 살면 봇 1명당 +3 */return{sc:7-rk+(HUMFIT&&HS.length?3*hb/HS.length:0),win:rk===0?1:0,t:S.t}}`;
 const rnd=(a,b)=>a+Math.random()*(b-a);
 /* HUM=사람기록.json HUMK=판마다 재생 봇 수(기본 1) → 알파고가 사람 플레이를 상대로 진화 */const HUMR=process.env.HUM?JSON.parse(fs.readFileSync(process.env.HUM)).recs:null,HUMK=+(process.env.HUMK||1);const humPick=()=>HUMR?HUMR.slice().sort(()=>Math.random()-.5).slice(0,HUMK):[];
 /* 성향별 진화(ARCH=이름): 성향의 핵심 유전자 범위를 고정해서 그 성격 안에서만 최강을 찾음 */
