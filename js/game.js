@@ -326,7 +326,7 @@ function nextAlive(i){for(let k=1;k<=8;k++){const n=(i+k)%8;if(S.pl[n].alive&&n!
 const cctvN=p=>p.grid.flat().filter(t=>t&&t.bp&&t.bp.cctv).length,cctvOK=p=>(p.sawSt||S.t>=240)&&cctvN(p)<2;
 function spawnAt(t,b,owner,hp,x,y,ex){const c=nearCell(x,y);if(b.stealth&&!t.sawSt&&owner!==t.id){t.sawSt=1;if(t.id===0&&!S.sim){toast('🦉 은신 새 목격! 이제 부엉이 CCTV를 지을 수 있어요');sfx('unlock',{k:'cctv'});try{ui()}catch(e){}}}
  const u={id:++uid,bp:b,owner,hp:hp??b.hp,x,y,path:b.t==='G'?(bfs(t.grid,c.x,c.y)||[]):null,pi:0,slow:0,stun:0,pois:0,pd:0,amp:0,hit:0,sh:b.shield||0,rv:b.revive?1:0,pk:1,hatch:0,hd:0,gold:0,col:0};
- if(ex)Object.assign(u,ex);t.units.push(u);return u}
+ if(ex)Object.assign(u,ex);if(u.t0==null)u.t0=S.t;t.units.push(u);return u}
 function spawn(t,b,owner,hp,ex){const x=Math.floor(Math.random()*COLS),first=hp===undefined;if(owner!==t.id){if(b.grab)t.crSeen=S.t;const m=Math.floor(S.t/60);t.inN=(t.inN||0)+1;(t.mIn=t.mIn||[])[m]=(t.mIn[m]||0)+1;(t.rIn=t.rIn||[]).push(S.t)}/* 📊 들어온 새 수(분별·최근) */if(hp===undefined&&S.pl[owner]&&S.pl[owner].ai){const uh=DIFF[diff].uh;if(uh)hp=b.hp*uh}
  {const rm=rOf(S.pl[owner]);ex=Object.assign({},ex);if(rm){if(first&&rm.uhp)hp=(hp===undefined?b.hp:hp)*rm.uhp;if(rm.spd)ex.spm=rm.spd;if(rm.rv&&b.c>=rm.rv&&ex.rv===undefined)ex.rv=1}}
  if(t.id===0&&owner!==0&&b.c>=280&&!S.sim&&S.t-(S.la||-9)>4){S.la=S.t;toast(`🚨 ${S.pl[owner].name}의 ${b.n} 접근!`)}
@@ -423,9 +423,10 @@ function useSkill(p){const s=skillOf(p);if(!s||!p.skU||p.skCD>0)return false;s.f
 // ---------- AI: 전략 유전자 ----------
 const GK={tw0:[3,14],twRate:[0,4],inc0:[30,140],incRate:[0,60],uShare:[.2,1],uAir:[0,1],uHeavy:[0,1],uTier:[.2,1],uSpec:[0,1],wall:[0,.7],
  upAgg:[0,1],upMax:[2,4],def8:[.2,1.3],crisis:[20,70],rush:[150,900],keep:[100,800],tech:[0,4.999],tech2:[0,4.999],m_cx:[0,1],
- m_egg:[0,1],m_air:[0,1],big:[0,1],bigT:[240,720],m_acorn:[0,1],m_t1:[0,1],m_t2:[0,1],m_t3:[0,1],wrep:[0,1],tswap:[0,1],adapt:[0,1],sLead:[-.3,.3],sTrail:[-.3,.3],sLate:[-.3,.3],sDanger:[0,1],learnK:[0,1],lHi:[.05,.4],lLo:[0,.15],tScale:[.7,1.4],mzInc:[120,450],core:[3,6],crUp:[0,1],crFill:[0,1],openN:[0,4],wave:[0,0],atkK:[0,0]};/* wave·atkK: 사람 재생 봇 시험에서 오히려 약해져(28판 중 사람 우승 11→17) 꺼 둠(범위 0) *//* 🤖 알파고 난이도 전용(사람 기록 분석): wave=돈을 모아 한꺼번에 보내기(0이면 끔), atkK=내가 보낸 새 중 실제로 뚫은 종류를 더 사기 *//* 🎯 openN=초반 배치: 완성될 미로 길을 미리 계산해 길을 많이 덮는 설계도 칸에 공격 타워를 듬성듬성 먼저(그동안 벽 안 지음) *//* 🏗 철거반장 대응: crUp=두루미가 오면 미로 타워를 3레벨로(못 들게), crFill=흐트러진 미로를 복구 대신 빈칸 채우기 *//* 🔀 유동 수비(fl.flex) 유전자 *//* 🧠 2026-11-16 ② 상황별 전략(앞섬·뒤짐·후반·위험) ③ 새는 새 보고 배우기 *//* 🧠 2026-11-16: 벽→공격 타워 교체·약한 타워 철거 후 재건·들어오는 새 보고 타워 고르기 */
+ m_egg:[0,1],m_air:[0,1],big:[0,1],bigT:[240,720],m_acorn:[0,1],m_t1:[0,1],m_t2:[0,1],m_t3:[0,1],wrep:[0,1],tswap:[0,1],adapt:[0,1],sLead:[-.3,.3],sTrail:[-.3,.3],sLate:[-.3,.3],sDanger:[0,1],learnK:[0,1],lHi:[.05,.4],lLo:[0,.15],tScale:[.7,1.4],mzInc:[120,450],core:[3,6],crUp:[0,1],crFill:[0,1],openN:[0,4],wave:[0,0],atkK:[0,0],safeK:[0,1],safeT:[8,30],safeY:[.35,.85],safeL:[15,45]};/* wave·atkK: 사람 재생 봇 시험에서 오히려 약해져(28판 중 사람 우승 11→17) 꺼 둠(범위 0) *//* 🤖 알파고 난이도 전용(사람 기록 분석): wave=돈을 모아 한꺼번에 보내기(0이면 끔), atkK=내가 보낸 새 중 실제로 뚫은 종류를 더 사기 *//* 🎯 openN=초반 배치: 완성될 미로 길을 미리 계산해 길을 많이 덮는 설계도 칸에 공격 타워를 듬성듬성 먼저(그동안 벽 안 지음) *//* 🏗 철거반장 대응: crUp=두루미가 오면 미로 타워를 3레벨로(못 들게), crFill=흐트러진 미로를 복구 대신 빈칸 채우기 *//* 🔀 유동 수비(fl.flex) 유전자 *//* 🧠 2026-11-16 ② 상황별 전략(앞섬·뒤짐·후반·위험) ③ 새는 새 보고 배우기 *//* 🧠 2026-11-16: 벽→공격 타워 교체·약한 타워 철거 후 재건·들어오는 새 보고 타워 고르기 */
 function randG(){const g={};for(const k in GK)g[k]=GK[k][0]+Math.random()*(GK[k][1]-GK[k][0]);return g}
-function mutG(g,s){const o={};for(const k in GK){const[a,b]=GK[k];o[k]=Math.max(a,Math.min(b,(g[k]??(a+b)/2)+(Math.random()+Math.random()+Math.random()-1.5)*2*s*(b-a)))}return o}
+/* 새 유전자 중 처음 값이 가운데가 아니라 '안 씀'이어야 하는 것 */const GDEF={safeK:0};
+function mutG(g,s){const o={};for(const k in GK){const[a,b]=GK[k];o[k]=Math.max(a,Math.min(b,(g[k]??GDEF[k]??(a+b)/2)+(Math.random()+Math.random()+Math.random()-1.5)*2*s*(b-a)))}return o}
 function crossG(a,b){const o={};for(const k in GK)o[k]=Math.random()<.5?a[k]:b[k];return o}
 const fx2=b=>(b.rapid?1.25:1)*(b.heavy?1.15:1)+(b.poison?.8:0)+(b.burn?.8:0)+(b.stun?.5:0)+(b.slow?.5:0)+(b.chain?b.chain*.25:0)+(b.freeze?.4:0)+(b.amp?.6:0)+(b.self?1:0)+(b.splash?.4:0)+(b.bubble?.6:0);
 function defPow(p){const ps=[0,2,COLS-1].map(x=>bfs(p.grid,x,0)).filter(Boolean);if(!ps.length)return 0;let tot=0;
@@ -575,6 +576,8 @@ function aiTick(p){if(p.cfg&&p.cfg.fl&&p.cfg.fl.tdem&&!p.tdem){p.tdem=1;/* 🦃 
  if(p.leak&&S.t-(p.lkD||0)>10){p.lkD=S.t;for(const k in p.leak)p.leak[k]*=.85}/* 기억은 천천히 잊음 */
  let g=phaseG(p);if(g&&g.fl&&g.fl.flex)g=flexG(p,g);const t=S.t/60,crisis=p.life<=g.crisis,um={up:Math.round(g.upMax)};
  /* 🦩 대형 새 모으기는 2026-11-15 사용자 요청으로 없앰(모으는 동안 새·타워를 전혀 안 사서 1~2분씩 멈췄음) */
+ /* 🛡💸 안전 송출(알파고): 들어온 새가 safeT초 넘게 살아 있거나 판 safeY까지 오지 않았고, safeL초 동안 목숨을 안 잃었으면 '안전' → 남는 돈으로 새를 계속 보내 인컴을 올림 / 위험하면 여윳돈을 수비에 */
+ const sfOn=diff==='A'&&(g.safeK||0)>.1&&S.t>45,lk=p.rLk&&p.rLk.length?p.rLk[p.rLk.length-1]:-99,safe=sfOn&&S.t-lk>g.safeL&&!p.units.some(u=>u.owner!==p.id&&(S.t-u.t0>g.safeT||u.y>BH*g.safeY));if(sfOn)p.safe=safe;
  const tgtT=g.fl&&g.fl.flex?flexTgt(p,g)+(crisis?4:0):Math.min(capOf(),g.tw0+g.twRate*t+(crisis?5:0)),tgtI=g.inc0+g.incRate*t,nT=cnt(p.grid),need=need8(S.t)*g.def8;
  const act=()=>{
   const upOK=crisis||!MZ_TIER[diff]||p.mzFull||S.t>420;
@@ -585,11 +588,12 @@ function aiTick(p){if(p.cfg&&p.cfg.fl&&p.cfg.fl.tdem&&!p.tdem){p.tdem=1;/* 🦃 
   if(upOK&&S.t>150&&nT>=tgtT*.8&&Math.random()<(g.wrep||0)*.35&&wallSwap(p,g))return 1;/* 🧱→🏹 */
   if(upOK&&S.t>240&&p.gold>450&&Math.random()<(g.tswap||0)*.2&&towerSwap(p,g))return 1;/* ♻️ */
   if(nT<tgtT&&buildT(p,g,(!(g.fl&&g.fl.flex)||p.mzGo)&&Math.random()<g.wall*(p.mzFill?.15:p.mzThick?.35:1)))return 1;/* 꽉 채우기 배치는 벽 대신 타워 */
+  if(safe&&p.gold>(g.keep??600)*(1-g.safeK)+60&&buyU(p,g,true))return 1;/* 🛡💸 안전하면 여윳돈을 새로 */
   if(!crisis&&p.income<tgtI&&Math.random()<g.uShare&&buyU(p,g))return 1;
   if(upOK&&Math.random()<g.upAgg&&aiUp(p,um))return 1;
   {const wv=diff==='A'&&(g.wave||0)>.08&&!crisis&&S.t>90;/* 🌊 몰아 보내기: 인컴 wave×80초어치가 모이면 한꺼번에 송출, 돈이 keep 밑으로 내려가면 다시 모음 */
    if(wv){const thr=(g.keep??600)+p.income*20*g.wave*4;if(!p.wvOn&&p.gold>=thr)p.wvOn=1;if(p.wvOn){if(p.gold<(g.keep??600)+60)p.wvOn=0;else if(buyU(p,g,true))return 1}}
-   else if((S.t>g.rush||p.gold>(g.keep??600))&&buyU(p,g,true))return 1}
+   else if((S.t>g.rush||p.gold>(g.keep??600))&&!(sfOn&&!safe&&p.gold<(g.keep??600)*2)&&buyU(p,g,true))return 1}/* 위험할 땐 여윳돈을 수비용으로 남김 */
   if(nT<capOf()&&p.gold>800&&buildT(p,g,false))return 1;
   if(nT>=capOf()&&p.gold>600&&((g.wrep&&wallSwap(p,g))||(g.tswap&&towerSwap(p,g))))return 1;/* 판이 꽉 차면 벽·약한 타워를 바꿈 */
   return 0};
