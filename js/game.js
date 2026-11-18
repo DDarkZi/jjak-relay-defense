@@ -354,7 +354,7 @@ function fossilLand(p,u){const cs=[];for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x
   p.grid.forEach((row,ty)=>row.forEach((t,tx)=>{if(t&&t.bp.d&&Math.hypot(cellX(tx,ty)-u.x,cellY(ty)-u.y)<1.8)t.dis=Math.max(t.dis||0,2)}));
   if(p.id===view&&!S.sim){sfx('hatch',{to:'hatch_dino'});u.popT=S.t+.5;/* 1) 하늘의 돌 화석이 금 가며 깨짐 → 2) 내려온 칸에 뼈 화석 돌판 → 3) 그 위에서 깨어난 시조새 */if(PXS.has('nature/fossil-crack')){PXS.play('nature/fossil-crack',ax,BH-ay,.6,{fit:3})}else PXS.play('impacts/ground-slam',u.x,BH-u.y,0,{fit:3.6});artFx('smoke',{x:u.x,y:BH-u.y,r:1.8,col:0xd6c7a1});setTimeout(()=>artFx('hatch',{u}),500);if(p.id===0)toast('🦖 화석이 깨지고 시조새가 깨어났어요! · 주변 타워 2초 기절')}return}}
 function refreshPaths(p){p.units.forEach(u=>{if(u.bp.t!=='G')return;const c=nearCell(u.x,u.y),np=bfs(p.grid,c.x,c.y);if(np){u.path=np;u.pi=0}})}
-function toast(m){const e=$('toast');e.textContent=m;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2400)}
+function toast(m){const e=$('toast');let pos='b';try{pos=SV.toastPos||'b'}catch(e){}if(pos==='off'&&S&&!S.sim&&$('game').style.display!=='none'){e.style.display='none';return}/* 📢 알림: 아래(기본)·위·끄기 — 게임판 첫 줄을 가리지 않게 */e.className=pos==='t'?'top':'bot';e.textContent=m;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2400)}
 
 // 🌐 행동은 '누가(pid)' 하는지 받아요: 0번은 이 기기, 그 밖은 온라인 손님(방장이 대신 처리)
 const netG=()=>!!(S&&S.net==='guest'),say=(pid,m)=>{if(pid===0)toast(m);else if(typeof NET!=='undefined')NET.tell(pid,m)};
@@ -1071,7 +1071,7 @@ function lanePanel(dt){const box=$('lane');if(!box||!S)return;laneT+=dt;if(laneT
  $('lane').dataset.id=id}
 function laneFit(){const m=document.querySelector('main'),sd=document.querySelector('.side'),cv=$('lanec');if(!m||!sd||!cv||!cv.style)return;const avail=m.clientHeight-sd.offsetHeight-56;const h=Math.max(90,Math.min(210,avail));cv.style.height=h+'px';cv.height=h*2;cv.width=192}
 function ui(){const me=S.pl[0];
- $('tip').style.display=sel?'block':'none';if(sel)$('tip').textContent=`${sel.n} (${tcost(me,sel)}G) · 놓을 칸을 터치`;
+ if(!(infoTip.u>performance.now())){$('tip').className='tip bot';$('tip').style.display=sel?'block':'none';if(sel)$('tip').textContent=`${sel.n} (${tcost(me,sel)}G) · 놓을 칸을 터치`}
  const ib=$('ib');const pa=view===0?bfs(me.grid,COLS>>1,0):null;if(pa)st('pl',pa.length);st('df',Math.round(defPow(S.pl[0])/(27000*BAL.need)*100));
  pd.forEach(m=>rmM(m));pd=[];
  if(pa&&sel)pa.forEach((q,i)=>{if(i%2)return;const m=SP(.07,0x38bdf8,GL(0x38bdf8));m.scale.x=1/XK;m.position.set(cellX(q.x,q.y),BH-cellY(q.y),.1);Sc.add(m);pd.push(m)});
@@ -1092,12 +1092,17 @@ function ui(){const me=S.pl[0];
  else{const r=me.skCD>0;sk.className='skb'+(r?' off':' rdy');setH(sk,`<i>${s.c.ic}</i><b>${s.n}</b><small>${r?'⏳ '+Math.ceil(me.skCD)+'초':'▶ 발동!'}</small>`)}}
 function cdnUI(){const e=$('cdn');if(!S)return;const n=Math.ceil(S.cdn);if(n!==S.cdl){S.cdl=n;if(n>0)sfx('tick',{n});else{sfx('go');sfx('bgm_start')}}if(S.cdn>0){e.style.display='flex';setH(e,`<b>${Math.ceil(S.cdn)}</b><small>속성을 골라 두세요</small>`)}else if(e.style.display!=='none'){setH(e,'<b>🐦 시작!</b>');setTimeout(()=>{e.style.display='none'},700)}}
 function hud(){const me=S.pl[0];st('tm',fmt(S.t));st('gd',Math.floor(me.gold)+'G');st('ic',me.income);st('it',`(${Math.max(0,TICK-S.inc).toFixed(1)}s)`);
- st('lf',me.life);st('dm',S.dealt);}
+ st('lf',me.life);st('dm',S.dealt);{const low=me.alive&&me.life<=30&&!S.spec;const v=$('vig');if(v&&(v.style.display==='block')!==low)v.style.display=low?'block':'none';if(low&&!S.lowW){S.lowW=1;toast('🚨 목숨 30 이하! 수비를 보강하세요');haptic([90,60,90]);sfx('alarm',{mul:S.lm||1})}}}
 const tierOf=c=>c>=1000?'lg':c>=500?'ep':c>=250?'rr':'cm';
+/* 👆 길게 누르기: 타워 카드는 정보, 유닛 카드는 0.45초 뒤부터 0.15초마다 연속 전송(돈이 떨어지면 멈춤) */
+function lpBind(e,onLong,onRep){let t0=null,iv=null;const stop=()=>{clearTimeout(t0);clearInterval(iv);t0=iv=null};
+ e.addEventListener('pointerdown',()=>{stop();t0=setTimeout(()=>{e._lp=1;if(onLong){onLong();haptic(12)}if(onRep){if(onRep()===false)return stop();iv=setInterval(()=>{if(onRep()===false)stop()},150)}},450)});
+ ['pointerup','pointerleave','pointercancel'].forEach(k=>e.addEventListener(k,stop));e.addEventListener('contextmenu',ev=>ev.preventDefault())}
+function infoTip(t){const e=$('tip');const me=S&&S.pl[0];setH(e,`${t.ic} <b>${t.n}</b> · ${me?tcost(me,t):t.c}G${t.d?` · 공격 ${t.d}`:''}${t.r?` · 사거리 ${t.r}`:''}${t.cd&&t.d?` · ${(+t.cd).toFixed(1)}초마다`:''}${t.x?`<br><small>${t.x}</small>`:''}`);e.className='tip bot';e.style.display='block';infoTip.u=performance.now()+3200;clearTimeout(infoTip.t);infoTip.t=setTimeout(()=>{e.style.display='none';infoTip.u=0},3200)}
 function build(){T.forEach(t=>{const e=document.createElement('button');e.classList.add('tr-'+tierOf(t.c));e.innerHTML=`<i>${t.ic}</i><span>${t.race?RACE[t.race].ic:''}${t.n}</span><u>${t.c}G</u>`;
-  e.onclick=()=>{if(S&&banOf(S.pl[0],t))return toast(banMsg(S.pl[0],t));sel=sel===t?null:t;view=0;insp=null;ui()};$('shB').append(e);t.el=e});
+  e.onclick=()=>{if(e._lp){e._lp=0;return}if(S&&banOf(S.pl[0],t))return toast(banMsg(S.pl[0],t));sel=sel===t?null:t;view=0;insp=null;ui()};lpBind(e,()=>infoTip(t,1));$('shB').append(e);t.el=e});
  U.forEach(u=>{const e=document.createElement('button');e.classList.add('tr-'+tierOf(u.c));e.innerHTML=`<i>${u.ic}</i><span>${u.sn||u.n}</span><u>${u.c}G</u><s>+${u.inc}</s>`;
-  e.onclick=()=>{if(S&&banOf(S.pl[0],u))return toast(banMsg(S.pl[0],u));send(u);ui()};$('shU').append(e);u.el=e})}
+  e.onclick=()=>{if(e._lp){e._lp=0;return}if(S&&banOf(S.pl[0],u))return toast(banMsg(S.pl[0],u));send(u);ui()};lpBind(e,null,()=>{if(!S||over||(S&&banOf(S.pl[0],u)))return false;const g=S.pl[0].gold;send(u);ui();if(!netG()&&S.pl[0].gold>=g)return false;haptic(6);return true});$('shU').append(e);u.el=e})}
 build();
 $('t1').onclick=()=>{if(S&&S.pl[0].alive)view=0;ui();$('t1').className='on';$('t2').className='';$('shB').style.display='grid';$('shU').style.display='none'};
 $('t2').onclick=()=>{$('t2').className='on';$('t1').className='';$('shU').style.display='grid';$('shB').style.display='none'};
@@ -1105,11 +1110,16 @@ $('t2').onclick=()=>{$('t2').className='on';$('t1').className='';$('shU').style.
 let pmArm=0,WL=null;
 function haptic(ms){try{if(SV.vib!==0&&navigator.vibrate)navigator.vibrate(ms)}catch(e){}}
 function inGame(){return !!(S&&!S.sim&&$('game').style.display!=='none'&&!over)}
-function pmUI(){$('pm2').textContent=`👆 타워 2단계 설치: ${SV.two!==0?'켜짐':'꺼짐'}`;$('pmv').textContent=`📳 진동: ${SV.vib!==0?'켜짐':'꺼짐'}`;$('pmx').textContent='🚪 나가기';pmArm=0;$('pmn').textContent=S&&S.net?'🌐 온라인 대전은 멈추지 않아요 · 나가면 AI가 대신해요':'게임이 멈춰 있어요'}
+const VOLS=[1,.6,.3,0],vtx=v=>v>0?Math.round(v*100)+'%':'끔';
+function pmUI(){const V=SFX.vol||{s:1,b:1};$('pms').textContent=`🔊 효과음: ${vtx(V.s)}`;$('pmb').textContent=`🎵 배경음악: ${vtx(V.b)}`;$('pmt').textContent=`📢 알림 위치: ${({b:'아래',t:'위',off:'끄기'})[SV.toastPos||'b']}`;$('pm2').textContent=`👆 타워 2단계 설치: ${SV.two!==0?'켜짐':'꺼짐'}`;$('pmv').textContent=`📳 진동: ${SV.vib!==0?'켜짐':'꺼짐'}`;$('pmx').textContent='🚪 나가기';pmArm=0;$('pmn').textContent=S&&S.net?'🌐 온라인 대전은 멈추지 않아요 · 나가면 AI가 대신해요':'게임이 멈춰 있어요'}
 function pmOpen(){if(!inGame())return;if(!S.net){paused=true;$('pz').textContent='▶️'}pmUI();$('pm').style.display='flex'}
 function pmClose(){$('pm').style.display='none';pmArm=0;if(S&&!S.net&&$('dexm').style.display!=='flex'){paused=false;$('pz').textContent='⏸'}}
 $('pz').onclick=()=>{if($('pm').style.display==='flex')return pmClose();pmOpen()};
 $('pmc').onclick=pmClose;
+const vNext=v=>VOLS[(VOLS.findIndex(x=>Math.abs(x-v)<.01)+1)%VOLS.length];
+$('pms').onclick=()=>{const V=SFX.vol;SFX.setVol(vNext(V.s),V.b);pmUI();sfx('build',{tower:'egg'})};
+$('pmb').onclick=()=>{const V=SFX.vol;SFX.setVol(V.s,vNext(V.b));pmUI()};
+$('pmt').onclick=()=>{const o=['b','t','off'];SV.toastPos=o[(o.indexOf(SV.toastPos||'b')+1)%3];svSave();pmUI();if(SV.toastPos!=='off'){$('pm').style.zIndex=12;toast('📢 알림은 여기에 나와요')}};
 $('pm2').onclick=()=>{SV.two=SV.two!==0?0:1;svSave();pend=null;pmUI()};
 $('pmv').onclick=()=>{SV.vib=SV.vib!==0?0:1;svSave();pmUI();haptic(25)};
 $('pmx').onclick=()=>{if(!pmArm){pmArm=1;$('pmx').textContent='❗ 한 번 더 누르면 나가요 (이번 판은 사라져요)';return}$('pm').style.display='none';pmArm=0;paused=false;wlRel();$('home').onclick()};
@@ -1129,7 +1139,7 @@ $('home').onclick=()=>{try{wlRel()}catch(e){}if(S&&S.net&&typeof NET!=='undefine
 // 사용: SFX.play(name,args) · SFX.toggle() → true=음소거 · SFX.muted
 // 규칙: 로드 시점엔 AudioContext/DOM을 건드리지 않음(헤드리스 시뮬레이션 안전). 첫 play/터치 때 지연 생성.
 const SFX=(()=>{
-const KEY='jjj_sfx_muted',MV=.8,BGMV=.3;
+const KEY='jjj_sfx_muted',MV=.8,BGMV=.3;let VS=1,VB=1;try{const v=JSON.parse(localStorage.getItem('jjj_vol')||'null');if(v){VS=+v.s;VB=+v.b;if(!(VS>=0))VS=1;if(!(VB>=0))VB=1}}catch(e){}/* 🔊 효과음·🎵 배경음악 볼륨 따로(0~1) */
 let ac=null,master=null,comp=null,sfxBus=null,bgmBus=null,noiseBuf=null,W={},offline=false,hooked=false,synced=false;
 let muted=false;try{muted=localStorage.getItem(KEY)==='1'}catch(e){}
 const now=()=>{try{return performance.now()}catch(e){return Date.now()}};
@@ -1143,8 +1153,8 @@ function build(ctx){
  comp=ac.createDynamicsCompressor();
  try{comp.threshold.value=-12;comp.knee.value=6;comp.ratio.value=12;comp.attack.value=.002;comp.release.value=.15}catch(e){}
  master=ac.createGain();master.gain.value=(muted&&!offline)?0:MV;
- sfxBus=ac.createGain();sfxBus.gain.value=1;
- bgmBus=ac.createGain();bgmBus.gain.value=BGMV;
+ sfxBus=ac.createGain();sfxBus.gain.value=VS;
+ bgmBus=ac.createGain();bgmBus.gain.value=BGMV*VB;
  sfxBus.connect(comp);bgmBus.connect(comp);comp.connect(master);master.connect(ac.destination);
  // 노이즈 버퍼: 딱 한 번 만들고 모든 소리가 재사용(루프 + 랜덤 시작점)
  const n=Math.floor(ac.sampleRate);noiseBuf=ac.createBuffer(1,n,ac.sampleRate);
@@ -1421,7 +1431,7 @@ function bgmFill(until){let g=0;
   if(!muted||offline)bgmStep(BG.step,BG.next,d);BG.next+=d;BG.step=(BG.step+1)%128}}
 function bgmTick(){if(!ac||!BG.on)return;try{const ct=ac.currentTime;if(BG.next<ct)BG.next=ct+.05;
  let pz=false;try{pz=typeof paused!=='undefined'&&!!paused}catch(e){}
- const tg=pz?BGMV*.3:BGMV;if(Math.abs(bgmBus.gain.value-tg)>.01)bgmBus.gain.setTargetAtTime(tg,ct,.1);
+ const tg=(pz?BGMV*.3:BGMV)*VB;if(Math.abs(bgmBus.gain.value-tg)>.01)bgmBus.gain.setTargetAtTime(tg,ct,.1);
  bgmFill(ct+.15)}catch(e){}}
 function bgmStart(){bgmStop(true);BG.on=true;BG.step=0;BG.mul=1;BG.tr=0;const ct=ac.currentTime;
  bgmBus.gain.cancelScheduledValues(ct);bgmBus.gain.setValueAtTime(BGMV,ct);BG.next=ct+.1;
@@ -1448,6 +1458,8 @@ return {
    if(muted)setTimeout(()=>{if(muted&&ac)P(ac.suspend())},120);else resume()}else if(!muted)ensure()}catch(e){}
   return muted},
  get muted(){return muted},
+ get vol(){return{s:VS,b:VB}},
+ setVol(s,b){VS=s;VB=b;try{localStorage.setItem('jjj_vol',JSON.stringify({s,b}))}catch(e){}try{if(sfxBus)sfxBus.gain.value=s}catch(e){}},
  // 테스트용: OfflineAudioContext에 그래프를 붙여 렌더링(null이면 원상복구)
  _attach(ctx){bgmStop(true);last={};wins={};if(!ctx){ac=null;offline=false;return}offline=true;build(ctx)},
  _bgm(sec,mul){bgmStart();BG.mul=mul||1;bgmFill(sec)},
