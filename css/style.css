@@ -156,3 +156,149 @@ footer{background:linear-gradient(#1b1846,#0b0a24);border-top:2px solid #000}
 .tipb .card{background:#14123acc;border:2px solid #000;border-radius:16px;box-shadow:0 4px 0 #000}
 .tipb h3{font-family:"Black Han Sans",system-ui;font-weight:400;color:#fde047;text-shadow:0 2px 0 #000;font-size:19px}
 .tipb details summary{cursor:pointer}
+
+/* ===== 🧪 만화풍 샘플: 초상화 카드 상점 · 피해 숫자 · 격추 배너 ===== */
+.sh button.pic i img{width:44px;height:44px;object-fit:contain;display:block;margin:-4px auto -3px;filter:drop-shadow(0 2px 0 #0007)}
+.sh button.tr-cm{background:linear-gradient(#475569,#1e293b)}
+.sh button.tr-rr{background:linear-gradient(#2563eb,#1e3a8a);box-shadow:inset 0 0 0 2px #93c5fd,0 3px 0 #000}
+.sh button.tr-ep{background:linear-gradient(#9333ea,#4c1d95);box-shadow:inset 0 0 0 2px #e9d5ff,0 3px 0 #000}
+.sh button.tr-lg{background:linear-gradient(#f59e0b,#9a3412);box-shadow:inset 0 0 0 2px #fde68a,0 3px 0 #000,0 0 10px #f59e0b88}
+.sh button.tch{background:linear-gradient(#7c3aed,#3b0764)!important}
+.sh button.sel{background:linear-gradient(#059669,#064e3b)!important;box-shadow:0 0 0 3px #34d399,0 3px 0 #000!important}
+#dmgl{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+#dmgl b{position:absolute;opacity:0;font:400 15px "Black Han Sans",system-ui;color:#fff;letter-spacing:.5px;transform:translate(-50%,-50%);
+ text-shadow:-2px 0 #000,2px 0 #000,0 2px #000,0 -2px #000,0 3px 0 #000;white-space:nowrap}
+#dmgl b.c{color:#fde047;font-size:22px}
+#dmgl b.go{animation:dmgf .8s ease-out forwards}
+@keyframes dmgf{0%{opacity:1;transform:translate(-50%,-50%) scale(.5)}18%{opacity:1;transform:translate(-50%,-90%) scale(1.2)}100%{opacity:0;transform:translate(-50%,-230%) scale(1)}}
+#killb{position:absolute;left:50%;top:22%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none;z-index:5;opacity:0}
+#killb i{font-style:normal;font-size:40px;filter:drop-shadow(0 3px 0 #000)}
+#killb b{font:400 44px "Black Han Sans",system-ui;color:#fde047;text-shadow:-3px 0 #000,3px 0 #000,0 3px #000,0 -3px #000,0 6px 0 #000,0 0 24px #f59e0b}
+#killb small{margin-top:4px;background:#0b0a24e6;border:2px solid #000;border-radius:99px;padding:3px 12px;font-weight:800;font-size:13px;color:#fff}
+#killb.go{animation:killf 1.6s ease-out forwards}
+@keyframes killf{0%{opacity:0;transform:translate(-50%,-50%) scale(2.2)}12%{opacity:1;transform:translate(-50%,-50%) scale(.92)}20%{transform:translate(-50%,-50%) scale(1.05)}75%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-80%) scale(1)}}
+/* 움직임·등급 다듬기 */
+.sh button{position:relative}
+.sh button.pic i img{animation:picin .35s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes picin{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+.sh button.sel i img{animation:selbob .9s ease-in-out infinite}
+@keyframes selbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px) scale(1.06)}}
+.sh button.tr-ep::after,.sh button.tr-lg::after{position:absolute;top:-6px;left:-4px;font:400 9px "Black Han Sans",system-ui;color:#fff;padding:1px 5px;border:1.5px solid #000;border-radius:6px;transform:rotate(-8deg);box-shadow:0 2px 0 #000;pointer-events:none}
+.sh button.tr-ep::after{content:"영웅";background:#9333ea}
+.sh button.tr-lg::after{content:"전설";background:linear-gradient(#fbbf24,#d97706)}
+.sh{padding-top:9px}
+
+/* 🏁 게임 결과 표 */
+#end>div{width:min(370px,95vw)!important;max-height:94vh;overflow:auto;padding:16px 12px!important}
+#eres table{width:100%;border-collapse:separate;border-spacing:0 3px;font-size:11px;margin:8px 0 4px}
+#eres th{font-weight:700;color:#a5b4fc;font-size:10px;padding:0 2px}
+#eres td{background:#0b0a24cc;padding:5px 3px;text-align:center;white-space:nowrap;font-weight:700}
+#eres td:first-child{border-radius:8px 0 0 8px;font-size:14px}#eres td:last-child{border-radius:0 8px 8px 0}
+#eres td.nm{text-align:left;max-width:110px;overflow:hidden;text-overflow:ellipsis;font-weight:600;color:#e2e8f0}
+#eres tr.win td{background:linear-gradient(#78350f,#451a03);color:#fde047}
+#eres tr.me td{box-shadow:inset 0 2px 0 #34d399,inset 0 -2px 0 #34d399}#eres tr.me td:first-child{box-shadow:inset 2px 2px 0 #34d399,inset 0 -2px 0 #34d399}#eres tr.me td:last-child{box-shadow:inset -2px 2px 0 #34d399,inset 0 -2px 0 #34d399}
+
+
+/* 📘 튜토리얼 */
+#tut{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center;padding:16px 16px 34vh;background:#0006;pointer-events:auto}
+.tutc{width:min(360px,100%);background:#fffbeb;color:#1c1240;border:3px solid #000;border-radius:20px;box-shadow:0 6px 0 #000;padding:14px 16px 12px;text-align:center;font-family:Jua,sans-serif;animation:tutin .25s ease-out}
+.tutc b{display:block;font-family:'Black Han Sans',sans-serif;font-size:22px;margin:2px 0 4px}.tutc p{margin:0 0 10px;font-size:15px;line-height:1.5}.tutc p b{display:inline;font-size:15px;font-family:inherit;color:#7c3aed}
+.tuti{font-size:42px;line-height:1}.tutd{display:flex;gap:6px;justify-content:center;margin-bottom:10px}.tutd i{width:8px;height:8px;border-radius:50%;background:#d6d3d1}.tutd i.on{background:#7c3aed;width:20px;border-radius:99px}
+.tutb{display:flex;gap:8px}.tutb button{flex:1;padding:10px;border-radius:14px;border:2px solid #000;font-size:15px;font-weight:800}.tsk{background:#e7e5e4;color:#444}.tnx{background:#ffcf3a;color:#1c1240;box-shadow:0 3px 0 #000}
+.tuthl{position:relative;z-index:61!important;outline:4px solid #ffcf3a;outline-offset:2px;border-radius:12px;animation:tutpl 1s infinite}
+@keyframes tutpl{50%{outline-color:#ff7aa8}}@keyframes tutin{from{transform:translateY(20px);opacity:0}}
+.tutre{width:100%;margin:0 0 8px;padding:10px;border-radius:14px;border:2px solid #000;background:#ffcf3a;font-weight:800;font-size:15px}
+#tut.top{align-items:flex-start;padding-top:12vh}
+.tutrs{background:#fecaca;color:#7f1d1d}
+
+/* ✨ v11.8 화면 다듬기 (Impeccable 점검: 대비·줄바꿈·겹침·브라우저 기본 모양) */
+html{-webkit-tap-highlight-color:transparent}
+::selection{background:#7c3aed;color:#fff}
+*{scrollbar-width:thin;scrollbar-color:#7c3aed #1e1b4b}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:#1e1b4b}::-webkit-scrollbar-thumb{background:#7c3aed;border-radius:99px}
+#lmodet{display:flex;flex-direction:column;align-items:flex-start;line-height:1.1;white-space:nowrap}
+#lmodet .lmd{font:12px Jua,system-ui,sans-serif;color:#fde68a;margin-top:2px}
+.lname{top:calc(21% + 24px)}.lhint{top:calc(21% + 54px)}
+#again{color:#052e16!important;text-shadow:0 1px 0 #a7f3d0}
+.sh .tch s{color:#f5f3ff;font-size:10.5px}
+#md{color:#ede9fe}
+#eP,.rw small{color:#cbd5e1}
+.mcard small{white-space:normal;line-height:1.35}
+/* 🛒 v11.8 상점 아이콘 작게: 한 줄 7칸, 초상화 34px */
+.sh{grid-template-columns:repeat(7,1fr);gap:4px;padding:6px 6px 8px}
+.sh button{padding:3px 1px 3px;border-radius:10px;font-size:9.5px}
+.sh button.pic i img{width:34px;height:34px;margin:-2px auto -2px}
+.sh i{font-size:18px}
+.sh u{font-size:9.5px;padding:0 4px}
+
+/* 🚨 게임 이름: 새떼 주의보 (큰 제목) + 짹짹 디펜스 (빨간 띠) */
+.llogo .lk{display:block;font-size:34px;letter-spacing:1px}
+.llogo em{display:inline-block;font-style:normal;font-size:17px;color:#fff;background:#dc2626;border:3px solid #000;border-radius:10px;padding:2px 12px 0;margin-top:4px;text-shadow:0 2px 0 #000;box-shadow:0 3px 0 #000;transform:rotate(-2deg)}
+/* 📢 마스코트 AI: 로비 말풍선 · 튜토리얼 얼굴 · 광장 이름표 · 결과 한마디 */
+#aib{position:absolute;z-index:4;width:0;height:0}#title>#aib{z-index:4}
+#aib .aibtn{position:absolute;left:-34px;top:-40px;width:68px;height:72px;border:0;background:transparent;padding:0;cursor:pointer}
+#aib .aisp{position:absolute;right:-24px;bottom:40px;width:max-content;max-width:min(210px,58vw);background:#fff;color:#1a0f33;border:3px solid #1a0f33;border-radius:14px 14px 4px 14px;padding:6px 10px;font:600 13px/1.35 "Jua",system-ui,sans-serif;box-shadow:0 4px 0 #1a0f33}
+#aib .aisp:after{content:'';position:absolute;right:20px;bottom:-11px;border:6px solid transparent;border-top:8px solid #1a0f33}
+#aib .aisp.pop{animation:aipop .28s ease-out}
+@keyframes aipop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+.tuti{position:relative;display:inline-block}.tuti .tuai{width:76px;height:76px;object-fit:contain;filter:drop-shadow(0 3px 0 #0003)}.tuti i{position:absolute;right:-12px;bottom:-2px;font-size:26px;font-style:normal}
+.tusp{display:block;font-size:11px;color:#7c3aed;font-weight:800;margin:2px 0 -2px}
+.pn.ai{color:#fff;background:#dc2626;border:2px solid #000;border-radius:8px;padding:1px 6px;text-shadow:none}
+.aiend{display:flex;align-items:center;gap:8px;margin:8px auto 4px;max-width:340px;text-align:left}
+.aiend img{width:58px;height:58px;flex:none;filter:drop-shadow(0 2px 0 #0004)}
+.aiend p{margin:0;background:#fff;color:#1a0f33;border:3px solid #1a0f33;border-radius:14px 14px 14px 4px;padding:7px 10px;font:600 13px/1.35 "Jua",system-ui,sans-serif}
+/* 🚫 종족 규칙으로 못 쓰는 타워·새: 숨기지 않고 잠금 표시 */
+.sh button.rban{opacity:1;filter:none;background:#1f1d2e}
+.sh button.rban>*{opacity:.35;filter:grayscale(1)}
+.sh button.rban::after{content:'🚫 종족 제한';position:absolute;top:38%;left:50%;transform:translateX(-50%) rotate(-8deg);font:400 9px "Black Han Sans",system-ui;white-space:nowrap;color:#fff;background:#b91c1c;border:1.5px solid #000;border-radius:6px;padding:1px 4px;box-shadow:0 2px 0 #000;pointer-events:none}
+
+/* 🤖 온라인 방 AI 난이도 */
+.ndifw{margin:8px 0}.ndifw .row button{flex:1;min-width:0;font-size:11px;padding:6px 2px}.ndifw .row button:disabled{opacity:.55}.ndifw .row button.on{opacity:1}
+.rpick{margin-left:6px;padding:4px 10px;font-size:12px;border-radius:99px}#racem .mbox{max-height:92vh;overflow:auto}#racem .mhd .soon{font-size:12px;vertical-align:middle}
+/* 🪶 영웅 해금 */
+.hopt .hnote,.hopt .hbuy{grid-column:1/-1;font-size:12px;padding:6px 8px;border-radius:10px;background:#0006;text-align:center}.hopt .hbuy button{margin-left:6px;padding:4px 10px;font-size:12px}.hopt button.hlk{opacity:.6}.hopt button small{display:block;font-size:9px;color:#fde68a}
+
+/* 🛒 깃털 상점 */
+#shopc{cursor:pointer}.lplus{background:#fde047;color:#000;border-radius:50%;width:16px;height:16px;line-height:16px;font-size:12px;font-weight:900;text-align:center;margin-left:2px}
+.shopl{display:flex;flex-direction:column;gap:10px;margin:6px 0}
+.sitem{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#fff7d6,#ffe08a);color:#2a1a00;border:3px solid #000;border-radius:16px;padding:10px 12px;box-shadow:0 4px 0 #000}
+.sitem .sic{font-size:40px;line-height:1}.sitem .sin{flex:1;display:flex;flex-direction:column;gap:2px}.sitem .sin b{font-family:"Black Han Sans","Jua",sans-serif;font-weight:400;font-size:19px}
+.sitem .sin small{font-size:13px;color:#5b4300}.sitem .sin em{font-style:normal;font-weight:800;color:#b45309}
+.sitem button{background:#22c55e;color:#fff;border:3px solid #000;border-radius:12px;padding:8px 12px;font-family:"Black Han Sans","Jua",sans-serif;font-size:17px;box-shadow:0 3px 0 #000;white-space:nowrap}
+.sitem button:disabled{background:#94a3b8;color:#e2e8f0}.shopnote{font-size:12px;text-align:center;opacity:.8;margin:2px 0}
+
+/* 🐣 제작 영웅 */
+.hsec{grid-column:1/-1;font-family:"Black Han Sans","Jua",sans-serif;font-size:15px;color:#fde047;margin:6px 2px 0}.hsec small{font-family:system-ui,sans-serif;font-size:11px;color:#cbd5e1;margin-left:6px}
+.hopt .hcus{background:linear-gradient(135deg,#7c3aed,#db2777)!important;color:#fff}.hcred{grid-column:1/-1;font-size:12px;color:#f5d0fe;background:#0b0a24aa;border-radius:10px;padding:6px 8px}
+
+.sitem.smake{background:linear-gradient(135deg,#f5d0fe,#c4b5fd)}.slink{font-size:13px;color:#5b21b6;font-weight:800;margin-top:3px}
+.sagree{display:flex;gap:6px;align-items:flex-start;font-size:13px;font-weight:700;color:#3b0764;margin-top:4px}.sagree input{width:18px;height:18px;margin:0;flex:none}.sagree small{display:block;font-weight:500;color:#6b21a8}
+.sord{display:block;font-size:12px;color:#3b0764;background:#fff8;border-radius:8px;padding:4px 6px;margin-top:4px}
+#shopm .mbox{max-height:92vh;overflow:auto}
+
+/* 🏞 광장 코드·초대 */
+#pzn{display:flex;align-items:center;gap:6px;flex:1;min-width:0;flex-wrap:wrap}#pzn small{font-size:11px;opacity:.85}
+.pzc{background:#fde047;color:#000;border:2px solid #000;border-radius:8px;padding:1px 6px;font-size:12px}.pzc b{font:400 15px "Black Han Sans",system-ui;letter-spacing:1px}
+#pzn button{padding:3px 8px;font-size:12px;border-radius:8px}#pzinv{background:#22c55e;color:#fff}
+#dmgl b.t{color:#fff;font-size:17px;white-space:nowrap;-webkit-text-stroke:0}
+#dif{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}#dif button{margin:0!important}
+
+/* 🔒 닫힌 종족 모드 카드(시작 버튼 아래) */#raceb{margin-top:12px;width:100%}.mcard.off{opacity:.45;filter:grayscale(1);pointer-events:none}
+/* 📱 v15.9 폰 조작: 터치 영역 44px+, 확대·당겨서 새로고침 방지, 일시정지 메뉴 */
+html,body{overscroll-behavior:none}
+header button{min-width:44px;min-height:44px;font-size:18px;padding:2px 6px}
+.tabs button{min-height:46px}
+#pm{position:fixed;inset:0;background:#000000cc;display:none;align-items:center;justify-content:center;z-index:12}
+#pm>div{background:linear-gradient(#34307a,#14123a);border:3px solid #000;border-radius:22px;box-shadow:0 6px 0 #000;width:min(320px,90vw);padding:16px;text-align:center;display:flex;flex-direction:column;gap:10px}
+#pm .big{min-height:52px;font-size:20px;background:linear-gradient(#fde047,#f59e0b);color:#1c1917;border:3px solid #000;border-radius:14px;box-shadow:0 4px 0 #000;font-weight:800}
+#pm .pmb{min-height:48px;font-size:15px;border:2px solid #000;border-radius:12px;box-shadow:0 3px 0 #000;background:#2e2a6b}
+/* 📱 v16.0: 알림 위치(게임판 첫 줄을 안 가리게 아래가 기본, 오른쪽 미니맵 피해서 판 가운데), 길게 누르기 정보, 목숨 경고 */
+#toast,.tip.bot{left:calc(50% - 52px);max-width:calc(100% - 124px);white-space:normal;text-align:center;line-height:1.35}
+#toast.bot{top:auto;bottom:3px;opacity:.92}
+#toast.top{top:40px;bottom:auto}
+.tip.bot{top:auto;bottom:52px;z-index:6;padding:6px 12px;border-radius:12px;font-size:12.5px}
+.sh button{-webkit-touch-callout:none;touch-action:manipulation}
+#vig{position:absolute;inset:0;pointer-events:none;display:none;z-index:4;border:3px solid #ef4444cc;box-shadow:inset 0 0 46px 20px #ef4444b3;animation:vigp 1.2s ease-in-out infinite}
+@keyframes vigp{0%,100%{opacity:.55}50%{opacity:1}}
+@media (max-width:380px){.sh{grid-template-columns:repeat(6,1fr)!important}.sh button{font-size:10.5px}}
+
