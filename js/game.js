@@ -295,6 +295,7 @@ const AIP=(()=>{const by=n=>AIS.find(a=>a.n===n).g,B={...by('폭풍 전략가'),
  return L})();
 /* 🦃 알파고 오프닝(2026-11-19 사용자 요청 '오프닝 다양하게·3·4분 인컴 보고·속성도 다양하게'): 사람 학습 알파고 8종에 처음 3분 운영을 하나씩 나눠 줌. m 1 칠면조만 · 2 해적 1→칠면조 · 3 알 타워 철거→칠면조 · 4 가성비 새 2분 · 5 알 새총 2개+칠면조 · 6 해적갈매기만. 끝 조건 inc(인컴)·life(목숨)·t(초). 속성 t=[첫,둘째] 0화염1빙결2뇌전3폭풍4독 — 8종이 겹치지 않게 */
 const HUM_OP={'알파 사람 사냥꾼':{op:{m:6,inc:400,life:80,t:180},t:[0,1]},'알파 탐욕 사냥꾼':{op:{m:2,inc:400,life:80,t:180},t:[2,3]},'알파 응징자':{op:{m:3,inc:400,life:80,t:180},t:[4,0]},'알파 출구 수비대':{op:{m:5,inc:9e9,life:80,t:180},t:[1,2]},'알파 생존왕':{op:{m:1,inc:350,life:80,t:180},t:[3,4]},'알파 끝까지 버티기':{op:{m:4,inc:9e9,life:0,t:120},t:[1,3]},'알파 역습꾼':{op:{m:6,inc:500,life:85,t:180},t:[2,4]},'알파 사람 연구원':{op:{m:2,inc:500,life:80,t:180},t:[0,3]}};
+/* 🧹 v16.9 중복 알파 6종 정리(유전자가 다른 성향과 같거나 빙결+폭풍 몰림, 사용자 결정) */for(const n of ['알파 상황판단','알파 번개불꽃','알파 신예','알파 계산기','알파 속공','알파 미로술사']){const i=AIP.findIndex(a=>a.n===n);if(i>=0)AIP.splice(i,1)}
 AIP.forEach(a=>{const o=HUM_OP[a.n];if(o&&a.hum){a.fl={...(a.fl||{}),op:o.op};a.g.tech=o.t[0]+.5;a.g.tech2=o.t[1]+.5}});
 const OP_IDS={1:['turkey'],2:['turkey'],3:['turkey'],4:['turkey','penguin','duck'],5:['turkey'],6:['pirate']};
 function opBuyAll(p,ids){let n=0,k=0;for(let g=0;g<300;g++){const b=UB[ids[k%ids.length]];if(!b||!techOK(p,b)||p.gold<ucost(p,b)){k++;if(k>ids.length*2)break;continue}if(!buyOne(p,b))break;n++;if(ids.length>1)k++}return n}
@@ -526,7 +527,7 @@ const MZ_TIER={M:['whsnake'],H:['wvsnake','diag','comb'],X:['hsnake','hsnake2','
 function mzLen(cells,keepEgg){const g=Array.from({length:ROWS},()=>Array(COLS).fill(null));let n=0;if(keepEgg){g[8][3]=1;n=1}
  for(const [x,y] of cells){if(n>=BAL.cap)break;if(x<0||x>=COLS||y<1||y>=ROWS-1||g[y][x])continue;g[y][x]=1;if(!allOK(g)){g[y][x]=null;continue}n++}
  let s=0;for(let x=0;x<COLS;x++){const pa=bfs(g,x,0);s+=pa?pa.length:0}return s/COLS}
-function mazeOrder(p){if(p.mzo)return p.mzo;const L=MZ_TIER[diff];if(!L)return null;const k=p.mzK||(p.cfg&&p.cfg.fl&&p.cfg.fl.flex?FLEX_LAY[Math.floor(Math.random()*FLEX_LAY.length)]:L[Math.floor(Math.random()*L.length)]),mr=Math.random()<.5;p.mzK=k;
+function mazeOrder(p){if(p.mzo)return p.mzo;const L=MZ_TIER[diff];if(!L)return null;const k=p.mzK||(p.cfg&&p.cfg.fl&&p.cfg.fl.mzK&&MZ[p.cfg.fl.mzK]?p.cfg.fl.mzK:null)||(p.cfg&&p.cfg.fl&&p.cfg.fl.flex?FLEX_LAY[Math.floor(Math.random()*FLEX_LAY.length)]:L[Math.floor(Math.random()*L.length)]),mr=Math.random()<.5;p.mzK=k;
  let cells=MZ[k].f();if(mr)cells=cells.map(([x,y])=>[COLS-1-x,y]);
  const a=mzLen(cells,true),b=mzLen(cells,false);p.mzDem=b>a+1;if(MZ[k].fill){const cr=MZ[k].f().corr;let x8=3;if(mr)x8=COLS-1-3;p.mzDem=!!(cr&&cr.has((mr?COLS-1-3:3)+',8'))||p.mzDem;p.mzFill=1}/* 통로가 알 타워 자리를 지나면 철거 */if(MZ[k].thick)p.mzThick=1;p.mzName=MZ[k].n+(p.mzDem?' (알 타워 철거)':'');return p.mzo=cells}
 /* ☠️⚡ 독뇌전 배치법(fl.pzt): 길을 입구→출구 진행도 f로 나눠 독은 앞(f<.4)·파리지옥은 중간(.3~.65)·뇌전은 그 뒤(.45~.85)·과자는 앞~중간(<.6)을 덮는 칸을 고름 */
@@ -584,6 +585,7 @@ function buyU(p,g,dump){const n=nextAlive(p.id);if(n===null)return false;const h
  if(!b)return false;p.lastB=b;{const R=p.rec=p.rec||{};for(const k in R)R[k]*=.8;R[b.id]=(R[b.id]||0)+1}if(diff==='A'){const SP=p.spent=p.spent||{};SP[b.id]=(SP[b.id]||0)+ucost(p,b);p.spT=(p.spT||0)+ucost(p,b);p.atkT=Object.values(p.atk||{}).reduce((a,v)=>a+v,0)}p.gold-=ucost(p,b);if(S.st){S.st.us[b.id]=(S.st.us[b.id]||0)+ucost(p,b);S.st.un[b.id]=(S.st.un[b.id]||0)+1}p.income+=gainInc(p,b);{const cn=cntOf(b),eg=b.id==='egg_legs',eb=eg?Math.min(BAL.eggCap,(p.egg||0)*BAL.eggHp):0;if(eg)p.egg=(p.egg||0)+1;/* 🥚 AI 알도 보낼수록 체력 +1 */for(let k=0;k<cn;k++){const u=spawn(S.pl[n],b,p.id);if(eb&&u){u.hp+=eb;u.mh=u.hp;u.eb=eb}}}
  /* 🐝 벌새 떼 폭탄: 강타형 위주·광역 약한 상대면 한꺼번에 몰아 보내기 */if(b.swarm&&p.bomb){p.bomb=0;let ex=0;while(ex<2&&p.gold>=ucost(p,b)){ex++;p.gold-=ucost(p,b);if(S.st){S.st.us[b.id]+=ucost(p,b);S.st.un[b.id]++}p.income+=gainInc(p,b);const cn=cntOf(b);for(let k=0;k<cn;k++)spawn(S.pl[n],b,p.id)}if(ex&&n===0&&!S.sim)toast('🐝 벌새 떼 습격! 광역 타워로 막으세요')}
  return true}
+/* ⬆️ v16.9 업그레이드 제한(최대 레벨·미로 먼저)은 쉬움·일반만, 숙련·어려움·헬·알파고는 Lv4까지 언제든(사용자 결정) */function UPLIM(){return diff==='N'||diff==='M'||diff==='E'}
 function aiUp(p,c){/* ⬆️ 길을 가장 많이 덮는(값어치 좋은) 타워부터 올림 */const pa=bfs(p.grid,COLS>>1,0)||[];let bt=null,bv=-1;p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t&&t.bp.id!=='wall'&&t.d>0&&t.lv<Math.max(c.up,p.crSeen&&p.cfg&&p.cfg.crUp>.3?3:0)&&p.gold>=upc(t,p)){let v=(pathCov(p,t.r,x,y,pa)+1)*t.d/t.bp.cd/upc(t,p);if(p.crSeen&&S.t-p.crSeen<150&&p.cfg&&p.cfg.crUp&&t.lv<=2)v*=1+3*p.cfg.crUp;/* 🏗 두루미가 오면 2레벨 이하부터 3레벨로(못 옮김) */if(v>bv){bv=v;bt=t}}}));for(const t of bt?[bt]:[]){if(t&&t.bp.id!=='wall'&&p.gold>=upc(t,p)){const k=upc(t,p);p.gold-=k;t.lv++;t.d=Math.floor(t.d*1.6);t.r+=.25;t.inv+=k;if(S.st){S.st.ti[t.bp.id]=(S.st.ti[t.bp.id]||0)+k;S.st.up++}return true}}return false}
 function aiTick(p){if(diff==='A'&&p.cfg&&p.cfg.fl&&p.cfg.fl.op&&!p.opDone&&opTick(p))return;/* 🦃 알파고 오프닝 */if(p.cfg&&p.cfg.fl&&p.cfg.fl.tdem&&!p.tdem){p.tdem=1;/* 🦃 시작하자마자 처음 알 타워를 철거해 그 돈으로 칠면조부터 */const t0=p.grid[8]&&p.grid[8][3];if(t0&&t0.bp&&t0.bp.id==='egg'){p.gold+=Math.floor(t0.inv*refR(p));p.grid[8][3]=null;refreshPaths(p)}const TK_=UB.turkey;while(TK_&&p.gold>=ucost(p,TK_)&&nextAlive(p.id)!==null){const n=nextAlive(p.id);p.gold-=ucost(p,TK_);if(S.st){S.st.us.turkey=(S.st.us.turkey||0)+ucost(p,TK_);S.st.un.turkey=(S.st.un.turkey||0)+1}p.income+=gainInc(p,TK_);spawn(S.pl[n],TK_,p.id)}return}
  if(p.cfg&&p.cfg.fl&&p.cfg.fl.jug&&(S.t<600||p.jug)&&jugTick(p))return;/* 🔄 재배치 미로는 10분까지만 */if(p.tech2plan&&!p.tech2&&S.t>45&&p.gold>=TECH2C){p.gold-=TECH2C;p.tech2=p.tech2plan;return}
@@ -591,14 +593,14 @@ function aiTick(p){if(diff==='A'&&p.cfg&&p.cfg.fl&&p.cfg.fl.op&&!p.opDone&&opTic
  if(p.skU&&p.skCD<=0&&(p.units.length>=5||(p.life<40&&p.units.length>=2)))useSkill(p);
  {const m=Math.floor(S.t/60);if(!(p.mT||(p.mT=[]))[m]&&p.mT[m]!==0){p.mT[m]=cnt(p.grid);(p.mInc=p.mInc||[])[m]=p.income}}/* 📊 분별 타워 수·인컴 */
  if(p.leak&&S.t-(p.lkD||0)>10){p.lkD=S.t;for(const k in p.leak)p.leak[k]*=.85}/* 기억은 천천히 잊음 */
- let g=phaseG(p);if(g&&g.fl&&(g.fl.flex||g.fl.hstg))g=flexG(p,g);const t=S.t/60,crisis=p.life<=g.crisis,um={up:diff==='A'&&(g.up4||0)>.5?4:Math.round(g.upMax)};/* 🧬 up4(알파고): 4단계까지 올릴지 학습으로 */
+ let g=phaseG(p);if(g&&g.fl&&(g.fl.flex||g.fl.hstg))g=flexG(p,g);const t=S.t/60,crisis=p.life<=g.crisis,um={up:UPLIM()?((diff==='A'&&(g.up4||0)>.5)?4:Math.round(g.upMax)):4};/* 🧬 up4(알파고): 4단계까지 올릴지 학습으로 */
  /* 🦩 대형 새 모으기는 2026-11-15 사용자 요청으로 없앰(모으는 동안 새·타워를 전혀 안 사서 1~2분씩 멈췄음) */
  /* 🛡💸 안전 송출(알파고): 들어온 새가 safeT초 넘게 살아 있거나 판 safeY까지 오지 않았고, safeL초 동안 목숨을 안 잃었으면 '안전' → 남는 돈으로 새를 계속 보내 인컴을 올림 / 위험하면 여윳돈을 수비에 */
  const sfOn=diff==='A'&&(g.safeK||0)>.1&&S.t>45,lk=p.rLk&&p.rLk.length?p.rLk[p.rLk.length-1]:-99,safe=sfOn&&S.t-lk>g.safeL&&!p.units.some(u=>u.owner!==p.id&&(S.t-u.t0>g.safeT||u.y>BH*g.safeY));if(sfOn)p.safe=safe;
  const tgtT=g.fl&&g.fl.hstg?hstgTgt(p,g)+(crisis?4:0):g.fl&&g.fl.flex?flexTgt(p,g)+(crisis?4:0):Math.min(capOf(),g.tw0+g.twRate*t+(crisis?5:0)),tgtI=g.inc0+g.incRate*t,nT=cnt(p.grid),need=need8(S.t)*g.def8;
  const bu=dump=>{const g0=p.gold;if(!buyU(p,g,dump))return false;const b=p.lastB,A=diff==='A',bf=A?(DIFF.A.ball??(g.burstF||0)):0,k=bf>.05?200:A?Math.round(g.burst||1):1,fl=bf>=.99?0:Math.max(dump?0:(g.keep??600)*.5,g0*(1-bf));/* burstF 1 = 남는 돈 전부 *//* 👆 꾹 누르기 연속 전송: burst=마리 수, burstF=가진 돈의 이 비율까지 같은 새로(싼 알은 수십 마리, 사람 기록 알 최대 132·공작 28마리 연속) */for(let i=1;i<k&&b&&p.gold-ucost(p,b)>=fl&&buyOne(p,b);i++);return true};
  const act=()=>{
-  const upOK=crisis||!MZ_TIER[diff]||p.mzFull||S.t>420||(diff==='A'&&(g.upGate||0)>.05&&S.t>420*(1-g.upGate));/* 🧬 upGate(알파고): 미로 완성 전에도 업그레이드 시작 시각을 학습으로 */
+  const upOK=!UPLIM()||crisis||!MZ_TIER[diff]||p.mzFull||S.t>420||(diff==='A'&&(g.upGate||0)>.05&&S.t>420*(1-g.upGate));/* 🧬 upGate(알파고): 미로 완성 전에도 업그레이드 시작 시각을 학습으로 */
   if(p.gold>20000&&!crisis&&Math.random()<.7&&bu(true))return 1;/* 💰 돈이 넘치면 새 보내기부터 */
   if(p.crHit&&mzRepair(p,g))return 1;/* 🏗 미로 복구 */
   if(g.crUp&&p.crSeen&&S.t-p.crSeen<150&&Math.random()<g.crUp*.5&&aiUp(p,{up:Math.max(3,um.up)}))return 1;/* 🏗 두루미 대비 3레벨 *//* ⬆️ 미로를 다 쌓기 전엔 업그레이드 안 함(돈이 미로로 가게) */
