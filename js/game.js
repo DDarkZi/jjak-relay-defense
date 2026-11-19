@@ -423,9 +423,9 @@ function useSkill(p){const s=skillOf(p);if(!s||!p.skU||p.skCD>0)return false;s.f
 // ---------- AI: 전략 유전자 ----------
 const GK={tw0:[3,14],twRate:[0,4],inc0:[30,140],incRate:[0,60],uShare:[.2,1],uAir:[0,1],uHeavy:[0,1],uTier:[.2,1],uSpec:[0,1],wall:[0,.7],
  upAgg:[0,1],upMax:[2,4],def8:[.2,1.3],crisis:[20,70],rush:[150,900],keep:[100,800],tech:[0,4.999],tech2:[0,4.999],m_cx:[0,1],
- m_egg:[0,1],m_air:[0,1],big:[0,1],bigT:[240,720],m_acorn:[0,1],m_t1:[0,1],m_t2:[0,1],m_t3:[0,1],wrep:[0,1],tswap:[0,1],adapt:[0,1],sLead:[-.3,.3],sTrail:[-.3,.3],sLate:[-.3,.3],sDanger:[0,1],learnK:[0,1],lHi:[.05,.4],lLo:[0,.15],tScale:[.7,1.4],mzInc:[120,450],core:[3,6],crUp:[0,1],crFill:[0,1],openN:[0,4],wave:[0,0],atkK:[0,0],safeK:[0,1],safeT:[8,30],safeY:[.35,.85],safeL:[15,45],burst:[1,8],burstF:[0,1],hOpen:[3,6],hStep:[.1,.6],hT0:[30,300],hT:[240,1200]};/* wave·atkK: 사람 재생 봇 시험에서 오히려 약해져(28판 중 사람 우승 11→17) 꺼 둠(범위 0) *//* 🤖 알파고 난이도 전용(사람 기록 분석): wave=돈을 모아 한꺼번에 보내기(0이면 끔), atkK=내가 보낸 새 중 실제로 뚫은 종류를 더 사기 *//* 🎯 openN=초반 배치: 완성될 미로 길을 미리 계산해 길을 많이 덮는 설계도 칸에 공격 타워를 듬성듬성 먼저(그동안 벽 안 지음) *//* 🏗 철거반장 대응: crUp=두루미가 오면 미로 타워를 3레벨로(못 들게), crFill=흐트러진 미로를 복구 대신 빈칸 채우기 *//* 🔀 유동 수비(fl.flex) 유전자 *//* 🧠 2026-11-16 ② 상황별 전략(앞섬·뒤짐·후반·위험) ③ 새는 새 보고 배우기 *//* 🧠 2026-11-16: 벽→공격 타워 교체·약한 타워 철거 후 재건·들어오는 새 보고 타워 고르기 */
+ m_egg:[0,1],m_air:[0,1],big:[0,1],bigT:[240,720],m_acorn:[0,1],m_t1:[0,1],m_t2:[0,1],m_t3:[0,1],wrep:[0,1],tswap:[0,1],adapt:[0,1],sLead:[-.3,.3],sTrail:[-.3,.3],sLate:[-.3,.3],sDanger:[0,1],learnK:[0,1],lHi:[.05,.4],lLo:[0,.15],tScale:[.7,1.4],mzInc:[120,450],core:[3,6],crUp:[0,1],crFill:[0,1],openN:[0,4],wave:[0,0],atkK:[0,0],safeK:[0,1],safeT:[8,30],safeY:[.35,.85],safeL:[15,45],burst:[1,8],burstF:[0,1],upGate:[0,1],up4:[0,1],hOpen:[3,6],hStep:[.1,.6],hT0:[30,300],hT:[240,1200]};/* wave·atkK: 사람 재생 봇 시험에서 오히려 약해져(28판 중 사람 우승 11→17) 꺼 둠(범위 0) *//* 🤖 알파고 난이도 전용(사람 기록 분석): wave=돈을 모아 한꺼번에 보내기(0이면 끔), atkK=내가 보낸 새 중 실제로 뚫은 종류를 더 사기 *//* 🎯 openN=초반 배치: 완성될 미로 길을 미리 계산해 길을 많이 덮는 설계도 칸에 공격 타워를 듬성듬성 먼저(그동안 벽 안 지음) *//* 🏗 철거반장 대응: crUp=두루미가 오면 미로 타워를 3레벨로(못 들게), crFill=흐트러진 미로를 복구 대신 빈칸 채우기 *//* 🔀 유동 수비(fl.flex) 유전자 *//* 🧠 2026-11-16 ② 상황별 전략(앞섬·뒤짐·후반·위험) ③ 새는 새 보고 배우기 *//* 🧠 2026-11-16: 벽→공격 타워 교체·약한 타워 철거 후 재건·들어오는 새 보고 타워 고르기 */
 function randG(){const g={};for(const k in GK)g[k]=GK[k][0]+Math.random()*(GK[k][1]-GK[k][0]);return g}
-/* 새 유전자 중 처음 값이 가운데가 아니라 '안 씀'이어야 하는 것 */const GDEF={safeK:0,burst:1,burstF:0};
+/* 새 유전자 중 처음 값이 가운데가 아니라 '안 씀'이어야 하는 것 */const GDEF={safeK:0,burst:1,burstF:0,upGate:0,up4:0};
 function mutG(g,s){const o={};for(const k in GK){const[a,b]=GK[k];o[k]=Math.max(a,Math.min(b,(g[k]??GDEF[k]??(a+b)/2)+(Math.random()+Math.random()+Math.random()-1.5)*2*s*(b-a)))}return o}
 function crossG(a,b){const o={};for(const k in GK)o[k]=Math.random()<.5?a[k]:b[k];return o}
 const fx2=b=>(b.rapid?1.25:1)*(b.heavy?1.15:1)+(b.poison?.8:0)+(b.burn?.8:0)+(b.stun?.5:0)+(b.slow?.5:0)+(b.chain?b.chain*.25:0)+(b.freeze?.4:0)+(b.amp?.6:0)+(b.self?1:0)+(b.splash?.4:0)+(b.bubble?.6:0);
@@ -578,14 +578,14 @@ function aiTick(p){if(p.cfg&&p.cfg.fl&&p.cfg.fl.tdem&&!p.tdem){p.tdem=1;/* 🦃 
  if(p.skU&&p.skCD<=0&&(p.units.length>=5||(p.life<40&&p.units.length>=2)))useSkill(p);
  {const m=Math.floor(S.t/60);if(!(p.mT||(p.mT=[]))[m]&&p.mT[m]!==0){p.mT[m]=cnt(p.grid);(p.mInc=p.mInc||[])[m]=p.income}}/* 📊 분별 타워 수·인컴 */
  if(p.leak&&S.t-(p.lkD||0)>10){p.lkD=S.t;for(const k in p.leak)p.leak[k]*=.85}/* 기억은 천천히 잊음 */
- let g=phaseG(p);if(g&&g.fl&&(g.fl.flex||g.fl.hstg))g=flexG(p,g);const t=S.t/60,crisis=p.life<=g.crisis,um={up:Math.round(g.upMax)};
+ let g=phaseG(p);if(g&&g.fl&&(g.fl.flex||g.fl.hstg))g=flexG(p,g);const t=S.t/60,crisis=p.life<=g.crisis,um={up:diff==='A'&&(g.up4||0)>.5?4:Math.round(g.upMax)};/* 🧬 up4(알파고): 4단계까지 올릴지 학습으로 */
  /* 🦩 대형 새 모으기는 2026-11-15 사용자 요청으로 없앰(모으는 동안 새·타워를 전혀 안 사서 1~2분씩 멈췄음) */
  /* 🛡💸 안전 송출(알파고): 들어온 새가 safeT초 넘게 살아 있거나 판 safeY까지 오지 않았고, safeL초 동안 목숨을 안 잃었으면 '안전' → 남는 돈으로 새를 계속 보내 인컴을 올림 / 위험하면 여윳돈을 수비에 */
  const sfOn=diff==='A'&&(g.safeK||0)>.1&&S.t>45,lk=p.rLk&&p.rLk.length?p.rLk[p.rLk.length-1]:-99,safe=sfOn&&S.t-lk>g.safeL&&!p.units.some(u=>u.owner!==p.id&&(S.t-u.t0>g.safeT||u.y>BH*g.safeY));if(sfOn)p.safe=safe;
  const tgtT=g.fl&&g.fl.hstg?hstgTgt(p,g)+(crisis?4:0):g.fl&&g.fl.flex?flexTgt(p,g)+(crisis?4:0):Math.min(capOf(),g.tw0+g.twRate*t+(crisis?5:0)),tgtI=g.inc0+g.incRate*t,nT=cnt(p.grid),need=need8(S.t)*g.def8;
  const bu=dump=>{const g0=p.gold;if(!buyU(p,g,dump))return false;const b=p.lastB,A=diff==='A',bf=A?(DIFF.A.ball??(g.burstF||0)):0,k=bf>.05?200:A?Math.round(g.burst||1):1,fl=bf>=.99?0:Math.max(dump?0:(g.keep??600)*.5,g0*(1-bf));/* burstF 1 = 남는 돈 전부 *//* 👆 꾹 누르기 연속 전송: burst=마리 수, burstF=가진 돈의 이 비율까지 같은 새로(싼 알은 수십 마리, 사람 기록 알 최대 132·공작 28마리 연속) */for(let i=1;i<k&&b&&p.gold-ucost(p,b)>=fl&&buyOne(p,b);i++);return true};
  const act=()=>{
-  const upOK=crisis||!MZ_TIER[diff]||p.mzFull||S.t>420;
+  const upOK=crisis||!MZ_TIER[diff]||p.mzFull||S.t>420||(diff==='A'&&(g.upGate||0)>.05&&S.t>420*(1-g.upGate));/* 🧬 upGate(알파고): 미로 완성 전에도 업그레이드 시작 시각을 학습으로 */
   if(p.gold>20000&&!crisis&&Math.random()<.7&&bu(true))return 1;/* 💰 돈이 넘치면 새 보내기부터 */
   if(p.crHit&&mzRepair(p,g))return 1;/* 🏗 미로 복구 */
   if(g.crUp&&p.crSeen&&S.t-p.crSeen<150&&Math.random()<g.crUp*.5&&aiUp(p,{up:Math.max(3,um.up)}))return 1;/* 🏗 두루미 대비 3레벨 *//* ⬆️ 미로를 다 쌓기 전엔 업그레이드 안 함(돈이 미로로 가게) */

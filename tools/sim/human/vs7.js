@@ -18,7 +18,7 @@ const PAGE=`window.vs7=function(R7,dk,aSeat){R=R||__mk();Sc=Sc||__mk();Cam=Cam||
 (async()=>{const b=await chromium.launch();const jobs=[];for(let i=0;i<N;i++)jobs.push(i);const res=[];
  await Promise.all([0,1,2,3].map(async()=>{const pg=await b.newPage();pg.setDefaultTimeout(0);pg.on('pageerror',e=>console.log('ERR',String(e).slice(0,150)));await pg.route('**/three.min.js',r=>r.fulfill({body:STUB,contentType:'application/javascript'}));await pg.route('**/*.glb',r=>r.abort());await pg.route('**/fonts.googleapis.com/**',r=>r.fulfill({body:'',contentType:'text/css'}));
   await pg.goto('file://'+root+'/index.html');await pg.waitForTimeout(300);await pg.evaluate(PAGE);if(process.env.PATCH)await pg.evaluate(process.env.PATCH);
-  while(jobs.length){const i=jobs.shift();const R7=recs.slice().sort(()=>Math.random()-.5).slice(0,7);const r=await pg.evaluate(([R7,d,s])=>vs7(R7,d,s),[R7,D,1+i%7]);res.push(r)}}));
+  while(jobs.length){const i=jobs.shift();const sh=recs.slice().sort(()=>Math.random()-.5),R7=Array.from({length:7},(_,k)=>sh[k%sh.length]);/* 기록이 7판보다 적으면 돌려 씀 */const r=await pg.evaluate(([R7,d,s])=>vs7(R7,d,s),[R7,D,1+i%7]);res.push(r)}}));
  const m=a=>a.reduce((x,y)=>x+y,0)/a.length,cnt=[0,0,0,0,0,0,0,0];res.forEach(r=>cnt[r.rank-1]++);
  console.log('알파고 평균 등수',m(res.map(r=>r.rank)).toFixed(2),'(기대 4.5) · 우승',cnt[0]+'/'+res.length,'· 등수 분포',cnt.join(' '),'· 3분 인컴 평균',Math.round(m(res.map(r=>r.inc3))),'· 게임',(m(res.map(r=>r.t))/60).toFixed(1)+'분');
  const by={};res.forEach(r=>{(by[r.n]=by[r.n]||[]).push(r.rank)});Object.entries(by).forEach(([k,v])=>console.log(' ',k,v.length+'판',m(v).toFixed(2)+'등'));await b.close()})();
