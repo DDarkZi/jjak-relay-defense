@@ -39,6 +39,7 @@ async function cross(pg,a,b){return clampA(await pg.evaluate(([a,b])=>{const g=c
    pop=[pick[0]];for(const t of pick.slice(1)){pop.push(t);pop.push(await mutate(pages[0],await cross(pages[0],pick[0],t),.08))}while(pop.length<POP)pop.push(await mutate(pages[0],await cross(pages[0],pick[0],pick[1+pop.length%Math.max(1,pick.length-1)]||pick[0]),.15))}
   while(pop.length<POP)pop.push(await mutate(pages[0],pick[pop.length%pick.length],.25));
   if(process.env.UPG)pop.forEach((g,i)=>{if(i%2){g.upGate=Math.random();g.up4=Math.random()}});/* UPG=1: 업글 시작·4단계 탐색 */
+  if(process.env.EGG0)pop.forEach((g,i)=>{if(i%3){g.eggK=Math.random();g.slowK=Math.random()}});/* EGG0=1: 알 대응·감속 선호 탐색 */
   if(process.env.HSTG)pop.forEach((g,i)=>{if(i%3){g.fl={...(g.fl||{}),hstg:1};g.hOpen=3+Math.random()*3;g.hStep=.1+Math.random()*.5;g.hT0=30+Math.random()*270;g.hT=240+Math.random()*960}if(i%2)g.burst=1+Math.random()*7});/* HSTG=1: 사람형 단계 수비·꾹 누르기 탐색 */
   if(process.env.SAFE0)pop.forEach((g,i)=>{if(i%3)g.safeK=Math.random()});/* SAFE0=1: 시작 개체 2/3에 안전 송출 유전자를 무작위로 켜서 탐색 */st={gen:0,pop:pop.map(g=>{delete g.n;return clampA(g)}),hist:[],best:null,games:0,arch:process.env.ARCH||null}}
  if(process.env.VAL){/* 검증: 개체마다 실제 AI 풀하고만 VAL판 → 우승률·평균 점수 순위 */const N=+process.env.VAL,tasks=[];st.pop.forEach((c,ci)=>{for(let k=0;k<N;k++)tasks.push([ci,k%8])});const res=st.pop.map(()=>({s:0,n:0,w:0}));let ti=0;
