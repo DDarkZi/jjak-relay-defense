@@ -4,7 +4,7 @@ const {chromium}=require('playwright'),fs=require('fs'),path=require('path');con
 const [RF,N0,DK]=process.argv.slice(2),N=+N0||24,D=DK||'A';const recs=JSON.parse(fs.readFileSync(RF)).recs;
 const STUB="const __mk=()=>new Proxy(function(){},{get:(t,p)=>p===Symbol.toPrimitive?(()=>0):__mk(),apply:()=>__mk(),construct:()=>__mk(),set:()=>true});window.THREE=__mk();";
 const PAGE=`window.vs7=function(R7,dk,aSeat){window.__aSeat=aSeat;R=R||__mk();Sc=Sc||__mk();Cam=Cam||__mk();diff=dk;start();S.cdn=0;S.sim=true;
- const H=[];let k=0;S.pl.forEach((p,i)=>{if(i===aSeat){if(!p.cfg){/* 0번 자리는 원래 사람 → 알파고 성향 하나를 붙임 */const c=AIP.filter(a=>a.alpha&&a.hum)[Math.floor(Math.random()*8)]||AIP.find(a=>a.alpha);p.ai=true;p.cfg={...mutG(c.g,.07),tech:c.g.tech,tech2:c.g.tech2,fav:c.fav,pn:c.n,fl:c.fl};p.name=c.n;p.aiT=0}return}
+ const H=[];let k=0;S.pl.forEach((p,i)=>{if(i===aSeat){if(!p.cfg){/* 0번 자리는 원래 사람 → 알파고 성향 하나를 붙임 */const pool=window.__PICK?AIP.filter(window.__PICK):AIP.filter(a=>a.alpha&&a.hum);const c=pool[Math.floor(Math.random()*pool.length)]||AIP.find(a=>a.alpha);p.ai=true;p.cfg={...mutG(c.g,.07),tech:c.g.tech,tech2:c.g.tech2,fav:c.fav,pn:c.n,fl:c.fl};p.name=c.n;p.aiT=0}return}
   p.ai=false;p.cfg=null;H.push({p,q:R7[k++].ev.slice()})});
  const run=(p,e)=>{const id=p.id,a=e[1],g0=p.gold,lv=a==='u'&&p.grid[e[3]]&&p.grid[e[3]][e[2]]&&p.grid[e[3]][e[2]].lv;
   if(a==='b'){actBuild(id,e[2],e[3],e[4]);return!!p.grid[e[3]][e[2]]&&p.grid[e[3]][e[2]].bp.id===e[4]}
