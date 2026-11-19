@@ -299,14 +299,22 @@ const HUM_OP={'알파 사람 사냥꾼':{op:{m:6,inc:400,life:80,t:180},t:[0,1]}
 AIP.forEach(a=>{const o=HUM_OP[a.n];if(o&&a.hum){a.fl={...(a.fl||{}),op:o.op};a.g.tech=o.t[0]+.5;a.g.tech2=o.t[1]+.5}});
 const OP_IDS={1:['turkey'],2:['turkey'],3:['turkey'],4:['turkey','penguin','duck'],5:['turkey'],6:['pirate'],7:['turkey'],8:['egg_legs'],9:['pigeon','crow']};
 /* 🦃 v16.9 오프닝은 어려움·헬·알파고에서, 끝나는 인컴은 난이도별 배율(어려움 .75·헬 .9·알파고 1) */const OP_D={X:.75,Z:.9,A:1};
-/* 🧱 v16.9 어려움 이상 AI는 처음 3분 동안 벽을 wall0개(1~5, 학습)까지만 */function earlyWallCap(p,g){if(!OP_D[diff]||S.t>=180)return false;let n=0;for(const r of p.grid)for(const t of r)if(t&&t.bp&&t.bp.id==='wall')n++;return n>=Math.max(0,Math.min(5,Math.round(g.wall0??3)))}
+/* 🧱 v16.9 어려움 이상 AI는 처음 3분 동안 벽을 wall0개(1~5, 학습)까지만 */function earlyWallCap(p,g){if(!OP_D[diff]||S.t>=180||!(p.cfg&&p.cfg.fl&&p.cfg.fl.op))return false;/* 오프닝이 있는 알파고만(기존 AI 밸런스는 그대로) */let n=0;for(const r of p.grid)for(const t of r)if(t&&t.bp&&t.bp.id==='wall')n++;return n>=Math.max(0,Math.min(5,Math.round(g.wall0??3)))}
 function opBuyAll(p,ids){let n=0,k=0;for(let g=0;g<300;g++){const b=UB[ids[k%ids.length]];if(!b||!techOK(p,b)||p.gold<ucost(p,b)){k++;if(k>ids.length*2)break;continue}if(!buyOne(p,b))break;n++;if(ids.length>1)k++}return n}
 /* 오프닝 중이면 true(그동안 다른 판단 안 함), 끝나면 p.opDone */
-function opTick(p){const o=p.cfg.fl.op,M=o.m;if(S.t>=o.t||p.life<=o.life||p.income>=o.inc*(OP_D[diff]||1)){p.opDone=1;return false}
+/* 🛡 수비 오프닝(m7): 공격 타워 n개 + 벽 w개를 비용 상한(cap, 기본 200G) 안에서, 매 틱 모자란 만큼 다시 시도. 전봇대는 이웃 칸에 이어 지음 */
+function opDef(p,o){if(MZ_TIER[diff])mazeOrder(p);const tt=o.tt==='T1'&&p.tech&&TECH[p.tech]?TECH[p.tech].t[0]:(o.tt||'egg'),b=TB[tt],cap=o.cap??200;p.opSp=p.opSp||0;p.opTw=p.opTw||0;p.opWl=p.opWl||0;
+ const tryB=(x,y,id)=>{if(y<=0||y>=ROWS-1||x<0||x>=COLS||p.grid[y][x])return false;const g0=p.gold;actBuild(p.id,x,y,id);if(p.grid[y][x]){p.opSp+=g0-p.gold;return true}return false};
+ if(b&&p.opTw<(o.n??2)&&p.opSp+tcost(p,b)<=cap){let ok=false;if(b.pylon&&p.opTw>0){const own=[];p.grid.forEach((r,y)=>r.forEach((t,x)=>{if(t&&t.bp&&t.bp.pylon)own.push([x,y])}));const mo=new Set(((MZ_TIER[diff]&&p.mzo)||[]).map(([x,y])=>x+','+y));const pa=bfs(p.grid,COLS>>1,0)||[];const C=[];for(const[x,y]of own)for(const[dx,dy]of NBR[y&1]){const nx=x+dx,ny=y+dy;if(!mo.size||mo.has(nx+','+ny))C.push([nx,ny,pathCov(p,b.r+1,nx,ny,pa)])}C.sort((a,c)=>c[2]-a[2]);for(const[x,y]of C)if(tryB(x,y,tt)){ok=true;break}}
+  if(!ok)for(const[x,y]of ((MZ_TIER[diff]&&openPicks(p))||[]))if(tryB(x,y,tt)){ok=true;break}if(ok)p.opTw++}
+ if(p.opWl<(o.w??0)&&p.opSp+tcost(p,TB.wall)<=cap+60){for(const[x,y]of ((MZ_TIER[diff]&&p.mzo)||[])){if(p.grid[y][x])continue;p.grid[y][x]={};const ok=allOK(p.grid);p.grid[y][x]=null;if(ok&&tryB(x,y,'wall')){p.opWl++;break}}}
+ return p.opTw<(o.n??2)&&b&&p.gold<tcost(p,b)&&p.opSp+tcost(p,b)<=cap}/* true = 타워 살 돈을 모으는 중 */
+function opTick(p){const o=p.cfg.fl.op,M=o.m;if(p.opJ===undefined)p.opJ=(Math.random()-.5)*40;/* 끝나는 시각 ±20초 엇갈림 */if(S.t>=o.t+p.opJ||p.life<=o.life||p.income>=o.inc*(OP_D[diff]||1)){p.opDone=1;return false}
+ if(p.tech2plan&&!p.tech2&&S.t>45&&p.gold>=TECH2C){p.gold-=TECH2C;p.tech2=p.tech2plan}/* 오프닝 중에도 둘째 속성은 삼 */
+ if(M===7&&opDef(p,o))return true;
  if(!p.opS){p.opS=1;if(M===3){const t0=p.grid[8]&&p.grid[8][3];if(t0&&t0.bp&&t0.bp.id==='egg'){p.gold+=Math.floor(t0.inv*refR(p));p.grid[8][3]=null;refreshPaths(p)}}
   if(M===2)opBuyAll(p,['pirate']);
-  if(M===7){/* 🛡 수비 오프닝: 공격 타워 o.n개(설계도에서 길을 많이 덮는 칸) + 벽 o.w개(1~5) 먼저, 나머지 돈은 새로 */const tt=o.tt==='T1'&&p.tech&&TECH[p.tech]?TECH[p.tech].t[0]:(o.tt||'egg');if(MZ_TIER[diff])mazeOrder(p);const P=(MZ_TIER[diff]&&openPicks(p))||[];let k=0;for(const [x,y] of P){if(k>=(o.n||2))break;if(p.grid[y][x])continue;actBuild(p.id,x,y,tt);if(p.grid[y][x])k++}
-   const mo=(MZ_TIER[diff]&&mazeOrder(p))||[];let w=0;for(const [x,y] of mo){if(w>=(o.w||2))break;if(p.grid[y][x])continue;p.grid[y][x]={};const ok=allOK(p.grid);p.grid[y][x]=null;if(!ok)continue;actBuild(p.id,x,y,'wall');if(p.grid[y][x])w++}}
+
   if(M===5){let k=0;for(const [x,y] of [[2,12],[4,12],[3,11],[1,11],[5,11],[3,13]]){if(k>=2)break;if(p.grid[y][x])continue;p.grid[y][x]={};const ok=allOK(p.grid);p.grid[y][x]=null;if(!ok)continue;actBuild(p.id,x,y,'egg');if(p.grid[y][x])k++}}}
  opBuyAll(p,o.ids||OP_IDS[M]);return true}
 
