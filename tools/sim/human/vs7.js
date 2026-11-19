@@ -13,7 +13,7 @@ const PAGE=`window.vs7=function(R7,dk,aSeat){R=R||__mk();Sc=Sc||__mk();Cam=Cam||
   if(a==='s'){actSend(id,e[2]);return p.gold<g0||!UB[e[2]]}
   if(a==='t'){actTech(id,e[2]);return p.tech===e[2]||p.tech2===e[2]}
   if(a==='ku'||a==='k'){actSkill(id);return true}return true};
- while(!over&&S.t<1800){step(.05);for(const h of H){if(!h.p.alive)continue;let n=0;while(h.q.length&&h.q[0][0]<=S.t&&n<40){if(run(h.p,h.q[0])){h.q.shift();n++}else{if(S.t-h.q[0][0]>90)h.q.shift();break}}}}
+ while(!over&&S.t<1800){step(.05);for(const h of H){if(!h.p.alive)continue;let n=0;while(h.q.length&&h.q[0][0]<=S.t&&n<40){let ok;try{ok=run(h.p,h.q[0])}catch(e){ok=true}/* 그 자리에서 못 하는 행동(전용 새 등)은 건너뜀 */if(ok){h.q.shift();n++}else{if(S.t-h.q[0][0]>90)h.q.shift();break}}}}
  const A=S.pl[aSeat],L=S.pl.slice().sort((a,b)=>(b.alive-a.alive)||((b.dieT||1e9)-(a.dieT||1e9)));return{rank:L.indexOf(A)+1,n:A.cfg&&A.cfg.pn||A.name,t:Math.round(S.t),inc3:(A.mInc||[])[3]||0}}`;
 (async()=>{const b=await chromium.launch();const jobs=[];for(let i=0;i<N;i++)jobs.push(i);const res=[];
  await Promise.all([0,1,2,3].map(async()=>{const pg=await b.newPage();pg.setDefaultTimeout(0);pg.on('pageerror',e=>console.log('ERR',String(e).slice(0,150)));await pg.route('**/three.min.js',r=>r.fulfill({body:STUB,contentType:'application/javascript'}));await pg.route('**/*.glb',r=>r.abort());await pg.route('**/fonts.googleapis.com/**',r=>r.fulfill({body:'',contentType:'text/css'}));
