@@ -2018,7 +2018,7 @@ const ART=(()=>{
     [[-.3,-.3,.9],[.3,.1,.95],[0,-.5,.85]].forEach(([x,y,z])=>Su(x,y,z,.02,0xffffff,1))},
    // 눈사람 갈매기: 단추 + 목도리 + 양동이 모자
    blizgull(){[.12,.03,-.06].forEach(dz=>Su(0,fy(0,z0+dz)+.01,z0+dz,.025,0x1f2937));/* 목도리는 PROP.scarf(v17.9) */
-    Y(0,hy,zt+.03,.1,.1,UP,0x6b7280);T(0,hy,zt+.08,.1,.015,O,0x4b5563)},
+    /* 양동이 모자는 PROP.bucket(v18.2) */},
    // 냉동 펭귄단: 고드름 볏 + 얼음 조각
    frostpeng(){[-1,0,1].forEach(i=>K(i*.05,hy,zt,.03,.14-Math.abs(i)*.03,[PI/2,0,i*.3],0x7dd3fc));sides(s=>Bx(s*.25,-.05,.55,.09,.09,.09,[.3,.4,.2],0xddd6fe));
     T(0,-.03,.6,.165,.04,O,0x7c3aed);[[.07,-.26,.42,.022],[.1,-.25,.33,.016]].forEach(([x,y,z,r])=>Su(x,y,z,r,0xa3e635,1));Bx(0,hy-.02,zt+.04,.16,.16,.07,O,0xdbeafe)},
@@ -2182,6 +2182,13 @@ const ART=(()=>{
    const h=new THREE.Mesh(gk('prop_mug_h',()=>new THREE.TorusGeometry(.045,.014,8,14,PI*1.3)),M1.material);h.rotation.set(PI/2,0,-PI*.65);h.position.set(-.085,0,.08);g.add(h);
    const cf=new THREE.Mesh(gk('prop_mug_cf',()=>new THREE.CircleGeometry(.074,16)),mat('prop_hat_'+0x3b1d0a,()=>std(0x3b1d0a,{flatShading:false})));cf.position.z=.135;g.add(cf);
    [0,1,2].forEach(i=>{const p=new THREE.Mesh(gk('hlS',()=>new THREE.SphereGeometry(1,10,6)),mat('prop_steam',()=>std(0xffffff,{flatShading:false,transparent:true,opacity:.75,emissive:0xffffff,emissiveIntensity:.3})));p.scale.setScalar(.02+i*.006);p.position.set((i-1)*.025,0,.18+i*.05);g.add(p)});return this._fin(g)},
+  /* 🪣 양동이 모자(눈사람 갈매기): 위가 넓은 함석 통 + 테두리 + 손잡이 고리, 외곽선. 원점=통 바닥(머리 꼭대기) */
+  bucket(){const g=new THREE.Group(),bm=mat('prop_bucket',()=>std(0x9ca3af,{flatShading:false,metalness:.2,roughness:.35,emissive:0x334155,emissiveIntensity:.12}));
+   const B=new THREE.Mesh(gk('prop_bkt',()=>{const q=new THREE.LatheGeometry([[0,0],[.082,0],[.084,.004],[.104,.13],[.096,.13],[.077,.012],[0,.012]].map(([a,b])=>new THREE.Vector2(a,b)),18);q.rotateX(PI/2);return q}),bm);g.add(B);this._ol(g,B,1.1,1.1,1.05);
+   const rim=new THREE.Mesh(gk('prop_bkt_rim',()=>new THREE.TorusGeometry(.104,.012,6,20)),mat('prop_hat_'+0x4b5563,()=>std(0x4b5563,{flatShading:false})));rim.position.z=.13;g.add(rim);
+   [.045,.09].forEach(z=>{const r=new THREE.Mesh(gk('prop_bkt_rb'+z,()=>new THREE.TorusGeometry(.088+z*.12,.006,5,20)),rim.material);r.position.z=z;g.add(r)});
+   const h=new THREE.Mesh(gk('prop_bkt_h',()=>new THREE.TorusGeometry(.1,.008,6,16,PI)),rim.material);h.rotation.set(PI/2,0,0);h.position.z=.13;h.rotation.y=.5;g.add(h);
+   return this._fin(g)},
   cocktail(drink){const g=new THREE.Group(),glass=mat('prop_glass',()=>std(0xe0f2fe,{flatShading:false,roughness:.15,transparent:true,opacity:.6,depthWrite:false}));
    const G1=new THREE.Mesh(gk('prop_ck_g',()=>{const q=new THREE.LatheGeometry([[0,0],[.045,0],[.045,.008],[.008,.014],[.008,.07],[.075,.16],[.07,.16],[.005,.08],[0,.08]].map(([a,b])=>new THREE.Vector2(a,b)),18);q.rotateX(PI/2);return q}),glass);g.add(G1);this._ol(g,G1,1.1,1.1,1.04);
    const D=new THREE.Mesh(gk('prop_ck_d',()=>{const q=new THREE.ConeGeometry(.064,.07,16,1);q.rotateX(-PI/2);q.translate(0,0,.12);return q}),mat('prop_hat_'+drink,()=>std(drink,{flatShading:false,emissive:drink,emissiveIntensity:.25})));D.rotation.x=PI;D.position.z=.27;g.add(D);
@@ -2229,6 +2236,7 @@ const ART=(()=>{
    if(id==='voltbat'){put(PROP.battery(),'propBat',0,.08,z0+.22);[-1,1].forEach(s=>put(PROP.ear(0x365314,0xf9a8d4),'propEar',s*.1,H.hy+.02,H.hz+H.hr-.07,1,[0,s*.3,0]))}
    if(id==='crow'){const tp=wingTip(m,1);if(tp){const q=PROP.shuriken();q.name='propShu';q.scale.setScalar(1.8);q.position.set(tp.x,-.02,.05);q.rotation.set(0,0,.4);tp.P.add(q)}}
    if(id==='owl')put(PROP.mug(),'propMug',-.22,-.37,z0-.155,1.05);
+   if(id==='blizgull')put(PROP.bucket(),'propBucket',0,H.hy,H.hz+H.hr+.1,1,[PI+.15,-.12,0])/* 눈사람처럼 거꾸로 씀 */;
    if(id==='flamingo')put(PROP.cocktail(0x84cc16),'propCk',.29,-.06,z0-.07,1.4)}
   /* 🧣🎩 v17.9: 목도리(목 소켓)·우체부 모자·실크햇 */
   if(id==='penguin'){const q=PROP.scarf(0xdc2626,0xffffff,.165);q.name='propScarf';q.position.set(0,-.03,.6);m.add(q)}
