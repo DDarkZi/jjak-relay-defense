@@ -177,3 +177,4 @@
 ## 🆕 이후 기록
 - 📒 **CLAUDE.md 다이어트**(2026-11-20 사용자 '수첩정리!'): 110KB → 핵심 규칙만 남긴 수첩으로. 옛 전문은 이 파일 위쪽에 그대로. 앞으로 변경 기록은 여기 '이후 기록'에 한 줄씩.
 - 🏍 **폭주 로드러너 디자인 시안**(2026-11-20, 아직 게임 U에는 없음): Gemini 그림 기준 PROP helmet(캔버스 불꽃·흰 줄·꼰 머리띠)·pomp(리젠트 볏)·shield(주황 거울 선글라스)·jacket(흰 특공복+금 테·자락)·streamer(목도리 띠)·exhaust(배기관+불꽃, sync3 깜빡 userData.flames)·neon(분홍·보라 언더글로우 맥박)·whirl(프로펠러 다리, sync3 회전 userData.whirl) + goggles(지금 안 씀). 몸 BODYS·LIFT·HEADX·NECK·bk·D.roadrunner. 렌더 시안은 views.js에 U 항목을 주입해서 봄.
+- 🏍 **폭주 로드러너 시안 4차**(2026-11-20 디자인 팀 C 회의: 몸통 작게·흰 특공복(한자 없음, 3:1)·헬멧 1.2배·볏 좁게·허접 바퀴): 몸 BODYS [.66,1.26,.64]·머리 hr .16·날개 없앰 · PROP wheel(r)(타이어·은 휠·바큇살·튀어나온 볼트, 축 어긋남) → sync3 userData.wheel: 양쪽 속도 1:1.13 엇박자·1.5초마다 0.2초 멈칫·멈칫할 때 몸 꾸벅 · jacket 자락 2장(빨간 안감·금 띠) userData.flap 펄럭 · streamer 길이 1.5배 userData.str 흔들림 · 헬멧 위 goggles · 네온 약하게. 애니는 views 복제 수식으로만 확인(실제 게임 화면 미확인).
