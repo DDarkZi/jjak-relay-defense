@@ -1806,13 +1806,13 @@ const ART=(()=>{
    // 과자도둑 해적: 금귀걸이 + 훔친 과자 봉지
    // 북극해적갈매기(2026-11-16 재디자인, 사용자 제미나이 그림 기준 → 목도리 빼고 둥근 모자·큰 칼로 수정): 둥근 해적 모자(금테+물고기 뼈)·안대·허리띠(해골 버클+금화 주머니)·큰 해적 칼·휜 부리
    pirate(){const NV=0x1e2a4a,GD=0xeab308,WH=0xf8fafc,BKc=0x111827,hb=zt-.03;belly(0x8b7563,.85);
-    /* 모자(둥근 해적 모자): 둥근 머리통 + 넓은 둥근 챙 + 금테 + 금띠 */Hm(0,hy+.01,hb-.03,.14,UP,NV);Y(0,hy+.01,hb,.25,.02,UP,NV);T(0,hy+.01,hb+.002,.25,.01,O,GD);T(0,hy+.01,hb+.016,.138,.011,O,GD);
-    /* 물고기 뼈 문양(모자 앞면) */Bx(0,hy-.112,hb+.045,.13,.008,.012,[.55,0,0],WH);[-.03,0,.03].forEach((x,i)=>Bx(x,hy-.112,hb+.045,.011,.008,.04-i*.007,[.55,0,0],WH));Su(-.075,hy-.112,hb+.045,.018,WH);Su(-.081,hy-.124,hb+.049,.006,BKc);K(.075,hy-.112,hb+.045,.018,.03,[0,0,PI/2],WH);
+    /* 모자(둥근 해적 모자): 둥근 머리통 + 넓은 둥근 챙 + 금테 + 금띠 — v17.1 .85배·뒤로 .045(얼굴이 보이게) */Hm(0,hy+.055,hb-.03,.12,UP,NV);Y(0,hy+.055,hb,.21,.02,UP,NV);T(0,hy+.055,hb+.002,.21,.01,O,GD);T(0,hy+.055,hb+.016,.118,.011,O,GD);
+    /* 물고기 뼈 문양(모자 앞면) */Bx(0,hy-.05,hb+.04,.11,.008,.011,[.55,0,0],WH);[-.026,0,.026].forEach((x,i)=>Bx(x,hy-.05,hb+.04,.01,.008,.034-i*.006,[.55,0,0],WH));Su(-.064,hy-.05,hb+.04,.016,WH);Su(-.069,hy-.06,hb+.044,.005,BKc);K(.064,hy-.05,hb+.04,.016,.026,[0,0,PI/2],WH);
     /* 안대 + 끈 */S(.088,hy-.128,hz+.06,.052,.02,.046,BKc,0,[0,0,.6]);T(0,hy,hz+.075,hr*1.015,.009,[0,.18,0],BKc);
     /* 휜 부리 끝 */S(0,hy-hr-.105,hz-.058,.022,.032,.032,0x1f2937);
     /* 허리띠 + 해골 버클 + 금화 주머니 */T(0,.02,z0,.262,.026,UP,0x7c4a1e);Su(0,.02,z0+.275,.05,0xf1f5f9);sides(s=>Su(s*.02,-.022,z0+.288,.011,BKc));
     S(.15,.02,z0+.225,.05,.05,.055,0xd6b98a);Y(.15,.02,z0+.275,.02,.014,O,0x7c4a1e);[[.135,.005,.287],[.16,.03,.29],[.15,.015,.305]].forEach(([x,y,z])=>S(x,y,z0+z,.02,.02,.008,0xfacc15));
-    /* 🗡 해적 칼(오른쪽 날개에 치켜듦): 넓은 휜 칼날 + 금 손잡이 가드 + 나무 손잡이 */Bx(.31,-.23,z0+.38,.026,.11,.6,[-.55,0,.15],0xcbd5e1);Bx(.31,-.235,z0+.38,.03,.02,.56,[-.55,0,.15],0x94a3b8);Bx(.31,-.04,z0+.1,.03,.22,.035,[-.55,0,.15],0xeab308);Bx(.31,.015,z0+.02,.036,.036,.13,[-.55,0,.15],0x92400e);Su(.31,.045,z0-.04,.032,0xeab308)},
+    /* 🗡 해적 칼은 v17.1부터 소품 상자 PROP.sword로 만들어 오른 날개 끝에 붙임(날개와 같이 퍼덕임) */},
    // 꽥꽥 오리: 밤색 가슴 + 말린 꼬리 + 반짝 머리
    duck(){S(0,-.14,z0+.04,.21,.18,.18,0x7c2d12);K(0,.36,z0+.12,.03,.1,[-.9,0,0],0x111827);K(0,.39,z0+.17,.02,.07,[.6,0,0],0x111827);
     S(0,.02,z0-.05,.36,.42,.09,0xffffff);for(let i=0;i<4;i++){const a=i*PI/2+PI/4;S(Math.cos(a)*.34,Math.sin(a)*.4,z0-.05,.11,.11,.095,0xef4444,0,[0,0,a])}
@@ -2029,6 +2029,19 @@ const ART=(()=>{
     else if(k[0]==='w'){q.rotation.x=Math.sin(t*11+(k==='wk1'?PI:0))*.5;q.position.z=H.z0-.21+Math.max(0,Math.sin(t*11+(k==='wk1'?PI:0)))*.025}
     else q.rotation.x=Math.sin(t*26+(k==='leg1'?PI:0))*.8}}}
 
+ /* 🎒 v17.1 소품 상자(PROP): 소품을 따로 만들어 두고 새의 '붙는 자리'에 붙임. 원점 = 붙는 점(칼은 손잡이), 위쪽 = +z */
+ const PROP={sword(){const g=new THREE.Group(),L=.46;
+   /* 휜 커틀러스 칼날: 등은 두툼하게, 날 끝은 뾰족하게, 앞으로 살짝 휨 */const blade=gk('prop_sword_blade',()=>{const sh=new THREE.Shape();sh.moveTo(-.034,0);sh.quadraticCurveTo(-.03,L*.6,-.075,L*.93);sh.lineTo(-.02,L);sh.quadraticCurveTo(.075,L*.62,.036,0);sh.lineTo(-.034,0);const q=new THREE.ExtrudeGeometry(sh,{depth:.016,bevelEnabled:true,bevelThickness:.007,bevelSize:.007,bevelSegments:2,curveSegments:8});q.translate(0,0,-.008);q.rotateX(PI/2);return q});
+   const bm=mat('prop_steel',()=>std(0xc4d0dc,{metalness:.25,roughness:.3,flatShading:false,emissive:0x334155,emissiveIntensity:.15})),ol=mat('prop_ol',()=>basic(0x141420,{side:THREE.BackSide}));
+   const B=new THREE.Mesh(blade,bm);B.position.z=.06;g.add(B);const BO=new THREE.Mesh(blade,ol);BO.position.z=.058;BO.scale.set(1.18,1.6,1.035);g.add(BO);
+   /* 날 쪽 반짝이 선 */const hl=new THREE.Mesh(gk('prop_sword_hl',()=>new THREE.BoxGeometry(.008,.03,L*.7)),mat('prop_hl',()=>basic(0xffffff)));hl.position.set(.022,-.012,.06+L*.4);hl.rotation.y=.1;g.add(hl);
+   const gold=mat('prop_gold',()=>std(0xfbbf24,{metalness:.15,roughness:.35,flatShading:false,emissive:0x92400e,emissiveIntensity:.2}));
+   /* 반원 가드(손을 감싸는 금 고리) */const gd=new THREE.Mesh(gk('prop_sword_guard',()=>new THREE.TorusGeometry(.055,.013,6,14,PI)),gold);gd.rotation.set(PI/2,0,PI);gd.position.z=.05;g.add(gd);
+   const bar=new THREE.Mesh(gk('prop_sword_bar',()=>new THREE.BoxGeometry(.13,.03,.022)),gold);bar.position.z=.058;g.add(bar);
+   /* 볼록한 손잡이 + 끝 구슬 */const gr=new THREE.Mesh(gk('prop_sword_grip',()=>{const pts=[[.0,0],[.017,.004],[.021,.045],[.017,.086],[0,.09]].map(([r,z])=>new THREE.Vector2(r,z));const q=new THREE.LatheGeometry(pts,8);q.rotateX(PI/2);return q}),mat('prop_wood',()=>std(0x7c3f12,{flatShading:false})));gr.position.z=-.035;g.add(gr);
+   const pm=new THREE.Mesh(gk('prop_sword_pom',()=>new THREE.SphereGeometry(.026,10,8)),gold);pm.position.z=-.045;g.add(pm);
+   g.traverse(o=>{o.userData.noStone=1});return g}};
+ /* 소품 붙이기: 날개 끝 소켓(오른쪽 날개 그룹의 자식 → 같이 퍼덕임) */const wingTip=(m,side)=>{const w=m.userData.w;const P=w&&w[side>0?1:0];if(!P)return null;let mx=0;P.children.forEach(o=>{mx=Math.max(mx,Math.abs(o.position.x))});return{P,x:side*mx*.78}};
  const ACG={};function accGeo(b,H){let r=ACG[b.id];if(!r){const[P,G]=accParts(b,H),mk=(k,L)=>L.length?gk(k+b.id,()=>merge(L)):null;r=ACG[b.id]={p:mk('acc_',P),g:mk('accG_',G)}}return r}
  const fadeSt=(o,m)=>{o.onBeforeRender=()=>{o.material.transparent=true;o.material.opacity=m.userData.st?.3:1}};
  A.bird=({m,b,u,dex})=>{if(!m||!b||typeof GC==='undefined')return;const id=b.id,sc0=m.scale.y||1,air=b.t==='A',H=headOf(id);
@@ -2047,6 +2060,7 @@ const ART=(()=>{
    const oo=add(og,mat('outl',()=>basic(0xffffff,{vertexColors:true,side:THREE.BackSide})),'artOutl');if(st)fadeSt(oo,m)}
   animAdd(m,b,H,st,cl);
   {const ag=accGeo(b,H);if(ag.p){const o=add(ag.p,AMAT(),'artAcc');if(st)fadeSt(o,m)}if(ag.g){const o=add(ag.g,GMAT(),'artAccG');if(st)fadeSt(o,m)}}
+  if(id==='pirate'){const tp=wingTip(m,1);if(tp){const sw=PROP.sword();sw.name='propSword';sw.scale.setScalar(1.15);sw.position.set(tp.x,-.03,.04);sw.rotation.set(-.38,.28,0);tp.P.add(sw)}}/* 🗡 오른 날개 끝에 칼 */
   if(dex&&!air&&!H.egg&&id!=='eggchief'&&id!=='crocbird'&&id!=='ostrich'){const ft=mat('foot',()=>std(0xf59e0b,{flatShading:false,roughness:.6}));[-1,1].forEach(s=>{const o=new THREE.Mesh(gk('hlS',()=>new THREE.SphereGeometry(1,10,6)),ft);o.position.set(s*.1,-.08,-.02);o.scale.set(.06,.085,.03);m.add(o)})}};
 
  // ---------- 🏗️ 타워 모델: 이름 맞춤 디자인 + 강화 Lv.1~4 진화 ----------
