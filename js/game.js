@@ -1090,13 +1090,13 @@ function stoneify(g,half){const R=half?[0x34312d,0x4c4842,0x67625a,0x827c72,0x9c
    const n=m.clone();if(!half||sat<=.12){tmp.setHex(R[Math.min(4,Math.floor(L*5.2))]);n.color.copy(tmp)}else n.color.multiplyScalar(1.12);if('roughness'in n){n.roughness=1;n.metalness=0;n.bumpMap=stoneTex();n.bumpScale=.035}if(!n.map&&o.geometry&&o.geometry.attributes.uv)n.map=stoneTex();if('flatShading'in n)n.flatShading=true;if(n.emissive)n.emissive.setHex(0);n.needsUpdate=true;return n});if(o.material.length===1)o.material=o.material[0]})}
 /* 🎨 새 재질(질감) 상자: U의 mat:'fire'|'ice'|'ghost'|'elec'|'gold'. 코드로 그린 작은 무늬 그림 + 빛·투명도. 움직이는 재질은 m.userData.fxm에 담아 sync3에서 깜빡임 */
 const MTX={};function matTex(k){if(MTX[k])return MTX[k];const N=128,c=document.createElement('canvas');c.width=c.height=N;const x=c.getContext('2d'),R=Math.random,line=(n,w,col,j)=>{x.strokeStyle=col;x.lineWidth=w;for(let i=0;i<n;i++){x.beginPath();let px=R()*N,py=R()*N;x.moveTo(px,py);for(let s=0;s<6;s++){px+=(R()-.5)*j;py+=(R()-.5)*j;x.lineTo(px,py)}x.stroke()}};
- if(k==='fireMap'){x.fillStyle='#d9d9d9';x.fillRect(0,0,N,N);for(let i=0;i<160;i++){const v=110+R()*120|0;x.fillStyle=`rgb(${v},${v*.8|0},${v*.7|0})`;x.beginPath();x.arc(R()*N,R()*N,2+R()*6,0,7);x.fill()}line(16,5,'#2a1810',30)}
+ if(k==='fireMap'){x.fillStyle='#d9d9d9';x.fillRect(0,0,N,N);for(let i=0;i<160;i++){const v=110+R()*120|0;x.fillStyle=`rgb(${v},${v*.8|0},${v*.7|0})`;x.beginPath();x.arc(R()*N,R()*N,2+R()*6,0,7);x.fill()}line(10,5,'#6b3d22',30)}
  else if(k==='fireGlow'){x.fillStyle='#000';x.fillRect(0,0,N,N);x.shadowColor='#ffb000';x.shadowBlur=6;line(16,3,'#fff',30);x.shadowBlur=0;for(let i=0;i<40;i++){x.fillStyle='#ffd27a';x.fillRect(R()*N|0,R()*N|0,2,2)}}
  else if(k==='ice'){x.fillStyle='#d8eef8';x.fillRect(0,0,N,N);for(let i=0;i<30;i++){const px=R()*N,py=R()*N,r=6+R()*14;x.strokeStyle='rgba(255,255,255,.9)';x.lineWidth=1;for(let a=0;a<6;a++){x.beginPath();x.moveTo(px,py);x.lineTo(px+Math.cos(a*1.047)*r,py+Math.sin(a*1.047)*r);x.stroke()}}line(10,1,'#9cc8de',40)}
  else if(k==='ghost'){const g=x.createLinearGradient(0,0,0,N);g.addColorStop(0,'#fff');g.addColorStop(1,'#8a90a0');x.fillStyle=g;x.fillRect(0,0,N,N);x.globalAlpha=.35;for(let i=0;i<14;i++){x.fillStyle='#fff';x.beginPath();x.ellipse(R()*N,R()*N,4+R()*10,10+R()*20,0,0,7);x.fill()}x.globalAlpha=1}
  else if(k==='elec'){x.fillStyle='#000';x.fillRect(0,0,N,N);x.shadowColor='#fff';x.shadowBlur=6;line(6,4,'#fff',46);line(10,2,'#e0f0ff',26)}
  else if(k==='gold'){x.fillStyle='#e8e8e8';x.fillRect(0,0,N,N);for(let i=0;i<N;i+=4){x.fillStyle=`rgba(255,255,255,${.15+R()*.25})`;x.fillRect(0,i,N,2)}for(let i=0;i<25;i++){x.fillStyle='#fff';const px=R()*N,py=R()*N;x.fillRect(px-3,py,7,1);x.fillRect(px,py-3,1,7)}}
- const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(2,2);return MTX[k]=t}
+ const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(1,1)/* v17.9 무늬 2배 크게(디자인 팀: 작은 화면에서 너무 자글자글) */;return MTX[k]=t}
 const MATK={fire:{em:0xffc23a,ei:1.4},ice:{em:0x7dd3fc,ei:.25},ghost:{em:0xc7d2fe,ei:.4},elec:{em:0xfde047,ei:.35},gold:{em:0xfacc15,ei:.25}};
 /* 무늬 좌표(uv)가 없는 몸통 모양에는 공 모양으로 감싸는 좌표를 만들어 줌 */function ensureUV(geo){if(!geo||geo.attributes.uv||!geo.attributes.position)return!!(geo&&geo.attributes.uv);const p=geo.attributes.position,n=p.count,a=new Float32Array(n*2);geo.computeBoundingBox();const c=geo.boundingBox.getCenter(new THREE.Vector3());for(let i=0;i<n;i++){const x=p.getX(i)-c.x,y=p.getY(i)-c.y,z=p.getZ(i)-c.z,r=Math.hypot(x,y,z)||1;a[i*2]=.5+Math.atan2(y,x)/(2*PI);a[i*2+1]=.5+Math.asin(Math.max(-1,Math.min(1,z/r)))/PI}geo.setAttribute('uv',new THREE.BufferAttribute(a,2));return true}
 function matFx(g,k,b){const K=MATK[k];if(!K)return;const fx=[];g.traverse(o=>{if(!o.isMesh||!o.material||o.name==='artOutl'||o.name==='f'||o.userData.noStone||!o.material.color||!('roughness'in o.material))return;
@@ -1913,7 +1913,7 @@ const ART=(()=>{
    swan(){Su(.19,hy+.02,hz+.1,.034,0x7dd3fc,1);K(.19,hy+.02,hz+.15,.026,.06,UP,0x7dd3fc,1);sides(s=>Bx(s*.045,-.43,hz-.01,.03,.03,.045,O,0x111827));
     S(0,-.44,hz,.045,.03,.04,0x1f2937);sides(s=>{K(s*.1,.1,z0+.22,.06,.3,[PI/2-.5,0,-s*.2],0xffffff);Su(s*.18,hy+.05,hz+.1,.02,0x7dd3fc,1)});Su(.2,hy+.1,hz,.015,0x7dd3fc,1)},
    // 펭귄 삼형제: 빨간 목도리 + 볼의 노란 무늬
-   penguin(){T(0,-.03,.6,.165,.04,O,0xdc2626);T(0,-.03,.63,.167,.012,O,0xffffff);Bx(.06,-.2,.47,.05,.03,.15,[0,.3,0],0xb91c1c);Bx(.06,-.215,.42,.052,.01,.03,O,0xffffff);S(0,hy-hr-.035,hz-.045,.028,.05,.014,0xf59e0b);[0,PI/3,-PI/3].forEach(a=>Bx(0,hy,zt+.11,.12,.012,.016,[0,a,0],0xbae6fd,1));Su(0,hy,zt+.11,.018,0xffffff,1)},
+   penguin(){/* 목도리는 PROP.scarf(v17.9) */S(0,hy-hr-.035,hz-.045,.028,.05,.014,0xf59e0b);[0,PI/3,-PI/3].forEach(a=>Bx(0,hy,zt+.11,.12,.012,.016,[0,a,0],0xbae6fd,1));Su(0,hy,zt+.11,.018,0xffffff,1)},
    // 드라큘라 박쥐: 뾰족 귀 + 높은 칼라 + 나비넥타이
    vampire(){sides(s=>{K(s*.1,hy+.02,zt+.0,.04,.16,[PI/2,0,-s*.25],0x450a0a);Bx(s*.13,hy+.16,hz-.1,.1,.02,.2,[0,s*.5,0],0x1f1020);K(s*.04,-.35,.36,.035,.06,[0,0,-s*PI/2],0xdc2626)});Su(0,-.35,.36,.025,0xdc2626)},
    // 🦩 플라맹독: 핑크 몸에 독 반점·외다리(접은 다리)·휜 부리에서 똑똑 떨어지는 초록 침·짝짝이 눈·독 칵테일
@@ -1959,7 +1959,7 @@ const ART=(()=>{
     sides(s=>{Bx(s*.05,hy+.02,zt+.06,.012,.012,.13,[0,s*.4,0],BK);Su(s*.08,hy+.03,zt+.12,.025,0xfacc15)});S(0,hy+.02,hz+.02,hr*1.01,hr*1.01,hr*.6,0x22c55e,0,[.3,0,0]);S(0,hy-.12,hz-.08,.05,.03,.03,0xf43f5e)},
    pelican(){S(0,-.56,hz-.19,.17,.3,.15,0xfb923c);S(0,-.54,hz-.14,.14,.25,.11,0xfdba74);
     [[-.06,-.46],[.05,-.53],[-.01,-.62]].forEach(([x,y])=>{Su(x,y,hz+.01,.055,0xfde047);sides(s=>Su(x+s*.02,y-.048,hz+.025,.01,0x111827));K(x,y-.06,hz+.005,.012,.03,DN,0xf97316)});
-    Y(0,hy,zt-.02,.13,.06,UP,0x1e3a8a);Bx(0,hy-.12,zt-.04,.16,.08,.015,[.2,0,0],0x1e3a8a);Bx(0,hy-.03,zt+.012,.06,.04,.03,O,0xfacc15);
+    /* 우체부 모자는 PROP.hat(v17.9) */
     Bx(.2,.1,z0+.28,.18,.02,.1,[0,0,-.2],0xdc2626);Bx(.2,.09,z0+.28,.13,.025,.04,[0,0,-.2],0xffffff)},
    // 과속 송골매: 헬멧 + 눈물 줄무늬 + 속도선
    falcon(){Hm(0,hy,hz+.01,hr+.012,UP,0x475569);sides(s=>{Bx(s*.075,-.42,hz-.03,.02,.02,.09,[0,s*.1,0],0x1f2937);Bx(s*.12,.5,z0+.1,.012,.35,.012,O,0xe0f2fe,1)});Bx(0,.55,z0+.02,.012,.4,.012,O,0xe0f2fe,1);
@@ -2017,7 +2017,7 @@ const ART=(()=>{
    auroraowl(){Bx(0,-.33,z0,.13,.07,.09,O,0x111827);Y(0,-.375,z0,.035,.03,O,0x64748b);S(0,-.392,z0,.025,.01,.025,0x93c5fd,1);Su(.05,-.33,z0+.055,.015,0xffffff,1);
     [[-.3,-.3,.9],[.3,.1,.95],[0,-.5,.85]].forEach(([x,y,z])=>Su(x,y,z,.02,0xffffff,1))},
    // 눈사람 갈매기: 단추 + 목도리 + 양동이 모자
-   blizgull(){[.12,.03,-.06].forEach(dz=>Su(0,fy(0,z0+dz)+.01,z0+dz,.025,0x1f2937));T(0,hy+.07,hz-.13,.16,.035,O,0xdc2626);Bx(.1,-.3,.33,.05,.03,.14,O,0xdc2626);
+   blizgull(){[.12,.03,-.06].forEach(dz=>Su(0,fy(0,z0+dz)+.01,z0+dz,.025,0x1f2937));/* 목도리는 PROP.scarf(v17.9) */
     Y(0,hy,zt+.03,.1,.1,UP,0x6b7280);T(0,hy,zt+.08,.1,.015,O,0x4b5563)},
    // 냉동 펭귄단: 고드름 볏 + 얼음 조각
    frostpeng(){[-1,0,1].forEach(i=>K(i*.05,hy,zt,.03,.14-Math.abs(i)*.03,[PI/2,0,i*.3],0x7dd3fc));sides(s=>Bx(s*.25,-.05,.55,.09,.09,.09,[.3,.4,.2],0xddd6fe));
@@ -2061,7 +2061,7 @@ const ART=(()=>{
   else if(id==='eggchief'){const BK=0x18181b,GLD=0xf5c542,hy=H.hy,hz=H.hz,zt=H.hz+H.hr;[-1,1].forEach(s=>{
     P.push([YG(),s*.11,-.02,.06,.065,.16,.065,PI/2,0,0,0xf59e0b]);P.push([SG(),s*.11,-.1,.0,.08,.11,.03,0,0,0,0xf59e0b]);// 굵은 다리
     P.push([SG(),s*.3,-.02,.32,.06,.14,.1,0,0,0,c])});// 접은 날개
-   P.push([YG(),0,hy+.01,zt-.005,.175,.016,.175,PI/2,0,0,BK]);P.push([YG(),0,hy+.01,zt+.1,.11,.2,.11,PI/2,0,0,BK]);P.push([YG(),0,hy+.01,zt+.025,.113,.035,.113,PI/2,0,0,0x7f1d1d]);// 실크햇
+   /* 실크햇은 PROP.hat(v17.9) */
    P.push([new THREE.TorusGeometry(1,.12,6,18),.08,hy-.115,hz+.06,.05,.05,.05,PI/2,0,0,GLD]);P.push([BG(),.12,hy-.1,hz-.06,.008,.008,.2,0,.3,0,GLD]);// 외알 안경 + 줄
    P.push([BG(),0,-.36,.4,.1,.03,.06,0,0,0,0x7f1d1d]);P.push([SG(),0,hy-.17,hz-.12,.035,.03,.06,0,0,0,0xdc2626]);[-.05,0,.05].forEach(x=>P.push([SG(),x,hy-.08,zt-.02,.035,.03,.04,0,0,0,0xdc2626]));P.push([SG(),.27,-.2,.36,.1,.1,.13,.2,0,0,0xfacc15]);P.push([SG(),.25,-.27,.4,.03,.02,.04,0,0,0,0xfff7c2]);P.push([SG(),.3,-.15,.32,.06,.08,.05,0,0,0,c]);[-1,1].forEach(s=>P.push([KG(),s*.05,-.37,.4,.035,.06,.02,0,0,s*PI/2,0x991b1b]));// 금목걸이 + 나비넥타이
    }// 황금알은 날개로 들고 있어요
@@ -2150,11 +2150,21 @@ const ART=(()=>{
    const brim=gk(k+'_b',()=>{const q=new THREE.CylinderGeometry(br,br,.018,22);q.rotateX(PI/2);return q});
    const ol=mat('prop_ol',()=>basic(0x141420,{side:THREE.BackSide})),cm=mat('prop_hat_'+o.col,()=>std(o.col,{flatShading:false,roughness:.55})),bm=o.brimCol?mat('prop_hat_'+o.brimCol,()=>std(o.brimCol,{flatShading:false,roughness:.55})):cm;
    const C=new THREE.Mesh(crown,cm);g.add(C);const CO=new THREE.Mesh(crown,ol);CO.scale.set(1.09,1.09,1.06);CO.position.z=-.004;g.add(CO);
-   const B=new THREE.Mesh(brim,bm);g.add(B);const BO=new THREE.Mesh(brim,ol);BO.scale.set(1.06,1.06,1.9);g.add(BO);
+   if(br>0){const B=new THREE.Mesh(brim,bm);g.add(B);const BO=new THREE.Mesh(brim,ol);BO.scale.set(1.06,1.06,1.9);g.add(BO)}
    if(o.band){const bd=new THREE.Mesh(gk(k+'_band',()=>{const q=new THREE.CylinderGeometry(r*(o.crown==='cone'?.86:.97),r*1.01,.04,18,1,true);q.rotateX(PI/2);q.translate(0,0,.03);return q}),mat('prop_hat_'+o.band,()=>std(o.band,{flatShading:false,roughness:.5,side:THREE.DoubleSide})));bd.scale.set(1.02,1.02,1);g.add(bd)}
    if(o.buckle){const bk=new THREE.Mesh(gk('prop_hat_buckle',()=>new THREE.BoxGeometry(.06,.012,.045)),mat('prop_gold',()=>std(0xfbbf24,{metalness:.15,roughness:.35,flatShading:false,emissive:0x92400e,emissiveIntensity:.2})));bk.position.set(0,-r*1.0,.03);g.add(bk);const hole=new THREE.Mesh(gk('prop_hat_bh',()=>new THREE.BoxGeometry(.032,.014,.02)),mat('prop_hat_'+(o.band||o.col),()=>std(o.band||o.col,{flatShading:false})));hole.position.set(0,-r*1.0-.002,.03);g.add(hole)}
    if(o.ridge){const rd=new THREE.Mesh(gk(k+'_ridge',()=>{const q=new THREE.TorusGeometry(r*.95,.016,6,16,PI);q.rotateY(PI/2);q.scale(1,1,h/r);return q}),bm);rd.position.z=.005;g.add(rd)}
+   if(o.visor){const vg=gk('prop_cap_vis',()=>{const h=new THREE.Shape();h.moveTo(-.8,0);h.quadraticCurveTo(-.75,-.75,0,-.85);h.quadraticCurveTo(.75,-.75,.8,0);h.quadraticCurveTo(0,-.3,-.8,0);return new THREE.ExtrudeGeometry(h,{depth:.08,bevelEnabled:true,bevelThickness:.04,bevelSize:.04,bevelSegments:2,curveSegments:10})});const vm=mat('prop_hat_'+o.visor,()=>std(o.visor,{flatShading:false,roughness:.5}));const V=new THREE.Mesh(vg,vm);V.scale.set(r,r*1.1,r*.25);V.position.set(0,-r*.82,0);V.rotation.x=-.2;g.add(V);const VO=new THREE.Mesh(vg,ol);VO.scale.set(r*1.08,r*1.18,r*.45);VO.position.set(0,-r*.8,-.002);VO.rotation.x=-.2;g.add(VO)}
+   if(o.badge){const bd=new THREE.Mesh(gk('prop_hat_badge',()=>new THREE.OctahedronGeometry(.04,0)),mat('prop_gold',()=>std(0xfbbf24,{metalness:.15,roughness:.35,flatShading:false,emissive:0x92400e,emissiveIntensity:.2})));bd.scale.set(1,.5,1);bd.position.set(0,-r*.98,h*.55);g.add(bd)}
    if(o.star){const st=new THREE.Mesh(gk('prop_hat_star',()=>new THREE.OctahedronGeometry(.035,0)),mat('prop_bolt_y',()=>std(0xfde047,{flatShading:false,emissive:0xf59e0b,emissiveIntensity:.5})));st.position.set(0,-r*.6,h*.4);g.add(st)}
+   g.traverse(q=>{q.userData.noStone=1});return g},
+  /* 🧣 목도리: 두툼한 고리(울퉁불퉁) + 줄무늬 + 앞으로 늘어진 꼬리 2가닥(끝 술 장식), 외곽선. 원점=목 가운데 */
+  scarf(col,st,R){const g=new THREE.Group(),cm=mat('prop_hat_'+col,()=>std(col,{flatShading:false,roughness:.75})),sm=mat('prop_hat_'+st,()=>std(st,{flatShading:false,roughness:.75})),ol=mat('prop_ol',()=>basic(0x141420,{side:THREE.BackSide}));
+   const ring=gk('prop_scarf_ring',()=>{const q=new THREE.TorusGeometry(1,.3,10,22);const p=q.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),a=Math.atan2(y,x),k=1+.06*Math.sin(a*9);p.setXYZ(i,x*k,y*k,p.getZ(i)*1.25)}q.computeVertexNormals();return q});
+   const Rg=new THREE.Mesh(ring,cm);Rg.scale.setScalar(R);g.add(Rg);const RO=new THREE.Mesh(ring,ol);RO.scale.set(R*1.06,R*1.06,R*1.25);g.add(RO);
+   const sr=new THREE.Mesh(gk('prop_scarf_st',()=>new THREE.TorusGeometry(1,.1,6,22)),sm);sr.scale.set(R*1.13,R*1.13,R*1.6);sr.position.z=R*.12;g.add(sr);
+   const tail=gk('prop_scarf_tail',()=>{const h=new THREE.Shape();h.moveTo(-.035,0);h.lineTo(-.04,-.17);for(let i=0;i<4;i++){h.lineTo(-.04+i*.027+.0135,-.2);h.lineTo(-.04+(i+1)*.027,-.17)}h.lineTo(.035,0);h.lineTo(-.035,0);const q=new THREE.ExtrudeGeometry(h,{depth:.02,bevelEnabled:true,bevelThickness:.008,bevelSize:.006,bevelSegments:1});q.rotateX(PI/2);return q});
+   [[-.3,.12],[.25,-.05]].forEach(([dx,rz],i)=>{const t=new THREE.Mesh(tail,i?sm:cm);t.position.set(dx*R,-R*1.05,-.01);t.rotation.set(-.35,rz,0);g.add(t);const to=new THREE.Mesh(tail,ol);to.position.copy(t.position);to.rotation.copy(t.rotation);to.scale.set(1.15,1.6,1.08);g.add(to)});
    g.traverse(q=>{q.userData.noStone=1});return g},
   /* 🧢 챙 모자(야구모자형): 머리 덮는 반구 + 앞으로 둥글게 휜 챙 + 꼭지 단추, 외곽선. 원점=머리 중심 */
   cap(col,r){const g=new THREE.Group(),cm=mat('prop_hat_'+col,()=>std(col,{flatShading:false,roughness:.55})),ol=mat('prop_ol',()=>basic(0x141420,{side:THREE.BackSide}));
@@ -2183,6 +2193,11 @@ const ART=(()=>{
    const oo=add(og,mat('outl',()=>basic(0xffffff,{vertexColors:true,side:THREE.BackSide})),'artOutl');if(st)fadeSt(oo,m)}
   animAdd(m,b,H,st,cl);
   {const ag=accGeo(b,H);if(ag.p){const o=add(ag.p,AMAT(),'artAcc');if(st)fadeSt(o,m)}if(ag.g){const o=add(ag.g,GMAT(),'artAccG');if(st)fadeSt(o,m)}}
+  /* 🧣🎩 v17.9: 목도리(목 소켓)·우체부 모자·실크햇 */
+  if(id==='penguin'){const q=PROP.scarf(0xdc2626,0xffffff,.165);q.name='propScarf';q.position.set(0,-.03,.6);m.add(q)}
+  if(id==='blizgull'){const q=PROP.scarf(0xdc2626,0xffffff,.15);q.name='propScarf';q.position.set(0,H.hy+.07,H.hz-.13);m.add(q)}
+  if(id==='pelican'){const q=PROP.hat({crown:'cyl',r:.13,h:.11,br:0,col:0x1e3a8a,band:0x172554,visor:0x172554,badge:1});q.name='propHat';q.position.set(0,H.hy,H.hz+H.hr-.05);m.add(q)}
+  if(id==='eggchief'){const q=PROP.hat({crown:'cyl',r:.11,h:.21,br:.175,col:0x18181b,band:0x7f1d1d});q.name='propHat';q.position.set(0,H.hy+.01,H.hz+H.hr-.005);m.add(q)}
   /* 🎩🧢 v17.7 소품 상자: 모자(머리 꼭대기 소켓 zt=H.hz+H.hr) */
   {const zt=H.hz+H.hr,hat=o=>{const q=PROP.hat(o.o);q.name='propHat';q.position.set(0,H.hy+(o.dy||0),zt+(o.dz||0));if(o.rz)q.rotation.y=o.rz;m.add(q)};
    if(id==='turkey')hat({o:{crown:'cyl',r:.1,h:.17,br:.18,col:0x18181b,band:0x7c2d12,buckle:1},dz:-.035});
