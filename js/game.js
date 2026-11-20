@@ -1884,7 +1884,7 @@ const ART=(()=>{
    // 닌자 까마귀: 머리띠 + 나부끼는 끈 + 수리검
    crow(){T(0,hy,hz+.04,hr+.006,.022,O,0xdc2626);Bx(0,hy-hr-.002,hz+.04,.1,.014,.05,O,0xcbd5e1);Su(0,hy+hr+.01,hz+.04,.035,0xdc2626);
     sides(s=>Bx(s*.04,hy+hr+.09,hz+.01,.035,.13,.012,[0,0,s*.3],0xdc2626));
-    [0,PI/2].forEach(a=>Bx(.3,-.02,.5,.2,.016,.04,[0,0,a+.6],0xcbd5e1));Su(.3,-.02,.5,.026,0xdc2626);belly(0x64748b,.85);[-1,0,1].forEach(i=>K(i*.07,.34,z0+.08,.045,.26,[.55,0,-i*.28],0x312e4a))},
+    /* 수리검은 PROP.shuriken(v18.1, 날개 끝) */belly(0x64748b,.85);[-1,0,1].forEach(i=>K(i*.07,.34,z0+.08,.045,.26,[.55,0,-i*.28],0x312e4a))},
    // 과자도둑 해적: 금귀걸이 + 훔친 과자 봉지
    // 북극해적갈매기(2026-11-16 재디자인, 사용자 제미나이 그림 기준 → 목도리 빼고 둥근 모자·큰 칼로 수정): 둥근 해적 모자(금테+물고기 뼈)·안대·허리띠(해골 버클+금화 주머니)·큰 해적 칼·휜 부리
    pirate(){const NV=0x1e2a4a,GD=0xeab308,WH=0xf8fafc,BKc=0x111827,hb=zt-.03;belly(0x8b7563,.85);
@@ -1922,7 +1922,7 @@ const ART=(()=>{
     /* 짝짝이 눈: 한쪽 왕눈 */Su(.07,hy-.11,hz+.04,.05,0xffffff);Su(.075,hy-.155,hz+.04,.024,0x111827);
     /* 휜 부리 끝 + 초록 침 방울 */K(0,hy-.255,hz-.085,.026,.08,[-PI/2,0,0],0x111827);[0,1,2].forEach(i=>Su(0,hy-.255,hz-.15-i*.045,.022-i*.004,TX));
     /* 머리 위 독 거품 */[[-.03,.02],[.04,.05],[0,.09]].forEach(([x,z],i)=>Su(x,hy+.02,zt+z,.025-i*.004,0xbef264));
-    /* 독 칵테일(날개에 듦): 잔+초록 음료+분홍 우산 */K(.27,-.06,z0+.05,.07,.1,[0,0,0],0xe0f2fe);Y(.27,-.06,z0+.1,.065,.015,UP,TX);Bx(.29,-.06,z0+.13,.006,.006,.14,[0,.4,0],0x92400e);K(.31,-.06,z0+.2,.07,.035,[0,0,0],0xf472b6);Y(.27,-.06,z0-.01,.012,.07,UP,0xe0f2fe);Y(.27,-.06,z0-.05,.04,.01,UP,0xe0f2fe)},
+    /* 독 칵테일(날개에 듦): 잔+초록 음료+분홍 우산 *//* 칵테일은 PROP.cocktail(v18.1) */},
    // 자뻑 공작: 티아라 + 반짝이 + 에메랄드 가슴
    peacock(){S(0,-.15,z0,.2,.18,.17,0x22d3ee);[-1,0,1].forEach(i=>{const a=-i*.32;Y(i*.03,hy+.02,zt+.05,.007,.12,[PI/2,0,a],0x0f766e);Su(i*.03-Math.sin(a)*.065,hy+.02,zt+.05+Math.cos(a)*.065,.026,0x22d3ee)});
     sides(s=>Bx(s*.075,hy-.1,hz+.0,.05,.012,.014,[0,s*.2,0],0xffffff))},
@@ -1969,7 +1969,7 @@ const ART=(()=>{
    // 야근 올빼미: 넥타이 + 커피잔 + 가슴 깃털
    owl(){const lc=mxc(c,0xffffff,.45);[[0,.1],[-.1,.1],[.1,.1],[-.14,0],[-.05,0],[.05,0],[.14,0]].forEach(([x,dz])=>S(x,fy(x,z0+dz)+.012,z0+dz,.05,.04,.04,lc));
     Bx(0,-.33,z0+.02,.055,.02,.14,O,0x92400e);[0,1,2].forEach(i=>Bx(0,-.342,z0-.02+i*.045,.056,.004,.01,[0,.5,0],0x451a03));Su(0,-.333,z0+.1,.03,0x78350f);
-    Y(-.22,-.37,z0-.08,.08,.15,UP,0xd6a77a);Y(-.22,-.37,z0,.07,.012,UP,0x3b1d0a);T(-.31,-.37,z0-.08,.045,.012,[0,PI/2,0],0xd6a77a);[0,1,2].forEach(i=>Su(-.22+(i-1)*.025,-.37,z0+.06+i*.05,.016,0xffffff,1))},
+    /* 커피잔은 PROP.mug(v18.1) */},
    // 정전 천둥새: 먹구름 모자 + 전기 플러그 꼬리
    thunderbird(){/* 먹구름 모자·플러그 꼬리는 PROP.cloud/PROP.plug(v17.5) */
     Bx(0,-.31,z0+.05,.04,.012,.1,[0,0,.5],0xfde047,1);Bx(0,-.31,z0-.04,.04,.012,.1,[0,0,-.5],0xfde047,1)},
@@ -2008,7 +2008,7 @@ const ART=(()=>{
    plasmabird(){Bx(0,-.32,z0,.14,.03,.09,O,0x1f2937);Bx(0,-.32,z0+.065,.04,.03,.02,O,0x9ca3af);[-1,0,1].forEach(i=>Bx(i*.04,-.338,z0,.03,.01,.06,O,0x4ade80,1));
     sides(s=>{K(s*.06,hy,zt,.012,.14,[PI/2,0,-s*.3],0x9ca3af);Su(s*.105,hy,zt+.065,.02,0xfde047,1)});/* 플러그 꼬리는 PROP.plug(v17.5) */},
    // 퀵배달 혜성매: 택배 상자 + 배달 모자 + 불꽃 꼬리
-   comet(){Bx(0,.08,z0+.35,.26,.28,.2,O,0xd6a35c);Bx(0,.08,z0+.35,.05,.285,.204,O,0xfde68a);/* 배달 모자는 PROP.cap(v17.7) */
+   comet(){/* 택배 상자는 PROP.box(v18.1) *//* 배달 모자는 PROP.cap(v17.7) */
     K(0,.62,z0+.1,.1,.5,BK,0xf97316,1);K(0,.66,z0+.1,.06,.42,BK,0xfde047,1)},
    // 재채기 까마귀: 얼음주머니 + 콧물방울 + 체온계
    plague(){Bx(0,hy+.01,zt,.15,.12,.04,O,0x93c5fd);Bx(0,hy+.01,zt+.022,.03,.09,.01,O,0xffffff);Bx(0,hy+.01,zt+.022,.09,.03,.01,O,0xffffff);
@@ -2025,8 +2025,8 @@ const ART=(()=>{
    // 태풍 독수리: 먹구름 + 소용돌이
    stormeagle(){/* 먹구름 모자는 PROP.cloud(v17.5) */[[-.32,.05,z0+.1],[.3,-.05,z0+.15],[0,.35,z0+.05]].forEach(([x,y,z])=>Bx(x,y,z,.025,.02,.09,[0,x*2,0],0xfde047,1))},
    // 보조배터리 박쥐: 뾰족 귀 + 보조배터리 + 충전선
-   voltbat(){sides(s=>{K(s*.11,hy+.02,zt,.05,.2,[PI/2,0,-s*.25],0x365314);K(s*.03,hy-.2,hz-.1,.012,.05,DN,0xffffff)});Bx(0,.08,z0+.27,.2,.3,.07,O,0x374151);
-    [-1,0,1].forEach(i=>Su(i*.05,-.03,z0+.31,.012,0x4ade80,1));Bx(0,.14,z0+.31,.05,.1,.01,O,0xfde047,1);T(0,.4,z0,.07,.01,[PI/2,0,0],0x111827)},
+   voltbat(){/* 박쥐 귀는 PROP.ear(v18.1) */sides(s=>{K(s*.03,hy-.2,hz-.1,.012,.05,DN,0xffffff)});/* 보조배터리는 PROP.battery(v18.1) */
+    T(0,.4,z0,.07,.01,[PI/2,0,0],0x111827)},
    // 투명망토 까마귀: 마법사 모자
    ghostcrow(){S(0,.14,z0+.03,.28,.06,.24,0x5b21b6,0,[.55,0,0]);S(0,.15,z0+.035,.24,.05,.2,0x7c3aed,0,[.55,0,0]);[[.2,.3,z0+.2],[-.22,.25,z0+.1],[.05,.4,z0+.28]].forEach(([x,y,z])=>Su(x,y,z,.018,0xfde047,1));/* 마법사 모자는 PROP.hat(v17.7) */}
   };
@@ -2158,6 +2158,36 @@ const ART=(()=>{
    if(o.badge){const bd=new THREE.Mesh(gk('prop_hat_badge',()=>new THREE.OctahedronGeometry(.04,0)),mat('prop_gold',()=>std(0xfbbf24,{metalness:.15,roughness:.35,flatShading:false,emissive:0x92400e,emissiveIntensity:.2})));bd.scale.set(1,.5,1);bd.position.set(0,-r*.98,h*.55);g.add(bd)}
    if(o.star){const st=new THREE.Mesh(gk('prop_hat_star',()=>new THREE.OctahedronGeometry(.035,0)),mat('prop_bolt_y',()=>std(0xfde047,{flatShading:false,emissive:0xf59e0b,emissiveIntensity:.5})));st.position.set(0,-r*.6,h*.4);g.add(st)}
    g.traverse(q=>{q.userData.noStone=1});return g},
+  /* 📦🔋⭐🦇☕🍸 v18.1 소품 상자: 둥근 상자 도우미 + 택배 상자·보조배터리·수리검·박쥐 귀·커피잔·칵테일 (모두 외곽선, 원점은 붙는 면) */
+  _rb(k,w,d,h,r){return gk('prop_rb_'+k,()=>{const sh=new THREE.Shape(),x=w/2-r,y=d/2-r;sh.moveTo(-x,-d/2);sh.lineTo(x,-d/2);sh.quadraticCurveTo(w/2,-d/2,w/2,-y);sh.lineTo(w/2,y);sh.quadraticCurveTo(w/2,d/2,x,d/2);sh.lineTo(-x,d/2);sh.quadraticCurveTo(-w/2,d/2,-w/2,y);sh.lineTo(-w/2,-y);sh.quadraticCurveTo(-w/2,-d/2,-x,-d/2);const q=new THREE.ExtrudeGeometry(sh,{depth:h-2*r*.6,bevelEnabled:true,bevelThickness:r*.6,bevelSize:r*.5,bevelSegments:2,curveSegments:4});q.translate(0,0,r*.6);return q})},
+  _ol(g,o,sx,sy,sz){const m=new THREE.Mesh(o.geometry,mat('prop_ol',()=>basic(0x141420,{side:THREE.BackSide})));m.position.copy(o.position);m.rotation.copy(o.rotation);m.scale.set(o.scale.x*sx,o.scale.y*sy,o.scale.z*sz);g.add(m)},
+  _fin(g){g.traverse(q=>{q.userData.noStone=1});return g},
+  box(){const g=new THREE.Group(),B=new THREE.Mesh(this._rb('box',.26,.28,.2,.025),mat('prop_hat_'+0xd6a35c,()=>std(0xd6a35c,{flatShading:false,roughness:.85})));g.add(B);this._ol(g,B,1.06,1.06,1.06);
+   const tm=mat('prop_hat_'+0xfde68a,()=>std(0xfde68a,{flatShading:false,roughness:.6}));[[.27,.05],[.05,.29]].forEach(([w,d])=>{const t=new THREE.Mesh(gk('prop_box_t'+w,()=>new THREE.BoxGeometry(w,d,.012)),tm);t.position.z=.205;g.add(t)});
+   const lb=new THREE.Mesh(gk('prop_box_lb',()=>new THREE.BoxGeometry(.1,.006,.07)),mat('prop_hat_'+0xffffff,()=>std(0xffffff,{flatShading:false})));lb.position.set(.05,-.143,.1);g.add(lb);
+   const ar=new THREE.Mesh(gk('prop_box_ar',()=>new THREE.BoxGeometry(.06,.008,.014)),mat('prop_hat_'+0xdc2626,()=>std(0xdc2626,{flatShading:false})));ar.position.set(.05,-.147,.1);g.add(ar);return this._fin(g)},
+  battery(){const g=new THREE.Group(),B=new THREE.Mesh(this._rb('bat',.2,.3,.08,.025),mat('prop_hat_'+0x374151,()=>std(0x374151,{flatShading:false,roughness:.4})));g.add(B);this._ol(g,B,1.08,1.06,1.15);
+   const gm=mat('prop_bat_g',()=>std(0x4ade80,{flatShading:false,emissive:0x16a34a,emissiveIntensity:.8}));[0,1,2].forEach(i=>{const q=new THREE.Mesh(gk('prop_bat_l',()=>new THREE.BoxGeometry(.11,.045,.012)),gm);q.position.set(0,-.08+i*.06,.084);g.add(q)});
+   const tip=new THREE.Mesh(gk('prop_bat_tip',()=>new THREE.BoxGeometry(.07,.03,.04)),mat('prop_steel',()=>std(0xc4d0dc,{metalness:.25,roughness:.3,flatShading:false,emissive:0x334155,emissiveIntensity:.15})));tip.position.set(0,.165,.04);g.add(tip);
+   const bolt=new THREE.Mesh(gk('prop_bolt',()=>{const h=new THREE.Shape();[[0,0],[.03,.05],[.012,.05],[.03,.1],[-.012,.04],[.006,.04],[-.012,0]].forEach(([x,y],i)=>i?h.lineTo(x,y):h.moveTo(x,y));const q=new THREE.ExtrudeGeometry(h,{depth:.012,bevelEnabled:false});q.rotateX(PI/2);q.translate(0,0,-.1);return q}),mat('prop_bolt_y',()=>std(0xfde047,{flatShading:false,emissive:0xf59e0b,emissiveIntensity:.5})));bolt.rotation.x=-PI/2;bolt.position.set(0,.08,.09);bolt.scale.setScalar(.9);g.add(bolt);return this._fin(g)},
+  shuriken(){const g=new THREE.Group(),geo=gk('prop_shu',()=>{const h=new THREE.Shape();for(let i=0;i<8;i++){const a=i*PI/4,r=i%2?.035:.12,x=Math.cos(a)*r,y=Math.sin(a)*r;i?h.lineTo(x,y):h.moveTo(x,y)}h.closePath();const q=new THREE.ExtrudeGeometry(h,{depth:.012,bevelEnabled:true,bevelThickness:.006,bevelSize:.006,bevelSegments:1});q.translate(0,0,-.006);return q});
+   const S=new THREE.Mesh(geo,mat('prop_steel',()=>std(0xc4d0dc,{metalness:.25,roughness:.3,flatShading:false,emissive:0x334155,emissiveIntensity:.15})));g.add(S);this._ol(g,S,1.14,1.14,1.8);
+   const c=new THREE.Mesh(gk('prop_shu_c',()=>new THREE.CylinderGeometry(.03,.03,.03,12).rotateX(PI/2)),mat('prop_hat_'+0xdc2626,()=>std(0xdc2626,{flatShading:false})));g.add(c);return this._fin(g)},
+  ear(col,inner){const g=new THREE.Group(),leaf=(k,w,l)=>gk('prop_ear_'+k,()=>{const h=new THREE.Shape();h.moveTo(-w,0);h.quadraticCurveTo(-w*1.1,l*.6,0,l);h.quadraticCurveTo(w*1.1,l*.6,w,0);h.lineTo(-w,0);const q=new THREE.ExtrudeGeometry(h,{depth:.02,bevelEnabled:true,bevelThickness:.008,bevelSize:.006,bevelSegments:1});q.rotateX(PI/2);q.translate(0,.01,0);return q});
+   const E=new THREE.Mesh(leaf('o',.065,.2),mat('prop_hat_'+col,()=>std(col,{flatShading:false,roughness:.6})));g.add(E);this._ol(g,E,1.15,1.6,1.08);
+   const I=new THREE.Mesh(leaf('i',.035,.13),mat('prop_hat_'+inner,()=>std(inner,{flatShading:false,roughness:.6})));I.position.set(0,-.018,.02);g.add(I);return this._fin(g)},
+  mug(){const g=new THREE.Group(),body=gk('prop_mug',()=>{const q=new THREE.LatheGeometry([[0,0],[.075,0],[.082,.02],[.085,.15],[.075,.15],[.072,.03],[0,.03]].map(([a,b])=>new THREE.Vector2(a,b)),18);q.rotateX(PI/2);return q});
+   const M1=new THREE.Mesh(body,mat('prop_hat_'+0xf5f5f4,()=>std(0xf5f5f4,{flatShading:false,roughness:.4})));g.add(M1);this._ol(g,M1,1.1,1.1,1.05);
+   const st=new THREE.Mesh(gk('prop_mug_st',()=>new THREE.TorusGeometry(.086,.012,6,20,PI*2)),mat('prop_hat_'+0x92400e,()=>std(0x92400e,{flatShading:false})));st.position.z=.08;st.scale.set(1.01,1.01,1.5);g.add(st);
+   const h=new THREE.Mesh(gk('prop_mug_h',()=>new THREE.TorusGeometry(.045,.014,8,14,PI*1.3)),M1.material);h.rotation.set(PI/2,0,-PI*.65);h.position.set(-.085,0,.08);g.add(h);
+   const cf=new THREE.Mesh(gk('prop_mug_cf',()=>new THREE.CircleGeometry(.074,16)),mat('prop_hat_'+0x3b1d0a,()=>std(0x3b1d0a,{flatShading:false})));cf.position.z=.135;g.add(cf);
+   [0,1,2].forEach(i=>{const p=new THREE.Mesh(gk('hlS',()=>new THREE.SphereGeometry(1,10,6)),mat('prop_steam',()=>std(0xffffff,{flatShading:false,transparent:true,opacity:.75,emissive:0xffffff,emissiveIntensity:.3})));p.scale.setScalar(.02+i*.006);p.position.set((i-1)*.025,0,.18+i*.05);g.add(p)});return this._fin(g)},
+  cocktail(drink){const g=new THREE.Group(),glass=mat('prop_glass',()=>std(0xe0f2fe,{flatShading:false,roughness:.15,transparent:true,opacity:.6,depthWrite:false}));
+   const G1=new THREE.Mesh(gk('prop_ck_g',()=>{const q=new THREE.LatheGeometry([[0,0],[.045,0],[.045,.008],[.008,.014],[.008,.07],[.075,.16],[.07,.16],[.005,.08],[0,.08]].map(([a,b])=>new THREE.Vector2(a,b)),18);q.rotateX(PI/2);return q}),glass);g.add(G1);this._ol(g,G1,1.1,1.1,1.04);
+   const D=new THREE.Mesh(gk('prop_ck_d',()=>{const q=new THREE.ConeGeometry(.064,.07,16,1);q.rotateX(-PI/2);q.translate(0,0,.12);return q}),mat('prop_hat_'+drink,()=>std(drink,{flatShading:false,emissive:drink,emissiveIntensity:.25})));D.rotation.x=PI;D.position.z=.27;g.add(D);
+   const stick=new THREE.Mesh(gk('prop_ck_s',()=>new THREE.CylinderGeometry(.004,.004,.17,5).rotateX(PI/2)),mat('prop_hat_'+0x92400e,()=>std(0x92400e,{flatShading:false})));stick.position.set(.03,0,.22);stick.rotation.y=.35;g.add(stick);
+   const um=new THREE.Mesh(gk('prop_ck_u',()=>{const q=new THREE.ConeGeometry(.08,.04,10,1,true);q.rotateX(PI/2);return q}),mat('prop_umb',()=>std(0xf472b6,{flatShading:false,side:THREE.DoubleSide})));um.position.set(.055,0,.3);um.rotation.y=.35;g.add(um);this._ol(g,um,1.1,1.1,1.4);
+   const ch=new THREE.Mesh(gk('hlS',()=>new THREE.SphereGeometry(1,10,6)),mat('prop_hat_'+0xdc2626,()=>std(0xdc2626,{flatShading:false})));ch.scale.setScalar(.018);ch.position.set(-.035,0,.165);g.add(ch);return this._fin(g)},
   /* 🧣 목도리: 두툼한 고리(울퉁불퉁) + 줄무늬 + 앞으로 늘어진 꼬리 2가닥(끝 술 장식), 외곽선. 원점=목 가운데 */
   scarf(col,st,R){const g=new THREE.Group(),cm=mat('prop_hat_'+col,()=>std(col,{flatShading:false,roughness:.75})),sm=mat('prop_hat_'+st,()=>std(st,{flatShading:false,roughness:.75})),ol=mat('prop_ol',()=>basic(0x141420,{side:THREE.BackSide}));
    const ring=gk('prop_scarf_ring',()=>{const q=new THREE.TorusGeometry(1,.3,10,22);const p=q.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),a=Math.atan2(y,x),k=1+.06*Math.sin(a*9);p.setXYZ(i,x*k,y*k,p.getZ(i)*1.25)}q.computeVertexNormals();return q});
@@ -2193,6 +2223,13 @@ const ART=(()=>{
    const oo=add(og,mat('outl',()=>basic(0xffffff,{vertexColors:true,side:THREE.BackSide})),'artOutl');if(st)fadeSt(oo,m)}
   animAdd(m,b,H,st,cl);
   {const ag=accGeo(b,H);if(ag.p){const o=add(ag.p,AMAT(),'artAcc');if(st)fadeSt(o,m)}if(ag.g){const o=add(ag.g,GMAT(),'artAccG');if(st)fadeSt(o,m)}}
+  /* 📦🔋⭐🦇☕🍸 v18.1 소품 붙이기 */
+  {const z0=H.z0,put=(q,n,x,y,z,sc,r)=>{q.name=n;q.position.set(x,y,z);if(sc)q.scale.setScalar(sc);if(r)q.rotation.set(r[0],r[1],r[2]);m.add(q);return q};
+   if(id==='comet')put(PROP.box(),'propBox',0,.08,z0+.25);
+   if(id==='voltbat'){put(PROP.battery(),'propBat',0,.08,z0+.22);[-1,1].forEach(s=>put(PROP.ear(0x365314,0xf9a8d4),'propEar',s*.1,H.hy+.02,H.hz+H.hr-.07,1,[0,s*.3,0]))}
+   if(id==='crow'){const tp=wingTip(m,1);if(tp){const q=PROP.shuriken();q.name='propShu';q.scale.setScalar(1.8);q.position.set(tp.x,-.02,.05);q.rotation.set(0,0,.4);tp.P.add(q)}}
+   if(id==='owl')put(PROP.mug(),'propMug',-.22,-.37,z0-.155,1.05);
+   if(id==='flamingo')put(PROP.cocktail(0x84cc16),'propCk',.29,-.06,z0-.07,1.4)}
   /* 🧣🎩 v17.9: 목도리(목 소켓)·우체부 모자·실크햇 */
   if(id==='penguin'){const q=PROP.scarf(0xdc2626,0xffffff,.165);q.name='propScarf';q.position.set(0,-.03,.6);m.add(q)}
   if(id==='blizgull'){const q=PROP.scarf(0xdc2626,0xffffff,.15);q.name='propScarf';q.position.set(0,H.hy+.07,H.hz-.13);m.add(q)}
