@@ -891,20 +891,20 @@ const WTIP={seagull:0x1f2937,albatross:0x1f2937,blizgull:0x334155,pelican:0x1f29
   const featherWing=(s,P)=>{const bat=id==='vampire'||id==='voltbat',T=WTIP[id],n=big?5:id==='hatch_wind'?3:4,tc2=i=>Array.isArray(T)?T[i%T.length]:(T??dkn3(wc,.68)),go=id==='phoenix'||id==='plasmabird'||id==='comet'?GL(0xf97316):{};
    const W=SP(1,bat?dkn3(wc,.8):wc,go);W.scale.set(wl*.62,bat?.17:.2,.05);W.position.set(s*wl*.6,.03,0);P.add(W);
    if(!bat){const cv=SP(1,ltn3(wc));cv.scale.set(wl*.5,.09,.056);cv.position.set(s*wl*.56,-.07,.008);cv.name='cv';P.add(cv)}
-   const tb=SP(1,oc);tb.userData.noStone=1;tb.scale.set(wl*.62,.03,.054);tb.position.set(s*wl*.62,.175,.004);P.add(tb);
-   for(let i=0;i<n;i++){const t=n>1?i/(n-1):0,a=-.12+t*.8,len=wl*(bat?.62:.46)*(1-.18*t),F=SP(1,bat?0x1c1917:tc2(i),go);F.scale.set(len,bat?.022:.058,bat?.02:.026);F.rotation.z=s*a;
+   for(let i=0;i<n;i++){const t=n>1?i/(n-1):0,a=-.12+t*.8,len=wl*(bat?.62:.46)*(1-.18*t),F=SP(1,!bat&&i===n-1?oc:bat?0x1c1917:tc2(i),go);if(!bat&&i===n-1)F.userData.noStone=1;F.scale.set(len,bat?.022:.058,bat?.02:.026);F.rotation.z=s*a;
     F.position.set(s*(wl*1.02+Math.cos(a)*len*.78),.02+t*.1+Math.sin(a)*len*.78,-.004*i);P.add(F);
     if(bat&&i<n-1){const M=SP(1,wc);M.scale.set(len*.85,.1,.018);M.rotation.z=s*(a+.4);M.position.set(s*(wl*1.0+Math.cos(a+.4)*len*.55),.06+t*.1+Math.sin(a+.4)*len*.55,-.01);P.add(M)}}
    w.push(P)};
   /* ⚡ 천둥새 날개: 비뚤비뚤한 번개 모양(지그재그 띠, 끝이 뾰족) */const boltWing=(s,P)=>{const C=[[0,0],[.2,.1],[.14,-.04],[.38,.08],[.31,-.06],[.54,.04],[.48,-.05],[.7,0]],Wd=[.24,.22,.2,.17,.15,.12,.09,0],sh=new THREE.Shape();C.forEach(([x,y],i)=>i?sh.lineTo(x,y+Wd[i]/2):sh.moveTo(x,y+Wd[i]/2));for(let i=C.length-1;i>=0;i--)sh.lineTo(C[i][0],C[i][1]-Wd[i]/2);const geo=GC('boltw',()=>{const q=new THREE.ExtrudeGeometry(sh,{depth:.035,bevelEnabled:true,bevelThickness:.008,bevelSize:.008,bevelSegments:1});q.translate(0,0,-.017);return q});const B=M(geo,0xfde047,{side:THREE.DoubleSide,emissive:0xfacc15,emissiveIntensity:.35,roughness:.35});B.userData.noStone=1;B.scale.set(s*wl*1.75,wl*1.6,1);B.position.set(-s*.03,.03,0);P.add(B);w.push(P)};
   /* 🌊 v17.2 바다새형 날개(시범: 폭격갈매기) — 한 장짜리 Shape+Extrude: 앞날은 둥글고 뒤쪽은 깃 끝 3개 물결, 바깥 30%는 진한 끝 색, 끝 깃 하나만 팀 색, 검은 외곽선, V자로 들고 뒤로 젖힘 */
-  const seaWing=(s,P)=>{const L=wl*1.3,T=WTIP[id],tc=Array.isArray(T)?T[0]:(T??dkn3(wc,.6));
+  const seaWing=(s,P)=>{const L=wl*(id==='albatross'?1.5:id==='pelican'?1.05:1.3),T=WTIP[id],tc=Array.isArray(T)?T[0]:(T??dkn3(wc,.6));
    const body=GC('seaw_body',()=>{const h=new THREE.Shape();h.moveTo(0,-.1);h.quadraticCurveTo(.55,-.15,1,-.03);h.lineTo(.9,.05);h.lineTo(.83,.03);h.lineTo(.74,.11);h.lineTo(.67,.085);h.lineTo(.56,.15);h.quadraticCurveTo(.3,.19,0,.16);h.lineTo(0,-.1);const q=new THREE.ExtrudeGeometry(h,{depth:.03,bevelEnabled:true,bevelThickness:.012,bevelSize:.012,bevelSegments:2,curveSegments:10});q.translate(0,0,-.015);return q});
    const tip=GC('seaw_tip',()=>{const h=new THREE.Shape();h.moveTo(.68,-.115);h.quadraticCurveTo(.86,-.115,1,-.03);h.lineTo(.9,.05);h.lineTo(.83,.03);h.lineTo(.74,.11);h.lineTo(.67,.085);h.quadraticCurveTo(.66,-.02,.68,-.115);const q=new THREE.ExtrudeGeometry(h,{depth:.034,bevelEnabled:true,bevelThickness:.013,bevelSize:.012,bevelSegments:2,curveSegments:8});q.translate(0,0,-.017);return q});
    const Wg=new THREE.Group();Wg.scale.set(s*L,.82,1);Wg.rotation.set(0,-s*.32,s*.16);Wg.position.set(-s*.02,.02,.01);P.add(Wg);
    const ol=new THREE.Mesh(body,new THREE.MeshBasicMaterial({color:0x141420,side:THREE.BackSide}));ol.scale.set(1.035,1.13,1.6);ol.position.set(-.012,0,0);ol.userData.noStone=1;Wg.add(ol);
-   const B=M(body,wc,{side:THREE.DoubleSide,flatShading:false});B.name='cv';Wg.add(B);
+   const B=M(body,wc,{side:THREE.DoubleSide,flatShading:false});B.name='wb';Wg.add(B);
    const Tp=M(tip,tc,{side:THREE.DoubleSide,flatShading:false});Wg.add(Tp);
+   const cv=SP(1,ltn3(wc));cv.name='cv';cv.scale.set(.3,.05,.025);cv.position.set(.33,-.06,.012);Wg.add(cv);
    /* 팀 색: 끝 깃 하나 */const tm=SP(1,oc);tm.userData.noStone=1;tm.scale.set(.085,.03,.022);tm.rotation.z=-.5;tm.position.set(.9,.035,.012);Wg.add(tm);
    w.push(P)};
   /* 🦅 v17.3 맹금형 날개(독수리·해적갈매기) — 넓고 짧은 한 장 + 끝에 벌어진 손가락깃 5개(진한 끝 색), 뒷날 물결, 검은 외곽선, 끝 손가락 하나만 팀 색 */
@@ -915,12 +915,25 @@ const WTIP={seagull:0x1f2937,albatross:0x1f2937,blizgull:0x334155,pelican:0x1f29
    const tip=GC('rapw_tip',()=>{const h=new THREE.Shape();h.moveTo(.7,-.17);h.lineTo(.76,-.16);fing(h);h.lineTo(.72,.2);h.quadraticCurveTo(.64,.02,.7,-.17);return ex(h,.036)});
    const Wg=new THREE.Group();Wg.scale.set(s*L,1,1);Wg.rotation.set(0,-s*.26,s*.12);Wg.position.set(-s*.02,.02,.01);P.add(Wg);
    const ol=new THREE.Mesh(body,new THREE.MeshBasicMaterial({color:0x141420,side:THREE.BackSide}));ol.scale.set(1.035,1.12,1.6);ol.position.set(-.012,0,0);ol.userData.noStone=1;Wg.add(ol);
-   const B=M(body,wc,{side:THREE.DoubleSide,flatShading:false});B.name='cv';Wg.add(B);
+   const B=M(body,wc,{side:THREE.DoubleSide,flatShading:false});B.name='wb';Wg.add(B);
    const Tp=M(tip,tc,{side:THREE.DoubleSide,flatShading:false});Wg.add(Tp);
-   /* 덮깃 줄(밝은 색 반달) */const cv=SP(1,ltn3(wc));cv.scale.set(.3,.07,.03);cv.position.set(.36,-.1,.012);Wg.add(cv);
+   /* 덮깃 줄(밝은 색 반달, 조합 새는 속성 색) */const cv=SP(1,ltn3(wc));cv.name='cv';cv.scale.set(.3,.075,.03);cv.position.set(.36,-.1,.012);Wg.add(cv);
    /* 팀 색: 맨 뒤 손가락깃 끝 */const tm=SP(1,oc);tm.userData.noStone=1;tm.scale.set(.06,.028,.024);tm.rotation.z=.9;tm.position.set(.85,.145,.014);Wg.add(tm);
    P.userData.tipX=s*L*.98;w.push(P)};
-  [-1,1].forEach(s=>{const P=new THREE.Group();P.position.set(s*.2,0,z0+.06);g.add(P);if(id==='thunderbird'){boltWing(s,P);return}if(id==='seagull'){seaWing(s,P);return}if(id==='eagle'||id==='pirate'){raptorWing(s,P);return}if(A&&id!=='swan'){featherWing(s,P);return}const W=SP(1,A?wc:(WINGC[id]??dkn3(c,.88)),id==='phoenix'?GL(0xf97316):{});if(A){W.scale.set(wl,.25,.045);W.position.set(s*wl*.95,.04,0)}else{W.scale.set(.06,.19,.12);W.position.set(s*.05,.03,-.02);W.rotation.y=s*.25}if(A)W.rotation.z=s*.2;if(id==='swan'){W.rotation.y=-s*.4;W.position.set(s*wl*.9,.04,wl*.39)}P.add(W);
+  /* 🐦 v17.4 작은 새형 날개(비둘기·앵무·혜성 매·오로라 올빼미) — 짧고 둥근 한 장, 끝이 둥근 깃 4개 물결, 바깥 진한 끝, 끝 깃 하나 팀 색 */
+  const roundWing=(s,P)=>{const L=wl*1.02,T=WTIP[id],tc=Array.isArray(T)?T[T.length-1]:(T??dkn3(wc,.62));
+   const edge=h=>{h.quadraticCurveTo(.99,-.11,1,-.01);h.quadraticCurveTo(1.03,.07,.93,.1);h.quadraticCurveTo(.94,.18,.82,.18);h.quadraticCurveTo(.79,.25,.67,.22)};
+   const ex=(h,d)=>{const q=new THREE.ExtrudeGeometry(h,{depth:d,bevelEnabled:true,bevelThickness:.012,bevelSize:.012,bevelSegments:2,curveSegments:10});q.translate(0,0,-d/2);return q};
+   const body=GC('rndw_body',()=>{const h=new THREE.Shape();h.moveTo(0,-.12);h.quadraticCurveTo(.5,-.24,.86,-.12);edge(h);h.quadraticCurveTo(.35,.27,0,.17);h.lineTo(0,-.12);return ex(h,.032)});
+   const tip=GC('rndw_tip',()=>{const h=new THREE.Shape();h.moveTo(.66,-.17);h.quadraticCurveTo(.78,-.16,.86,-.12);edge(h);h.quadraticCurveTo(.6,.04,.66,-.17);return ex(h,.036)});
+   const Wg=new THREE.Group();Wg.scale.set(s*L,1.05,1);Wg.rotation.set(0,-s*.24,s*.12);Wg.position.set(-s*.02,.02,.01);P.add(Wg);
+   const ol=new THREE.Mesh(body,new THREE.MeshBasicMaterial({color:0x141420,side:THREE.BackSide}));ol.scale.set(1.04,1.12,1.6);ol.position.set(-.014,0,0);ol.userData.noStone=1;Wg.add(ol);
+   const B=M(body,wc,{side:THREE.DoubleSide,flatShading:false});B.name='wb';Wg.add(B);Wg.add(M(tip,tc,{side:THREE.DoubleSide,flatShading:false}));
+   const cv=SP(1,ltn3(wc));cv.name='cv';cv.scale.set(.28,.075,.03);cv.position.set(.34,-.11,.012);Wg.add(cv);
+   const tm=SP(1,oc);tm.userData.noStone=1;tm.scale.set(.06,.03,.024);tm.rotation.z=.5;tm.position.set(.76,.19,.014);Wg.add(tm);
+   P.userData.tipX=s*L*.98;w.push(P)};
+  const WTYPE={sea:['seagull','albatross','blizgull','pelican'],raptor:['eagle','pirate','crow','falcon','plague','stormeagle','archaeo','ghostcrow'],round:['pigeon','parrot','comet','auroraowl']};
+  [-1,1].forEach(s=>{const P=new THREE.Group();P.position.set(s*.2,0,z0+.06);g.add(P);if(id==='thunderbird'){boltWing(s,P);return}if(WTYPE.sea.includes(id)){seaWing(s,P);return}if(WTYPE.raptor.includes(id)){raptorWing(s,P);return}if(WTYPE.round.includes(id)){roundWing(s,P);return}if(A&&id!=='swan'){featherWing(s,P);return}const W=SP(1,A?wc:(WINGC[id]??dkn3(c,.88)),id==='phoenix'?GL(0xf97316):{});if(A){W.scale.set(wl,.25,.045);W.position.set(s*wl*.95,.04,0)}else{W.scale.set(.06,.19,.12);W.position.set(s*.05,.03,-.02);W.rotation.y=s*.25}if(A)W.rotation.z=s*.2;if(id==='swan'){W.rotation.y=-s*.4;W.position.set(s*wl*.9,.04,wl*.39)}P.add(W);
    if(A&&id!=='vampire'){const cv=SP(1,ltn3(wc));cv.scale.set(wl*.55,.16,.05);cv.position.set(s*wl*.55,-.03,id==='swan'?wl*.22+.012:.012);if(id==='swan')cv.rotation.y=-s*.4;P.add(cv)}
    if(A){const tp=SP(1,oc);tp.userData.noStone=1;tp.scale.set(wl*.5,.15,.035);tp.rotation.z=s*.45;tp.position.set(s*wl*1.6,.16,id==='swan'?wl*.72:0);if(id==='swan')tp.rotation.y=-s*.4;P.add(tp);w.push(P)}})}
  /* 팀 색 목 고리는 디자인을 해쳐서 뺐음(2026-11-11) — 팀 표시는 나중에 다른 방식으로 */
