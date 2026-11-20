@@ -865,12 +865,12 @@ function towerMesh2(b){const g=new THREE.Group(),sp=[],id=b.id,cl=b.col,wd=0x713
 const BODYS={archaeo:[.9,1.62,.86],archaeo_g:[.95,1.5,.9],eagle:[.86,1.62,.84],stormeagle:[.88,1.62,.86],falcon:[.76,1.68,.74],berserk:[1.26,1.36,1.12],pigeon:[1.2,1.12,1.14],crow:[.9,1.48,.86],ghostcrow:[.9,1.48,.86],bonecrow:[.86,1.5,.82],plague:[.94,1.42,.9],
  seagull:[.9,1.52,.84],blizgull:[.94,1.5,.88],albatross:[.82,1.64,.78],pirate:[1.04,1.4,.96],owl:[1.22,.96,1.22],shadowowl:[1.2,.96,1.2],lich:[1.16,.98,1.22],auroraowl:[1.2,.96,1.2],
  parrot:[.92,1.2,1.1],vampire:[.84,.9,.9],voltbat:[.86,.92,.92],phoenix:[.86,1.56,.88],plasmabird:[.86,1.56,.88],comet:[.8,1.64,.8],thunderbird:[.84,1.42,.8],pelican:[1.12,1.45,1.02],
- duck:[1.12,1.45,.86],goose:[1,1.42,1.02],turkey:[1.02,1.18,1],rooster:[1,1.18,1.14],dodo:[1.28,1.22,1.18],woodpecker:[.86,1.18,1.08],kiwi:[1.06,1.22,.98],peacock:[.96,1.3,.98]};
+ duck:[1.12,1.45,.86],goose:[1,1.42,1.02],turkey:[1.02,1.18,1],rooster:[1,1.18,1.14],dodo:[1.28,1.22,1.18],woodpecker:[.86,1.18,1.08],kiwi:[1.06,1.22,.98],peacock:[.96,1.3,.98],roadrunner:[.74,1.72,.74]};
 const PENG={penguin:1,frostpeng:1},CHICKY={chick:1,hatch_chick:1,hatch_fire:1,hatch_ice:1,hatch_thunder:1,hatch_wind:1,hatch_dark:1,hatch_gold:1};
-const LIFT={crocbird:.26,knight:.3,egg_legs:.2,crane:.25,demcrane:.25,flamingo:.32};
-const HEADX={thunderbird:{hz:.52,hy:-.3,hr:.2},demcrane:{hz:.98,hy:-.3,hr:.13},archaeo_g:{hz:.6,hy:-.34,hr:.14},dodo:{hz:.74,hy:-.36,hr:.15},crocbird:{hz:.68,hy:-.2,hr:.12},hatch_chick:{hz:.56,hy:-.15,hr:.18},hatch_fire:{hz:.56,hy:-.15,hr:.18},hatch_ice:{hz:.56,hy:-.15,hr:.18},hatch_thunder:{hz:.56,hy:-.15,hr:.18},hatch_wind:{hz:.56,hy:-.15,hr:.18},hatch_dark:{hz:.56,hy:-.15,hr:.18},hatch_gold:{hz:.56,hy:-.15,hr:.18},frostpeng:{hz:.74,hy:-.08,hr:.15},auroraowl:{hz:.46,hy:-.3,hr:.2},crane:{hz:.98,hy:-.3,hr:.13},flamingo:{hz:1.06,hy:-.3,hr:.13},chick:{hz:.56,hy:-.15,hr:.18},penguin:{hz:.74,hy:-.08,hr:.15},swan:{hz:.86,hy:-.3,hr:.13},goose:{hz:.66,hy:-.36,hr:.14}};
+const LIFT={roadrunner:.2,crocbird:.26,knight:.3,egg_legs:.2,crane:.25,demcrane:.25,flamingo:.32};
+const HEADX={roadrunner:{hz:.7,hy:-.46,hr:.125},thunderbird:{hz:.52,hy:-.3,hr:.2},demcrane:{hz:.98,hy:-.3,hr:.13},archaeo_g:{hz:.6,hy:-.34,hr:.14},dodo:{hz:.74,hy:-.36,hr:.15},crocbird:{hz:.68,hy:-.2,hr:.12},hatch_chick:{hz:.56,hy:-.15,hr:.18},hatch_fire:{hz:.56,hy:-.15,hr:.18},hatch_ice:{hz:.56,hy:-.15,hr:.18},hatch_thunder:{hz:.56,hy:-.15,hr:.18},hatch_wind:{hz:.56,hy:-.15,hr:.18},hatch_dark:{hz:.56,hy:-.15,hr:.18},hatch_gold:{hz:.56,hy:-.15,hr:.18},frostpeng:{hz:.74,hy:-.08,hr:.15},auroraowl:{hz:.46,hy:-.3,hr:.2},crane:{hz:.98,hy:-.3,hr:.13},flamingo:{hz:1.06,hy:-.3,hr:.13},chick:{hz:.56,hy:-.15,hr:.18},penguin:{hz:.74,hy:-.08,hr:.15},swan:{hz:.86,hy:-.3,hr:.13},goose:{hz:.66,hy:-.36,hr:.14}};
 // 긴 목: [시작, 조절점, 끝(y,z)], 굵기 시작→끝, 색(없으면 몸 색)
-const NECK={demcrane:[[-.2,.64],[-.08,.84],[-.27,.9],.06,.05,0xf1f5f9],archaeo_g:[[-.18,.4],[-.3,.5],[-.33,.56],.07,.06],dodo:[[-.16,.42],[-.34,.5],[-.34,.68],.125,.085,0x7385a8],crane:[[-.2,.64],[-.08,.84],[-.27,.9],.06,.05,0x1f2937],flamingo:[[-.18,.7],[.06,.86],[-.3,.98],.065,.05,0xf9a8d4],swan:[[-.2,.4],[-.04,.62],[-.27,.78],.07,.055],goose:[[-.22,.36],[-.3,.5],[-.35,.56],.07,.06],ostrich:[[-.18,.78],[-.08,1.06],[-.27,1.2],.07,.045,0xf5b8c8]};
+const NECK={roadrunner:[[-.24,.5],[-.36,.58],[-.42,.66],.08,.07],demcrane:[[-.2,.64],[-.08,.84],[-.27,.9],.06,.05,0xf1f5f9],archaeo_g:[[-.18,.4],[-.3,.5],[-.33,.56],.07,.06],dodo:[[-.16,.42],[-.34,.5],[-.34,.68],.125,.085,0x7385a8],crane:[[-.2,.64],[-.08,.84],[-.27,.9],.06,.05,0x1f2937],flamingo:[[-.18,.7],[.06,.86],[-.3,.98],.065,.05,0xf9a8d4],swan:[[-.2,.4],[-.04,.62],[-.27,.78],.07,.055],goose:[[-.22,.36],[-.3,.5],[-.35,.56],.07,.06],ostrich:[[-.18,.78],[-.08,1.06],[-.27,1.2],.07,.045,0xf5b8c8]};
 // 나는 새 날개 색(없으면 몸 색을 살짝 어둡게)
 const WINGC={demcrane:0x1f2937,archaeo:0x8f8676,pelican:0xf1f5f9,humbee:0xca8a04,crocbird:0x64748b,pirate:0x4a3a2e,knight:0x1f2937,crane:0x1f2937,plague:0x3f5a1f,ghostcrow:0x64748b,voltbat:0x3f3f46,auroraowl:0x7aa2d6,plasmabird:0xf97316,stormeagle:0x4338ca,comet:0xbe123c,blizgull:0xe2e8f0,seagull:0x94a3b8,albatross:0xf1f5f9,eagle:0x5b4030,falcon:0x57534e,owl:0x6d4c33,crow:0x2e2a40,parrot:0x2e7d32,pigeon:0x7c8aa0,swan:0xffffff,phoenix:0xf97316,vampire:0x450a0a,thunderbird:0x3730a3};
 const ltn3=c=>{const m=v=>Math.round(v+(255-v)*.3);return(m((c>>16)&255)<<16)|(m((c>>8)&255)<<8)|m(c&255)},dkn3=(c,f)=>((Math.round(((c>>16)&255)*f)<<16)|(Math.round(((c>>8)&255)*f)<<8)|Math.round((c&255)*f));
@@ -882,7 +882,7 @@ function birdMesh2(b,oc){const g=new THREE.Group(),id=b.id,A=b.t==='A',c=b.col,w
  else{const nk=NECK[id];if(nk){const[a,m,e,r0,r1,nc]=nk,n=tall?18:12;for(let i=0;i<n;i++){const t=i/(n-1),q=1-t;at(SP(r0+(r1-r0)*t,nc||c),0,q*q*a[0]+2*q*t*m[0]+t*t*e[0],q*q*a[1]+2*q*t*m[1]+t*t*e[1])}}
   at(SP(hr,hc),0,hy,hz);const ec=id==='owl'?0xfde047:id==='vampire'?0xff2020:0x111111;
   {const ek=id==='owl'?1:hr/.15;/* 머리가 크면 눈 위치·크기도 같이 */[-1,1].forEach(s=>at(SP((id==='owl'?.065:.035)*Math.sqrt(ek),ec,id==='vampire'?GL(0xff0000):{}),s*.08*ek,hy-.09*ek,hz+.06*ek))}
-  const bk={kiwi:[.025,.42,0xd97706],duck:[.08,.2,0xfacc15],dodo:[.004,.02,0xf4a259],swan:[.045,.14,0xf97316],penguin:[.035,.13,0x1f2937],frostpeng:[.035,.13,0x312e81],crane:[.035,.28,0xd6d3a0],blizgull:[.04,.22,0xf97316],stormeagle:[.07,.22,0xfacc15],comet:[.05,.14,0xfacc15],eagle:[.07,.22,0xfacc15],parrot:[.004,.02,0xf59e0b],owl:[.04,.1,0xca8a04],ostrich:[.06,.17,0xe0a088],knight:[.04,.34,0xef4444],humbee:[.016,.3,0x111827],pelican:[.07,.5,0xf59e0b],crocbird:[.035,.15,0x1f2937],woodpecker:[.035,.3,0x57534e],turkey:[.05,.14,0xf59e0b],pirate:[.06,.17,0x374151],flamingo:[.05,.18,0x111827]}[id]||[.055,.16,0xf59e0b];
+  const bk={roadrunner:[.026,.3,0x3f3f46],kiwi:[.025,.42,0xd97706],duck:[.08,.2,0xfacc15],dodo:[.004,.02,0xf4a259],swan:[.045,.14,0xf97316],penguin:[.035,.13,0x1f2937],frostpeng:[.035,.13,0x312e81],crane:[.035,.28,0xd6d3a0],blizgull:[.04,.22,0xf97316],stormeagle:[.07,.22,0xfacc15],comet:[.05,.14,0xfacc15],eagle:[.07,.22,0xfacc15],parrot:[.004,.02,0xf59e0b],owl:[.04,.1,0xca8a04],ostrich:[.06,.17,0xe0a088],knight:[.04,.34,0xef4444],humbee:[.016,.3,0x111827],pelican:[.07,.5,0xf59e0b],crocbird:[.035,.15,0x1f2937],woodpecker:[.035,.3,0x57534e],turkey:[.05,.14,0xf59e0b],pirate:[.06,.17,0x374151],flamingo:[.05,.18,0x111827]}[id]||[.055,.16,0xf59e0b];
   const k=KO(bk[0],bk[1],bk[2]);k.rotation.z=PI;at(k,0,hy-hr-bk[1]/2+.04,hz-.03,id==='duck'?[1.8,1,.5]:tall?[1.6,1,.55]:null)}
 const WTIP={seagull:0x1f2937,albatross:0x1f2937,blizgull:0x334155,pelican:0x1f2937,pigeon:0x475569,eagle:0x3b2414,stormeagle:0x312e81,falcon:0x44403c,crow:0x111827,ghostcrow:0x475569,plague:0x365314,pirate:[0x3b2a1e,0xf1f5f9,0xe5e7eb,0x4a3a2e],owl:0x5b3a1e,auroraowl:0x6366f1,lich:0x581c87,shadowowl:0x0f172a,bonecrow:0xe5e7eb,berserk:0x7f1d1d,thunderbird:0xfde047,parrot:[0xe53935,0x1e88e5],phoenix:[0xef4444,0xfde047],plasmabird:[0xfb923c,0x60a5fa],comet:[0xf43f5e,0xfde047],hatch_wind:0x5eead4};
  if(id!=='kiwi'&&id!=='egg_legs'&&!PENG[id]&&!tall){const big=['eagle','phoenix','owl','vampire','stormeagle','auroraowl','pelican'].includes(id),wl=A?(big?.46:id==='hatch_wind'?.17:.34):.15,wc=WINGC[id]??(A?dkn3(c,.85):c);
@@ -995,7 +995,7 @@ const WTIP={seagull:0x1f2937,albatross:0x1f2937,blizgull:0x334155,pelican:0x1f29
  if(id==='eagle'||id==='stormeagle')at(BX(.2,.04,.03,id==='eagle'?0x451a03:0x1e1b4b),0,hy-.08,hz+.1);
  if(id==='vampire')[-1,1].forEach(s=>{const f=KO(.02,.07,0xffffff);f.rotation.z=PI;at(f,s*.03,hy-.22,hz-.1)});
  if(id==='duck')at(TR(.14,.025,0xffffff),0,hy+.1,hz-.1);
- if(!A&&!tall&&id!=='egg_legs'&&id!=='crocbird')(id==='flamingo'?[0]:[-1,1]).forEach(s=>at(BX(LF?.03:.045,LF?.03:.045,z0,id==='knight'?0xef4444:id==='crane'?0x57534e:id==='flamingo'?0xec4899:0xf97316),s*.1,-.02,z0/2-.04));/* 🦩 플라맹독은 외다리 */
+ if(!A&&!tall&&id!=='egg_legs'&&id!=='crocbird'&&id!=='roadrunner')(id==='flamingo'?[0]:[-1,1]).forEach(s=>at(BX(LF?.03:.045,LF?.03:.045,z0,id==='knight'?0xef4444:id==='crane'?0x57534e:id==='flamingo'?0xec4899:0xf97316),s*.1,-.02,z0/2-.04));/* 🦩 플라맹독은 외다리 */
  const bz=tall?1.7:.85+LF,bg=new THREE.Mesh(new THREE.PlaneGeometry(.6,.09),new THREE.MeshBasicMaterial({color:0}));bg.position.set(0,.45,bz);
  const f=new THREE.Mesh(new THREE.PlaneGeometry(.56,.06),new THREE.MeshBasicMaterial({color:0x22c55e}));f.position.set(0,.45,bz+.01);f.name='f';g.add(bg,f);
  g.scale.setScalar(b.id==='crocbird'?1.2:.7+Math.min(.9,b.hp/3500));return g}
@@ -1168,7 +1168,7 @@ let talkN=0;function sync3(dt){try{prevUpd()}catch(e){}try{guideUpd()}catch(e){}
  const us=new Set();
  p.units.forEach(u=>{us.add(u.id);let m=um.get(u.id);if(m&&m.userData.bp!==u.bp){rmM(m);um.delete(u.id);m=null}if(!m){m=birdMesh3(u.bp,parseInt(PC[u.owner].slice(1),16));artFx('bird',{m,b:u.bp,u});m.userData.bp=u.bp;Sc.add(m);um.set(u.id,m)}if(m.userData.fxm)matTick(m,S.t);
   if(u.bp.wig){const w=m.getObjectByName('wig'),gl=m.getObjectByName('glare');if(w)w.visible=!u.wg;if(gl){gl.visible=!!u.wg;gl.material.emissiveIntensity=.7+.8*Math.abs(Math.sin(S.t*4))}if(u.wgfx){u.wgfx=0;if(!S.sim){artFx('smoke',{x:u.x,y:BH-u.y,r:.6,col:0x6b4423});artFx('crit',{u})}}}
-  m.visible=!(u.popT&&S.t<u.popT);m.position.set(u.x,BH-u.y,u.bp.t==='A'?(u.gr>0?.35:1.4):u.fl>0?.75+Math.sin(S.t*5)*.06:.05+(u.jt>0?Math.sin(PI*(1-u.jt/.5))*.9:0));if(u.bp.id==='egg_legs'&&!u.hd&&(u.ha||0)>BAL.hatchT-1.2){const k=((u.ha||0)-(BAL.hatchT-1.2))/1.2;m.position.x+=Math.sin(S.t*55)*.035*k;m.position.y+=Math.cos(S.t*47)*.02*k}/* 🥚 v18.3 부화 직전 덜덜 */{let bb=m.userData.bub;if(u.fl>0&&!bb){bb=m.userData.bub=new THREE.Mesh(new THREE.SphereGeometry(.42,16,12),new THREE.MeshStandardMaterial({color:0xbae6fd,emissive:0x7dd3fc,emissiveIntensity:.5,transparent:true,opacity:.42,roughness:.1,depthWrite:false}));bb.position.z=.28;const hl=new THREE.Mesh(new THREE.SphereGeometry(.07,8,6),new THREE.MeshBasicMaterial({color:0xffffff}));hl.position.set(-.18,-.2,.2);bb.add(hl);m.add(bb)}if(bb)bb.visible=u.fl>0}m.scale.x=m.scale.y/XK;
+  m.visible=!(u.popT&&S.t<u.popT);m.position.set(u.x,BH-u.y,u.bp.t==='A'?(u.gr>0?.35:1.4):u.fl>0?.75+Math.sin(S.t*5)*.06:.05+(u.jt>0?Math.sin(PI*(1-u.jt/.5))*.9:0));if(u.bp.id==='egg_legs'&&!u.hd&&(u.ha||0)>BAL.hatchT-1.2){const k=((u.ha||0)-(BAL.hatchT-1.2))/1.2;m.position.x+=Math.sin(S.t*55)*.035*k;m.position.y+=Math.cos(S.t*47)*.02*k}/* 🥚 v18.3 부화 직전 덜덜 */{const wh=m.userData.whirl;if(wh)wh.forEach((q,i)=>q.rotation.x=-S.t*(u.stun>0||u.held?0:24)-i*.8)}/* 🌀 로드러너 프로펠러 다리 */{const fl=m.userData.flames;if(fl)fl.forEach((q,i)=>q.scale.set(1,.7+.5*Math.abs(Math.sin(S.t*31+i*1.7)),1));const ne=m.userData.neon;if(ne)ne.material.opacity=.75+.25*Math.sin(S.t*6)}{let bb=m.userData.bub;if(u.fl>0&&!bb){bb=m.userData.bub=new THREE.Mesh(new THREE.SphereGeometry(.42,16,12),new THREE.MeshStandardMaterial({color:0xbae6fd,emissive:0x7dd3fc,emissiveIntensity:.5,transparent:true,opacity:.42,roughness:.1,depthWrite:false}));bb.position.z=.28;const hl=new THREE.Mesh(new THREE.SphereGeometry(.07,8,6),new THREE.MeshBasicMaterial({color:0xffffff}));hl.position.set(-.18,-.2,.2);bb.add(hl);m.add(bb)}if(bb)bb.visible=u.fl>0}m.scale.x=m.scale.y/XK;
   // 💬 말하는 새: 끝까지 가는 동안 진행 25%·50%·75%에서 딱 한 마디씩(3번), 1.6초. 화면에 동시에 최대 3개
   if(u.bp.talk){let sp=m.userData.talk;const prog=u.y/BH,nx=u.tkN||0;
    if(nx<3&&prog>=(nx+1)*.25){u.tkN=nx+1;const A=sync3.tA=(sync3.tA||[]).filter(t=>t>S.t);if(A.length<3){u.tkI=nx%u.bp.talk.length;u.tkT=S.t+1.6;A.push(u.tkT)}}
@@ -1899,6 +1899,14 @@ const ART=(()=>{
     S(0,.02,z0-.05,.36,.42,.09,0xffffff);for(let i=0;i<4;i++){const a=i*PI/2+PI/4;S(Math.cos(a)*.34,Math.sin(a)*.4,z0-.05,.11,.11,.095,0xef4444,0,[0,0,a])}
     sides(s=>{Bx(s*.065,hy-.125,hz+.06,.08,.02,.055,O,0x111827);Bx(s*.065,hy-.135,hz+.06,.06,.01,.04,O,0x38bdf8,1)});Bx(0,hy-.13,hz+.075,.05,.015,.012,O,0x111827);
     Y(0,hy,zt-.02,.2,.012,UP,0xeab308);Hm(0,hy,zt-.04,.1,UP,0xfacc15);Y(0,hy,zt-.005,.102,.025,UP,0xef4444)},
+   // 🏃 과속 로드러너(디자인 시안): 뾰족 볏 + 눈 뒤 파랑·빨강 맨살 + 줄무늬 + 길게 뻗은 꼬리 + 흙먼지
+   roadrunner(){const DB=0x4a3424,LB=0xc9a77c,W=0xfaf6ee;
+    [[0,-.05,.13,.35],[0,.01,.17,.6],[0,.07,.15,.85],[0,.12,.11,1.1],[-.035,.03,.1,.7],[.035,.03,.1,.7]].forEach(([x,dy,h,a])=>K(x,hy+dy,zt+.005,.04,h*1.35,[a,0,x*6],DB));
+    sides(s=>{S(s*.1,hy-.01,hz+.03,.022,.03,.026,0x3b82f6);S(s*.105,hy+.035,hz+.025,.018,.024,.02,0xef4444);
+     [[-.24,.07],[-.12,.1],[0,.11],[.12,.1],[.24,.07]].forEach(([y,dz])=>{S(s*.12,y,z0+dz,.03,.06,.016,DB);S(s*.07,y+.05,z0+dz+.05,.025,.05,.014,DB)});[[-.16,-.03],[-.04,-.04],[.08,-.04],[.2,-.03]].forEach(([y,dz])=>S(s*.175,y,z0+dz,.02,.05,.012,LB))});
+    S(0,-.2,z0-.08,.12,.2,.1,W);
+    [-.05,0,.05].forEach((x,i)=>{S(x,.62,z0+.17,.035,.3,.022,i===1?DB:0x5b4330,0,[.55,0,x*2.4]);S(x*1.3,.86,z0+.36,.04,.07,.024,W,0,[.55,0,0])});
+        [-1,1].forEach(s=>[0,1].forEach(i=>Bx(s*(.12+i*.07),.44+i*.08,z0+.05+i*.06,.008,.16,.008,O,0xffffff,1)))},
    // 락스피릿 딱따구리: 모히칸 + 땀받이 + 박치기 선
    woodpecker(){const R=0xdc2626,W=0xffffff;S(0,hy+.015,hz+.06,.152,.158,.1,R);K(0,hy+.1,zt+.02,.05,.17,[.82,0,0],R);K(0,hy+.16,zt-.03,.035,.12,[.6,0,0],0xb91c1c);
     sides(s=>{Bx(s*.118,hy-.01,hz-.015,.02,.17,.034,[0,0,s*.25],0x111827);S(s*.33,.03,z0+.1,.03,.035,.012,W);S(s*.29,-.05,z0+.1,.025,.03,.012,W);Bx(s*.2,hy,hz+.1,.012,.1,.012,[0,0,s*.5],W,1)});
@@ -2244,6 +2252,65 @@ const ART=(()=>{
   /* 💤 zZ: 납작한 Z 두 개(큰·작은), 앞=-y. 원점=작은 Z */
   zz(){const g=new THREE.Group(),geo=gk('prop_zz',()=>{const h=new THREE.Shape();[[-.05,.05],[.05,.05],[.05,.032],[-.022,-.032],[.05,-.032],[.05,-.05],[-.05,-.05],[-.05,-.032],[.022,.032],[-.05,.032]].forEach(([x,y],i)=>i?h.lineTo(x,y):h.moveTo(x,y));const q=new THREE.ExtrudeGeometry(h,{depth:.018,bevelEnabled:false});q.rotateX(PI/2);return q}),zm=mat('prop_zz_m',()=>std(0x93c5fd,{flatShading:false,emissive:0x1d4ed8,emissiveIntensity:.35}));
    [[0,0,.7],[.09,.1,1]].forEach(([x,z,k])=>{const Z=new THREE.Mesh(geo,zm);Z.position.set(x,0,z);Z.scale.setScalar(k);g.add(Z);this._ol(g,Z,1.15,1.6,1.15)});return this._fin(g)},
+  /* 🥽 고글: 고무 띠 + 테 2개 + 주황 렌즈(빛남). 원점=두 눈 가운데, 앞=-y */
+  goggles(w){const g=new THREE.Group(),rm=mat('prop_gog_r',()=>std(0x475569,{flatShading:false,metalness:.2,roughness:.4})),lm=mat('prop_gog_l',()=>std(0xfb923c,{flatShading:false,transparent:true,opacity:.85,emissive:0xea580c,emissiveIntensity:.45}));
+   [-1,1].forEach(s=>{const R=new THREE.Mesh(gk('prop_gog_rim',()=>{const q=new THREE.TorusGeometry(.042,.012,6,16);q.rotateX(PI/2);return q}),rm);R.position.x=s*w/2;g.add(R);this._ol(g,R,1.12,1.6,1.12);
+    const L=new THREE.Mesh(gk('prop_gog_len',()=>{const q=new THREE.CircleGeometry(.038,14);q.rotateX(PI/2);return q}),lm);L.position.set(s*w/2,-.004,0);g.add(L)});
+   const bm=mat('prop_gog_s',()=>std(0x1f2937,{flatShading:false}));[-1,1].forEach(s=>{const B=new THREE.Mesh(gk('prop_gog_b',()=>new THREE.BoxGeometry(.05,.022,.03)),bm);B.position.set(s*(w/2+.06),.012,0);B.rotation.z=-s*.5;g.add(B)});
+   const br=new THREE.Mesh(gk('prop_gog_br',()=>new THREE.BoxGeometry(.03,.012,.014)),rm);g.add(br);
+   return this._fin(g)},
+  /* 🪖 폭주족 헬멧: 빨간 반구(캔버스 무늬: 앞뒤 흰 줄 2개 + 양옆 불꽃) + 꼰 흰 머리띠 + 옆 매듭. 원점=머리 중심, r=머리 반지름 */
+  helmet(r){const g=new THREE.Group(),R=r*1.16,wh=mat('prop_hel_w',()=>std(0xfafafa,{flatShading:false}));
+   const red=mat('prop_hel_tx',()=>{const c=document.createElement('canvas');c.width=512;c.height=256;const x=c.getContext('2d');x.fillStyle='#dc2626';x.fillRect(0,0,512,256);
+    const fl=(cx,dir)=>{for(let k=0;k<3;k++){const ox=cx+(k-1)*34*dir;x.beginPath();x.moveTo(ox-22,128);x.quadraticCurveTo(ox-30,92,ox-8,70);x.quadraticCurveTo(ox-14,96,ox+2,100);x.quadraticCurveTo(ox,64,ox+18,40);x.quadraticCurveTo(ox+10,82,ox+26,94);x.quadraticCurveTo(ox+34,112,ox+24,128);x.closePath();x.fillStyle='#fbbf24';x.fill();x.lineWidth=3;x.strokeStyle='#fef3c7';x.stroke()}};
+    fl(0,1);fl(512,-1);fl(256,1);[110,146,366,402].forEach(px=>{x.fillStyle='#ffffff';x.fillRect(px,0,16,128)});
+    const t=new THREE.CanvasTexture(c);return std(0xffffff,{map:t,flatShading:false,roughness:.25,emissive:0x450a0a,emissiveIntensity:.15})});
+   const D=new THREE.Mesh(gk('prop_hel_d',()=>{const q=new THREE.SphereGeometry(1,24,12,0,PI*2,0,PI*.5);q.rotateX(PI/2);return q}),red);D.scale.setScalar(R);D.position.z=r*.05;g.add(D);this._ol(g,D,1.07,1.07,1.07);
+   const rope=mat('prop_rope',()=>std(0xf8fafc,{flatShading:false,roughness:.7}));
+   for(let k=0;k<2;k++){const T=new THREE.Mesh(gk('prop_hel_rope',()=>{const q=new THREE.TorusGeometry(1,.075,6,28);const p=q.attributes.position;for(let i=0;i<p.count;i++){const a=Math.atan2(p.getY(i),p.getX(i));p.setZ(i,p.getZ(i)+Math.sin(a*14)*.05)}q.computeVertexNormals();return q}),rope);T.scale.setScalar(R*1.02);T.position.z=r*.05+R*.03+k*R*.07;T.rotation.z=k*.22;g.add(T)}
+   [[1,.1],[1.18,-.1]].forEach(([k,dz])=>{const K=new THREE.Mesh(gk('hlS',()=>new THREE.SphereGeometry(1,10,6)),rope);K.scale.set(R*.13,R*.2,R*.13*k);K.position.set(R*1.02,R*.25,r*.05+R*.1+dz*R);K.rotation.y=-.6;g.add(K)});
+   return this._fin(g)},
+  /* 💈 리젠트 머리(폭주족 볏): 앞으로 휘어 솟은 갈색 큰 덩어리(Extrude) + 밝은 결 줄 + 외곽선. 원점=헬멧 꼭대기, 앞=-y */
+  pomp(col){const g=new THREE.Group(),geo=gk('prop_pomp',()=>{const h=new THREE.Shape();h.moveTo(.12,0);h.quadraticCurveTo(.16,.22,.02,.34);h.quadraticCurveTo(-.12,.44,-.3,.36);h.quadraticCurveTo(-.2,.3,-.18,.24);h.quadraticCurveTo(-.06,.18,-.08,0);h.closePath();
+     const q=new THREE.ExtrudeGeometry(h,{depth:.1,bevelEnabled:true,bevelThickness:.03,bevelSize:.025,bevelSegments:3,curveSegments:12});q.translate(0,0,-.05);q.rotateX(PI/2);q.rotateZ(PI/2);return q});
+   const M=new THREE.Mesh(geo,mat('prop_pomp_'+col,()=>std(col,{flatShading:false,roughness:.45})));g.add(M);this._ol(g,M,1.1,1.05,1.05);
+   [-.025,.025].forEach(x=>{const L=new THREE.Mesh(gk('prop_pomp_l',()=>{const c=new THREE.QuadraticBezierCurve3(new THREE.Vector3(0,.06,.04),new THREE.Vector3(0,-.12,.36),new THREE.Vector3(0,-.27,.33));return new THREE.TubeGeometry(c,10,.008,4)}),mat('prop_pomp_hl',()=>std(0xa16207,{flatShading:false})));L.position.x=x;g.add(L)});
+   return this._fin(g)},
+  /* 😎 거울 선글라스(폭주족): 휘어진 넓은 렌즈 띠(주황→노랑 반사) + 검은 테. 원점=두 눈 가운데, 앞=-y */
+  shield(w){const g=new THREE.Group(),lm=mat('prop_shl',()=>{const c=document.createElement('canvas');c.width=64;c.height=64;const x=c.getContext('2d'),gr=x.createLinearGradient(0,0,0,64);gr.addColorStop(0,'#fde047');gr.addColorStop(.5,'#fb923c');gr.addColorStop(1,'#dc2626');x.fillStyle=gr;x.fillRect(0,0,64,64);x.fillStyle='rgba(255,255,255,.7)';x.fillRect(8,10,14,5);return basic(0xffffff,{map:new THREE.CanvasTexture(c),side:THREE.DoubleSide})});
+   const L=new THREE.Mesh(gk('prop_shl_g',()=>{const q=new THREE.CylinderGeometry(1,1,1,20,1,true,-PI*.32,PI*.64);q.rotateX(PI/2);return q}),lm);L.scale.set(w*1.15,w*.95,.075);L.position.y=w*.8;g.add(L);
+   const F=new THREE.Mesh(gk('prop_shl_f',()=>{const q=new THREE.TorusGeometry(1,.035,4,20,PI*.64);q.rotateZ(-PI*.82);return q}),mat('prop_shl_fr',()=>std(0x111827,{flatShading:false})));F.scale.set(w*1.17,w*.97,.35);F.position.set(0,w*.8,.038);g.add(F);
+   const F2=F.clone();F2.position.z=-.038;g.add(F2);return this._fin(g)},
+  /* 🧥 특공복: 몸 위쪽을 덮는 흰 껍질(금 테두리) + 뒤로 펄럭이는 자락 2장 + 금 무늬 점. 원점=몸통 중심, 몸 반지름·비율 */
+  jacket(R,sx,sy,sz){const g=new THREE.Group(),wm=mat('prop_jk',()=>std(0xf8fafc,{flatShading:false,roughness:.6,side:THREE.DoubleSide})),gd=mat('prop_gold',()=>std(0xfbbf24,{metalness:.15,roughness:.35,flatShading:false,emissive:0x92400e,emissiveIntensity:.2}));
+   const C=new THREE.Mesh(gk('prop_jk_c',()=>{const q=new THREE.SphereGeometry(1,22,12,0,PI*2,0,PI*.58);q.rotateX(PI/2);return q}),wm);C.scale.set(R*sx*1.06,R*sy*1.04,R*sz*1.08);C.position.z=-R*sz*.12;g.add(C);this._ol(g,C,1.04,1.03,1.04);
+   const hem=new THREE.Mesh(gk('prop_jk_h',()=>new THREE.TorusGeometry(1,.018,5,32)),gd);hem.scale.set(R*sx*1.07,R*sy*1.05,1);hem.position.z=-R*sz*.12-R*sz*1.08*Math.cos(PI*.58)*-1+.0;hem.position.z=-R*sz*.12+R*sz*1.08*Math.cos(PI*.58);g.add(hem);
+   [-1,1].forEach(s=>{const F=new THREE.Mesh(gk('prop_jk_f',()=>{const h=new THREE.Shape();h.moveTo(0,0);h.lineTo(.13,0);h.quadraticCurveTo(.16,.18,.1,.36);h.lineTo(.02,.4);h.quadraticCurveTo(-.02,.2,0,0);const q=new THREE.ExtrudeGeometry(h,{depth:.012,bevelEnabled:false,curveSegments:8});return q}),wm);
+    F.position.set(s*R*sx*.5,R*sy*.75,-R*sz*.25);F.rotation.set(-.35,s*.25,s>0?-.15:PI+.15);F.scale.set(1,1,1);g.add(F);this._ol(g,F,1.06,1.06,2);
+    for(let k=0;k<4;k++){const d=new THREE.Mesh(gk('hlS',()=>new THREE.SphereGeometry(1,10,6)),gd);d.scale.set(.022,.022,.008);const a=k/3;d.position.set(s*R*sx*(1.0-.05*k),-R*sy*.3+a*R*sy*.9,R*sz*.35);g.add(d)}});
+   return this._fin(g)},
+  /* 🧣 날리는 목도리 띠 2장: 원점=목, 뒤(+y)로 물결치며 흩날림 */
+  streamer(){const g=new THREE.Group(),wm=mat('prop_jk',()=>std(0xf8fafc,{flatShading:false,roughness:.6,side:THREE.DoubleSide}));
+   [[.04,0],[-.02,.05]].forEach(([dz,k],i)=>{const geo=gk('prop_str'+i,()=>{const q=new THREE.PlaneGeometry(.075,.62,1,12);q.translate(0,.31,0);const p=q.attributes.position;for(let j=0;j<p.count;j++){const y=p.getY(j);p.setZ(j,Math.sin(y*11+i*1.5)*.04+y*.18);p.setX(j,p.getX(j)+Math.sin(y*7+i)*.05)}q.computeVertexNormals();return q});
+    const P=new THREE.Mesh(geo,wm);P.position.set(i?-.05:.05,0,dz);P.rotation.z=i?.25:-.15;g.add(P);this._ol(g,P,1.15,1.02,1)});return this._fin(g)},
+  /* 🔧 배기관 2개 + 불꽃(빛남, sync3에서 깜빡). 원점=꼬리 뿌리, 뒤=+y */
+  exhaust(){const g=new THREE.Group(),cm=mat('prop_chrome',()=>std(0xe2e8f0,{flatShading:false,metalness:.3,roughness:.2,emissive:0x64748b,emissiveIntensity:.25}));g.userData.flames=[];
+   [-1,1].forEach(s=>{const P=new THREE.Mesh(gk('prop_ex_p',()=>{const q=new THREE.CylinderGeometry(.03,.034,.36,10);q.translate(0,.18,0);return q}),cm);P.position.set(s*.07,0,0);P.rotation.x=.42;g.add(P);this._ol(g,P,1.25,1.02,1.25);
+    const tip=new THREE.Vector3(s*.07,.36*Math.cos(.42),.36*Math.sin(.42));
+    const F=new THREE.Mesh(gk('prop_ex_f',()=>{const q=new THREE.ConeGeometry(.045,.22,8);q.translate(0,.11,0);return q}),mat('prop_ex_fl',()=>basic(0xfb923c,{transparent:true,opacity:.85,blending:THREE.AdditiveBlending,depthWrite:false})));F.position.copy(tip);F.rotation.x=.42;g.add(F);
+    const B=new THREE.Mesh(gk('prop_ex_b',()=>{const q=new THREE.ConeGeometry(.025,.13,8);q.translate(0,.065,0);return q}),mat('prop_ex_bl',()=>basic(0x60a5fa,{transparent:true,opacity:.9,blending:THREE.AdditiveBlending,depthWrite:false})));B.position.copy(tip);B.rotation.x=.42;g.add(B);g.userData.flames.push(F,B)});
+   return this._fin(g)},
+  /* 💜 네온 언더글로우: 바닥에 깔린 분홍·보라 타원 빛(더하기 혼합). 원점=바닥 */
+  neon(){const g=new THREE.Group(),m=mat('prop_neon',()=>{const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d'),gr=x.createRadialGradient(32,32,4,32,32,32);gr.addColorStop(0,'rgba(236,72,153,.95)');gr.addColorStop(.55,'rgba(168,85,247,.6)');gr.addColorStop(1,'rgba(168,85,247,0)');x.fillStyle=gr;x.fillRect(0,0,64,64);return basic(0xffffff,{map:new THREE.CanvasTexture(c),transparent:true,blending:THREE.AdditiveBlending,depthWrite:false})});
+   const P=new THREE.Mesh(gk('prop_neon_g',()=>new THREE.PlaneGeometry(1,1)),m);P.scale.set(.6,1.05,1);P.position.z=.012;g.add(P);g.userData.neon=P;return this._fin(g)},
+  /* 🌀 프로펠러 다리: 허리(원점)에서 다리 4개가 방사형으로 뻗고 반투명 원판이 겹침 → sync3에서 x축으로 계속 돌림(userData.whirl) */
+  whirl(L,col,ft){const g=new THREE.Group(),lm=mat('prop_wh_l'+col,()=>std(col,{flatShading:false})),fm=mat('prop_wh_f'+ft,()=>std(ft,{flatShading:false}));
+   for(let i=0;i<4;i++){const a=i*PI/2,P=new THREE.Group();P.rotation.x=a;g.add(P);
+    const Lg=new THREE.Mesh(gk('prop_wh_leg',()=>{const q=new THREE.CylinderGeometry(.018,.022,1,6);q.translate(0,-.5,0);q.rotateX(PI/2);return q}),lm);Lg.scale.set(1,1,L);P.add(Lg);
+    const F=new THREE.Mesh(gk('prop_wh_ft',()=>new THREE.ConeGeometry(.035,.09,6)),fm);F.position.set(0,-.04,-L);F.rotation.x=PI;P.add(F)}
+   const B=new THREE.Mesh(gk('prop_wh_b',()=>{const q=new THREE.CircleGeometry(1,24);q.rotateY(PI/2);return q}),mat('prop_wh_bl',()=>basic(0xcbd5e1,{transparent:true,opacity:.45,depthWrite:false,side:THREE.DoubleSide})));B.scale.setScalar(L*1.05);g.add(B);
+   const Rg=new THREE.Mesh(gk('prop_wh_r',()=>{const q=new THREE.TorusGeometry(1,.035,4,28);q.rotateY(PI/2);return q}),mat('prop_wh_rl',()=>basic(0xfb923c,{transparent:true,opacity:.9,blending:THREE.AdditiveBlending,depthWrite:false})));Rg.scale.setScalar(L*1.02);g.add(Rg);
+   return this._fin(g)},
   /* 🥄 금수저 */
   spoon(){const g=new THREE.Group(),gm=mat('prop_gold',()=>std(0xfbbf24,{metalness:.15,roughness:.35,flatShading:false,emissive:0x92400e,emissiveIntensity:.2}));
    const bowl=new THREE.Mesh(gk('hlS',()=>new THREE.SphereGeometry(1,10,6)),gm);bowl.scale.set(.04,.055,.015);g.add(bowl);this._ol(g,bowl,1.2,1.15,1.6);
@@ -2308,6 +2375,10 @@ const ART=(()=>{
    if(id==='goose'){put(PROP.shades(Math.max(.15,EW)),'propShades',0,EY[0]-.03,EY[1]+.005,1.05);put(PROP.chain(.15),'propChain',0,H.hy+.08,H.hz-.17,1);put(PROP.bandage(),'propBand',.1,H.hy+.02,H.hz+H.hr*.75,1,[.3,0,.4])}
    if(id==='crane'){put(PROP.towel(H.hr),'propTowel',0,H.hy,H.hz+.01,1);put(PROP.tub(),'propTub',.3,-.05,z0-.05,1.2,[0,-.25,0])}
    if(id==='chick'){const q=put(PROP.heart(),'propHeart',0,H.hy+.04,H.hz+H.hr+.16,1.3);q.userData.bob=1}
+   if(id==='roadrunner'){put(PROP.helmet(H.hr),'propHelmet',0,H.hy+.05,H.hz+.06,.95,[.55,0,0]);put(PROP.pomp(0x6b4226),'propPomp',0,H.hy+.1,H.hz+H.hr*.9,.62,[.25,0,0]);put(PROP.shield(Math.max(.15,EW)),'propShade',0,EY[0]-.02,EY[1]+.01,1);
+    const b0=m.children[0];put(PROP.jacket(.26,b0?b0.scale.x:.74,b0?b0.scale.y:1.72,b0?b0.scale.z:.74),'propJacket',0,b0?b0.position.y:0,z0,1);put(PROP.streamer(),'propScarf',0,H.hy+.12,H.hz-.12,1);
+    const ex=put(PROP.exhaust(),'propExhaust',0,.36,z0+.06,1);m.userData.flames=ex.userData.flames;const ng=put(PROP.neon(),'propNeon',0,0,0,1);m.userData.neon=ng.userData.neon;
+    const hip=.2;m.userData.whirl=[-1,1].map(s=>put(PROP.whirl(hip-.01,0x64748b,0x475569),'propWhirl',s*.08,-.04,hip))}
    if(id==='kiwi')put(PROP.sign('과일 아님'),'propSign',.36,-.14,0,1,[0,0,-.3]);
    if(id==='rooster')put(PROP.clock(),'propClock',.3,-.14,z0-.06,1.35,[0,0,-.3]);
    if(id==='owl'){const om=mat('prop_dark',()=>basic(0x6d28d9,{transparent:true,opacity:.75}));eyes.forEach(([x,y,z,er])=>{er*=ek;const q=new THREE.Mesh(gk('prop_dk',()=>{const t=new THREE.TorusGeometry(1,.26,4,10,PI);t.rotateX(-PI/2);return t}),om);q.name='propDark';q.position.set(x,y-er*.7,z-er*.45);q.scale.setScalar(er*1.15);m.add(q)});
@@ -2330,7 +2401,7 @@ const ART=(()=>{
   if(id==='thunderbird'||id==='stormeagle'){const c=id==='stormeagle'?PROP.cloud(0x94a3b8,0x334155):PROP.cloud();c.name='propCloud';c.position.set(0,H.hy+.01,H.hz+H.hr-.02);m.add(c)}
   if(id==='thunderbird'||id==='plasmabird'){const q=PROP.plug(id==='plasmabird'?0x1f2937:0x374151);q.name='propPlug';q.scale.setScalar(1.55);q.rotation.x=.35;q.position.set(0,.4,H.z0+.12);m.add(q)}
   if(id==='pirate'){const tp=wingTip(m,1);if(tp){const sw=PROP.sword();sw.name='propSword';sw.scale.setScalar(1.15);sw.position.set(tp.x,-.03,.04);sw.rotation.set(-.38,.28,0);tp.P.add(sw)}}/* 🗡 오른 날개 끝에 칼 */
-  if(dex&&!air&&!H.egg&&id!=='eggchief'&&id!=='crocbird'&&id!=='ostrich'){const ft=mat('foot',()=>std(0xf59e0b,{flatShading:false,roughness:.6}));[-1,1].forEach(s=>{const o=new THREE.Mesh(gk('hlS',()=>new THREE.SphereGeometry(1,10,6)),ft);o.position.set(s*.1,-.08,-.02);o.scale.set(.06,.085,.03);m.add(o)})}};
+  if(dex&&!air&&!H.egg&&id!=='eggchief'&&id!=='crocbird'&&id!=='ostrich'&&id!=='roadrunner'){const ft=mat('foot',()=>std(0xf59e0b,{flatShading:false,roughness:.6}));[-1,1].forEach(s=>{const o=new THREE.Mesh(gk('hlS',()=>new THREE.SphereGeometry(1,10,6)),ft);o.position.set(s*.1,-.08,-.02);o.scale.set(.06,.085,.03);m.add(o)})}};
 
  // ---------- 🏗️ 타워 모델: 이름 맞춤 디자인 + 강화 Lv.1~4 진화 ----------
  // (종류,레벨)마다 부품을 재질 종류별 지오메트리 1개로 합쳐 캐시 → 타워 하나당 메시 3~12개(드로우콜 최소).
