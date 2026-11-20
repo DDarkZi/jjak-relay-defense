@@ -1941,8 +1941,7 @@ const ART=(()=>{
     Bx(0,-.33,z0+.02,.055,.02,.14,O,0x92400e);[0,1,2].forEach(i=>Bx(0,-.342,z0-.02+i*.045,.056,.004,.01,[0,.5,0],0x451a03));Su(0,-.333,z0+.1,.03,0x78350f);
     Y(-.22,-.37,z0-.08,.08,.15,UP,0xd6a77a);Y(-.22,-.37,z0,.07,.012,UP,0x3b1d0a);T(-.31,-.37,z0-.08,.045,.012,[0,PI/2,0],0xd6a77a);[0,1,2].forEach(i=>Su(-.22+(i-1)*.025,-.37,z0+.06+i*.05,.016,0xffffff,1))},
    // 정전 천둥새: 먹구름 모자 + 전기 플러그 꼬리
-   thunderbird(){Su(0,hy,zt+.04,.1,0x94a3b8);Su(-.07,hy+.02,zt+.03,.07,0xcbd5e1);Su(.07,hy+.02,zt+.03,.07,0xcbd5e1);
-    Bx(0,.47,z0+.1,.08,.1,.045,O,0x374151);sides(s=>Bx(s*.022,.55,z0+.1,.012,.05,.02,O,0xd1d5db));
+   thunderbird(){/* 먹구름 모자·플러그 꼬리는 PROP.cloud/PROP.plug(v17.5) */
     Bx(0,-.31,z0+.05,.04,.012,.1,[0,0,.5],0xfde047,1);Bx(0,-.31,z0-.04,.04,.012,.1,[0,0,-.5],0xfde047,1)},
    // 대머리 독수리: 흰머리 + 목 털옷
    eagle(){Su(-.04,hy+.02,zt+.0,.065,0xffffff);Su(.04,hy+.0,zt+.0,.06,0xffffff);Su(0,hy+.05,zt-.01,.06,0xffffff);T(0,hy+.1,hz-.13,.15,.045,O,0xffffff)},
@@ -1977,7 +1976,7 @@ const ART=(()=>{
     [[.18,-.1,zt+.2,.04],[-.15,-.05,zt+.3,.05],[.1,.05,zt+.42,.035]].forEach(([x,y,z,r])=>Su(x,y,z,r,0xffffff,1));K(0,.36,z0+.02,.08,.22,[-.3,0,0],0x1f2937)},
    // 고속충전 불새: 배터리 + 안테나 + 플러그 꼬리
    plasmabird(){Bx(0,-.32,z0,.14,.03,.09,O,0x1f2937);Bx(0,-.32,z0+.065,.04,.03,.02,O,0x9ca3af);[-1,0,1].forEach(i=>Bx(i*.04,-.338,z0,.03,.01,.06,O,0x4ade80,1));
-    sides(s=>{K(s*.06,hy,zt,.012,.14,[PI/2,0,-s*.3],0x9ca3af);Su(s*.105,hy,zt+.065,.02,0xfde047,1)});Bx(0,.48,z0+.1,.08,.1,.045,O,0x374151);sides(s=>Bx(s*.022,.56,z0+.1,.012,.05,.02,O,0xd1d5db))},
+    sides(s=>{K(s*.06,hy,zt,.012,.14,[PI/2,0,-s*.3],0x9ca3af);Su(s*.105,hy,zt+.065,.02,0xfde047,1)});/* 플러그 꼬리는 PROP.plug(v17.5) */},
    // 퀵배달 혜성매: 택배 상자 + 배달 모자 + 불꽃 꼬리
    comet(){Bx(0,.08,z0+.35,.26,.28,.2,O,0xd6a35c);Bx(0,.08,z0+.35,.05,.285,.204,O,0xfde68a);Hm(0,hy,hz+.01,hr+.012,UP,0x2563eb);Bx(0,hy-.14,hz+.07,.16,.09,.015,O,0x2563eb);
     K(0,.62,z0+.1,.1,.5,BK,0xf97316,1);K(0,.66,z0+.1,.06,.42,BK,0xfde047,1)},
@@ -1994,7 +1993,7 @@ const ART=(()=>{
    frostpeng(){[-1,0,1].forEach(i=>K(i*.05,hy,zt,.03,.14-Math.abs(i)*.03,[PI/2,0,i*.3],0x7dd3fc));sides(s=>Bx(s*.25,-.05,.55,.09,.09,.09,[.3,.4,.2],0xddd6fe));
     T(0,-.03,.6,.165,.04,O,0x7c3aed);[[.07,-.26,.42,.022],[.1,-.25,.33,.016]].forEach(([x,y,z,r])=>Su(x,y,z,r,0xa3e635,1));Bx(0,hy-.02,zt+.04,.16,.16,.07,O,0xdbeafe)},
    // 태풍 독수리: 먹구름 + 소용돌이
-   stormeagle(){Su(0,hy,zt+.04,.1,0x64748b);Su(-.07,hy+.02,zt+.03,.07,0x94a3b8);Su(.07,hy+.02,zt+.03,.07,0x94a3b8);[[-.32,.05,z0+.1],[.3,-.05,z0+.15],[0,.35,z0+.05]].forEach(([x,y,z])=>Bx(x,y,z,.025,.02,.09,[0,x*2,0],0xfde047,1))},
+   stormeagle(){/* 먹구름 모자는 PROP.cloud(v17.5) */[[-.32,.05,z0+.1],[.3,-.05,z0+.15],[0,.35,z0+.05]].forEach(([x,y,z])=>Bx(x,y,z,.025,.02,.09,[0,x*2,0],0xfde047,1))},
    // 보조배터리 박쥐: 뾰족 귀 + 보조배터리 + 충전선
    voltbat(){sides(s=>{K(s*.11,hy+.02,zt,.05,.2,[PI/2,0,-s*.25],0x365314);K(s*.03,hy-.2,hz-.1,.012,.05,DN,0xffffff)});Bx(0,.08,z0+.27,.2,.3,.07,O,0x374151);
     [-1,0,1].forEach(i=>Su(i*.05,-.03,z0+.31,.012,0x4ade80,1));Bx(0,.14,z0+.31,.05,.1,.01,O,0xfde047,1);T(0,.4,z0,.07,.01,[PI/2,0,0],0x111827)},
@@ -2092,6 +2091,28 @@ const ART=(()=>{
    const bar=new THREE.Mesh(gk('prop_sword_bar',()=>new THREE.BoxGeometry(.13,.03,.022)),gold);bar.position.z=.058;g.add(bar);
    /* 볼록한 손잡이 + 끝 구슬 */const gr=new THREE.Mesh(gk('prop_sword_grip',()=>{const pts=[[.0,0],[.017,.004],[.021,.045],[.017,.086],[0,.09]].map(([r,z])=>new THREE.Vector2(r,z));const q=new THREE.LatheGeometry(pts,8);q.rotateX(PI/2);return q}),mat('prop_wood',()=>std(0x7c3f12,{flatShading:false})));gr.position.z=-.035;g.add(gr);
    const pm=new THREE.Mesh(gk('prop_sword_pom',()=>new THREE.SphereGeometry(.026,10,8)),gold);pm.position.z=-.045;g.add(pm);
+   g.traverse(o=>{o.userData.noStone=1});return g},
+  /* ☁️ 먹구름 모자: 몽글몽글 구 6개를 한 덩어리로 + 납작한 어두운 밑면 + 검은 외곽선 + 양옆 작은 번개. 원점=머리 꼭대기 */
+  cloud(top=0xe2e8f0,bot=0x64748b){const g=new THREE.Group(),P=[[0,0,.06,.1],[-.1,.01,.035,.075],[.1,.01,.035,.075],[-.045,.05,.08,.07],[.05,-.04,.085,.065],[0,.06,.03,.07]];
+   const geo=gk('prop_cloud',()=>merge(P.map(([x,y,z,r])=>[new THREE.SphereGeometry(1,12,9),x,y,z,r*1.15,r,r*.9,0,0,0,0xffffff])));
+   const C=new THREE.Mesh(geo,mat('prop_cloud_'+top,()=>std(top,{flatShading:false,roughness:.85})));C.position.z=.02;g.add(C);
+   const O=new THREE.Mesh(geo,mat('prop_ol',()=>basic(0x141420,{side:THREE.BackSide})));O.position.z=.012;O.scale.set(1.08,1.1,1.12);g.add(O);
+   const Bt=new THREE.Mesh(gk('prop_cloud_bot',()=>new THREE.SphereGeometry(1,14,8)),mat('prop_cloud_'+bot,()=>std(bot,{flatShading:false,roughness:.9})));Bt.scale.set(.2,.13,.035);Bt.position.z=.025;g.add(Bt);
+   const bolt=gk('prop_bolt',()=>{const h=new THREE.Shape();[[0,0],[.03,.05],[.012,.05],[.03,.1],[-.012,.04],[.006,.04],[-.012,0]].forEach(([x,y],i)=>i?h.lineTo(x,y):h.moveTo(x,y));const q=new THREE.ExtrudeGeometry(h,{depth:.012,bevelEnabled:false});q.rotateX(PI/2);q.translate(0,0,-.1);return q});
+   const ym=mat('prop_bolt_y',()=>std(0xfde047,{flatShading:false,emissive:0xf59e0b,emissiveIntensity:.5}));
+   [-1,1].forEach(sd=>{const b=new THREE.Mesh(bolt,ym);b.position.set(sd*.215,0,.07);b.rotation.y=sd*.45;b.scale.setScalar(1.3);g.add(b)});
+   g.traverse(o=>{o.userData.noStone=1});return g},
+  /* 🔌 플러그 꼬리: 엉덩이에서 꼬불꼬불 전선 → 둥근 플러그 몸통 → 은색 핀 2개. 원점=꼬리 뿌리, +y 뒤쪽 */
+  plug(body=0x374151,cord=0x1f2937){const g=new THREE.Group();
+   const cu=new THREE.CatmullRomCurve3([[0,0,0],[.04,.05,.03],[-.03,.1,.05],[.03,.15,.06],[0,.2,.07]].map(a=>V3(a[0],a[1],a[2])));
+   const cg=gk('prop_plug_cord',()=>new THREE.TubeGeometry(cu,20,.014,6,false));
+   g.add(new THREE.Mesh(cg,mat('prop_cord_'+cord,()=>std(cord,{flatShading:false,roughness:.6}))));
+   const bg=gk('prop_plug_body',()=>{const pts=[[0,0],[.03,.004],[.042,.03],[.045,.07],[.04,.085],[0,.088]].map(([r,z])=>new THREE.Vector2(r,z));const q=new THREE.LatheGeometry(pts,12);q.rotateX(-PI/2);return q});
+   const pb=new THREE.Mesh(bg,mat('prop_plug_'+body,()=>std(body,{flatShading:false,roughness:.45})));pb.position.set(0,.195,.07);g.add(pb);
+   const po=new THREE.Mesh(bg,mat('prop_ol',()=>basic(0x141420,{side:THREE.BackSide})));po.position.copy(pb.position);po.position.y-=.004;po.scale.set(1.18,1.1,1.18);g.add(po);
+   const pin=gk('prop_plug_pin',()=>new THREE.BoxGeometry(.014,.06,.024));const sm=mat('prop_steel',()=>std(0xc4d0dc,{metalness:.25,roughness:.3,flatShading:false,emissive:0x334155,emissiveIntensity:.15}));
+   [-1,1].forEach(sd=>{const q=new THREE.Mesh(pin,sm);q.position.set(sd*.02,.305,.07);g.add(q)});
+   const ring=new THREE.Mesh(gk('prop_plug_ring',()=>new THREE.TorusGeometry(.043,.007,6,16)),mat('prop_plug_ring',()=>std(0xfde047,{flatShading:false,emissive:0xf59e0b,emissiveIntensity:.3})));ring.rotation.x=PI/2;ring.position.set(0,.25,.07);g.add(ring);
    g.traverse(o=>{o.userData.noStone=1});return g}};
  /* 소품 붙이기: 날개 끝 소켓(오른쪽 날개 그룹의 자식 → 같이 퍼덕임) */const wingTip=(m,side)=>{const w=m.userData.w;const P=w&&w[side>0?1:0];if(!P)return null;if(P.userData.tipX)return{P,x:P.userData.tipX*.78};let mx=0;P.children.forEach(o=>{mx=Math.max(mx,Math.abs(o.position.x))});return{P,x:side*mx*.78}};
  const ACG={};function accGeo(b,H){let r=ACG[b.id];if(!r){const[P,G]=accParts(b,H),mk=(k,L)=>L.length?gk(k+b.id,()=>merge(L)):null;r=ACG[b.id]={p:mk('acc_',P),g:mk('accG_',G)}}return r}
@@ -2112,6 +2133,9 @@ const ART=(()=>{
    const oo=add(og,mat('outl',()=>basic(0xffffff,{vertexColors:true,side:THREE.BackSide})),'artOutl');if(st)fadeSt(oo,m)}
   animAdd(m,b,H,st,cl);
   {const ag=accGeo(b,H);if(ag.p){const o=add(ag.p,AMAT(),'artAcc');if(st)fadeSt(o,m)}if(ag.g){const o=add(ag.g,GMAT(),'artAccG');if(st)fadeSt(o,m)}}
+  /* ☁️🔌 v17.5 소품 상자: 먹구름 모자(머리 꼭대기 소켓)·플러그 꼬리(꼬리 뿌리 소켓) */
+  if(id==='thunderbird'||id==='stormeagle'){const c=id==='stormeagle'?PROP.cloud(0x94a3b8,0x334155):PROP.cloud();c.name='propCloud';c.position.set(0,H.hy+.01,H.hz+H.hr-.02);m.add(c)}
+  if(id==='thunderbird'||id==='plasmabird'){const q=PROP.plug(id==='plasmabird'?0x1f2937:0x374151);q.name='propPlug';q.scale.setScalar(1.55);q.rotation.x=.35;q.position.set(0,.4,H.z0+.12);m.add(q)}
   if(id==='pirate'){const tp=wingTip(m,1);if(tp){const sw=PROP.sword();sw.name='propSword';sw.scale.setScalar(1.15);sw.position.set(tp.x,-.03,.04);sw.rotation.set(-.38,.28,0);tp.P.add(sw)}}/* 🗡 오른 날개 끝에 칼 */
   if(dex&&!air&&!H.egg&&id!=='eggchief'&&id!=='crocbird'&&id!=='ostrich'){const ft=mat('foot',()=>std(0xf59e0b,{flatShading:false,roughness:.6}));[-1,1].forEach(s=>{const o=new THREE.Mesh(gk('hlS',()=>new THREE.SphereGeometry(1,10,6)),ft);o.position.set(s*.1,-.08,-.02);o.scale.set(.06,.085,.03);m.add(o)})}};
 
