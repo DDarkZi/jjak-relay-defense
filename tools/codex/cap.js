@@ -1,0 +1,23 @@
+const {chromium}=require('playwright');const fs=require('fs');const OUT=process.argv[2]||'./codex_out/';
+(async()=>{fs.mkdirSync(OUT+'png',{recursive:true});const b=await chromium.launch({args:['--use-gl=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist']});
+ const ctx=await b.newContext({serviceWorkers:'block',viewport:{width:1080,height:1400},deviceScaleFactor:2});const pg=await ctx.newPage();let ne=0;pg.on('pageerror',e=>{if(ne++<3)console.log('ERR',String(e).slice(0,200))});
+ await pg.route('**/three.min.js',r=>r.fulfill({path:process.env.THREE_JS,contentType:'application/javascript'}));
+ await pg.goto('http://localhost:8123/index.html?v='+Date.now());await pg.waitForTimeout(3000);
+ const pngs=await pg.evaluate(()=>{dxThumbs();const o={};for(const k in DXC)if(k!=='done'&&!k.startsWith('s_'))o[k]=DXC[k];return o});
+ for(const [k,v] of Object.entries(pngs))fs.writeFileSync(OUT+'png/'+k+'.png',Buffer.from(v.split(',')[1],'base64'));
+ const secs=await pg.evaluate(()=>{const TN={fire:'🔥 화염',ice:'❄️ 빙결',thunder:'⚡ 뇌전',wind:'🌪️ 폭풍',dark:'☠️ 독'};const tu=new Set(Object.values(TECH).map(t=>t.u));
+  const esc=s=>String(s??'').replace(/</g,'&lt;');const ucard=u=>`<div class=c><img src="${DXC['u_'+u.id]}"><b>${u.ic||''} ${esc(u.n)}</b><small>${u.c}G · 체력 ${u.hp} · 속도 ${u.sp} · ${u.t==='A'?'공중':'지상'}${u.count>1?' · '+u.count+'마리':''}</small><p>${esc(u.x)}</p></div>`;
+  const tcard=t=>`<div class="c t"><div class=lv>${[1,2,3,4].filter(l=>t.id!=='wall'||l===1).map(l=>`<div><img src="${DXC[l===1?'t_'+t.id:'t_'+t.id+'_'+l]}"><i>Lv${l}</i></div>`).join('')}</div><b>${t.ic||''} ${esc(t.n)}</b><small>${t.c}G${t.d?' · 공격 '+t.d:''}${t.r?' · 사거리 '+t.r:''}${t.cd?' · 간격 '+t.cd+'초':''}${t.t==='A'?' · 공중 전용':t.t==='G'?' · 지상 전용':''}</small><p>${esc(t.x)}</p></div>`;
+  const S=[];const add=(id,h,arr,f)=>{if(arr.length)S.push({id,h:`<section id=${id}><h2>${h} <span>${arr.length}</span></h2><div class=g>${arr.map(f).join('')}</div></section>`})};
+  const vis=U.filter(u=>!u.hidden&&!u.id.startsWith('hatch_')&&u.id!=='archaeo_g');
+  add('b_basic','🐦 새 — 기본',vis.filter(u=>!tu.has(u.id)&&!u.secret),ucard);
+  add('b_tech','🐦 새 — 속성 전용',vis.filter(u=>tu.has(u.id)),u=>ucard(u).replace('<b>','<b>'+TN[Object.keys(TECH).find(k=>TECH[k].u===u.id)]+' · '));
+  add('b_secret','🥚 숨은 새 · 부화 병아리 · 변신',U.filter(u=>u.hidden||u.secret||u.id.startsWith('hatch_')||u.id==='archaeo_g'),ucard);
+  add('t_basic','🏹 타워 — 공용',T.filter(t=>!t.tech&&!t.combo),tcard);
+  for(const k of Object.keys(TECH))add('t_'+k,'🏹 타워 — '+TN[k],T.filter(t=>t.tech===k),tcard);
+  add('t_combo','🌈 타워 — 속성 조합',T.filter(t=>t.combo),t=>tcard(t).replace('<b>','<b>'+t.combo.map(c=>TN[c].split(' ')[0]).join('')+' '));
+  document.head.innerHTML='<meta charset=utf-8><link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700&display=swap" rel=stylesheet><style>body{margin:0;background:#fdf8ee;font-family:"Noto Sans KR";color:#222;width:1080px}section{padding:28px 32px 36px}h1,h2{font-family:"Black Han Sans";margin:0 0 18px}h1{font-size:44px;padding:28px 32px 0}h2{font-size:34px}h2 span{font-size:20px;color:#999}.g{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.c{background:#fff;border:3px solid #222;border-radius:16px;padding:10px;text-align:center}.c img{width:100%;background:#eef6e6;border-radius:10px}.c b{display:block;font-size:19px;margin-top:6px}.c small{display:block;color:#666;font-size:13px}.c p{margin:6px 0 0;font-size:14px;line-height:1.35}.t{grid-column:span 2}.lv{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.lv i{font-size:13px;color:#666;display:block;font-style:normal;font-weight:700}</style>';
+  document.body.className='';document.body.innerHTML=`<h1>🐦 새떼 주의보: 짹짹 디펜스 — 도감 (${new Date().toISOString().slice(0,10)})</h1>`+S.map(s=>s.h).join('');window.scrollTo(0,0);return S.map(s=>s.id)});
+ await pg.waitForTimeout(3000);
+ for(const id of secs){await pg.locator('#'+id).screenshot({path:OUT+id+'.png'});console.log('sec',id)}
+ await pg.screenshot({path:OUT+'all.png',fullPage:true});await b.close()})();
