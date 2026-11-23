@@ -566,7 +566,7 @@ function placeScore(p,b,x,y,pa){if(!b.r)return 0;const px=cellX(x,y),py=cellY(y)
  if(b.t==='A'||b.snack){const cx=cellX(COLS>>1,7),air=Math.max(0,b.r*2-Math.abs(px-cx)*.8);return air*(b.snack?1.6-py/BH:1)+cov*.3}
  if(b.cctv)return cov*(1.6-prog*1.4);
  let v=cov;if(b.splash||b.self||b.chain)v*=1+.45*Math.max(0,segs-1);if(b.slow||b.freeze||b.stun||b.bubble||b.kb)v*=1.5-prog;if(b.r>=4)v*=1.1;return v}
-function buildT(p,g,wall){if(wall&&earlyWallCap(p,g))wall=false;const fz=p.mzFull&&MZ_TIER[diff],on=openOn(p,g);if(on&&OPEN_NOWALL)wall=false;/* 🧱 미로를 다 채운 뒤(빈칸 채우기)엔 벽 대신 공격 타워만 */const b=p.forceB||(wall&&!fz?TB.wall:pickTower(p,g));if(!b||p.gold<tcost(p,b))return false;
+function buildT(p,g,wall){if(wall&&earlyWallCap(p,g))wall=false;const fz=p.mzFull&&MZ_TIER[diff],on=openOn(p,g);if(on&&OPEN_NOWALL)wall=false;/* 🧱 미로를 다 채운 뒤(빈칸 채우기)엔 벽 대신 공격 타워만 */let b=p.forceB||(wall&&!fz?TB.wall:pickTower(p,g));if(typeof b==='string')b=TB[b];if(!b||!(p.gold>=tcost(p,b)))return false;
  const mo=MZ_TIER[diff]&&mazeOrder(p);if(mo&&b.cctv){/* 🦉 CCTV는 미로 설계도의 '벽' 칸에만(통로 칸에 지으면 미로가 막힘) — 빈 칸이나 벽 자리 중 다른 CCTV와 떨어지고 길을 많이 보는 곳 */const pa=bfs(p.grid,COLS>>1,0)||[],cc=[];p.grid.forEach((row,yy)=>row.forEach((t2,xx)=>{if(t2&&t2.bp&&t2.bp.cctv)cc.push([cellX(xx,yy),cellY(yy)])}));let bc=null,bv=-1e9;
   for(const [x,y] of mo){const t0=p.grid[y][x];if(t0&&t0.bp&&t0.bp.id!=='wall')continue;if(t0&&t0.carrier)continue;const px=cellX(x,y),py=cellY(y);let v=pathCov(p,b.r,x,y,pa)+Math.random()*.5;for(const[cx,cy]of cc)if(Math.hypot(cx-px,cy-py)<5)v-=60;if(!t0){p.grid[y][x]=1;const ok=allOK(p.grid);p.grid[y][x]=null;if(!ok)continue}if(v>bv){bv=v;bc=[x,y,t0]}}
   if(!bc)return false;const[x,y,t0]=bc;if(t0)p.gold+=Math.floor(t0.inv*refR(p));p.grid[y][x]=mkR(b,p);p.gold-=tcost(p,b);if(S.st){S.st.ti[b.id]=(S.st.ti[b.id]||0)+tcost(p,b);S.st.tn[b.id]=(S.st.tn[b.id]||0)+1}refreshPaths(p);return true}
@@ -648,7 +648,7 @@ function aiTick(p){stTick(p);if(OP_D[diff]&&p.cfg&&p.cfg.fl&&p.cfg.fl.op&&!p.opD
   if(p.gold>20000&&!crisis&&Math.random()<.7&&bu(true))return 1;/* 💰 돈이 넘치면 새 보내기부터 */
   if(p.crHit&&mzRepair(p,g))return 1;/* 🏗 미로 복구 */
   if(g.crUp&&p.crSeen&&S.t-p.crSeen<150&&Math.random()<g.crUp*.5&&aiUp(p,{up:Math.max(3,um.up)}))return 1;/* 🏗 두루미 대비 3레벨 *//* ⬆️ 미로를 다 쌓기 전엔 업그레이드 안 함(돈이 미로로 가게) */
-  if(diff==='A'&&(g.twF||0)>.05&&S.t>15&&nT<twFloorT(g)&&nT<capOf()){p.forceB=earlyAtk(p,160)||null;const ok=p.forceB&&buildT(p,g,false);p.forceB=null;if(ok)return 1}/* 🧱 최소 타워 수 */
+  if(diff==='A'&&(g.twF||0)>.05&&S.t>15&&nT<twFloorT(g)&&nT<capOf()){p.forceB=TB[earlyAtk(p,160)]||null;/* v19.5 고침: earlyAtk는 이름(문자)을 줘서 돈이 NaN이 되던 버그 */const ok=p.forceB&&buildT(p,g,false);p.forceB=null;if(ok)return 1}/* 🧱 최소 타워 수 */
   if(diff==='A'&&(g.leadEye||0)>.05&&Math.random()<g.leadEye&&leadWarn(p)){if(upOK&&aiUp(p,um))return 1;if(nT<capOf()&&buildT(p,g,false))return 1}/* 👀 앞사람이 돈을 모으면 미리 수비 */
   if(S.t>20&&defPow(p)<need){if(upOK&&Math.random()<g.upAgg*.6&&aiUp(p,um))return 1;if(nT<capOf()&&buildT(p,g,false))return 1}
   if(upOK&&S.t>150&&nT>=tgtT*.8&&Math.random()<(g.wrep||0)*.35&&wallSwap(p,g))return 1;/* 🧱→🏹 */
