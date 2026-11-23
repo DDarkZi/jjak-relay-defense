@@ -614,7 +614,7 @@ function buyU(p,g,dump){const n=nextAlive(p.id);if(n===null)return false;const h
 function stgUp(p,g){if(UPLIM()||!((g.stg||0)>.5))return false;const mo=p.mzo;if(!mo||!mo.length)return false;let n=0,bY=0;for(const[x,y]of mo){const t=p.grid[y][x];if(t&&t.bp){n++;if(y>bY)bY=y}}if(n<mo.length*(g.stgF??.35))return false;
  const lim=bY-(g.stgM??1.5);for(const u of p.units)if(u.owner!==p.id&&u.bp.t!=='A'&&u.y/HH-.5>=lim){p.stgT=S.t;break}return S.t-(p.stgT||-99)>(g.stgW??15)&&S.t-(p.lkT||-99)>(g.stgW??15)}
 function UPLIM(){return diff==='N'||diff==='M'||diff==='E'}
-/* 🦉🍤 v18.9 서포트 타워 판단(숙련 이상·알파고): 내 판에 숨은 새·샌 은신 새 → CCTV 가치, 공중 새 → 과자 가치 */const SUPD=()=>diff==='A'||(DIFF[diff].learn||0)>=.6;
+/* 🦉🍤 v18.9 서포트 타워 판단(숙련 이상·알파고): 내 판에 숨은 새·샌 은신 새 → CCTV 가치, 공중 새 → 과자 가치 */const SUPD=()=>diff!=='A'&&(DIFF[diff].learn||0)>=.6;/* 2026-11-23 연구팀: AI끼리는 크게 강해짐(알파고 4.02 vs 4.98등), 사람 재생 봇 상대로는 차이 없음 → 숙련·어려움·헬만, 알파고는 기능별 검증 뒤 */
 function supThreat(p){const c=p.supC;if(c&&S.t-c.t<1)return c;let st=0,air=0;for(const u of p.units){if(u.owner===p.id||u.hp<=0)continue;if(u.bp.stealth&&!u.seen&&u.y<BH*u.bp.stealth)st++;if(u.bp.t==='A'&&!(u.gr>0))air++}const L=p.leak||{};return p.supC={t:S.t,st:st+3*(L.st||0),air:air+2*(L.air||0)}}
 function supV(p,t){const g=p.cfg;if(!g||!SUPD()||!(g.supK>0))return 0;const th=supThreat(p);if(t.bp.cctv)return g.supK*th.st*6;if(t.bp.snack)return g.supK*th.air*1.5;return 0}
 function stTick(p){/* 🦉 은신 새가 보이거나 샜으면 CCTV를 먼저 */const g=p.cfg;if(!g||!SUPD()||!(g.stK>0)||!cctvOK(p)||p.gold<tcost(p,TB.cctv)||S.t-(p.stT||-99)<4)return false;const th=supThreat(p);if(th.st<2/Math.max(.3,g.stK))return false;p.stT=S.t;p.sawSt=1;p.forceB=TB.cctv;const ok=buildT(p,g);p.forceB=null;return ok}
