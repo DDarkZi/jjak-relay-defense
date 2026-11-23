@@ -12,7 +12,7 @@
 - 큰 변경 전엔 커밋으로 되돌릴 지점 남기기.
 - 변경을 끝내면: ① `index.html` 업데이트 내역 맨 위에 `<li><b>vX.Y</b> …</li>` ② **`docs/history.md` 맨 아래 '🆕 이후 기록'에 한 줄 메모**(CLAUDE.md엔 새 규칙일 때만) ③ 작업 브랜치에 push + `git push origin HEAD:main`.
 - 디자인(날개·꼬리·소품)을 바꾸면 `docs/design/README.md` 표 + 전후 비교 그림 추가.
-- 알파고 학습·검증을 하면 `docs/alphago_training.md` 학습 이력·총 판 수와 `DIFF.A.d`('지금까지 N판 학습', 지금 17,646) 갱신. 검증 판은 안 셈.
+- 알파고 학습·검증을 하면 `docs/alphago_training.md` 학습 이력·총 판 수와 `DIFF.A.d`('지금까지 N판 학습', 지금 18,614) 갱신. 검증 판은 안 셈.
 - 출시 질문은 `assets/store/RELEASE_CHECKLIST.md`의 '📍 지금 어디까지'·'🧸 쉽게 이해하기'(도장 비유)로 쉽게 설명하고 표 갱신.
 - 회의가 필요하면 `.claude/skills/jjak-meeting`(A 도입 결정·B 알파고 연구·C 디자인 팀). 결정할 때만 열기(비용).
 - 🔒 보안: 서명 키(signing.keystore)·비밀번호는 받지도 요청하지도 않기. 사용자 이메일 등 개인정보는 외부·문서에 넣지 않기. MCP·플러그인은 공식 저장소 것만. 커밋 메시지에 모델 이름 넣지 않기.
