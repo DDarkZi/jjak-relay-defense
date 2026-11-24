@@ -302,3 +302,8 @@ header button{min-width:44px;min-height:44px;font-size:18px;padding:2px 6px}
 @keyframes vigp{0%,100%{opacity:.55}50%{opacity:1}}
 @media (max-width:380px){.sh{grid-template-columns:repeat(6,1fr)!important}.sh button{font-size:10.5px}}
 
+/* v18.8 광역 타워 맞힌 수 · 도감 자세한 설명 */
+#dmgl b.t.hn{color:#fde047;font-size:15px;-webkit-text-stroke:.6px #7c2d12}
+#dmgl b.t.hn.hbig{color:#fb923c;font-size:21px}
+.cdet{padding:5px 7px;border-radius:8px;background:rgba(255,255,255,.07);color:#e2e8f0;font-size:11px;line-height:1.45;text-align:left}
+.cdet b{color:#fcd34d}
