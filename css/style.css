@@ -307,3 +307,34 @@ header button{min-width:44px;min-height:44px;font-size:18px;padding:2px 6px}
 #dmgl b.t.hn.hbig{color:#fb923c;font-size:21px}
 .cdet{padding:5px 7px;border-radius:8px;background:rgba(255,255,255,.07);color:#e2e8f0;font-size:11px;line-height:1.45;text-align:left}
 .cdet b{color:#fcd34d}
+
+/* ===== 🎮 v20.3 메인·난이도 화면 게임답게 (2026-11-24, frontend-design·ui-ux-pro-max: 단계 색·두꺼운 버튼·누를 때 꾹·글자 대비) ===== */
+.lobby::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.14;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 0l28 16v32L28 64 0 48V16zM28 64l28 16v32M0 80l28-16' fill='none' stroke='%23c7d2fe' stroke-width='2'/%3E%3C/svg%3E");
+ background-size:56px 97px;animation:lhex 40s linear infinite;-webkit-mask-image:radial-gradient(ellipse at 50% 55%,#000 30%,transparent 80%);mask-image:radial-gradient(ellipse at 50% 55%,#000 30%,transparent 80%)}
+@keyframes lhex{to{background-position:56px 97px}}
+@media (prefers-reduced-motion:reduce){.lobby::before,.lplay::after{animation:none!important}}
+.llogo small{color:#e0e7ff;font-size:12px;font-weight:700}
+.lmenu{background:none;border:0;padding:0;gap:9px}
+.lmenu button{width:66px;padding:7px 0 5px;border:3px solid #000;border-radius:16px;background:linear-gradient(#5b4fd6,#3b2f9e);box-shadow:inset 0 3px 0 #ffffff40,inset 0 -5px 0 #00000055,0 4px 0 #000;transition:transform .08s}
+.lmenu button:nth-child(1){background:linear-gradient(#34d399,#059669)}.lmenu button:nth-child(2){background:linear-gradient(#60a5fa,#2563eb)}
+.lmenu button:nth-child(3){background:linear-gradient(#fbbf24,#d97706)}.lmenu button:nth-child(4){background:linear-gradient(#f472b6,#db2777)}.lmenu button:nth-child(5){background:linear-gradient(#a78bfa,#7c3aed)}
+.lmenu button:active,.lmode:active{transform:translateY(3px);box-shadow:inset 0 3px 0 #ffffff40,inset 0 -3px 0 #00000055,0 1px 0 #000}
+.lmenu i{font-size:30px}.lmenu b{font-size:14px;margin-top:1px;-webkit-text-stroke:3px #000;paint-order:stroke fill;text-shadow:none}
+.lplay{position:relative;overflow:hidden;border-width:4px;box-shadow:inset 0 -8px 0 #d97706,inset 0 4px 0 #fff8,0 6px 0 #000;animation:lpulse 1.6s ease-in-out infinite}
+.lplay::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,#fff9,transparent);transform:skewX(-20deg);animation:lshine 2.8s ease-in-out infinite}
+@keyframes lshine{0%,55%{left:-60%}100%{left:130%}}@keyframes lpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+.lplay:active{animation:none}
+.lmode{border-width:3px;background:linear-gradient(#3f3f46,#18181b);box-shadow:inset 0 3px 0 #ffffff26,0 5px 0 #000}
+/* 난이도: 단계마다 색, 위험 게이지, 우승 깃털 */
+#dif{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+#dif .dk{--c:#22c55e;position:relative;display:grid;grid-template-columns:40px 1fr;grid-template-rows:auto auto;align-items:center;column-gap:6px;text-align:left;padding:8px 8px 9px!important;border:3px solid #000;border-radius:14px;
+ background:linear-gradient(color-mix(in srgb,var(--c) 70%,#fff),var(--c));box-shadow:inset 0 3px 0 #ffffff55,inset 0 -5px 0 #0004,0 4px 0 #000;color:#111;white-space:normal;transition:transform .08s}
+#dif .dk i{grid-row:1/3;font-style:normal;font-size:28px;text-align:center;filter:drop-shadow(0 2px 0 #0006)}
+#dif .dk b{font-family:"Black Han Sans","Jua",sans-serif;font-weight:400;font-size:19px;line-height:1.1;color:#fff;-webkit-text-stroke:4px #000;paint-order:stroke fill}
+#dif .dk .dm{font-size:10px;letter-spacing:1px;color:#0005}#dif .dk .dm u{text-decoration:none;color:#111}
+#dif .dk em{position:absolute;top:-9px;right:6px;font-style:normal;font:900 11px system-ui,sans-serif;background:#111;color:#fde047;border:2px solid #000;border-radius:99px;padding:1px 7px}
+#dif .dk:active{transform:translateY(3px);box-shadow:inset 0 3px 0 #ffffff55,inset 0 -3px 0 #0004,0 1px 0 #000}
+#dif .dk.on{outline:4px solid #fde047;outline-offset:2px;transform:translateY(-2px) scale(1.03);box-shadow:inset 0 3px 0 #ffffff55,inset 0 -5px 0 #0004,0 6px 0 #000,0 0 18px #fde047aa}
+#dif .dk-N{--c:#22c55e}#dif .dk-M{--c:#14b8a6}#dif .dk-H{--c:#eab308}#dif .dk-X{--c:#f97316}#dif .dk-Z{--c:#dc2626}#dif .dk-A{--c:#8b5cf6}#dif .dk-L{--c:#0f766e;grid-column:1/-1}
+#dd{color:#e0e7ff!important;font-size:13px!important}
