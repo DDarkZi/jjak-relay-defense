@@ -13,6 +13,7 @@ const jobs=[];for(const d in CFG.defs)for(const w in CFG.waves)for(let k=0;k<N;k
    start();S.cdn=0;S.sim=true;S.pl.forEach(p=>{p.ai=false;p.cfg=null});const me=S.pl[0];me.tech=D.tech||null;me.tech2=D.tech2||null;me.gold=1e9;me.life=1e6;
    /* 배치 칸 목록(앞줄부터) */const C=COLS;let cells=[];
    if((D.lay||'snake')==='snake'){[2,4,6,8,10,12,14].forEach((y,r)=>{const g=r%2?0:C-1;for(let x=0;x<C;x++)if(x!==g)cells.push([x,y])})}
+   else if(D.lay==='mid'){/* 🪶 하늘 새 길(가운데 세로줄) 가까운 칸부터 */for(let y=1;y<ROWS-1;y++)for(let x=0;x<C;x++)cells.push([x,y]);const cx=cellX(C>>1,1);cells.sort((a,b)=>Math.abs(cellX(a[0],a[1])-cx)-Math.abs(cellX(b[0],b[1])-cx)||a[1]-b[1])}
    else{for(const ys of [[1,2,3,4,5],[8,9,10,11,12]])for(const y of ys)for(let x=1;x<C-1;x++)cells.push([x,y])}
    let cost=0,i=0,j=cells.length-1;const g0=me.gold;me.sawSt=1;
    for(const [id,n,lv,bk] of D.towers)for(let k=0;k<n;k++){const c=bk?cells[j--]:cells[i++];if(!c)break;actBuild(0,c[0],c[1],id);const t=me.grid[c[1]][c[0]];if(!t||t.bp.id!==id)continue;for(let l=1;l<(lv||1);l++)actUpg(0,c[0],c[1])}
