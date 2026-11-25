@@ -339,3 +339,4 @@ header button{min-width:44px;min-height:44px;font-size:18px;padding:2px 6px}
 #dif .dk-N{--c:#22c55e}#dif .dk-M{--c:#14b8a6}#dif .dk-H{--c:#eab308}#dif .dk-X{--c:#f97316}#dif .dk-Z{--c:#dc2626}#dif .dk-A{--c:#8b5cf6}#dif .dk-L{--c:#0f766e;grid-column:1/-1}
 #dd{color:#e0e7ff!important;font-size:13px!important}
 #dif .dk i img{width:40px;height:40px;display:block;object-fit:contain;filter:drop-shadow(0 2px 0 #0008)}#dif .dk i{line-height:0}
+.lmenu i img{width:44px;height:44px;display:block;object-fit:contain;filter:drop-shadow(0 2px 0 #0009)}.lmenu i{line-height:0}
