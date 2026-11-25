@@ -27,10 +27,10 @@ const jobs=[];for(const d in CFG.defs)for(const w in CFG.waves)for(let k=0;k<N;k
     for(const u of me.units)if(!seen.has(u)){seen.add(u);u._t0=S.t}
     for(const u of seen)if(!me.units.includes(u)){seen.delete(u);dw+=S.t-u._t0;dn2++;if(!u._esc)kill++}
     if(!q.length&&!me.units.length)break}
-   window.escape=oe;
-   return{d:dn,w:wn,cost,sent,gold,kill,all:dn2,leakN,leakDm,dwell:dn2?dw/dn2:0,end:S.t}},[CFG.defs[dn],CFG.waves[wn],dn,wn]))}}));
+   window.escape=oe;const stuck=me.units.filter(u=>u.hp>0),hpP=stuck.length?stuck.reduce((a,u)=>a+u.hp/(u.mh||u.bp.hp),0)/stuck.length:0;/* ⏳ 400초 넘게 남은 새(안 죽고 안 샘) */
+   return{d:dn,w:wn,cost,sent,gold,kill,all:dn2,stuck:stuck.length,hpP,leakN,leakDm,dwell:dn2?dw/dn2:0,end:S.t}},[CFG.defs[dn],CFG.waves[wn],dn,wn]))}}));
  await br.close();
- const agg={};for(const r of out){const k=r.d+' | '+r.w,a=agg[k]||(agg[k]={d:r.d,w:r.w,n:0,cost:r.cost,gold:r.gold,kill:0,all:0,leakDm:0,dwell:0});a.n++;a.kill+=r.kill;a.all+=r.all;a.leakDm+=r.leakDm;a.dwell+=r.dwell}
- const rows=Object.values(agg).map(a=>({d:a.d,w:a.w,cost:a.cost,gold:a.gold,killP:+(a.kill/a.all*100).toFixed(1),leakDm:+(a.leakDm/a.n).toFixed(1),dwell:+(a.dwell/a.n).toFixed(1)}));
+ const agg={};for(const r of out){const k=r.d+' | '+r.w,a=agg[k]||(agg[k]={d:r.d,w:r.w,n:0,cost:r.cost,gold:r.gold,kill:0,all:0,leakDm:0,dwell:0,stuck:0,end:0});a.n++;a.stuck+=r.stuck;a.end+=r.end;a.kill+=r.kill;a.all+=r.all;a.leakDm+=r.leakDm;a.dwell+=r.dwell}
+ const rows=Object.values(agg).map(a=>({d:a.d,w:a.w,cost:a.cost,gold:a.gold,killP:a.all?+(a.kill/a.all*100).toFixed(1):0,stuck:+(a.stuck/a.n).toFixed(1),end:+(a.end/a.n).toFixed(0),leakDm:+(a.leakDm/a.n).toFixed(1),dwell:+(a.dwell/a.n).toFixed(1)}));
  console.log(JSON.stringify({rows,errs:errs.slice(0,5)},null,0).replace(/\},\{/g,'},\n{'));
 })();
