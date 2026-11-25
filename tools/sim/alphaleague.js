@@ -10,7 +10,7 @@ const STUB="const __mk=()=>new Proxy(function(){},{get:(t,p)=>p===Symbol.toPrimi
   await pg.route('**/three.min.js',r=>r.fulfill({body:STUB,contentType:'application/javascript'}));await pg.route('**/fonts.googleapis.com/**',r=>r.fulfill({body:'',contentType:'text/css'}));await pg.route('**/*.glb',r=>r.abort());
   await pg.goto('file://'+root+'/index.html');await pg.waitForTimeout(300);await pg.addScriptTag({path:root+'/tools/sim/harness.js'});await pg.evaluate(()=>setTune({}));if(process.env.PATCH)await pg.evaluate(process.env.PATCH);
   while(left>0){left--;out.push(await pg.evaluate(([EX,POOL,FORCE])=>{R=R||__mk();Sc=Sc||__mk();Cam=Cam||__mk();diff='A';
-   let pool=POOL==='ex'?[]:AIP.filter(a=>a.alpha&&(!a.ret||POOL==='all')&&(POOL!=='lab'||a.lab||a.exp||a.v198)).map(a=>({n:a.n,g:a.g,fav:a.fav,fl:a.fl}));pool=pool.concat(EX);
+   let pool=POOL==='ex'?[]:AIP.filter(a=>a.alpha&&(!a.ret||POOL==='all')&&(!a.labo||POOL==='lab'||POOL==='all')&&(POOL!=='lab'||a.lab||a.exp||a.v198)).map(a=>({n:a.n,g:a.g,fav:a.fav,fl:a.fl}));pool=pool.concat(EX);
    let cf=pool.slice().sort(()=>Math.random()-.5).slice(0,8);if(FORCE&&EX.length&&!cf.some(c=>EX.includes(c))){cf[0]=EX[Math.floor(Math.random()*EX.length)]}cf.sort(()=>Math.random()-.5);
    const gs=cf.map(c=>aiLearn({...mutG(c.g,0),tech:c.g.tech,tech2:c.g.tech2,fav:c.fav||{},efav:c.g.efav,pn:c.n,fl:c.fl||{}},0,c.n));gs.races=Array(8).fill(null);
    S=null;over=false;start(gs);const snap={};
