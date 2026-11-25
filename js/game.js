@@ -2357,17 +2357,26 @@ const ART=(()=>{
    const me=this;return this.__jb={R,SP,CY,TR,STAR,GD:R(0xf2c14e),GR:R(0x9aa0b0),
     A(g,geo,m,x,y,z,sx,sy,sz,ol){const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);o.scale.set(sx,sy??sx,sz??sx);g.add(o);if(ol)me._ol(g,o,ol,ol,ol);return o}}},
   /* 투구: 반구+가운데 능선+남색 이마 챙+금테 헤드폰+안테나(원점=머리 중심, 머리 반지름 .21 기준) */
-  jbHelm(){const g=new THREE.Group(),J=this._jb(),A=J.A,RD=J.R(0xd62828);
+  jbHelm(){/* 🤖 v20.6.1 리얼 로봇풍 투구(사용자 '건담처럼' → 특정 작품을 베끼지 않고 특징만): 빨강 투구+흰 이마판+빨간 센서+금색 V자 뿔+옆 귀 센서. 원점=머리 중심(반지름 .21) */
+   const g=new THREE.Group(),J=this._jb(),A=J.A,RD=J.R(0xd62828),WT=J.R(0xf1f5f9);
    A(g,gk('prop_jb_helm',()=>{const q=new THREE.SphereGeometry(1,18,10,0,PI*2,0,PI*.42);q.rotateX(PI/2);return q}),RD,0,.01,.03,.23,.23,.23,1.07);
-   A(g,this._rb('jbridge',.03,.26,.03,.012),RD,0,.01,.24,1,1,1);
-   const v=A(g,this._rb('jbvis',.36,.1,.04,.02),J.R(0x2b3150),0,-.2,.08,1,1,1,1.1);v.rotation.x=-.26;
-   [-1,1].forEach(s=>{const h=A(g,J.CY,J.GR,s*.23,0,.02,.07,.05,.07,1.1);h.rotation.z=PI/2;const r=A(g,J.TR,J.GD,s*.255,0,.02,.07,.07,.07);r.rotation.y=PI/2;
-    A(g,J.CY,J.GR,s*.1,.05,.2,.012,.16,.012).rotation.x=PI/2;A(g,J.SP,J.GD,s*.1,.05,.29,.026,.026,.026,1.25)});return this._fin(g)},
-  /* 머리: 빨강 새 머리+얼굴(화난 눈썹·볼터치·노란 부리)+투구 */
-  jbHead(){const g=new THREE.Group(),J=this._jb(),A=J.A,BK=mat('prop_jb_bk',()=>basic(0x141420)),WH=mat('prop_jb_wh',()=>basic(0xffffff));
+   A(g,this._rb('jbridge',.03,.26,.03,.012),RD,0,.03,.24,1,1,1);
+   const fp=A(g,this._rb('jbfore',.2,.07,.07,.025),WT,0,-.205,.05,1,1,1,1.1);fp.rotation.x=-.2;
+   A(g,gk('prop_jb_gem',()=>new THREE.OctahedronGeometry(1,0)),mat('prop_jb_sensor',()=>std(0xef4444,{flatShading:false,emissive:0xb91c1c,emissiveIntensity:.45})),0,-.245,.09,.03,.02,.03);
+   const VF=gk('prop_jb_vfin',()=>{const h=new THREE.Shape();h.moveTo(0,0);h.lineTo(.03,-.02);h.lineTo(.3,.2);h.lineTo(.27,.24);h.lineTo(0,.05);const q=new THREE.ExtrudeGeometry(h,{depth:.025,bevelEnabled:true,bevelThickness:.008,bevelSize:.008,bevelSegments:1});q.rotateX(PI/2);return q});
+   [-1,1].forEach(s=>{A(g,VF,J.GD,0,-.245,.1,s*.5,.5,.5,1.12);
+    const e=A(g,J.CY,J.GR,s*.23,0,.02,.07,.05,.07,1.1);e.rotation.z=PI/2;const r=A(g,J.TR,J.GD,s*.255,0,.02,.07,.07,.07);r.rotation.y=PI/2;
+    const ant=A(g,J.CY,J.GR,s*.25,.02,.12,.012,.12,.012);ant.rotation.x=PI/2;ant.rotation.y=s*.5});
+   return this._fin(g)},
+  /* 머리: 빨강 머리 + 날카로운 초록빛 눈 + 흰 마스크(통풍구) + 볼 가드 + 마스크 밖으로 나온 노란 부리(새라는 표시) + 투구 */
+  jbHead(){const g=new THREE.Group(),J=this._jb(),A=J.A,WT=J.R(0xf1f5f9),DK=mat('prop_jb_dk',()=>basic(0x1e293b));
    A(g,J.SP,J.R(0xe8433a),0,0,0,.21,.21,.21,1.07);
-   [-1,1].forEach(s=>{A(g,J.SP,BK,s*.075,-.192,-.01,.036,.018,.044);A(g,J.SP,WH,s*.075+.012,-.205,.006,.012,.012,.012);const br=A(g,gk('prop_jb_br',()=>new THREE.BoxGeometry(1,1,1)),BK,s*.08,-.2,.055,.085,.016,.02);br.rotation.y=s*.42;A(g,J.SP,mat('prop_jb_bl',()=>basic(0xff8fa3)),s*.135,-.17,-.055,.042,.014,.026)});
-   const bk=A(g,gk('prop_jb_beak',()=>new THREE.ConeGeometry(1,1,10)),J.R(0xfacc15),0,-.235,-.05,.05,.1,.05,1.06);bk.rotation.x=PI;
+   const EY=gk('prop_jb_eye',()=>{const h=new THREE.Shape();h.moveTo(0,0);h.lineTo(.075,.012);h.lineTo(.085,.034);h.lineTo(.01,.026);const q=new THREE.ExtrudeGeometry(h,{depth:.02,bevelEnabled:false});q.rotateX(PI/2);return q}),EM=mat('prop_jb_eyem',()=>std(0xbef264,{flatShading:false,emissive:0x65a30d,emissiveIntensity:.55}));
+   [-1,1].forEach(s=>{A(g,this._rb('jbsock',.11,.03,.055,.012),DK,s*.07,-.19,-.01,1,1,1);A(g,EY,EM,s*.02,-.214,-.025,s*1.25,1,1.25);
+    const ck=A(g,this._rb('jbcheek',.06,.12,.1,.025),WT,s*.165,-.1,-.1,1,1,1,1.1);ck.rotation.z=-s*.35});
+   const mk=A(g,this._rb('jbmask',.17,.07,.1,.03),WT,0,-.19,-.17,1,1,1,1.08);mk.rotation.x=.15;
+   [-1,1].forEach(s=>A(g,gk('prop_jb_box',()=>new THREE.BoxGeometry(1,1,1)),DK,s*.055,-.228,-.12,.03,.01,.05));
+   const bk=A(g,gk('prop_jb_beak',()=>new THREE.ConeGeometry(1,1,10)),J.R(0xfacc15),0,-.26,-.075,.05,.12,.05,1.06);bk.rotation.x=PI;
    const h=this.jbHelm();g.add(h);return this._fin(g)},
   /* 가슴 장갑: 둥근 상자+세로 홈+V자 패널선+금 링+빛나는 별(원점=가슴 중심) */
   jbChest(){const g=new THREE.Group(),J=this._jb(),A=J.A,DK=J.R(0x245cb8);
@@ -2393,7 +2402,7 @@ const ART=(()=>{
    const el=A(g,J.TR,J.GR,sd*.05,0,-.23,.07,.07,.07);A(g,J.SP,J.GR,sd*.05,0,-.23,.058,.058,.058);
    A(g,gk('prop_jb_cone2',()=>new THREE.CylinderGeometry(.82,1,1,14)),M,sd*.06,-.02,-.32,.11,.16,.11,1.08).rotation.x=PI/2;
    A(g,J.TR,J.GD,sd*.06,-.02,-.41,.11,.11,.11);
-   if(kind==='fist'){const f=this.jbFist(c,sd);f.position.set(sd*.07,-.06,-.5);g.add(f)}else{const s2=this.jbShield();s2.position.set(sd*.16,-.1,-.4);s2.rotation.z=sd*.25;g.add(s2)}
+   if(kind==='fist'){const f=this.jbFist(c,sd);f.position.set(sd*.07,-.06,-.5);g.add(f)}else{A(g,this._rb('jbgrip',.12,.1,.1,.03),M,sd*.07,-.04,-.53,1,1,1,1.1);const s2=this.jbShield();s2.position.set(sd*.1,-.15,-.42);s2.rotation.z=sd*.35;g.add(s2)}
    return this._fin(g)},
   /* 다리: 허벅지 관절 → 분홍 부츠(발끝·뒤꿈치 진분홍, 옆 볼트) → 금 발목 링 → 2단 노즐+불꽃(원점=엉덩이 가운데) */
   jbLegs(fk){const g=new THREE.Group(),J=this._jb(),A=J.A,PK=J.R(0xf27ab8),DP=J.R(0xc85a95);
