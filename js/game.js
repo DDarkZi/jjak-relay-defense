@@ -63,12 +63,12 @@ const U=[
 {id:'eagle',n:'제왕독수리',c:850,hp:1690,sp:1,t:'A',dm:4,inc:52,wig:1,ic:'🦅',col:0x6b4f3a,x:'가발 날리기: 체력 절반이 되면 가발이 날아가고, 번쩍이는 머리에 근처 타워가 2초 눈부심(공격 멈춤)'},
 {id:'phoenix',mat:'fire',n:'불사조',c:1300,hp:1950,sp:1.4,t:'A',dm:6,inc:85,revive:1,tech:'fire',ic:'🔥',col:0xf97316,x:'한 번 부활'},
 {id:'humbee',n:'벌새',c:360,hp:125,sp:1.9,t:'G',dm:1,inc:19,count:6,cntR:[5,7],swarm:1,ic:'🐝',col:0xfacc15,x:'5~7마리 떼 · 너무 작아서 강타형 타워(공격 간격 1.5초 이상)의 피해를 절반만 받아요'},
-{id:'starling',n:'찌르레기 5형제',c:1400,hp:2000,sp:1.4,t:'A',dm:6,inc:85,robo:5,ic:'🤖',col:0x4a3f7a,talk:['짹짹 합체! 찌르봇 출격!','파츠 갑옷 단단하지?','한 방은 하나도 안 아파~'],x:'평소엔 5형제가 합체한 로봇 찌르봇: 한 마리만 노리는 공격(한 방 타워 등) 피해 -40%, 광역·연쇄·전깃줄 피해 +30% · 쓰러지면 💥 5형제로 분리돼 사방으로 흩어져 날아가요(각자 체력 120, 빠름)'},
-{id:'starbro0',hidden:1,bro:0,n:'찌르레기 짹레드',c:96,hp:120,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['리더는 투구부터 챙긴다! …앞이 안 보여!','형 먼저 간다!'],x:'찌르봇 머리 담당 형제(분열하면 나와요)'},
-{id:'starbro1',hidden:1,bro:1,n:'찌르레기 짹블루',c:96,hp:120,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['몸통 담당인데 몸통이 제일 작아졌어…','후퇴! 각자 집으로!'],x:'찌르봇 몸통 담당 형제(분열하면 나와요)'},
-{id:'starbro2',hidden:1,bro:2,n:'찌르레기 짹옐로',c:96,hp:120,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['주먹이 나보다 무거운 건 비밀이야.','주먹밥 먹으러 간다~'],x:'찌르봇 오른팔 담당 형제(분열하면 나와요)'},
-{id:'starbro3',hidden:1,bro:3,n:'찌르레기 짹그린',c:96,hp:120,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['방패 뒤가 제일 안전해. 나 먼저 갈게!','형들 기다려!'],x:'찌르봇 왼팔 담당 형제(분열하면 나와요)'},
-{id:'starbro4',hidden:1,bro:4,n:'찌르레기 짹핑크',c:96,hp:120,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['신발 한 짝은 형 거 아니었어?','부스터 최대 출력!'],x:'찌르봇 다리 담당 형제(분열하면 나와요)'},
+{id:'starling',n:'찌르레기 5형제',c:1400,hp:1600,sp:1.4,t:'A',dm:6,inc:85,robo:5,ic:'🤖',col:0x4a3f7a,talk:['짹짹 합체! 찌르봇 출격!','파츠 갑옷 단단하지?','한 방은 하나도 안 아파~'],x:'평소엔 5형제가 합체한 로봇 찌르봇: 한 마리만 노리는 공격(한 방 타워 등) 피해 -40%, 광역·연쇄·전깃줄 피해 +30% · 쓰러지면 💥 5형제로 분리돼 사방으로 흩어져 날아가요(각자 체력 100, 빠름)'},
+{id:'starbro0',hidden:1,bro:0,n:'찌르레기 짹레드',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['리더는 투구부터 챙긴다! …앞이 안 보여!','형 먼저 간다!'],x:'찌르봇 머리 담당 형제(분열하면 나와요)'},
+{id:'starbro1',hidden:1,bro:1,n:'찌르레기 짹블루',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['몸통 담당인데 몸통이 제일 작아졌어…','후퇴! 각자 집으로!'],x:'찌르봇 몸통 담당 형제(분열하면 나와요)'},
+{id:'starbro2',hidden:1,bro:2,n:'찌르레기 짹옐로',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['주먹이 나보다 무거운 건 비밀이야.','주먹밥 먹으러 간다~'],x:'찌르봇 오른팔 담당 형제(분열하면 나와요)'},
+{id:'starbro3',hidden:1,bro:3,n:'찌르레기 짹그린',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['방패 뒤가 제일 안전해. 나 먼저 갈게!','형들 기다려!'],x:'찌르봇 왼팔 담당 형제(분열하면 나와요)'},
+{id:'starbro4',hidden:1,bro:4,n:'찌르레기 짹핑크',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['신발 한 짝은 형 거 아니었어?','부스터 최대 출력!'],x:'찌르봇 다리 담당 형제(분열하면 나와요)'},
 {id:'pelican',n:'펠리컨',c:3000,hp:5200,sp:.8,t:'A',dm:10,inc:190,carry:8,ic:'🚌',col:0xf8fafc,x:'쓰러지면 부리 주머니에서 승객 새 8마리가 쏟아져 지상으로 걸어가요'},
 {id:'demcrane',n:'철거반장 두루미',c:4800,hp:8200,sp:.75,t:'G',dm:14,inc:250,grab:1,ic:'🏗️',col:0xf1f5f9,talk:['이거 불법 건축물이에요~','철거 들어갑니다!','민원 접수됐습니다'],x:'6초마다 멈춰서 근처 타워를 부리로 집어 4초 동안 머리에 이고 걸어가요(그동안 공격 불가). Lv.2 이하는 근처 빈칸으로 옮겨 놓고(미로는 절대 안 막아요), 더 높거나 빈칸이 없으면 제자리에 돌려놔요'},
 {id:'archaeo',n:'시조새',c:5500,hp:8600,sp:.75,t:'A',dm:21,inc:330,fossil:1,stone:1,ic:'🦖',col:0xa8a08f,talk:['요즘 타워는 처음 보네…','1억 5천만 년 만의 외출!','깃털… 내 깃털…'],x:'체력이 절반이 되면 화석이 깨지며 땅에 쿵! 착지해요(주변 타워 2초 기절). 그 뒤로는 공룡처럼 땅으로 달려요'},
@@ -2357,26 +2357,24 @@ const ART=(()=>{
    const me=this;return this.__jb={R,SP,CY,TR,STAR,GD:R(0xf2c14e),GR:R(0x9aa0b0),
     A(g,geo,m,x,y,z,sx,sy,sz,ol){const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);o.scale.set(sx,sy??sx,sz??sx);g.add(o);if(ol)me._ol(g,o,ol,ol,ol);return o}}},
   /* 투구: 반구+가운데 능선+남색 이마 챙+금테 헤드폰+안테나(원점=머리 중심, 머리 반지름 .21 기준) */
-  jbHelm(){/* 🤖 v20.6.1 리얼 로봇풍 투구(사용자 '건담처럼' → 특정 작품을 베끼지 않고 특징만): 빨강 투구+흰 이마판+빨간 센서+금색 V자 뿔+옆 귀 센서. 원점=머리 중심(반지름 .21) */
+  jbHelm(){/* 🤖 v20.6.2 투구(디자인 회의 C 2차): 빨강 투구+능선, 이마를 감싸는 흰 띠, 금색 찌르레기 볏 3갈래(특정 로봇 V뿔 대신), 회색 귀 센서. 원점=머리 중심(반지름 .21) */
    const g=new THREE.Group(),J=this._jb(),A=J.A,RD=J.R(0xd62828),WT=J.R(0xf1f5f9);
    A(g,gk('prop_jb_helm',()=>{const q=new THREE.SphereGeometry(1,18,10,0,PI*2,0,PI*.42);q.rotateX(PI/2);return q}),RD,0,.01,.03,.23,.23,.23,1.07);
    A(g,this._rb('jbridge',.03,.26,.03,.012),RD,0,.03,.24,1,1,1);
-   const fp=A(g,this._rb('jbfore',.2,.07,.07,.025),WT,0,-.205,.05,1,1,1,1.1);fp.rotation.x=-.2;
-   A(g,gk('prop_jb_gem',()=>new THREE.OctahedronGeometry(1,0)),mat('prop_jb_sensor',()=>std(0xef4444,{flatShading:false,emissive:0xb91c1c,emissiveIntensity:.45})),0,-.245,.09,.03,.02,.03);
-   const VF=gk('prop_jb_vfin',()=>{const h=new THREE.Shape();h.moveTo(0,0);h.lineTo(.03,-.02);h.lineTo(.3,.2);h.lineTo(.27,.24);h.lineTo(0,.05);const q=new THREE.ExtrudeGeometry(h,{depth:.025,bevelEnabled:true,bevelThickness:.008,bevelSize:.008,bevelSegments:1});q.rotateX(PI/2);return q});
-   [-1,1].forEach(s=>{A(g,VF,J.GD,0,-.245,.1,s*.5,.5,.5,1.12);
-    const e=A(g,J.CY,J.GR,s*.23,0,.02,.07,.05,.07,1.1);e.rotation.z=PI/2;const r=A(g,J.TR,J.GD,s*.255,0,.02,.07,.07,.07);r.rotation.y=PI/2;
-    const ant=A(g,J.CY,J.GR,s*.25,.02,.12,.012,.12,.012);ant.rotation.x=PI/2;ant.rotation.y=s*.5});
+   A(g,gk('prop_jb_band',()=>{const q=new THREE.CylinderGeometry(1,1,1,24,1,true,PI*.65,PI*.7);q.rotateX(PI/2);return q}),mat('prop_jb_wt2',()=>std(0xf1f5f9,{flatShading:false,roughness:.45,side:THREE.DoubleSide})),0,0,.1,.226,.226,.06).rotation.z=PI;
+   A(g,J.SP,mat('prop_jb_sensor',()=>std(0xef4444,{flatShading:false,emissive:0xb91c1c,emissiveIntensity:.4})),0,-.228,.1,.022,.014,.022,1.2);
+   {const PR=gk('prop_jb_prong',()=>{const q=new THREE.CylinderGeometry(.6,1,1,10);q.translate(0,.5,0);q.rotateX(PI/2);return q});[-.55,0,.55].forEach(a=>{const c=A(g,PR,J.GD,0,-.17,.2,.02,.02,a?.11:.14,1.15);c.rotation.set(-.35,a,0);const L=a?.11:.14;A(g,J.SP,J.GD,Math.sin(a)*L*Math.cos(.35),-.17-Math.sin(.35)*L,.2+Math.cos(a)*L*Math.cos(.35),.026,.026,.026,1.15)})}
+   [-1,1].forEach(s=>{const e=A(g,J.CY,J.GR,s*.225,0,.02,.07,.05,.07,1.1);e.rotation.z=PI/2;A(g,J.SP,J.GR,s*.255,0,.02,.035,.035,.035)});
    return this._fin(g)},
-  /* 머리: 빨강 머리 + 날카로운 초록빛 눈 + 흰 마스크(통풍구) + 볼 가드 + 마스크 밖으로 나온 노란 부리(새라는 표시) + 투구 */
-  jbHead(){const g=new THREE.Group(),J=this._jb(),A=J.A,WT=J.R(0xf1f5f9),DK=mat('prop_jb_dk',()=>basic(0x1e293b));
+  /* 머리: 빨강 둥근 머리 + 큰 새 눈(흰자·눈동자·반짝이) 위 하늘색 바이저 + 볼터치 + 알 모양 흰 마스크 + 크고 둥근 노란 부리(새라는 표시) + 투구 */
+  jbHead(){const g=new THREE.Group(),J=this._jb(),A=J.A,BK=mat('prop_jb_bk',()=>basic(0x141420)),WH=mat('prop_jb_wh',()=>basic(0xffffff)),DK=mat('prop_jb_dk',()=>basic(0x475569));
    A(g,J.SP,J.R(0xe8433a),0,0,0,.21,.21,.21,1.07);
-   const EY=gk('prop_jb_eye',()=>{const h=new THREE.Shape();h.moveTo(0,0);h.lineTo(.075,.012);h.lineTo(.085,.034);h.lineTo(.01,.026);const q=new THREE.ExtrudeGeometry(h,{depth:.02,bevelEnabled:false});q.rotateX(PI/2);return q}),EM=mat('prop_jb_eyem',()=>std(0xbef264,{flatShading:false,emissive:0x65a30d,emissiveIntensity:.55}));
-   [-1,1].forEach(s=>{A(g,this._rb('jbsock',.11,.03,.055,.012),DK,s*.07,-.19,-.01,1,1,1);A(g,EY,EM,s*.02,-.214,-.025,s*1.25,1,1.25);
-    const ck=A(g,this._rb('jbcheek',.06,.12,.1,.025),WT,s*.165,-.1,-.1,1,1,1,1.1);ck.rotation.z=-s*.35});
-   const mk=A(g,this._rb('jbmask',.17,.07,.1,.03),WT,0,-.19,-.17,1,1,1,1.08);mk.rotation.x=.15;
-   [-1,1].forEach(s=>A(g,gk('prop_jb_box',()=>new THREE.BoxGeometry(1,1,1)),DK,s*.055,-.228,-.12,.03,.01,.05));
-   const bk=A(g,gk('prop_jb_beak',()=>new THREE.ConeGeometry(1,1,10)),J.R(0xfacc15),0,-.26,-.075,.05,.12,.05,1.06);bk.rotation.x=PI;
+   [-1,1].forEach(s=>{A(g,J.SP,WH,s*.074,-.186,.0,.048,.02,.052);A(g,J.SP,BK,s*.07,-.2,-.004,.03,.012,.034);A(g,J.SP,WH,s*.07+.012,-.21,.014,.011,.008,.011);
+    const br=A(g,J.SP,BK,s*.078,-.19,.07,.045,.012,.012);br.rotation.y=s*.3;A(g,J.SP,mat('prop_jb_bl',()=>basic(0xff8fa3)),s*.135,-.155,-.065,.04,.014,.026)});
+   A(g,gk('prop_jb_visor',()=>{const q=new THREE.CylinderGeometry(1,1,1,24,1,true,PI*.72,PI*.56);q.rotateX(PI/2);return q}),mat('prop_jb_vis2',()=>std(0x7dd3fc,{flatShading:false,transparent:true,opacity:.35,emissive:0x0ea5e9,emissiveIntensity:.25,side:THREE.DoubleSide,depthWrite:false})),0,0,.0,.235,.235,.085).rotation.z=PI;
+   A(g,J.SP,J.R(0xf1f5f9),0,-.15,-.1,.125,.07,.08,1.07);
+   [-1,1].forEach(s=>{const v=A(g,J.SP,DK,s*.07,-.205,-.12,.025,.008,.006);v.rotation.y=s*.35});
+   const bk=A(g,gk('prop_jb_beak',()=>new THREE.ConeGeometry(1,1,12)),J.R(0xfacc15),0,-.265,-.07,.058,.12,.05);bk.rotation.x=PI;A(g,J.SP,J.R(0xfacc15),0,-.215,-.07,.055,.03,.048);
    const h=this.jbHelm();g.add(h);return this._fin(g)},
   /* 가슴 장갑: 둥근 상자+세로 홈+V자 패널선+금 링+빛나는 별(원점=가슴 중심) */
   jbChest(){const g=new THREE.Group(),J=this._jb(),A=J.A,DK=J.R(0x245cb8);
@@ -2405,17 +2403,26 @@ const ART=(()=>{
    if(kind==='fist'){const f=this.jbFist(c,sd);f.position.set(sd*.07,-.06,-.5);g.add(f)}else{A(g,this._rb('jbgrip',.12,.1,.1,.03),M,sd*.07,-.04,-.53,1,1,1,1.1);const s2=this.jbShield();s2.position.set(sd*.1,-.15,-.42);s2.rotation.z=sd*.35;g.add(s2)}
    return this._fin(g)},
   /* 다리: 허벅지 관절 → 분홍 부츠(발끝·뒤꿈치 진분홍, 옆 볼트) → 금 발목 링 → 2단 노즐+불꽃(원점=엉덩이 가운데) */
-  jbLegs(fk){const g=new THREE.Group(),J=this._jb(),A=J.A,PK=J.R(0xf27ab8),DP=J.R(0xc85a95);
-   [-1,1].forEach(s=>{const h=A(g,J.CY,J.GR,s*.12,0,0,.05,.08,.05);h.rotation.z=PI/2;
-    A(g,this._rb('jbboot',.16,.22,.18,.05),PK,s*.13,-.03,-.25,1,1,1,1.08);A(g,this._rb('jbtoe',.15,.07,.05,.02),DP,s*.13,-.11,-.25,1,1,1);A(g,this._rb('jbheel',.15,.06,.05,.02),DP,s*.13,.06,-.25,1,1,1);
-    A(g,J.SP,J.GR,s*.215,-.03,-.16,.022,.022,.022);const r=A(g,J.TR,J.GD,s*.13,0,-.06,.08,.08,.08);
-    A(g,J.CY,J.GR,s*.13,0,-.28,.06,.04,.06,1.1).rotation.x=PI/2;A(g,J.CY,J.GR,s*.13,0,-.32,.045,.04,.045).rotation.x=PI/2;
-    const f=A(g,gk('prop_jb_fl',()=>new THREE.ConeGeometry(1,1,8)),mat('prop_rb_fl',()=>basic(0xfb923c,{transparent:true,opacity:.85})),s*.13,0,-.4,.045*(fk||1),.13*(fk||1),.045*(fk||1));f.rotation.x=-PI/2});return this._fin(g)},
+  jbLegs(fk,only){/* 🤖 v20.6.2 허리~다리(디자인 회의 C 2차): 짙은 회색 허리 블록 → 흰 앞치마 2장·파랑 옆 스커트 → 회색 볼 관절 → 회색 허벅지(속 뼈대) → 금 리벳 분홍 무릎 → 분홍 정강이+앞 장갑 → 발목 → 통통한 분홍 부츠 → 노즐+불꽃. 원점=발밑. only=1이면 부츠·불꽃만(형제용) */
+   const g=new THREE.Group(),J=this._jb(),A=J.A,PK=J.R(0xf27ab8),DP=J.R(0xc85a95),fl=fk||1;
+   [-1,1].forEach(s=>{const x=s*.12;
+    A(g,this._rb('jbboot2',.17,.23,.16,.055),PK,x,-.03,0,1,1,1,1.08);A(g,this._rb('jbtoe',.15,.07,.05,.02),DP,x,-.12,0,1,1,1);A(g,this._rb('jbheel',.15,.06,.05,.02),DP,x,.07,0,1,1,1);
+    A(g,J.CY,J.GR,x,0,-.03,.06,.04,.06).rotation.x=PI/2;A(g,J.CY,J.GR,x,0,-.065,.045,.035,.045).rotation.x=PI/2;
+    const f=A(g,gk('prop_jb_fl',()=>new THREE.ConeGeometry(1,1,8)),mat('prop_rb_fl',()=>basic(0xfb923c,{transparent:true,opacity:.85})),x,0,-.14,.045*fl,.13*fl,.045*fl);f.rotation.x=-PI/2;
+    if(only)return;
+    A(g,J.CY,J.GR,x,0,.18,.045,.04,.045).rotation.x=PI/2;
+    A(g,gk('prop_jb_shin',()=>new THREE.CylinderGeometry(.075,.09,1,14)),PK,x,0,.28,1,.16,1,1.08).rotation.x=PI/2;
+    A(g,this._rb('jbshinA',.1,.03,.12,.03),PK,x,-.085,.22,1,1,1,1.1);
+    A(g,J.SP,J.GR,x,0,.38,.055,.055,.055);A(g,this._rb('jbknee',.11,.06,.08,.03),PK,x,-.06,.34,1,1,1,1.1);A(g,J.SP,J.GD,x,-.093,.38,.022,.022,.022);
+    A(g,J.CY,J.GR,x,0,.45,.065,.1,.065).rotation.x=PI/2;A(g,J.SP,J.GR,x,0,.53,.07,.07,.07,1.08)});
+   if(!only){A(g,this._rb('jbwaist',.28,.2,.08,.035),J.R(0x6b7080),0,0,.53,1,1,1,1.08);
+    [-1,1].forEach(s=>{const ap=A(g,this._rb('jbapron',.12,.03,.13,.03),J.R(0xf1f5f9),s*.065,-.125,.47,1,1,1,1.1);ap.rotation.x=.17;A(g,this._rb('jbside',.03,.15,.12,.025),J.R(0x3a7be8),s*.17,0,.48,1,1,1,1.1)})}
+   return this._fin(g)},
   /* 조립: 키 약 1.15(원점=발밑) + 머리 위 '합체 중' 점 5개 */
   jjirbot(){const g=new THREE.Group(),add=(q,x,y,z)=>{q.position.set(x,y,z);g.add(q);return q};
-   add(this.jbLegs(),0,0,.32);add(this.jbBelly(),0,0,.42);add(this.jbChest(),0,0,.62);add(this.jbHead(),0,-.02,.9);
-   add(this.jbArm(-1,0xf5c431,'fist'),-.36,0,.72);add(this.jbArm(1,0x3fbf6a,'shield'),.36,0,.72);
-   const J=this._jb();[0xe8433a,0x3a7be8,0xf5c431,0x3fbf6a,0xf27ab8].forEach((c,i)=>{const d=J.A(g,J.SP,mat('prop_jb_dot'+c,()=>basic(c)),(i-2)*.07,0,1.32,.028,.028,.028,1.3);d.name='rdot'+i});
+   add(this.jbLegs(),0,0,.1);const bl=add(this.jbBelly(),0,0,.68);bl.scale.set(.75,.7,.55);add(this.jbChest(),0,0,.8);add(this.jbHead(),0,-.02,1.08);
+   add(this.jbArm(-1,0xf5c431,'fist'),-.36,0,.9);add(this.jbArm(1,0x3fbf6a,'shield'),.36,0,.9);
+   const J=this._jb();[0xe8433a,0x3a7be8,0xf5c431,0x3fbf6a,0xf27ab8].forEach((c,i)=>{const d=J.A(g,J.SP,mat('prop_jb_dot'+c,()=>basic(c)),(i-2)*.07,0,1.52,.028,.028,.028,1.3);d.name='rdot'+i});
    return this._fin(g)},
   /* 🎙️ 아이돌 헤드셋 마이크: 귀 패드 + 얇은 대 + 동그란 마이크(원점=머리 옆면, 앞=-y) */
   mic(){const g=new THREE.Group(),dm=mat('prop_mic_d',()=>std(0x1f2937,{flatShading:false,roughness:.5}));
@@ -3141,7 +3148,7 @@ const ART=(()=>{
   [0,1,2,3].forEach(i=>{const a=i*PI/2+.4;c.seg('s',Math.cos(a)*.12,Math.sin(a)*.12,.55,Math.cos(a)*.42,Math.sin(a)*.42,1.0,.04,V1);c.s('S',Math.cos(a)*.42,Math.sin(a)*.42,1.02,.06,.06,.06,V3)});
   rose(-.22,-.18,.6,1.4,0xf43f5e);rose(.24,.14,.64,1.4,0xfb7185);rose(0,.0,.76,1.8,0xf43f5e);rose(.1,-.2,.5,1.1,0xfda4af);
   const r=c.spin(0,0,.8,1.1);[0,1,2,3,4,5].forEach(i=>{const a=i*PI/3;r.g('S',Math.cos(a)*.5,Math.sin(a)*.5,Math.sin(i)*.08,.03,.03,.03,0xfde047)});return [0,0,1.12,.07]};
- /* 🤖 찌르봇: 새 몸은 숨기고(체력 막대 평면만 남겨 위로) 부위별로 조립한 로봇을 입힘 / 🐦 형제: 몸 0.7배 + 자기 파츠를 등(위에서 보이게)에 */{const ob=A.bird;A.bird=o=>{const r=ob(o);const m=o&&o.m,b=o&&o.b;if(!m||!b||m.userData.robo)return r;if(b.id==='starling'){m.userData.robo=1;m.children.forEach(c=>{if(c.geometry&&c.geometry.type==='PlaneGeometry')c.position.z=1.62;else c.visible=false});const q=PROP.jjirbot();q.name='propRobo';q.position.z=-.15;q.scale.setScalar(1.25);m.add(q)}else if(b.bro!=null){m.userData.robo=1;m.scale.multiplyScalar(.7);const k=b.bro,H=headOf(b.id),P=(q,x,y,z,sc,rx)=>{q.position.set(x,y,z);q.scale.setScalar(sc);if(rx)q.rotation.x=rx;q.name='propBro';m.add(q)};if(k===0)P(PROP.jbHelm(),0,H.hy,H.hz-.02,.82);if(k===1)P(PROP.jbChest(),0,.1,.5,.95,-PI/2+.15);if(k===2)P(PROP.jbFist(0xf5c431,-1),0,.12,.52,1.35,-PI/2+.2);if(k===3)P(PROP.jbShield(),0,.12,.5,1.25,-PI/2+.2);if(k===4)P(PROP.jbLegs(.6),0,.14,.62,.8,-PI/2+.35)}return r}}
+ /* 🤖 찌르봇: 새 몸은 숨기고(체력 막대 평면만 남겨 위로) 부위별로 조립한 로봇을 입힘 / 🐦 형제: 몸 0.7배 + 자기 파츠를 등(위에서 보이게)에 */{const ob=A.bird;A.bird=o=>{const r=ob(o);const m=o&&o.m,b=o&&o.b;if(!m||!b||m.userData.robo)return r;if(b.id==='starling'){m.userData.robo=1;m.children.forEach(c=>{if(c.geometry&&c.geometry.type==='PlaneGeometry')c.position.z=1.95;else c.visible=false});const q=PROP.jjirbot();q.name='propRobo';q.position.z=-.3;q.scale.setScalar(1.15);m.add(q)}else if(b.bro!=null){m.userData.robo=1;m.scale.multiplyScalar(.7);const k=b.bro,H=headOf(b.id),P=(q,x,y,z,sc,rx)=>{q.position.set(x,y,z);q.scale.setScalar(sc);if(rx)q.rotation.x=rx;q.name='propBro';m.add(q)};if(k===0)P(PROP.jbHelm(),0,H.hy,H.hz-.02,.82);if(k===1)P(PROP.jbChest(),0,.1,.5,.95,-PI/2+.15);if(k===2)P(PROP.jbFist(0xf5c431,-1),0,.12,.52,1.35,-PI/2+.2);if(k===3)P(PROP.jbShield(),0,.12,.5,1.25,-PI/2+.2);if(k===4)P(PROP.jbLegs(.6,1),0,.16,.6,.8,-PI/2+.35)}return r}}
  A.towerMesh=({b,lv})=>{if(!b||typeof GC==='undefined'||typeof THREE==='undefined')return;const f=TD[b.id];if(!f)return;lv=b.id==='wall'?1:Math.max(1,Math.min(4,lv|0||1));
   const key=b.id+'_'+lv;let R=REC[key];
   if(!R){const T=tgt(new THREE.Matrix4(),0),c=cx(T,T.M);const top=f(c,lv,b);if(lv>=4)legend(c,top,b&&b.col);R=REC[key]=bake(T)}
