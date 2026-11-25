@@ -63,12 +63,12 @@ const U=[
 {id:'eagle',n:'제왕독수리',c:850,hp:1690,sp:1,t:'A',dm:4,inc:52,wig:1,ic:'🦅',col:0x6b4f3a,x:'가발 날리기: 체력 절반이 되면 가발이 날아가고, 번쩍이는 머리에 근처 타워가 2초 눈부심(공격 멈춤)'},
 {id:'phoenix',mat:'fire',n:'불사조',c:1300,hp:1950,sp:1.4,t:'A',dm:6,inc:85,revive:1,tech:'fire',ic:'🔥',col:0xf97316,x:'한 번 부활'},
 {id:'humbee',n:'벌새',c:360,hp:125,sp:1.9,t:'G',dm:1,inc:19,count:6,cntR:[5,7],swarm:1,ic:'🐝',col:0xfacc15,x:'5~7마리 떼 · 너무 작아서 강타형 타워(공격 간격 1.5초 이상)의 피해를 절반만 받아요'},
-{id:'starling',n:'찌르레기 5형제',c:480,hp:300,sp:1.5,t:'A',dm:5,inc:24,robo:5,ic:'🤖',col:0x4a3f7a,talk:['짹짹 합체! 찌르봇 출격!','파츠 갑옷 단단하지?','한 방은 하나도 안 아파~'],x:'평소엔 5형제가 합체한 로봇 찌르봇: 한 마리만 노리는 공격(한 방 타워 등) 피해 -40%, 광역·연쇄·전깃줄 피해 +30% · 쓰러지면 5형제로 분열해 흩어져 날아가요(각자 체력 40, 빠름)'},
-{id:'starbro0',hidden:1,bro:0,n:'찌르레기 짹레드',c:96,hp:40,sp:2.3,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['형 먼저 간다!', '내가 리더야!'],x:'찌르봇 머리 담당 형제(분열하면 나와요)'},
-{id:'starbro1',hidden:1,bro:1,n:'찌르레기 짹블루',c:96,hp:40,sp:2.3,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['중심은 내가 잡는다', '후퇴! 각자 집으로!'],x:'찌르봇 몸통 담당 형제(분열하면 나와요)'},
-{id:'starbro2',hidden:1,bro:2,n:'찌르레기 짹옐로',c:96,hp:40,sp:2.3,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['배고파서 합체 못 해…', '주먹밥 먹으러 간다~'],x:'찌르봇 오른팔 담당 형제(분열하면 나와요)'},
-{id:'starbro3',hidden:1,bro:3,n:'찌르레기 짹그린',c:96,hp:40,sp:2.3,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['형들 기다려!', '방패는 내가 챙겼어!'],x:'찌르봇 왼팔 담당 형제(분열하면 나와요)'},
-{id:'starbro4',hidden:1,bro:4,n:'찌르레기 짹핑크',c:96,hp:40,sp:2.3,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['출발 버튼은 내 거~', '부스터 최대 출력!'],x:'찌르봇 다리 담당 형제(분열하면 나와요)'},
+{id:'starling',n:'찌르레기 5형제',c:1400,hp:2000,sp:1.4,t:'A',dm:6,inc:85,robo:5,ic:'🤖',col:0x4a3f7a,talk:['짹짹 합체! 찌르봇 출격!','파츠 갑옷 단단하지?','한 방은 하나도 안 아파~'],x:'평소엔 5형제가 합체한 로봇 찌르봇: 한 마리만 노리는 공격(한 방 타워 등) 피해 -40%, 광역·연쇄·전깃줄 피해 +30% · 쓰러지면 💥 5형제로 분리돼 사방으로 흩어져 날아가요(각자 체력 120, 빠름)'},
+{id:'starbro0',hidden:1,bro:0,n:'찌르레기 짹레드',c:96,hp:120,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['리더는 투구부터 챙긴다! …앞이 안 보여!','형 먼저 간다!'],x:'찌르봇 머리 담당 형제(분열하면 나와요)'},
+{id:'starbro1',hidden:1,bro:1,n:'찌르레기 짹블루',c:96,hp:120,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['몸통 담당인데 몸통이 제일 작아졌어…','후퇴! 각자 집으로!'],x:'찌르봇 몸통 담당 형제(분열하면 나와요)'},
+{id:'starbro2',hidden:1,bro:2,n:'찌르레기 짹옐로',c:96,hp:120,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['주먹이 나보다 무거운 건 비밀이야.','주먹밥 먹으러 간다~'],x:'찌르봇 오른팔 담당 형제(분열하면 나와요)'},
+{id:'starbro3',hidden:1,bro:3,n:'찌르레기 짹그린',c:96,hp:120,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['방패 뒤가 제일 안전해. 나 먼저 갈게!','형들 기다려!'],x:'찌르봇 왼팔 담당 형제(분열하면 나와요)'},
+{id:'starbro4',hidden:1,bro:4,n:'찌르레기 짹핑크',c:96,hp:120,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['신발 한 짝은 형 거 아니었어?','부스터 최대 출력!'],x:'찌르봇 다리 담당 형제(분열하면 나와요)'},
 {id:'pelican',n:'펠리컨',c:3000,hp:5200,sp:.8,t:'A',dm:10,inc:190,carry:8,ic:'🚌',col:0xf8fafc,x:'쓰러지면 부리 주머니에서 승객 새 8마리가 쏟아져 지상으로 걸어가요'},
 {id:'demcrane',n:'철거반장 두루미',c:4800,hp:8200,sp:.75,t:'G',dm:14,inc:250,grab:1,ic:'🏗️',col:0xf1f5f9,talk:['이거 불법 건축물이에요~','철거 들어갑니다!','민원 접수됐습니다'],x:'6초마다 멈춰서 근처 타워를 부리로 집어 4초 동안 머리에 이고 걸어가요(그동안 공격 불가). Lv.2 이하는 근처 빈칸으로 옮겨 놓고(미로는 절대 안 막아요), 더 높거나 빈칸이 없으면 제자리에 돌려놔요'},
 {id:'archaeo',n:'시조새',c:5500,hp:8600,sp:.75,t:'A',dm:21,inc:330,fossil:1,stone:1,ic:'🦖',col:0xa8a08f,talk:['요즘 타워는 처음 보네…','1억 5천만 년 만의 외출!','깃털… 내 깃털…'],x:'체력이 절반이 되면 화석이 깨지며 땅에 쿵! 착지해요(주변 타워 2초 기절). 그 뒤로는 공룡처럼 땅으로 달려요'},
@@ -166,7 +166,7 @@ thunderbird:['정전 천둥새','지나가면 타워 전원이 나가요. 관리
 eagle:['대머리 독수리','대머리가 아니라 흰머리래요. 본인 주장이에요.'],
 phoenix:['부활절 불사조','한 번 죽는 건 그냥 준비운동이에요.'],
 humbee:['벌인 척 벌새','벌 옷 입고 위장 취업한 벌새 떼. 본인들도 벌인지 새인지 헷갈려요. 너무 작고 빨라서 느린 대포로는 맞히기 어려워요. 꿀은 안 줘요.','벌새 떼'],
-starling:['합체! 찌르봇','찌르레기 5형제가 합체한 하늘 로봇. 투구·가슴판·주먹·부스터가 다 형제들이라 한 방 공격은 갑옷이 막아 줘요. 쓰러지면 "후퇴! 각자 집으로!" 하고 5형제가 흩어져 날아가요. 광역 공격엔 파츠 이음매가 약해요.','찌르봇'],
+starling:['합체! 찌르봇','찌르레기 5형제가 합체한 1400G짜리 하늘 로봇. 투구·가슴판·주먹·방패·부츠가 다 형제들이라 한 방 공격은 갑옷이 막아 줘요. 머리 위 점 5개가 깜빡이면 곧 분리! 쓰러지면 쾅! 5형제가 각자 파츠를 등에 메고 사방으로 흩어져요. 광역 공격엔 이음매가 약해요.','찌르봇'],
 pelican:['만원 버스 펠리컨','부리 주머니에 승객을 꽉꽉 태운 하늘 버스. 격추되면 승객들이 "여기서 내릴게요!" 하고 우르르 쏟아져요.','만원 펠리컨'],
 demcrane:['철거반장 두루미','구청에서 나왔습니다. 허가 안 받은 타워는 부리로 번쩍 들어서 치워 버려요. 안전모는 필수!','철거 두루미'],
 archaeo:['1억 5천만 년 만의 외출 시조새','박물관 화석에서 깨어난 할아버지 새. 요즘 타워가 신기해서 자꾸 쳐다보다가, 많이 맞으면 돌 껍질이 깨지고 진짜 모습으로 깨어나요.','시조새'],
@@ -812,12 +812,13 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;recTick();
     if(b.rage&&u.hp<b.hp*.35)sp*=1.6;
     if(b.leap){u.lp=(u.lp??2)-dt;if(u.lp<=0&&u.path&&u.pi<u.path.length-1){u.lp=b.leap;u.jt=.5}}
     if(u.jt>0){u.jt-=dt;sp=Math.max(sp,5);if(u.jt<=0){u.jt=0;/* 🩰 착지: 주변 타워 1초 흔들림 */for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(t&&t.bp.d&&Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y)<1.5)t.dis=Math.max(t.dis||0,.6)}if(p.id===view&&!S.sim)PXS.play('impacts/ground-slam',u.x,BH-u.y,0,{fit:2})}}
+    if(u.spr>0){const k=u.spr/.4;u.x+=u.bvx*k*dt;u.y=Math.max(cellY(0),u.y+u.bvy*k*dt);u.spr-=dt}else if(u.lx!=null&&Math.abs(u.lx-u.x)>.02){const d=u.lx-u.x;u.x+=Math.sign(d)*Math.min(Math.abs(d),2.2*dt)}if(u.spr!=null)u.x=Math.max(.35,Math.min(COLS+.15,u.x));/* 🐦 5형제 퍼지기 */
     if(b.t==='A'||b.over)u.y+=sp*dt*(b.over?BAL.ovs:.9);
     else if(u.path&&u.pi<u.path.length){const n=u.path[u.pi],tx=cellX(n.x,n.y),ty=cellY(n.y),d=Math.hypot(tx-u.x,ty-u.y),s=sp*dt;
      if(d<=s){u.x=tx;u.y=ty;u.pi++}else{u.x+=(tx-u.x)/d*s;u.y+=(ty-u.y)/d*s}}}
    if(u.y>=EY){escape(p,u);return false}return true});
   born.forEach(u=>spawnAt(p,UB.egg_legs,u.owner,undefined,u.x+(Math.random()-.5)*.4,u.y));
-  robo.forEach(u=>{for(let i=0;i<u.bp.robo;i++){const a=i*PI*2/u.bp.robo-PI/2;spawnAt(p,UB['starbro'+i],u.owner,undefined,Math.max(.3,Math.min(COLS+.2,u.x+Math.cos(a)*.5)),u.y+Math.sin(a)*.35,Object.assign({src:'starling'},u.tag?{tag:u.tag}:{}))}if(p.id===view&&!S.sim){artFx('crit',{u});artFx('hatch',{u});popTxt(u,'💥분열! 5형제 흩어져!')}});/* 🤖 찌르봇 격추 → 5형제 분열 */
+  robo.forEach(u=>{const n=u.bp.robo,LN=[0,-1.5,1.5,-3,3];for(let i=0;i<n;i++){const a=i*PI*2/n+PI/2,lx=Math.max(.6,Math.min(COLS-.1,u.x+LN[i]));spawnAt(p,UB['starbro'+i],u.owner,undefined,u.x,u.y,Object.assign({src:'starling',spr:.4,bvx:Math.cos(a)*3.2,bvy:Math.sin(a)*2.4,lx,tkN:i===0||i===3?2:3},u.tag?{tag:u.tag}:{}))}if(p.id===view&&!S.sim){PXS.play('explosions/plasma-explosion',u.x,BH-u.y,1.4,{fit:3.4});PXS.play('holy/feather-burst',u.x,BH-u.y,1.5,{fit:2,delay:.08,life:1.1});artFx('crit',{u});popTxt(u,'💥분리!')}if(!S.sim&&(p.id===view||p.id===0))sfx('robosplit',{mine:p.id===0})});/* 🤖 찌르봇 격추 → 5형제가 사방으로 흩어짐(회의 C 2026-11-25) */
   if(drop.length){const PAX=['chick','turkey','rooster','kiwi','goose','duck'];drop.forEach(u=>spawnAt(p,UB[PAX[Math.floor(Math.random()*PAX.length)]],u.owner,undefined,Math.max(.3,Math.min(COLS+.2,u.x+(Math.random()-.5)*1.4)),u.y+(Math.random()-.5)*.8,Object.assign({src:'pelican'},u.tag?{tag:u.tag}:{})));
    if(p.id===view&&!S.sim){toast('🚌 펠리컨 격추! 승객 새들이 우르르 쏟아져요');artFx('hatch',{u:drop[0]})}}
   lay.forEach(u=>{spawnAt(p,UB.egg_legs,u.owner,undefined,u.x,u.y,{hatch:eggHasP(S.pl[u.owner],'hatch')?1:0});if(p.id===view){sfx('lay');artFx('lay',{u})}});
@@ -1245,6 +1246,7 @@ let talkN=0;function sync3(dt){try{prevUpd()}catch(e){}try{guideUpd()}catch(e){}
  const us=new Set();
  p.units.forEach(u=>{us.add(u.id);let m=um.get(u.id);if(m&&m.userData.bp!==u.bp){rmM(m);um.delete(u.id);m=null}if(!m){m=birdMesh3(u.bp,parseInt(PC[u.owner].slice(1),16));artFx('bird',{m,b:u.bp,u});m.userData.bp=u.bp;Sc.add(m);um.set(u.id,m)}if(m.userData.fxm)matTick(m,S.t);
   if(u.bp.flock){const cr=m.getObjectByName('propCrown');if(cr)cr.visible=!!u.ctr}
+  if(u.bp.robo){const lo=u.hp<(u.mh||u.bp.hp)*.3,on=!lo||Math.sin(S.t*18)>0;for(let i=0;i<5;i++){const d=m.getObjectByName('rdot'+i);if(d)d.visible=on}}
   if(u.bp.wig){const w=m.getObjectByName('wig'),gl=m.getObjectByName('glare');if(w)w.visible=!u.wg;if(gl){gl.visible=!!u.wg;gl.material.emissiveIntensity=.7+.8*Math.abs(Math.sin(S.t*4))}if(u.wgfx){u.wgfx=0;if(!S.sim){artFx('smoke',{x:u.x,y:BH-u.y,r:.6,col:0x6b4423});artFx('crit',{u})}}}
   m.visible=!(u.popT&&S.t<u.popT);m.position.set(u.x,BH-u.y,u.bp.t==='A'?(u.gr>0?.35:1.4):u.fl>0?.75+Math.sin(S.t*5)*.06:.05+(u.jt>0?Math.sin(PI*(1-u.jt/.5))*.9:0));if(u.bp.id==='egg_legs'&&!u.hd&&(u.ha||0)>BAL.hatchT-1.2){const k=((u.ha||0)-(BAL.hatchT-1.2))/1.2;m.position.x+=Math.sin(S.t*55)*.035*k;m.position.y+=Math.cos(S.t*47)*.02*k}/* 🥚 v18.3 부화 직전 덜덜 */{const wh=m.userData.whirl;if(wh)wh.forEach((q,i)=>q.rotation.x=-S.t*(u.stun>0||u.held?0:24)-i*.8);const wl=m.userData.wheel;if(wl){const st=u.stun>0||u.held;let bob=0;wl.forEach((q,i)=>{const T=(st?(u.wT||(u.wT=S.t)):(u.wT=0,S.t))*(i?1.13:1)+i*.37,f=T%1.5,a=14*(T-.2*Math.floor(T/1.5)-Math.min(f,.2));q.rotation.x=-a;bob=Math.max(bob,f<.2?.04*(1-f/.2):0)});m.position.z+=bob+.012*Math.abs(Math.sin(S.t*20))}const fp=m.userData.flap;if(fp)fp.forEach((q,i)=>q.rotation.x=Math.sin(S.t*14-i*1.3)*.42+.1);const sr=m.userData.str;if(sr)sr.forEach((q,i)=>q.rotation.x=Math.sin(S.t*11+i*1.7)*.25)}/* 🌀 로드러너 프로펠러 다리 */{const fl=m.userData.flames;if(fl)fl.forEach((q,i)=>q.scale.set(1,.7+.5*Math.abs(Math.sin(S.t*31+i*1.7)),1));const ne=m.userData.neon;if(ne)ne.material.opacity=.75+.25*Math.sin(S.t*6)}{let bb=m.userData.bub;if(u.fl>0&&!bb){bb=m.userData.bub=new THREE.Mesh(new THREE.SphereGeometry(.42,16,12),new THREE.MeshStandardMaterial({color:0xbae6fd,emissive:0x7dd3fc,emissiveIntensity:.5,transparent:true,opacity:.42,roughness:.1,depthWrite:false}));bb.position.z=.28;const hl=new THREE.Mesh(new THREE.SphereGeometry(.07,8,6),new THREE.MeshBasicMaterial({color:0xffffff}));hl.position.set(-.18,-.2,.2);bb.add(hl);m.add(bb)}if(bb)bb.visible=u.fl>0}m.scale.x=m.scale.y/XK;
   // 💬 말하는 새: 끝까지 가는 동안 진행 25%·50%·75%에서 딱 한 마디씩(3번), 1.6초. 화면에 동시에 최대 3개
@@ -1449,8 +1451,8 @@ let last={},wins={};
 const SMP={tap:['click_001','click_002','click_003'],build:['impactWood_medium_000','impactWood_medium_001'],upgrade:['maximize_006'],sell:['handleCoins','handleCoins2'],
  send:['drop_002','drop_003'],tech:['jingles_NES03'],unlock:['jingles_NES12'],skill:['maximize_009'],die:['impactSoft_medium_000','impactSoft_medium_001','impactSoft_medium_002'],
  leak:['impactPunch_heavy_000','impactPunch_heavy_001'],elim:['impactBell_heavy_000'],alarm:['impactBell_heavy_001'],win:['jingles_STEEL02'],lose:['jingles_STEEL06'],start:['jingles_NES08'],go:['jingles_NES05'],
- tick:['tick_001'],hatch:['impactGlass_light_000','impactGlass_light_001'],lay:['drop_004'],pop:['glass_001','glass_002'],revive:['maximize_003']};
-const SVOL={tap:.3,die:.28,send:.4,build:.5,tick:.4,hatch:.4,pop:.35,lay:.35},SGAP={tap:60,die:70,hatch:120,pop:90,leak:120,send:80},SLAYER={die:1};// SLAYER: 녹음 소리 + 기존 새 울음 합성음을 같이
+ tick:['tick_001'],hatch:['impactGlass_light_000','impactGlass_light_001'],lay:['drop_004'],pop:['glass_001','glass_002'],revive:['maximize_003'],robosplit:['impactPunch_heavy_001']};
+const SVOL={tap:.3,die:.28,send:.4,build:.5,tick:.4,hatch:.4,pop:.35,lay:.35},SGAP={robosplit:500,tap:60,die:70,hatch:120,pop:90,leak:120,send:80},SLAYER={die:1,robosplit:1};// SLAYER: 녹음 소리 + 기존 새 울음 합성음을 같이
 const SBUF={};let sLoad=false;
 function smpLoad(){if(sLoad||!ac||offline)return;sLoad=true;[...new Set(Object.values(SMP).flat())].forEach(f=>fetch('assets/sfx/'+f+'.ogg').then(r=>r.ok?r.arrayBuffer():Promise.reject()).then(b=>new Promise((ok,no)=>ac.decodeAudioData(b,ok,no))).then(buf=>{SBUF[f]=buf}).catch(()=>{}))}
 function smpPlay(n,t){const L=SMP[n];if(!L||offline)return false;const f=L[Math.floor(Math.random()*L.length)],buf=SBUF[f];if(!buf)return false;if(!gate('smp_'+n,SGAP[n]||40))return !SLAYER[n];
@@ -1568,6 +1570,9 @@ const FX={
  die(t,a){const id=a.unit||'chick';if(!gate('die_'+id,70)||!gate('die_any',40)||!rate('die',8))return;chirp(t,id,.09)},
  revive(t){if(!gate('rev',300))return;noise(t,{ft:'bandpass',q:2,f:300,f2:3000,dur:.6,a:.2,v:.25});
   arp(t+.05,[67,71,74,79,83,86],.055,{wave:'p25',dur:.16,v:.08,lp:4000});tone(t+.4,{type:'sine',f:mtof(91),dur:.45,v:.06,vib:20,vibF:8})},
+ robosplit(t,a){if(!gate('robosplit',500))return;const v=a.mine?1:.5;/* 🤖 찌르봇 분리: 금속 쾅 + 펑 + 휙×5 + 띠링 */
+  tone(t,{type:'square',f:240,f2:90,dur:.22,v:.12*v,lp:900});tone(t,{type:'triangle',f:1400,f2:700,dur:.18,v:.08*v});noise(t+.03,{ft:'lowpass',f:900,f2:120,dur:.28,v:.32*v});
+  if(a.mine){for(let i=0;i<5;i++)noise(t+.2+i*.08,{ft:'bandpass',f:900+i*180,f2:3200+i*300,q:3,dur:.09,v:.12});arp(t+.68,[76,79,84],.06,{wave:'p25',dur:.12,v:.06,lp:4000})}},
  leak(t,a){if(!gate('leak',150))return;const dm=Math.max(1,+a.dm||1),v=Math.min(1,.65+dm*.06);
   tone(t,{type:'triangle',f:900,f2:300,dur:.22,v:.18*v});tone(t,{type:'square',f:200,f2:90,dur:.16,v:.07*v,lp:700});
   if(dm>=3)tone(t+.13,{type:'triangle',f:700,f2:220,dur:.22,v:.15*v});if(dm>=6)tone(t+.26,{type:'triangle',f:520,f2:160,dur:.25,v:.13*v})},
@@ -2346,22 +2351,62 @@ const ART=(()=>{
   roboFist(c,sd){const g=new THREE.Group(),f=new THREE.Mesh(this._rb('rfist',.12,.12,.11,.035),this._rm(c));f.position.z=-.055;g.add(f);this._ol(g,f,1.12,1.12,1.12);const cf=new THREE.Mesh(gk('prop_rf_c',()=>{const q=new THREE.CylinderGeometry(.045,.05,.05,10);q.rotateZ(PI/2);return q}),this._rm(0x9aa0b0));cf.position.set(-sd*.07,0,0);g.add(cf);return this._fin(g)},
   roboBoost(){const g=new THREE.Group(),M=this._rm(0xf27ab8),fm=mat('prop_rb_fl',()=>basic(0xfb923c,{transparent:true,opacity:.85}));[-1,1].forEach(s=>{const c=new THREE.Mesh(gk('prop_rb_c',()=>{const q=new THREE.CylinderGeometry(.05,.06,.14,12);return q}),M);c.position.set(s*.07,0,0);g.add(c);this._ol(g,c,1.12,1.06,1.12);const f=new THREE.Mesh(gk('prop_rb_f',()=>{const q=new THREE.ConeGeometry(.04,.12,8);q.rotateX(PI);return q}),fm);f.position.set(s*.07,.12,0);f.rotation.x=-PI/2;g.add(f)});return this._fin(g)},
   bolt(){const g=new THREE.Group(),b=new THREE.Mesh(gk('prop_bolt',()=>{const q=new THREE.CylinderGeometry(.03,.03,.02,8);q.rotateZ(PI/2);return q}),this._rm(0x9aa0b0));g.add(b);this._ol(g,b,1.2,1.2,1.2);return this._fin(g)},
-  /* 🤖 합체! 찌르봇(제미나이 시안 2026-11-25): 서 있는 로봇 — 빨강 새 머리+투구·헤드폰·안테나 / 파랑 가슴 갑옷+별 램프 / 우주빛 배 / 노랑 주먹 팔 / 초록 방패 팔 / 분홍 부츠+불꽃. 원점=발밑, 앞=-y, 키 약 1.1 */
-  jjirbot(){const g=new THREE.Group(),R=c=>this._rm(c),O=(o,k)=>{this._ol(g,o,k||1.08,k||1.08,k||1.08);return o},A=(geo,m,x,y,z,sx,sy,sz)=>{const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);if(sx)o.scale.set(sx,sy??sx,sz??sx);g.add(o);return o},SP=gk('prop_jb_sp',()=>new THREE.SphereGeometry(1,16,12)),
-   GR=R(0x9aa0b0),BK=mat('prop_jb_bk',()=>basic(0x141420)),WH=mat('prop_jb_wh',()=>basic(0xffffff)),GLX=R(0x2a2350);
-   O(A(SP,GLX,0,0,.36,.21,.19,.2));[[-.08,-.17,.3],[.06,-.18,.36],[-.02,-.19,.24],[.1,-.15,.27],[-.11,-.14,.4]].forEach(([x,y,z])=>A(SP,WH,x,y,z,.012));
-   O(A(SP,R(0x3a7be8),0,-.01,.53,.27,.23,.17));
-   {const st=A(gk('prop_rp_s',()=>{const h=new THREE.Shape();for(let i=0;i<10;i++){const a=i*PI/5-PI/2,r=i%2?.022:.055;i?h.lineTo(Math.cos(a)*r,-Math.sin(a)*r):h.moveTo(Math.cos(a)*r,-Math.sin(a)*r)}const q=new THREE.ExtrudeGeometry(h,{depth:.02,bevelEnabled:false});q.rotateX(PI/2);return q}),mat('prop_jb_star',()=>std(0xfde047,{flatShading:false,emissive:0xf59e0b,emissiveIntensity:.5})),0,-.235,.53);st.scale.setScalar(1.5);O(st,1.15)}
-   O(A(SP,R(0xe8433a),0,-.02,.8,.17));
-   {O(A(gk('prop_jb_helm',()=>{const q=new THREE.SphereGeometry(1,16,10,0,PI*2,0,PI*.36);q.rotateX(PI/2);return q}),R(0xd62828),0,.01,.84,.19));
-    const v=O(A(this._rb('jbvis',.3,.06,.035,.015),R(0x475569),0,-.15,.885),1.1);v.rotation.x=-.5;
-    [-1,1].forEach(s=>{O(A(gk('prop_jb_ear',()=>{const q=new THREE.CylinderGeometry(1,1,1,14);q.rotateZ(PI/2);return q}),GR,s*.18,0,.82,.06,.05,.06));
-     A(gk('prop_jb_ant',()=>{const q=new THREE.CylinderGeometry(.009,.009,1,6);q.rotateX(PI/2);q.translate(0,0,.5);return q}),GR,s*.17,0,.88,1,1,.22);O(A(SP,GR,s*.17,0,1.11,.025))})}
-   [-1,1].forEach(s=>{A(SP,BK,s*.062,-.178,.79,.032,.016,.038);A(SP,WH,s*.062+.01,-.19,.805,.011);const br=A(gk('prop_jb_br',()=>new THREE.BoxGeometry(.075,.014,.018)),BK,s*.066,-.18,.845);br.rotation.y=s*.45;A(SP,mat('prop_jb_bl',()=>basic(0xff8fa3)),s*.112,-.15,.745,.036,.012,.022)});
-   {const bk=A(gk('prop_jb_beak',()=>new THREE.ConeGeometry(.045,.09,10)),R(0xfacc15),0,-.225,.75);bk.rotation.x=PI;O(bk,1.15)}
-   O(A(SP,R(0xf5c431),-.3,0,.56,.1));A(SP,GR,-.36,0,.46,.04);O(A(SP,R(0xf5c431),-.38,-.02,.38,.07,.07,.1));O(A(SP,R(0xf5c431),-.42,-.06,.24,.16,.15,.15));[-.06,0,.06].forEach(dz=>A(SP,R(0xf5c431),-.42,-.2,.25+dz,.042));O(A(SP,GR,-.33,0,.6,.03));
-   O(A(SP,R(0x3fbf6a),.3,0,.56,.1));A(SP,GR,.36,0,.46,.04);O(A(SP,R(0x3fbf6a),.38,-.02,.38,.07,.07,.1));O(A(gk('prop_jb_sh',()=>new THREE.CylinderGeometry(1,1,1,20)),R(0x2fa85a),.42,-.12,.3,.16,.05,.16));A(gk('prop_jb_shr',()=>{const q=new THREE.TorusGeometry(1,.12,6,20);q.rotateX(PI/2);return q}),R(0x3fbf6a),.42,-.15,.3,.12,.12,.12);O(A(SP,GR,.33,0,.6,.03));
-   [-1,1].forEach(s=>{A(SP,GR,s*.1,0,.16,.045);O(A(this._rb('jbboot',.13,.16,.14,.04),R(0xf27ab8),s*.11,-.01,-.04));O(A(SP,GR,s*.18,0,.03,.018));const f=A(gk('prop_jb_fl',()=>new THREE.ConeGeometry(.045,.13,8)),mat('prop_rb_fl',()=>basic(0xfb923c,{transparent:true,opacity:.85})),s*.11,-.01,-.11);f.rotation.x=-PI/2});
+  /* 🤖 합체! 찌르봇 부품 상자(디자인 회의 C 2026-11-25, 제미나이 시안): 부위를 하나씩 만들어 조립. 금색은 가슴 링·손목·발목·방패 테 4곳만 */
+  _jb(){if(this.__jb)return this.__jb;const R=c=>this._rm(c),SP=gk('prop_jb_sp',()=>new THREE.SphereGeometry(1,16,12)),CY=gk('prop_jb_cy',()=>new THREE.CylinderGeometry(1,1,1,16)),
+   TR=gk('prop_jb_tr',()=>{const q=new THREE.TorusGeometry(1,.18,8,22);return q}),STAR=gk('prop_jb_star',()=>{const h=new THREE.Shape();for(let i=0;i<10;i++){const a=i*PI/5+PI/2,r=i%2?.42:1;i?h.lineTo(Math.cos(a)*r,Math.sin(a)*r):h.moveTo(Math.cos(a)*r,Math.sin(a)*r)}return new THREE.ExtrudeGeometry(h,{depth:.4,bevelEnabled:true,bevelThickness:.12,bevelSize:.1,bevelSegments:1})});
+   const me=this;return this.__jb={R,SP,CY,TR,STAR,GD:R(0xf2c14e),GR:R(0x9aa0b0),
+    A(g,geo,m,x,y,z,sx,sy,sz,ol){const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);o.scale.set(sx,sy??sx,sz??sx);g.add(o);if(ol)me._ol(g,o,ol,ol,ol);return o}}},
+  /* 투구: 반구+가운데 능선+남색 이마 챙+금테 헤드폰+안테나(원점=머리 중심, 머리 반지름 .21 기준) */
+  jbHelm(){const g=new THREE.Group(),J=this._jb(),A=J.A,RD=J.R(0xd62828);
+   A(g,gk('prop_jb_helm',()=>{const q=new THREE.SphereGeometry(1,18,10,0,PI*2,0,PI*.42);q.rotateX(PI/2);return q}),RD,0,.01,.03,.23,.23,.23,1.07);
+   A(g,this._rb('jbridge',.03,.26,.03,.012),RD,0,.01,.24,1,1,1);
+   const v=A(g,this._rb('jbvis',.36,.1,.04,.02),J.R(0x2b3150),0,-.2,.08,1,1,1,1.1);v.rotation.x=-.26;
+   [-1,1].forEach(s=>{const h=A(g,J.CY,J.GR,s*.23,0,.02,.07,.05,.07,1.1);h.rotation.z=PI/2;const r=A(g,J.TR,J.GD,s*.255,0,.02,.07,.07,.07);r.rotation.y=PI/2;
+    A(g,J.CY,J.GR,s*.1,.05,.2,.012,.16,.012).rotation.x=PI/2;A(g,J.SP,J.GD,s*.1,.05,.29,.026,.026,.026,1.25)});return this._fin(g)},
+  /* 머리: 빨강 새 머리+얼굴(화난 눈썹·볼터치·노란 부리)+투구 */
+  jbHead(){const g=new THREE.Group(),J=this._jb(),A=J.A,BK=mat('prop_jb_bk',()=>basic(0x141420)),WH=mat('prop_jb_wh',()=>basic(0xffffff));
+   A(g,J.SP,J.R(0xe8433a),0,0,0,.21,.21,.21,1.07);
+   [-1,1].forEach(s=>{A(g,J.SP,BK,s*.075,-.192,-.01,.036,.018,.044);A(g,J.SP,WH,s*.075+.012,-.205,.006,.012,.012,.012);const br=A(g,gk('prop_jb_br',()=>new THREE.BoxGeometry(1,1,1)),BK,s*.08,-.2,.055,.085,.016,.02);br.rotation.y=s*.42;A(g,J.SP,mat('prop_jb_bl',()=>basic(0xff8fa3)),s*.135,-.17,-.055,.042,.014,.026)});
+   const bk=A(g,gk('prop_jb_beak',()=>new THREE.ConeGeometry(1,1,10)),J.R(0xfacc15),0,-.235,-.05,.05,.1,.05,1.06);bk.rotation.x=PI;
+   const h=this.jbHelm();g.add(h);return this._fin(g)},
+  /* 가슴 장갑: 둥근 상자+세로 홈+V자 패널선+금 링+빛나는 별(원점=가슴 중심) */
+  jbChest(){const g=new THREE.Group(),J=this._jb(),A=J.A,DK=J.R(0x245cb8);
+   const b=A(g,this._rb('jbchest',.5,.34,.3,.09),J.R(0x3a7be8),0,0,-.15,1,1,1,1.06);
+   A(g,gk('prop_jb_box',()=>new THREE.BoxGeometry(1,1,1)),DK,0,-.172,.04,.012,.01,.1);
+   [-1,1].forEach(s=>{const l=A(g,gk('prop_jb_box',()=>new THREE.BoxGeometry(1,1,1)),DK,s*.08,-.172,-.1,.14,.01,.012);l.rotation.y=s*.5});
+   const r=A(g,J.TR,J.GD,0,-.18,.02,.085,.085,.085);r.rotation.x=PI/2;
+   const st=A(g,J.STAR,mat('prop_jb_starm',()=>std(0xfde047,{flatShading:false,emissive:0xf59e0b,emissiveIntensity:.4})),0,-.2,.02,.06,.06,.06,1.15);st.rotation.x=PI/2;return this._fin(g)},
+  /* 배: 우주빛 납작 구+별 점 */
+  jbBelly(){const g=new THREE.Group(),J=this._jb(),A=J.A,WH=mat('prop_jb_wh',()=>basic(0xffffff));A(g,J.SP,J.R(0x2a2350),0,0,0,.22,.2,.17,1.07);[[-.09,-.17,.0],[.07,-.18,.05],[-.02,-.2,-.06],[.12,-.13,-.04],[-.13,-.12,.06]].forEach(([x,y,z])=>A(g,J.SP,WH,x,y,z,.013));return this._fin(g)},
+  /* 주먹: 둥근 상자+손가락 4개+엄지(원점=주먹 중심, 앞=-y) */
+  jbFist(c,sd){const g=new THREE.Group(),J=this._jb(),A=J.A,M=J.R(c);A(g,this._rb('jbfist',.2,.17,.18,.05),M,0,0,-.09,1,1,1,1.08);
+   for(let i=0;i<4;i++)A(g,this._rb('jbfing',.045,.07,.06,.016),M,-.0705+i*.047,-.1,.035,1,1,1,1.12);A(g,this._rb('jbthumb',.05,.09,.05,.018),M,-sd*.105,-.04,-.03,1,1,1,1.12);return this._fin(g)},
+  /* 방패: 원판+금테+진한 초록 별 엠블럼(원점=방패 중심, 앞=-y) */
+  jbShield(){const g=new THREE.Group(),J=this._jb(),A=J.A;const d=A(g,J.CY,J.R(0x3fbf6a),0,0,0,.2,.05,.2,1.08);const r=A(g,J.TR,J.GD,0,-.02,0,.2,.2,.2);r.rotation.x=PI/2;const e=A(g,J.STAR,J.R(0x2a8a4a),0,-.03,0,.075,.075,.075);e.rotation.x=PI/2;return this._fin(g)},
+  /* 팔: 깃털 어깨 갑옷 → 어깨 관절 → 위팔 → 팔꿈치 링 → 아래팔(손목 쪽 굵게)+금 손목 → 주먹/방패. 원점=어깨, sd=-1 노랑(화면 왼쪽)/+1 초록 */
+  jbArm(sd,c,kind){const g=new THREE.Group(),J=this._jb(),A=J.A,M=J.R(c);
+   A(g,gk('prop_jb_pau',()=>{const q=new THREE.SphereGeometry(1,16,10,0,PI*2,0,PI*.5);q.rotateX(PI/2);return q}),M,0,0,0,.15,.15,.13,1.08);
+   A(g,J.TR,M,0,0,-.005,.14,.14,.14);
+   A(g,J.SP,J.GR,sd*.02,-.12,.02,.025,.025,.025);
+   const jt=A(g,J.CY,J.GR,-sd*.06,0,-.04,.06,.08,.06);jt.rotation.z=PI/2;
+   A(g,gk('prop_jb_cone',()=>new THREE.CylinderGeometry(1,.87,1,14)),M,sd*.04,0,-.14,.08,.14,.08,1.08).rotation.x=PI/2;
+   const el=A(g,J.TR,J.GR,sd*.05,0,-.23,.07,.07,.07);A(g,J.SP,J.GR,sd*.05,0,-.23,.058,.058,.058);
+   A(g,gk('prop_jb_cone2',()=>new THREE.CylinderGeometry(.82,1,1,14)),M,sd*.06,-.02,-.32,.11,.16,.11,1.08).rotation.x=PI/2;
+   A(g,J.TR,J.GD,sd*.06,-.02,-.41,.11,.11,.11);
+   if(kind==='fist'){const f=this.jbFist(c,sd);f.position.set(sd*.07,-.06,-.5);g.add(f)}else{const s2=this.jbShield();s2.position.set(sd*.16,-.1,-.4);s2.rotation.z=sd*.25;g.add(s2)}
+   return this._fin(g)},
+  /* 다리: 허벅지 관절 → 분홍 부츠(발끝·뒤꿈치 진분홍, 옆 볼트) → 금 발목 링 → 2단 노즐+불꽃(원점=엉덩이 가운데) */
+  jbLegs(fk){const g=new THREE.Group(),J=this._jb(),A=J.A,PK=J.R(0xf27ab8),DP=J.R(0xc85a95);
+   [-1,1].forEach(s=>{const h=A(g,J.CY,J.GR,s*.12,0,0,.05,.08,.05);h.rotation.z=PI/2;
+    A(g,this._rb('jbboot',.16,.22,.18,.05),PK,s*.13,-.03,-.25,1,1,1,1.08);A(g,this._rb('jbtoe',.15,.07,.05,.02),DP,s*.13,-.11,-.25,1,1,1);A(g,this._rb('jbheel',.15,.06,.05,.02),DP,s*.13,.06,-.25,1,1,1);
+    A(g,J.SP,J.GR,s*.215,-.03,-.16,.022,.022,.022);const r=A(g,J.TR,J.GD,s*.13,0,-.06,.08,.08,.08);
+    A(g,J.CY,J.GR,s*.13,0,-.28,.06,.04,.06,1.1).rotation.x=PI/2;A(g,J.CY,J.GR,s*.13,0,-.32,.045,.04,.045).rotation.x=PI/2;
+    const f=A(g,gk('prop_jb_fl',()=>new THREE.ConeGeometry(1,1,8)),mat('prop_rb_fl',()=>basic(0xfb923c,{transparent:true,opacity:.85})),s*.13,0,-.4,.045*(fk||1),.13*(fk||1),.045*(fk||1));f.rotation.x=-PI/2});return this._fin(g)},
+  /* 조립: 키 약 1.15(원점=발밑) + 머리 위 '합체 중' 점 5개 */
+  jjirbot(){const g=new THREE.Group(),add=(q,x,y,z)=>{q.position.set(x,y,z);g.add(q);return q};
+   add(this.jbLegs(),0,0,.32);add(this.jbBelly(),0,0,.42);add(this.jbChest(),0,0,.62);add(this.jbHead(),0,-.02,.9);
+   add(this.jbArm(-1,0xf5c431,'fist'),-.36,0,.72);add(this.jbArm(1,0x3fbf6a,'shield'),.36,0,.72);
+   const J=this._jb();[0xe8433a,0x3a7be8,0xf5c431,0x3fbf6a,0xf27ab8].forEach((c,i)=>{const d=J.A(g,J.SP,mat('prop_jb_dot'+c,()=>basic(c)),(i-2)*.07,0,1.32,.028,.028,.028,1.3);d.name='rdot'+i});
    return this._fin(g)},
   /* 🎙️ 아이돌 헤드셋 마이크: 귀 패드 + 얇은 대 + 동그란 마이크(원점=머리 옆면, 앞=-y) */
   mic(){const g=new THREE.Group(),dm=mat('prop_mic_d',()=>std(0x1f2937,{flatShading:false,roughness:.5}));
@@ -2514,14 +2559,7 @@ const ART=(()=>{
    if(id==='hatch_gold')put(PROP.spoon(),'propSpoon',0,H.hy-H.hr-.06,H.hz-.07,1.3,[-1.2,0,.3]);
    if(id==='blizgull')put(PROP.bucket(),'propBucket',0,H.hy,H.hz+H.hr+.1,1,[PI+.15,-.12,0])/* 눈사람처럼 거꾸로 씀 */;
    if(id==='flamingo')put(PROP.cocktail(0x84cc16),'propCk',.29,-.06,z0-.07,1.4);
-   if(id==='starling'||b.bro!=null){/* 🤖 찌르봇 파츠(회의 C 2026-11-25): 머리=빨강 투구, 몸통=파랑 가슴판, 오른팔=노랑·왼팔=초록 주먹, 다리=분홍 부스터. 형제는 자기 파츠만 작게 */
-    const R=false,k=b.bro,on=i=>k===i,sk=.8;if(id==='starling')return;
-    if(on(0))put(PROP.roboHelm(),'propHelm',0,H.hy+.02,H.hz+H.hr*.62,R?.92:.8);
-    if(on(1))put(PROP.roboPlate(),'propPlate',0,R?-.27:.1,R?z0+.02:z0+.2,R?1.15:.7,R?null:[-PI/2+.3,0,0]);
-    [[2,1,0xf5c431],[3,-1,0x3fbf6a]].forEach(([i,sd,c])=>{if(!on(i))return;const tp=wingTip(m,sd);const q=PROP.roboFist(c,sd);q.name='propFist'+i;if(tp&&R){q.position.set(tp.x,-.02,.02);tp.P.add(q)}else{q.position.set(0,.1,z0+.22);q.scale.setScalar(.8);m.add(q)}});
-    if(on(4))put(PROP.roboBoost(),'propBoost',0,R?.3:.14,R?z0-.04:z0+.16,R?1.25:.7);
-    if(R)[[.17,-.08,z0+.12],[-.17,-.08,z0+.12]].forEach(([x,y,z],j)=>put(PROP.bolt(),'propBolt'+j,x,y,z,1,[0,0,0]));
-    }}
+   /* 🤖 찌르봇·형제 파츠는 A.bird 감싸는 곳에서 입힘 */}
   /* 🧣🎩 v17.9: 목도리(목 소켓)·우체부 모자·실크햇 */
   if(id==='penguin'){const q=PROP.scarf(0xdc2626,0xffffff,.165);q.name='propScarf';q.position.set(0,-.03,.6);m.add(q)}
   if(id==='blizgull'){const q=PROP.scarf(0xdc2626,0xffffff,.15);q.name='propScarf';q.position.set(0,H.hy+.07,H.hz-.13);m.add(q)}
@@ -3094,7 +3132,7 @@ const ART=(()=>{
   [0,1,2,3].forEach(i=>{const a=i*PI/2+.4;c.seg('s',Math.cos(a)*.12,Math.sin(a)*.12,.55,Math.cos(a)*.42,Math.sin(a)*.42,1.0,.04,V1);c.s('S',Math.cos(a)*.42,Math.sin(a)*.42,1.02,.06,.06,.06,V3)});
   rose(-.22,-.18,.6,1.4,0xf43f5e);rose(.24,.14,.64,1.4,0xfb7185);rose(0,.0,.76,1.8,0xf43f5e);rose(.1,-.2,.5,1.1,0xfda4af);
   const r=c.spin(0,0,.8,1.1);[0,1,2,3,4,5].forEach(i=>{const a=i*PI/3;r.g('S',Math.cos(a)*.5,Math.sin(a)*.5,Math.sin(i)*.08,.03,.03,.03,0xfde047)});return [0,0,1.12,.07]};
- /* 🤖 찌르봇: 새 몸은 숨기고(체력 막대 평면만 남겨 위로) 서 있는 로봇을 입힘 */{const ob=A.bird;A.bird=o=>{const r=ob(o);if(o&&o.m&&o.b&&o.b.id==='starling'&&!o.m.userData.robo){const m=o.m;m.userData.robo=1;m.children.forEach(c=>{if(c.geometry&&c.geometry.type==='PlaneGeometry')c.position.z=1.5;else c.visible=false});const q=PROP.jjirbot();q.name='propRobo';q.position.z=-.1;q.scale.setScalar(1.3);m.add(q)}return r}}
+ /* 🤖 찌르봇: 새 몸은 숨기고(체력 막대 평면만 남겨 위로) 부위별로 조립한 로봇을 입힘 / 🐦 형제: 몸 0.7배 + 자기 파츠를 등(위에서 보이게)에 */{const ob=A.bird;A.bird=o=>{const r=ob(o);const m=o&&o.m,b=o&&o.b;if(!m||!b||m.userData.robo)return r;if(b.id==='starling'){m.userData.robo=1;m.children.forEach(c=>{if(c.geometry&&c.geometry.type==='PlaneGeometry')c.position.z=1.62;else c.visible=false});const q=PROP.jjirbot();q.name='propRobo';q.position.z=-.15;q.scale.setScalar(1.25);m.add(q)}else if(b.bro!=null){m.userData.robo=1;m.scale.multiplyScalar(.7);const k=b.bro,H=headOf(b.id),P=(q,x,y,z,sc,rx)=>{q.position.set(x,y,z);q.scale.setScalar(sc);if(rx)q.rotation.x=rx;q.name='propBro';m.add(q)};if(k===0)P(PROP.jbHelm(),0,H.hy,H.hz-.02,.82);if(k===1)P(PROP.jbChest(),0,.1,.5,.95,-PI/2+.15);if(k===2)P(PROP.jbFist(0xf5c431,-1),0,.12,.52,1.35,-PI/2+.2);if(k===3)P(PROP.jbShield(),0,.12,.5,1.25,-PI/2+.2);if(k===4)P(PROP.jbLegs(.6),0,.14,.62,.8,-PI/2+.35)}return r}}
  A.towerMesh=({b,lv})=>{if(!b||typeof GC==='undefined'||typeof THREE==='undefined')return;const f=TD[b.id];if(!f)return;lv=b.id==='wall'?1:Math.max(1,Math.min(4,lv|0||1));
   const key=b.id+'_'+lv;let R=REC[key];
   if(!R){const T=tgt(new THREE.Matrix4(),0),c=cx(T,T.M);const top=f(c,lv,b);if(lv>=4)legend(c,top,b&&b.col);R=REC[key]=bake(T)}
@@ -3846,7 +3884,7 @@ const PXS=(()=>{const MAT={},act=[],M=()=>typeof PFXS_META!=='undefined'?PFXS_ME
  function stop(a){if(!a)return;a.dead=1}
  function update(dt){for(let i=act.length-1;i>=0;i--){const a=act[i];a.t+=dt;
    if(a.t<0){a.me.visible=false;continue}a.me.visible=true;const cm=a.cam||(typeof Cam!=='undefined'&&Cam);if(cm){a.me.quaternion.copy(cm.quaternion);a.me.scale.x=1/(a.sc.scale.x||1)}
-   let f=Math.floor(a.t*a.m.fps);if(f>=a.m.n){if(a.loop&&!a.dead&&(!a.life||a.t<a.life))f%=a.m.n;else{a.sc.remove(a.me);a.g.dispose();act.splice(i,1);continue}}
+   let f=Math.floor(a.t*a.m.fps);if(f>=a.m.n||(!a.loop&&a.life&&a.t>=a.life)){if(a.loop&&!a.dead&&(!a.life||a.t<a.life))f%=a.m.n;else{a.sc.remove(a.me);a.g.dispose();act.splice(i,1);continue}}
    if(a.dead&&!a.loop){}if(f!==a.f){a.f=f;setUV(a)}}}
  const has=id=>!!M()[id];
  /* 여러 새 위에 나눠서(최대 n개, 조금씩 시차) */

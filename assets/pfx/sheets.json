@@ -102,5 +102,31 @@
   "px": 64,
   "py": 56,
   "ofw": 170
+ },
+ "explosions/plasma-explosion": {
+  "f": "assets/pfx/explosions_plasma-explosion.png",
+  "n": 26,
+  "fps": 15.0,
+  "loop": false,
+  "cols": 5,
+  "rows": 6,
+  "fw": 206,
+  "fh": 190,
+  "px": 108,
+  "py": 95,
+  "ofw": 224
+ },
+ "holy/feather-burst": {
+  "f": "assets/pfx/holy_feather-burst.png",
+  "n": 46,
+  "fps": 15.0,
+  "loop": false,
+  "cols": 7,
+  "rows": 7,
+  "fw": 141,
+  "fh": 137,
+  "px": 68,
+  "py": 50,
+  "ofw": 160
  }
 }
