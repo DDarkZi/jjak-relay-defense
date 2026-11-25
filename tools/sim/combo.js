@@ -19,9 +19,9 @@ const jobs=[];for(const d in CFG.defs)for(const w in CFG.waves)for(let k=0;k<N;k
    for(;i<=j;i++){const c=cells[i];if(!me.grid[c[1]][c[0]]){me.grid[c[1]][c[0]]=mkR(TB.wall,me)}}if(typeof refreshPaths==='function')refreshPaths(me);
    cost=g0-me.gold;
    /* 새 보내기 계측 */let leakDm=0,leakN=0,kill=0,dw=0,dn2=0,sent=0,gold=0;const oe=window.escape;window.escape=function(p,u){if(p.id===0){leakDm+=u.bp.dm;leakN++;u._esc=1}return oe.apply(this,arguments)};
-   const q=[];for(const [id,n] of W){const b=U.find(u=>u.id===id);for(let k=0;k<n;k++)q.push(b)}q.sort(()=>Math.random()-.5);
+   const q=[];for(const [id,n,ov] of W){const b0=U.find(u=>u.id===id),b=ov?{...b0,...ov}:b0;/* ov: 능력 바꿔 보기 예) {flock:0} */for(let k=0;k<n;k++)q.push(b)}q.sort(()=>Math.random()-.5);
    const seen=new Set();let nt=0;
-   while(S.t<400){if(q.length&&S.t>=nt){const b=q.shift();spawn(me,b,1);sent++;gold+=b.c;nt=S.t+.6}
+   while(S.t<400){if(q.length&&S.t>=nt){const b=q.shift();for(let c=cntOf(b);c>0;c--)spawn(me,b,1);sent++;gold+=b.c;nt=S.t+.6}
     step(.05);
     for(const u of me.units)if(!seen.has(u)){seen.add(u);u._t0=S.t}
     for(const u of seen)if(!me.units.includes(u)){seen.delete(u);dw+=S.t-u._t0;dn2++;if(!u._esc)kill++}
