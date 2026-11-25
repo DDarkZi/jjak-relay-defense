@@ -2346,6 +2346,23 @@ const ART=(()=>{
   roboFist(c,sd){const g=new THREE.Group(),f=new THREE.Mesh(this._rb('rfist',.12,.12,.11,.035),this._rm(c));f.position.z=-.055;g.add(f);this._ol(g,f,1.12,1.12,1.12);const cf=new THREE.Mesh(gk('prop_rf_c',()=>{const q=new THREE.CylinderGeometry(.045,.05,.05,10);q.rotateZ(PI/2);return q}),this._rm(0x9aa0b0));cf.position.set(-sd*.07,0,0);g.add(cf);return this._fin(g)},
   roboBoost(){const g=new THREE.Group(),M=this._rm(0xf27ab8),fm=mat('prop_rb_fl',()=>basic(0xfb923c,{transparent:true,opacity:.85}));[-1,1].forEach(s=>{const c=new THREE.Mesh(gk('prop_rb_c',()=>{const q=new THREE.CylinderGeometry(.05,.06,.14,12);return q}),M);c.position.set(s*.07,0,0);g.add(c);this._ol(g,c,1.12,1.06,1.12);const f=new THREE.Mesh(gk('prop_rb_f',()=>{const q=new THREE.ConeGeometry(.04,.12,8);q.rotateX(PI);return q}),fm);f.position.set(s*.07,.12,0);f.rotation.x=-PI/2;g.add(f)});return this._fin(g)},
   bolt(){const g=new THREE.Group(),b=new THREE.Mesh(gk('prop_bolt',()=>{const q=new THREE.CylinderGeometry(.03,.03,.02,8);q.rotateZ(PI/2);return q}),this._rm(0x9aa0b0));g.add(b);this._ol(g,b,1.2,1.2,1.2);return this._fin(g)},
+  /* 🤖 합체! 찌르봇(제미나이 시안 2026-11-25): 서 있는 로봇 — 빨강 새 머리+투구·헤드폰·안테나 / 파랑 가슴 갑옷+별 램프 / 우주빛 배 / 노랑 주먹 팔 / 초록 방패 팔 / 분홍 부츠+불꽃. 원점=발밑, 앞=-y, 키 약 1.1 */
+  jjirbot(){const g=new THREE.Group(),R=c=>this._rm(c),O=(o,k)=>{this._ol(g,o,k||1.08,k||1.08,k||1.08);return o},A=(geo,m,x,y,z,sx,sy,sz)=>{const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);if(sx)o.scale.set(sx,sy??sx,sz??sx);g.add(o);return o},SP=gk('prop_jb_sp',()=>new THREE.SphereGeometry(1,16,12)),
+   GR=R(0x9aa0b0),BK=mat('prop_jb_bk',()=>basic(0x141420)),WH=mat('prop_jb_wh',()=>basic(0xffffff)),GLX=R(0x2a2350);
+   O(A(SP,GLX,0,0,.36,.21,.19,.2));[[-.08,-.17,.3],[.06,-.18,.36],[-.02,-.19,.24],[.1,-.15,.27],[-.11,-.14,.4]].forEach(([x,y,z])=>A(SP,WH,x,y,z,.012));
+   O(A(SP,R(0x3a7be8),0,-.01,.53,.27,.23,.17));
+   {const st=A(gk('prop_rp_s',()=>{const h=new THREE.Shape();for(let i=0;i<10;i++){const a=i*PI/5-PI/2,r=i%2?.022:.055;i?h.lineTo(Math.cos(a)*r,-Math.sin(a)*r):h.moveTo(Math.cos(a)*r,-Math.sin(a)*r)}const q=new THREE.ExtrudeGeometry(h,{depth:.02,bevelEnabled:false});q.rotateX(PI/2);return q}),mat('prop_jb_star',()=>std(0xfde047,{flatShading:false,emissive:0xf59e0b,emissiveIntensity:.5})),0,-.235,.53);st.scale.setScalar(1.5);O(st,1.15)}
+   O(A(SP,R(0xe8433a),0,-.02,.8,.17));
+   {O(A(gk('prop_jb_helm',()=>{const q=new THREE.SphereGeometry(1,16,10,0,PI*2,0,PI*.36);q.rotateX(PI/2);return q}),R(0xd62828),0,.01,.84,.19));
+    const v=O(A(this._rb('jbvis',.3,.06,.035,.015),R(0x475569),0,-.15,.885),1.1);v.rotation.x=-.5;
+    [-1,1].forEach(s=>{O(A(gk('prop_jb_ear',()=>{const q=new THREE.CylinderGeometry(1,1,1,14);q.rotateZ(PI/2);return q}),GR,s*.18,0,.82,.06,.05,.06));
+     A(gk('prop_jb_ant',()=>{const q=new THREE.CylinderGeometry(.009,.009,1,6);q.rotateX(PI/2);q.translate(0,0,.5);return q}),GR,s*.17,0,.88,1,1,.22);O(A(SP,GR,s*.17,0,1.11,.025))})}
+   [-1,1].forEach(s=>{A(SP,BK,s*.062,-.178,.79,.032,.016,.038);A(SP,WH,s*.062+.01,-.19,.805,.011);const br=A(gk('prop_jb_br',()=>new THREE.BoxGeometry(.075,.014,.018)),BK,s*.066,-.18,.845);br.rotation.y=s*.45;A(SP,mat('prop_jb_bl',()=>basic(0xff8fa3)),s*.112,-.15,.745,.036,.012,.022)});
+   {const bk=A(gk('prop_jb_beak',()=>new THREE.ConeGeometry(.045,.09,10)),R(0xfacc15),0,-.225,.75);bk.rotation.x=PI;O(bk,1.15)}
+   O(A(SP,R(0xf5c431),-.3,0,.56,.1));A(SP,GR,-.36,0,.46,.04);O(A(SP,R(0xf5c431),-.38,-.02,.38,.07,.07,.1));O(A(SP,R(0xf5c431),-.42,-.06,.24,.16,.15,.15));[-.06,0,.06].forEach(dz=>A(SP,R(0xf5c431),-.42,-.2,.25+dz,.042));O(A(SP,GR,-.33,0,.6,.03));
+   O(A(SP,R(0x3fbf6a),.3,0,.56,.1));A(SP,GR,.36,0,.46,.04);O(A(SP,R(0x3fbf6a),.38,-.02,.38,.07,.07,.1));O(A(gk('prop_jb_sh',()=>new THREE.CylinderGeometry(1,1,1,20)),R(0x2fa85a),.42,-.12,.3,.16,.05,.16));A(gk('prop_jb_shr',()=>{const q=new THREE.TorusGeometry(1,.12,6,20);q.rotateX(PI/2);return q}),R(0x3fbf6a),.42,-.15,.3,.12,.12,.12);O(A(SP,GR,.33,0,.6,.03));
+   [-1,1].forEach(s=>{A(SP,GR,s*.1,0,.16,.045);O(A(this._rb('jbboot',.13,.16,.14,.04),R(0xf27ab8),s*.11,-.01,-.04));O(A(SP,GR,s*.18,0,.03,.018));const f=A(gk('prop_jb_fl',()=>new THREE.ConeGeometry(.045,.13,8)),mat('prop_rb_fl',()=>basic(0xfb923c,{transparent:true,opacity:.85})),s*.11,-.01,-.11);f.rotation.x=-PI/2});
+   return this._fin(g)},
   /* 🎙️ 아이돌 헤드셋 마이크: 귀 패드 + 얇은 대 + 동그란 마이크(원점=머리 옆면, 앞=-y) */
   mic(){const g=new THREE.Group(),dm=mat('prop_mic_d',()=>std(0x1f2937,{flatShading:false,roughness:.5}));
    const pad=new THREE.Mesh(gk('prop_mic_p',()=>{const q=new THREE.CylinderGeometry(.035,.035,.02,12);q.rotateZ(PI/2);return q}),dm);g.add(pad);this._ol(g,pad,1.15,1.15,1.15);
@@ -2498,13 +2515,13 @@ const ART=(()=>{
    if(id==='blizgull')put(PROP.bucket(),'propBucket',0,H.hy,H.hz+H.hr+.1,1,[PI+.15,-.12,0])/* 눈사람처럼 거꾸로 씀 */;
    if(id==='flamingo')put(PROP.cocktail(0x84cc16),'propCk',.29,-.06,z0-.07,1.4);
    if(id==='starling'||b.bro!=null){/* 🤖 찌르봇 파츠(회의 C 2026-11-25): 머리=빨강 투구, 몸통=파랑 가슴판, 오른팔=노랑·왼팔=초록 주먹, 다리=분홍 부스터. 형제는 자기 파츠만 작게 */
-    const R=id==='starling',k=b.bro,on=i=>R||k===i,sk=R?1:.8;
+    const R=false,k=b.bro,on=i=>k===i,sk=.8;if(id==='starling')return;
     if(on(0))put(PROP.roboHelm(),'propHelm',0,H.hy+.02,H.hz+H.hr*.62,R?.92:.8);
     if(on(1))put(PROP.roboPlate(),'propPlate',0,R?-.27:.1,R?z0+.02:z0+.2,R?1.15:.7,R?null:[-PI/2+.3,0,0]);
     [[2,1,0xf5c431],[3,-1,0x3fbf6a]].forEach(([i,sd,c])=>{if(!on(i))return;const tp=wingTip(m,sd);const q=PROP.roboFist(c,sd);q.name='propFist'+i;if(tp&&R){q.position.set(tp.x,-.02,.02);tp.P.add(q)}else{q.position.set(0,.1,z0+.22);q.scale.setScalar(.8);m.add(q)}});
     if(on(4))put(PROP.roboBoost(),'propBoost',0,R?.3:.14,R?z0-.04:z0+.16,R?1.25:.7);
     if(R)[[.17,-.08,z0+.12],[-.17,-.08,z0+.12]].forEach(([x,y,z],j)=>put(PROP.bolt(),'propBolt'+j,x,y,z,1,[0,0,0]));
-    if(R)m.scale.multiplyScalar(1.6)}}
+    }}
   /* 🧣🎩 v17.9: 목도리(목 소켓)·우체부 모자·실크햇 */
   if(id==='penguin'){const q=PROP.scarf(0xdc2626,0xffffff,.165);q.name='propScarf';q.position.set(0,-.03,.6);m.add(q)}
   if(id==='blizgull'){const q=PROP.scarf(0xdc2626,0xffffff,.15);q.name='propScarf';q.position.set(0,H.hy+.07,H.hz-.13);m.add(q)}
@@ -3077,6 +3094,7 @@ const ART=(()=>{
   [0,1,2,3].forEach(i=>{const a=i*PI/2+.4;c.seg('s',Math.cos(a)*.12,Math.sin(a)*.12,.55,Math.cos(a)*.42,Math.sin(a)*.42,1.0,.04,V1);c.s('S',Math.cos(a)*.42,Math.sin(a)*.42,1.02,.06,.06,.06,V3)});
   rose(-.22,-.18,.6,1.4,0xf43f5e);rose(.24,.14,.64,1.4,0xfb7185);rose(0,.0,.76,1.8,0xf43f5e);rose(.1,-.2,.5,1.1,0xfda4af);
   const r=c.spin(0,0,.8,1.1);[0,1,2,3,4,5].forEach(i=>{const a=i*PI/3;r.g('S',Math.cos(a)*.5,Math.sin(a)*.5,Math.sin(i)*.08,.03,.03,.03,0xfde047)});return [0,0,1.12,.07]};
+ /* 🤖 찌르봇: 새 몸은 숨기고(체력 막대 평면만 남겨 위로) 서 있는 로봇을 입힘 */{const ob=A.bird;A.bird=o=>{const r=ob(o);if(o&&o.m&&o.b&&o.b.id==='starling'&&!o.m.userData.robo){const m=o.m;m.userData.robo=1;m.children.forEach(c=>{if(c.geometry&&c.geometry.type==='PlaneGeometry')c.position.z=1.5;else c.visible=false});const q=PROP.jjirbot();q.name='propRobo';q.position.z=-.1;q.scale.setScalar(1.3);m.add(q)}return r}}
  A.towerMesh=({b,lv})=>{if(!b||typeof GC==='undefined'||typeof THREE==='undefined')return;const f=TD[b.id];if(!f)return;lv=b.id==='wall'?1:Math.max(1,Math.min(4,lv|0||1));
   const key=b.id+'_'+lv;let R=REC[key];
   if(!R){const T=tgt(new THREE.Matrix4(),0),c=cx(T,T.M);const top=f(c,lv,b);if(lv>=4)legend(c,top,b&&b.col);R=REC[key]=bake(T)}
