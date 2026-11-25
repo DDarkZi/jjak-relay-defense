@@ -8,7 +8,7 @@ const jobs=[];for(const d in CFG.defs)for(const w in CFG.waves)for(let k=0;k<N;k
 (async()=>{const br=await chromium.launch();const out=[];const errs=[];
  await Promise.all([0,1,2,3].map(async()=>{const pg=await br.newPage();pg.setDefaultTimeout(0);pg.on('pageerror',e=>errs.push(String(e)));
   await pg.route('**/three.min.js',r=>r.fulfill({body:STUB,contentType:'application/javascript'}));await pg.route('**/fonts.googleapis.com/**',r=>r.fulfill({body:'',contentType:'text/css'}));await pg.route('**/*.glb',r=>r.abort());
-  await pg.goto('file://'+root+'/index.html');await pg.waitForTimeout(300);
+  await pg.goto('file://'+root+'/index.html');await pg.waitForTimeout(300);if(process.env.PATCH)await pg.evaluate(process.env.PATCH);/* PATCH='JS' 비교 실험 */
   while(jobs.length){const [dn,wn]=jobs.shift();out.push(await pg.evaluate(([D,W,dn,wn])=>{R=R||__mk();Sc=Sc||__mk();Cam=Cam||__mk();diff='M';
    start();S.cdn=0;S.sim=true;S.pl.forEach(p=>{p.ai=false;p.cfg=null});const me=S.pl[0];me.tech=D.tech||null;me.tech2=D.tech2||null;me.gold=1e9;me.life=1e6;
    /* 배치 칸 목록(앞줄부터) */const C=COLS;let cells=[];
