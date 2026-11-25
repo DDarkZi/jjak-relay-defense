@@ -63,12 +63,12 @@ const U=[
 {id:'eagle',n:'제왕독수리',c:850,hp:1690,sp:1,t:'A',dm:4,inc:52,wig:1,ic:'🦅',col:0x6b4f3a,x:'가발 날리기: 체력 절반이 되면 가발이 날아가고, 번쩍이는 머리에 근처 타워가 2초 눈부심(공격 멈춤)'},
 {id:'phoenix',mat:'fire',n:'불사조',c:1300,hp:1950,sp:1.4,t:'A',dm:6,inc:85,revive:1,tech:'fire',ic:'🔥',col:0xf97316,x:'한 번 부활'},
 {id:'humbee',n:'벌새',c:360,hp:125,sp:1.9,t:'G',dm:1,inc:19,count:6,cntR:[5,7],swarm:1,ic:'🐝',col:0xfacc15,x:'5~7마리 떼 · 너무 작아서 강타형 타워(공격 간격 1.5초 이상)의 피해를 절반만 받아요'},
-{id:'starling',n:'찌르레기 5형제',c:1400,hp:1600,sp:1.4,t:'A',dm:6,inc:85,robo:5,ic:'🤖',col:0x4a3f7a,talk:['짹짹 합체! 찌르봇 출격!','파츠 갑옷 단단하지?','한 방은 하나도 안 아파~'],x:'평소엔 5형제가 합체한 로봇 찌르봇: 한 마리만 노리는 공격(한 방 타워 등) 피해 -40%, 광역·연쇄·전깃줄 피해 +30% · 쓰러지면 💥 5형제로 분리돼 사방으로 흩어져 날아가요(각자 체력 100, 빠름)'},
-{id:'starbro0',hidden:1,bro:0,n:'찌르레기 짹레드',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['리더는 투구부터 챙긴다! …앞이 안 보여!','형 먼저 간다!'],x:'찌르봇 머리 담당 형제(분열하면 나와요)'},
-{id:'starbro1',hidden:1,bro:1,n:'찌르레기 짹블루',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['몸통 담당인데 몸통이 제일 작아졌어…','후퇴! 각자 집으로!'],x:'찌르봇 몸통 담당 형제(분열하면 나와요)'},
-{id:'starbro2',hidden:1,bro:2,n:'찌르레기 짹옐로',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['주먹이 나보다 무거운 건 비밀이야.','주먹밥 먹으러 간다~'],x:'찌르봇 오른팔 담당 형제(분열하면 나와요)'},
-{id:'starbro3',hidden:1,bro:3,n:'찌르레기 짹그린',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['방패 뒤가 제일 안전해. 나 먼저 갈게!','형들 기다려!'],x:'찌르봇 왼팔 담당 형제(분열하면 나와요)'},
-{id:'starbro4',hidden:1,bro:4,n:'찌르레기 짹핑크',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['신발 한 짝은 형 거 아니었어?','부스터 최대 출력!'],x:'찌르봇 다리 담당 형제(분열하면 나와요)'},
+{id:'starling',n:'찌르레기 5형제',c:1400,hp:1600,sp:1.4,t:'A',dm:6,inc:85,robo:5,ic:'🤖',col:0x4a3f7a,talk:['짹짹 합체! 찌르봇 출격!','파츠 갑옷 단단하지?','한 방은 하나도 안 아파~'],x:'평소엔 5형제가 합체한 로봇 찌르봇: 한 마리만 노리는 공격(한 방 타워 등) 피해 -40%, 광역·연쇄·전깃줄 피해 +30% · 쓰러지면 💥 5형제로 분리돼 사방으로 흩어져 날아가요(각자 7대 맞으면 쓰러짐, 빠름)'},
+{id:'starbro0',hidden:1,bro:0,hits:7,n:'찌르레기 짹레드',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['리더는 투구부터 챙긴다! …앞이 안 보여!','형 먼저 간다!'],x:'찌르봇 머리 담당 형제(분열하면 나와요)'},
+{id:'starbro1',hidden:1,bro:1,hits:7,n:'찌르레기 짹블루',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['몸통 담당인데 몸통이 제일 작아졌어…','후퇴! 각자 집으로!'],x:'찌르봇 몸통 담당 형제(분열하면 나와요)'},
+{id:'starbro2',hidden:1,bro:2,hits:7,n:'찌르레기 짹옐로',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['주먹이 나보다 무거운 건 비밀이야.','주먹밥 먹으러 간다~'],x:'찌르봇 오른팔 담당 형제(분열하면 나와요)'},
+{id:'starbro3',hidden:1,bro:3,hits:7,n:'찌르레기 짹그린',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['방패 뒤가 제일 안전해. 나 먼저 갈게!','형들 기다려!'],x:'찌르봇 왼팔 담당 형제(분열하면 나와요)'},
+{id:'starbro4',hidden:1,bro:4,hits:7,n:'찌르레기 짹핑크',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['신발 한 짝은 형 거 아니었어?','부스터 최대 출력!'],x:'찌르봇 다리 담당 형제(분열하면 나와요)'},
 {id:'pelican',n:'펠리컨',c:3000,hp:5200,sp:.8,t:'A',dm:10,inc:190,carry:8,ic:'🚌',col:0xf8fafc,x:'쓰러지면 부리 주머니에서 승객 새 8마리가 쏟아져 지상으로 걸어가요'},
 {id:'demcrane',n:'철거반장 두루미',c:4800,hp:8200,sp:.75,t:'G',dm:14,inc:250,grab:1,ic:'🏗️',col:0xf1f5f9,talk:['이거 불법 건축물이에요~','철거 들어갑니다!','민원 접수됐습니다'],x:'6초마다 멈춰서 근처 타워를 부리로 집어 4초 동안 머리에 이고 걸어가요(그동안 공격 불가). Lv.2 이하는 근처 빈칸으로 옮겨 놓고(미로는 절대 안 막아요), 더 높거나 빈칸이 없으면 제자리에 돌려놔요'},
 {id:'archaeo',n:'시조새',c:5500,hp:8600,sp:.75,t:'A',dm:21,inc:330,fossil:1,stone:1,ic:'🦖',col:0xa8a08f,talk:['요즘 타워는 처음 보네…','1억 5천만 년 만의 외출!','깃털… 내 깃털…'],x:'체력이 절반이 되면 화석이 깨지며 땅에 쿵! 착지해요(주변 타워 2초 기절). 그 뒤로는 공룡처럼 땅으로 달려요'},
@@ -166,7 +166,7 @@ thunderbird:['정전 천둥새','지나가면 타워 전원이 나가요. 관리
 eagle:['대머리 독수리','대머리가 아니라 흰머리래요. 본인 주장이에요.'],
 phoenix:['부활절 불사조','한 번 죽는 건 그냥 준비운동이에요.'],
 humbee:['벌인 척 벌새','벌 옷 입고 위장 취업한 벌새 떼. 본인들도 벌인지 새인지 헷갈려요. 너무 작고 빨라서 느린 대포로는 맞히기 어려워요. 꿀은 안 줘요.','벌새 떼'],
-starling:['합체! 찌르봇','찌르레기 5형제가 합체한 1400G짜리 하늘 로봇. 투구·가슴판·주먹·방패·부츠가 다 형제들이라 한 방 공격은 갑옷이 막아 줘요. 머리 위 점 5개가 깜빡이면 곧 분리! 쓰러지면 쾅! 5형제가 각자 파츠를 등에 메고 사방으로 흩어져요. 광역 공격엔 이음매가 약해요.','찌르봇'],
+starling:['합체! 찌르봇','찌르레기 5형제가 합체한 1400G짜리 하늘 로봇. 투구·가슴판·주먹·방패·부츠가 다 형제들이라 한 방 공격은 갑옷이 막아 줘요. 머리 위 점 5개가 깜빡이면 곧 분리! 쓰러지면 쾅! 5형제가 각자 파츠를 등에 메고 사방으로 흩어져요. 형제들은 아무리 센 공격도 한 대는 한 대 — 7대 맞으면 기절해요(머리 위 하트 7개). 광역 공격엔 이음매가 약해요.','찌르봇'],
 pelican:['만원 버스 펠리컨','부리 주머니에 승객을 꽉꽉 태운 하늘 버스. 격추되면 승객들이 "여기서 내릴게요!" 하고 우르르 쏟아져요.','만원 펠리컨'],
 demcrane:['철거반장 두루미','구청에서 나왔습니다. 허가 안 받은 타워는 부리로 번쩍 들어서 치워 버려요. 안전모는 필수!','철거 두루미'],
 archaeo:['1억 5천만 년 만의 외출 시조새','박물관 화석에서 깨어난 할아버지 새. 요즘 타워가 신기해서 자꾸 쳐다보다가, 많이 맞으면 돌 껍질이 깨지고 진짜 모습으로 깨어나요.','시조새'],
@@ -382,7 +382,7 @@ function addPois(u,pv,src){u.pst=Math.min(BAL.pmax,(u.pst||0)+1);u.ps=BAL.pdur;i
 /* 💃 칼군무: 뭉친 찌르레기(해체 안 한 5마리 이상)는 한 마리만 노린 공격을 똑같이 나눠 맞음 */
 const flockOf=(p,h)=>p.units.filter(o=>o.bp.flock&&!o.solo&&o.hp>0&&Math.hypot(o.x-h.x,o.y-h.y)<2.2);
 function flockHit(p,h,d,zap){if(h.solo)return dmgU(h,d,zap);const g=flockOf(p,h);if(g.length<5)return dmgU(h,d,zap);let s=0;for(const o of g)s+=dmgU(o,d/g.length,zap);if(!S.sim&&p.id===view&&d>=80&&S.t-(p.fkP||-9)>1.2){p.fkP=S.t;popTxt(h,'💃칼군무 ÷'+g.length)}return s}
-/* zap: ⚡ 뇌전(번개) 공격은 보호막에 2배 */function dmgU(u,d,zap){if(u.amp>0)d*=1.35;const h0=Math.max(0,u.hp)+Math.max(0,u.sh||0),d0=d;if(u.sh>0){const k=zap?BAL.shz:1,a=Math.min(u.sh,d*k);u.sh-=a;d-=a/k;if(zap&&u.sh<=0)u.shb=1}u.hp-=d;u.hit=.1;return Math.min(h0,d0)}
+/* zap: ⚡ 뇌전(번개) 공격은 보호막에 2배 */function dmgU(u,d,zap,k){if(u.bp.hits){/* 🐦 v20.6.3 5형제: 피해 크기와 상관없이 한 대=1(7대면 쓰러짐). 독·화상은 1초에 1대, 전깃줄은 0.5초에 1대 */if(!(d>0))return 0;if(k){const q='_h'+k;if(S.t-(u[q]??-9)<(k==='py'?.5:1))return 0;u[q]=S.t}const m=(u.mh||u.bp.hp)/u.bp.hits,a=Math.min(Math.max(0,u.hp),m);u.hp-=m;u.hit=.1;return a}if(u.amp>0)d*=1.35;const h0=Math.max(0,u.hp)+Math.max(0,u.sh||0),d0=d;if(u.sh>0){const k=zap?BAL.shz:1,a=Math.min(u.sh,d*k);u.sh-=a;d-=a/k;if(zap&&u.sh<=0)u.shb=1}u.hp-=d;u.hit=.1;return Math.min(h0,d0)}
 /* 🏗 공사 고깔: 두루미가 타워를 이고 간 동안 원래 자리에 세워 둬요(그 칸은 여전히 막혀 있어요) */
 const CONE=new Map();function craneCone(t,x,y){if(!t){CONE.forEach((c,tt)=>{if(!tt.carrier||!c.on){Sc.remove(c.m);CONE.delete(tt)}else c.on=0});return}
  let c=CONE.get(t);if(!c){const g=new THREE.Group(),o=new THREE.Mesh(new THREE.ConeGeometry(.16,.42,10),new THREE.MeshStandardMaterial({color:0xf97316}));o.rotation.x=PI/2;o.position.z=.21;g.add(o);
@@ -770,9 +770,9 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;recTick();
   if(p.units.some(u=>u.bp.flock)){let c=null,has=0;for(const u of p.units)if(u.bp.flock&&!u.solo&&u.hp>0){if(u.ctr)has=1;if(!c||u.y>c.y)c=u}if(!has&&c)c.ctr=1}/* 👑 센터: 맨 앞 멤버, 쓰러지면 다음 멤버가 이어받음 */
   const drop=[];p.units=p.units.filter(u=>{const b=u.bp;
    if(u.sh>0&&SHIM.poison&&(u.pois>0||u.ps>0||u.bn>0||u.slow>0)){u.pois=0;u.ps=0;u.pst=0;u.pv=0;u.bn=0;u.slow=0}/* 🛡 보호막 동안 상태이상 씻김 */
-   if(u.pois>0){u.pois-=dt;dmgU(u,u.pd*dt)}
-   if(u.ps>0){u.ps-=dt;const d=dmgU(u,u.pv*u.pst*dt);if(S.st)S.st.td[u.psrc]=(S.st.td[u.psrc]||0)+d;if(REC&&p.id===0)recTD(u.psrc,d);if(u.ps<=0){u.pst=0;u.pv=0}}
-   if(u.bn>0){u.bn-=dt;const d=dmgU(u,u.bv*dt);if(S.st)S.st.td[u.bsrc]=(S.st.td[u.bsrc]||0)+d;if(REC&&p.id===0)recTD(u.bsrc,d)}
+   if(u.pois>0){u.pois-=dt;dmgU(u,u.pd*dt,0,'dot')}
+   if(u.ps>0){u.ps-=dt;const d=dmgU(u,u.pv*u.pst*dt,0,'dot');if(S.st)S.st.td[u.psrc]=(S.st.td[u.psrc]||0)+d;if(REC&&p.id===0)recTD(u.psrc,d);if(u.ps<=0){u.pst=0;u.pv=0}}
+   if(u.bn>0){u.bn-=dt;const d=dmgU(u,u.bv*dt,0,'dot');if(S.st)S.st.td[u.bsrc]=(S.st.td[u.bsrc]||0)+d;if(REC&&p.id===0)recTD(u.bsrc,d)}
    if(u.amp>0)u.amp-=dt;
    if(u.kbt>0)u.kbt-=dt;
    if(u.bbt>0)u.bbt-=dt;
@@ -830,10 +830,10 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;recTick();
    p.grid.forEach(r=>r.forEach(t=>{if(t&&t.bp&&t.bp.pylon&&t.dis>0)t.dis-=dtp}));
    const hid=u=>u.bp.stealth&&u.y<BH*u.bp.stealth&&!(p.reveal>0)&&!u.seen,air=u=>(u.bp.t==='A'||u.fl>0)&&!(u.gr>0),PY=BAL.py;
    for(const w of W){if(w.a.dis>0||w.b.dis>0)continue;const dps=(w.a.d+w.b.d)/2*w.m;
-    for(const u of p.units){if(hid(u))continue;const d=segD(u.x,u.y,w),A=air(u);if(d<(A?PY.ar:PY.gr)){const ef=dmgU(u,dps*(A?PY.am:PY.gm)*dtp*(u.bp.robo?1.3:1),1);if(S.st)S.st.td.pylon=(S.st.td.pylon||0)+ef;zapped++;mx=Math.max(mx,w.m)}}}
+    for(const u of p.units){if(hid(u))continue;const d=segD(u.x,u.y,w),A=air(u);if(d<(A?PY.ar:PY.gr)){const ef=dmgU(u,dps*(A?PY.am:PY.gm)*dtp*(u.bp.robo?1.3:1),1,'py');if(S.st)S.st.td.pylon=(S.st.td.pylon||0)+ef;zapped++;mx=Math.max(mx,w.m)}}}
    // 이웃 없는 외톨이 전봇대: 약한 방전
    p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(!t||!t.bp||!t.bp.pylon||t.dis>0)return;if(W.some(w=>w.a===t||w.b===t))return;const cx=cellX(x,y),cy=cellY(y);
-    for(const u of p.units){if(hid(u))continue;const A=air(u);if(Math.hypot(u.x-cx,u.y-cy)<PY.lr){const ef=dmgU(u,t.d*(A?PY.la:PY.lg)*dtp*(u.bp.robo?1.3:1),1);if(S.st)S.st.td.pylon=(S.st.td.pylon||0)+ef;zapped++}}}));
+    for(const u of p.units){if(hid(u))continue;const A=air(u);if(Math.hypot(u.x-cx,u.y-cy)<PY.lr){const ef=dmgU(u,t.d*(A?PY.la:PY.lg)*dtp*(u.bp.robo?1.3:1),1,'py');if(S.st)S.st.td.pylon=(S.st.td.pylon||0)+ef;zapped++}}}));
    if(zapped&&p.id===view){sfx('wire',{mult:mx});artFx('wire',{n:zapped,mult:mx})}}
   for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(!t)continue;
    if(t.bp.snack){if(t.dis>0){t.dis-=dt;continue}t.cd-=dt;if(t.cd>0)continue;t.cd=t.bp.cd*(p.boost>0?.5:1);const cx=cellX(x,y),cy=cellY(y);p.snacks=p.snacks||[];
@@ -1246,6 +1246,7 @@ let talkN=0;function sync3(dt){try{prevUpd()}catch(e){}try{guideUpd()}catch(e){}
  const us=new Set();
  p.units.forEach(u=>{us.add(u.id);let m=um.get(u.id);if(m&&m.userData.bp!==u.bp){rmM(m);um.delete(u.id);m=null}if(!m){m=birdMesh3(u.bp,parseInt(PC[u.owner].slice(1),16));artFx('bird',{m,b:u.bp,u});m.userData.bp=u.bp;Sc.add(m);um.set(u.id,m)}if(m.userData.fxm)matTick(m,S.t);
   if(u.bp.flock){const cr=m.getObjectByName('propCrown');if(cr)cr.visible=!!u.ctr}
+  if(u.bp.hits){const n=u.bp.hits,left=Math.max(0,Math.ceil(u.hp/((u.mh||u.bp.hp)/n)-1e-6));for(let i=0;i<n;i++){const h=m.getObjectByName('hp'+i);if(h)h.visible=i<left}}
   if(u.bp.robo){const lo=u.hp<(u.mh||u.bp.hp)*.3,on=!lo||Math.sin(S.t*18)>0;for(let i=0;i<5;i++){const d=m.getObjectByName('rdot'+i);if(d)d.visible=on}}
   if(u.bp.wig){const w=m.getObjectByName('wig'),gl=m.getObjectByName('glare');if(w)w.visible=!u.wg;if(gl){gl.visible=!!u.wg;gl.material.emissiveIntensity=.7+.8*Math.abs(Math.sin(S.t*4))}if(u.wgfx){u.wgfx=0;if(!S.sim){artFx('smoke',{x:u.x,y:BH-u.y,r:.6,col:0x6b4423});artFx('crit',{u})}}}
   m.visible=!(u.popT&&S.t<u.popT);m.position.set(u.x,BH-u.y,u.bp.t==='A'?(u.gr>0?.35:1.4):u.fl>0?.75+Math.sin(S.t*5)*.06:.05+(u.jt>0?Math.sin(PI*(1-u.jt/.5))*.9:0));if(u.bp.id==='egg_legs'&&!u.hd&&(u.ha||0)>BAL.hatchT-1.2){const k=((u.ha||0)-(BAL.hatchT-1.2))/1.2;m.position.x+=Math.sin(S.t*55)*.035*k;m.position.y+=Math.cos(S.t*47)*.02*k}/* 🥚 v18.3 부화 직전 덜덜 */{const wh=m.userData.whirl;if(wh)wh.forEach((q,i)=>q.rotation.x=-S.t*(u.stun>0||u.held?0:24)-i*.8);const wl=m.userData.wheel;if(wl){const st=u.stun>0||u.held;let bob=0;wl.forEach((q,i)=>{const T=(st?(u.wT||(u.wT=S.t)):(u.wT=0,S.t))*(i?1.13:1)+i*.37,f=T%1.5,a=14*(T-.2*Math.floor(T/1.5)-Math.min(f,.2));q.rotation.x=-a;bob=Math.max(bob,f<.2?.04*(1-f/.2):0)});m.position.z+=bob+.012*Math.abs(Math.sin(S.t*20))}const fp=m.userData.flap;if(fp)fp.forEach((q,i)=>q.rotation.x=Math.sin(S.t*14-i*1.3)*.42+.1);const sr=m.userData.str;if(sr)sr.forEach((q,i)=>q.rotation.x=Math.sin(S.t*11+i*1.7)*.25)}/* 🌀 로드러너 프로펠러 다리 */{const fl=m.userData.flames;if(fl)fl.forEach((q,i)=>q.scale.set(1,.7+.5*Math.abs(Math.sin(S.t*31+i*1.7)),1));const ne=m.userData.neon;if(ne)ne.material.opacity=.75+.25*Math.sin(S.t*6)}{let bb=m.userData.bub;if(u.fl>0&&!bb){bb=m.userData.bub=new THREE.Mesh(new THREE.SphereGeometry(.42,16,12),new THREE.MeshStandardMaterial({color:0xbae6fd,emissive:0x7dd3fc,emissiveIntensity:.5,transparent:true,opacity:.42,roughness:.1,depthWrite:false}));bb.position.z=.28;const hl=new THREE.Mesh(new THREE.SphereGeometry(.07,8,6),new THREE.MeshBasicMaterial({color:0xffffff}));hl.position.set(-.18,-.2,.2);bb.add(hl);m.add(bb)}if(bb)bb.visible=u.fl>0}m.scale.x=m.scale.y/XK;
@@ -3148,7 +3149,7 @@ const ART=(()=>{
   [0,1,2,3].forEach(i=>{const a=i*PI/2+.4;c.seg('s',Math.cos(a)*.12,Math.sin(a)*.12,.55,Math.cos(a)*.42,Math.sin(a)*.42,1.0,.04,V1);c.s('S',Math.cos(a)*.42,Math.sin(a)*.42,1.02,.06,.06,.06,V3)});
   rose(-.22,-.18,.6,1.4,0xf43f5e);rose(.24,.14,.64,1.4,0xfb7185);rose(0,.0,.76,1.8,0xf43f5e);rose(.1,-.2,.5,1.1,0xfda4af);
   const r=c.spin(0,0,.8,1.1);[0,1,2,3,4,5].forEach(i=>{const a=i*PI/3;r.g('S',Math.cos(a)*.5,Math.sin(a)*.5,Math.sin(i)*.08,.03,.03,.03,0xfde047)});return [0,0,1.12,.07]};
- /* 🤖 찌르봇: 새 몸은 숨기고(체력 막대 평면만 남겨 위로) 부위별로 조립한 로봇을 입힘 / 🐦 형제: 몸 0.7배 + 자기 파츠를 등(위에서 보이게)에 */{const ob=A.bird;A.bird=o=>{const r=ob(o);const m=o&&o.m,b=o&&o.b;if(!m||!b||m.userData.robo)return r;if(b.id==='starling'){m.userData.robo=1;m.children.forEach(c=>{if(c.geometry&&c.geometry.type==='PlaneGeometry')c.position.z=1.95;else c.visible=false});const q=PROP.jjirbot();q.name='propRobo';q.position.z=-.3;q.scale.setScalar(1.15);m.add(q)}else if(b.bro!=null){m.userData.robo=1;m.scale.multiplyScalar(.7);const k=b.bro,H=headOf(b.id),P=(q,x,y,z,sc,rx)=>{q.position.set(x,y,z);q.scale.setScalar(sc);if(rx)q.rotation.x=rx;q.name='propBro';m.add(q)};if(k===0)P(PROP.jbHelm(),0,H.hy,H.hz-.02,.82);if(k===1)P(PROP.jbChest(),0,.1,.5,.95,-PI/2+.15);if(k===2)P(PROP.jbFist(0xf5c431,-1),0,.12,.52,1.35,-PI/2+.2);if(k===3)P(PROP.jbShield(),0,.12,.5,1.25,-PI/2+.2);if(k===4)P(PROP.jbLegs(.6,1),0,.16,.6,.8,-PI/2+.35)}return r}}
+ /* 🤖 찌르봇: 새 몸은 숨기고(체력 막대 평면만 남겨 위로) 부위별로 조립한 로봇을 입힘 / 🐦 형제: 몸 0.7배 + 자기 파츠를 등(위에서 보이게)에 */{const ob=A.bird;A.bird=o=>{const r=ob(o);const m=o&&o.m,b=o&&o.b;if(!m||!b||m.userData.robo)return r;if(b.id==='starling'){m.userData.robo=1;m.children.forEach(c=>{if(c.geometry&&c.geometry.type==='PlaneGeometry')c.position.z=1.95;else c.visible=false});const q=PROP.jjirbot();q.name='propRobo';q.position.z=-.3;q.scale.setScalar(1.15);m.add(q)}else if(b.bro!=null){m.userData.robo=1;m.scale.multiplyScalar(.7);m.children.forEach(c=>{if(c.geometry&&c.geometry.type==='PlaneGeometry')c.visible=false});{const hm=mat('prop_bro_heart',()=>basic(0xff4d6d)),hg=gk('prop_bro_hg',()=>new THREE.SphereGeometry(1,8,6)),n=b.hits||7;for(let i=0;i<n;i++){const h=new THREE.Mesh(hg,hm);h.scale.setScalar(.045);h.position.set((i-(n-1)/2)*.11,.05,1.02);h.name='hp'+i;m.add(h)}}const k=b.bro,H=headOf(b.id),P=(q,x,y,z,sc,rx)=>{q.position.set(x,y,z);q.scale.setScalar(sc);if(rx)q.rotation.x=rx;q.name='propBro';m.add(q)};if(k===0)P(PROP.jbHelm(),0,H.hy,H.hz-.02,.82);if(k===1)P(PROP.jbChest(),0,.1,.5,.95,-PI/2+.15);if(k===2)P(PROP.jbFist(0xf5c431,-1),0,.12,.52,1.35,-PI/2+.2);if(k===3)P(PROP.jbShield(),0,.12,.5,1.25,-PI/2+.2);if(k===4)P(PROP.jbLegs(.6,1),0,.16,.6,.8,-PI/2+.35)}return r}}
  A.towerMesh=({b,lv})=>{if(!b||typeof GC==='undefined'||typeof THREE==='undefined')return;const f=TD[b.id];if(!f)return;lv=b.id==='wall'?1:Math.max(1,Math.min(4,lv|0||1));
   const key=b.id+'_'+lv;let R=REC[key];
   if(!R){const T=tgt(new THREE.Matrix4(),0),c=cx(T,T.M);const top=f(c,lv,b);if(lv>=4)legend(c,top,b&&b.col);R=REC[key]=bake(T)}
