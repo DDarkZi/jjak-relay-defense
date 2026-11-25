@@ -36,6 +36,7 @@ async function cross(pg,a,b){return clampA(await pg.evaluate(([a,b])=>{const g=c
   await pg.route('**/fonts.googleapis.com/**',r=>r.fulfill({body:'',contentType:'text/css'}));await pg.route('**/*.glb',r=>r.abort());
   await pg.goto('file://'+root+'/index.html');await pg.waitForTimeout(300);await pg.addScriptTag({path:root+'/tools/sim/harness.js'});await pg.evaluate(()=>setTune({}));await pg.evaluate(PAGEFN);pages.push(pg)}
  let st=fs.existsSync(stf)?JSON.parse(fs.readFileSync(stf)):null;
+ if(st&&process.env.NEW4&&!st.new4){st.pop.forEach((g,i)=>{if(i%2)g.ctr=Math.random()*3});st.new4=1}/* NEW4=1: v20.4 상성 유전자 ctr를 이어 학습 중인 무리의 절반에 심기 */
  if(!st){/* 시작 개체: 실제 AI 풀의 좋은 성향 + 지능형 + 무작위 변형 */const seeds=await pages[0].evaluate((SA)=>AIP.filter(a=>!SA||a.alpha).map(a=>({...a.g,fav:a.fav||{},fl:a.fl||{},n:a.n})),!!process.env.SEEDA);/* SEEDA=1이면 알파고들에서 시작 */
   let pick=seeds.sort(()=>Math.random()-.5).slice(0,POP-4);const hell=process.env.SEEDA||process.env.SEEDN?[]:seeds.filter(s=>s.fl&&(s.fl.scout||s.fl.kz||s.fl.jug));let pop=[...pick,...hell];
   if(process.env.SEEDN){/* SEEDN='약한 성향|상위1|상위2…' → 약한 성향 + 상위 성향과의 교배로 시작(새 유전자 만들기) */const all=await pages[0].evaluate(()=>AIP.map(a=>({...a.g,fav:a.fav||{},fl:a.fl||{},efav:a.g.efav,n:a.n})));const nm=process.env.SEEDN.split('|');pick=nm.map(n=>all.find(a=>a.n===n)).filter(Boolean);if(!pick.length)throw new Error('SEEDN 없음');
