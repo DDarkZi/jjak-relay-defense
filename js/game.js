@@ -54,7 +54,7 @@ const U=[
 {id:'swan',n:'백조',c:380,hp:377,sp:1.3,t:'A',dm:2,inc:19,shield:580,ic:'🦢',col:0xffffff,x:'보호막(체력 400 추가) · 보호막 동안 독·화상·감속 면역 · ⚡번개에 약함'},
 {id:'penguin',n:'황제펭귄',c:400,hp:390,sp:1.2,t:'G',dm:1,inc:22,count:3,imm:['slow'],tech:'ice',ic:'🐧',col:0x3f4d6e,x:'3마리 무리 · 감속 면역'},
 {id:'flamingo',n:'플라맹독',c:540,hp:1200,sp:1.45,t:'G',dm:2,inc:30,acid:1,tech:'dark',ic:'🦩',col:0xf472b6,x:'4초마다 산성 침: 근처 타워 공격력 -30%(4초)'},/* 🦩 2026-11-17 흡혈박쥐새 대신(사용자 요청) */
-{id:'peacock',n:'공작',c:460,hp:720,sp:1.1,t:'G',dm:2,inc:24,heal:1,ic:'🦚',col:0x1d6fd8,x:'주변 아군 치유'},
+{id:'peacock',n:'공작',c:460,hp:720,sp:1.1,t:'G',dm:2,inc:24,heal:1,hlA:.07,hlT:2,ic:'🦚',col:0x1d6fd8,x:'주변 아군 치유(2초마다 7%)'},
 {id:'dodo',n:'도도새',c:500,hp:1400,sp:.8,t:'G',dm:4,inc:30,ic:'🦤',col:0x7a4e2d,talk:['죽지도 않고 또 왔네!','얼씨구씨구 들어간다~','절씨구씨구 들어간다~'],extinct:2,x:'멸종 거부: 쓰러지면 30% 확률로 체력 30%로 벌떡(최대 2번) · 각설이 타령'},
 {id:'falcon',n:'송골매',c:560,hp:504,sp:3.4,t:'A',dm:3,inc:30,dodge:.3,ic:'💨',col:0x78716c,x:'과속 매: 공격을 30% 피해요 · 🦉CCTV 범위에선 과속 단속(못 피함, 수비 쪽 벌금 +15G)'},
 {id:'albatross',n:'알바트로스',c:620,hp:770,sp:2.6,t:'A',dm:3,inc:36,imm:['kb'],tech:'wind',ic:'🌊',col:0xe0f2fe,x:'넉백 면역 · 고속'},
@@ -776,7 +776,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;recTick();
    if(b.id==='egg_legs'&&u.hatch&&!u.hd&&(u.ha=(u.ha||0)+dt)>=BAL.hatchT){/* 🐣 보낸 지 BAL.hatchT(6)초면 부화(예전엔 판 중간 45% 지점이라 미로에서 거의 못 감, 2026-11-17 사용자 요청) */u.hd=1;const nb=hatchOf(u),r=Math.min(1,u.hp/(u.mh||b.hp)),mx=nb.hp+(u.eb||0)*BAL.eggHatchK;/* 🐣 알 보너스 체력의 2배를 병아리에게 */u.bp=nb;u.mh=mx;u.hp=mx*r;u.col=0;if(nb.t==='A')u.path=null;
     if(p.id===view){sfx('hatch',{to:nb.id});artFx('hatch',{u});popTxt(u,'들켰다!')}}
    if(b.lay){u.lt=(u.lt||0)+dt;if(u.lt>=3){u.lt=0;lay.push(u)}}
-   if(b.heal){u.ht=(u.ht||0)+dt;if(u.ht>=1){u.ht=0;p.units.forEach(o=>{if(o!==u&&o.hp>0&&Math.hypot(o.x-u.x,o.y-u.y)<1.8)o.hp=Math.max(o.hp,Math.min(o.mh||o.bp.hp,o.hp+o.bp.hp*.06))})}}
+   if(b.heal){u.ht=(u.ht||0)+dt;if(u.ht>=(b.hlT||1)){u.ht=0;const sw=Math.floor(S.t);p.units.forEach(o=>{if(o!==u&&o.hp>0&&Math.hypot(o.x-u.x,o.y-u.y)<1.8){/* 🩹 한 새가 1초에 받는 회복 상한 50% */if(o.hw!==sw){o.hw=sw;o.hq=0}const add=Math.min(o.bp.hp*(b.hlA||.06),o.bp.hp*.5-o.hq);if(add>0){o.hq+=add;o.hp=Math.max(o.hp,Math.min(o.mh||o.bp.hp,o.hp+add))}}})}}
    if(b.peck||b.zap){u.pk-=dt;if(u.pk<=0){const R2=b.peck?1.3:1.8;let near=null,nd=R2;
      for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(!t||!t.bp.d)continue;const d=Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y);
       if(d<=R2){if(b.zap)t.dis=2;else if(d<nd){nd=d;near=t}}}
