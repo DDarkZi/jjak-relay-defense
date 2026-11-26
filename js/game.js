@@ -35,7 +35,7 @@ const T=[
 {id:'frostbane',combo:['ice','dark'],n:'독빙 결정',c:380,d:36,r:3,cd:1,splash:1.2,poison:10,freeze:.25,slow:1,ic:'🧊',col:0x5eead4,x:'독+감속+빙결'},
 {id:'tempest',combo:['thunder','wind'],n:'폭풍 번개탑',c:440,d:72,r:4,cd:1.2,chain:4,kb:1,ic:'🗼',col:0xa5b4fc,x:'4연쇄+넉백'},
 {id:'venomvolt',combo:['thunder','dark'],n:'맹독 전류',c:400,d:56,r:3.4,cd:1.1,chain:3,poison:8,amp:1,ic:'🔋',col:0xbef264,x:'3연쇄 독+약화'},
-{id:'miasma',combo:['wind','dark'],n:'독안개 풍차',c:380,d:10,r:3.4,cd:1.2,self:1,poison:9,kb:1,ic:'🌫️',col:0x86efac,x:'주변 독+넉백'}];
+{id:'miasma',combo:['wind','dark'],n:'독안개 풍차',c:380,d:10,r:3.4,cd:1.2,self:1,poison:9,kb:1,ic:'🌫️',col:0x86efac,x:'주변 독+넉백 · 맞은 새 회복 75% 감소(4초)'}];
 // 유닛: c가격 hp sp속도 t(G지상/A공중) dm탈출피해 inc인컴 x(특수 능력)
 const U=[
 {id:'egg_legs',n:'다리 알',c:60,hp:80,sp:1.4,t:'G',dm:1,inc:3,ic:'🥚',col:0xfef08a},
@@ -381,7 +381,7 @@ function spawn(t,b,owner,hp,ex){const x=Math.floor(Math.random()*COLS),first=hp=
  return spawnAt(t,b,owner,hp,cellX(x,0),cellY(0),ex)}
 const gainInc=(p,b)=>Math.max(1,Math.round(b.inc*BAL.ui*BAL.incS/(BAL.incS+Math.max(0,p.income-BAL.incF))))/* v19.7: 인컴 incF(500)까지는 깎임 없이 표시값 그대로, 그 뒤부터 줄어듦(6분 2000 근처는 예전과 비슷) */,lateMul=()=>S.t>=BAL.late2?BAL.lm2:S.t>=BAL.late1?BAL.lm1:1;
 function kbU(u,n,force){if(!force&&(im(u,'kb')||u.kbt>0))return;if(u.bp.t==='G'&&u.pi>1)u.pi=Math.max(0,u.pi-2*n);else u.y=Math.max(cellY(0),u.y-1.1*n);u.kbt=7+Math.random()*3}
-function addPois(u,pv,src){u.pst=Math.min(BAL.pmax,(u.pst||0)+1);u.ps=BAL.pdur;if(pv>=(u.pv||0)){u.pv=pv;u.psrc=src}}
+function addPois(u,pv,src){if(src==='miasma')u.hcT=S.t+BAL.pdur;u.pst=Math.min(BAL.pmax,(u.pst||0)+1);u.ps=BAL.pdur;if(pv>=(u.pv||0)){u.pv=pv;u.psrc=src}}
 /* 💃 칼군무: 뭉친 찌르레기(해체 안 한 5마리 이상)는 한 마리만 노린 공격을 똑같이 나눠 맞음 */
 const flockOf=(p,h)=>p.units.filter(o=>o.bp.flock&&!o.solo&&o.hp>0&&Math.hypot(o.x-h.x,o.y-h.y)<2.2);
 function flockHit(p,h,d,zap){if(h.solo)return dmgU(h,d,zap);const g=flockOf(p,h);if(g.length<5)return dmgU(h,d,zap);let s=0;for(const o of g)s+=dmgU(o,d/g.length,zap);if(!S.sim&&p.id===view&&d>=80&&S.t-(p.fkP||-9)>1.2){p.fkP=S.t;popTxt(h,'💃칼군무 ÷'+g.length)}return s}
@@ -798,7 +798,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;recTick();
    if(b.id==='egg_legs'&&u.hatch&&!u.hd&&(u.ha=(u.ha||0)+dt)>=BAL.hatchT){/* 🐣 보낸 지 BAL.hatchT(6)초면 부화(예전엔 판 중간 45% 지점이라 미로에서 거의 못 감, 2026-11-17 사용자 요청) */u.hd=1;const nb=hatchOf(u),r=Math.min(1,u.hp/(u.mh||b.hp)),mx=nb.hp+(u.eb||0)*BAL.eggHatchK;/* 🐣 알 보너스 체력의 2배를 병아리에게 */u.bp=nb;u.mh=mx;u.hp=mx*r;u.col=0;if(nb.t==='A')u.path=null;
     if(p.id===view){sfx('hatch',{to:nb.id});artFx('hatch',{u});popTxt(u,'들켰다!')}}
    if(b.lay){u.lt=(u.lt||0)+dt;if(u.lt>=3){u.lt=0;lay.push(u)}}
-   if(b.heal){u.ht=(u.ht||0)+dt;if(u.ht>=(b.hlT||1)){u.ht=0;const sw=Math.floor(S.t);p.units.forEach(o=>{if((o!==u||b.hlS)&&o.hp>0&&Math.hypot(o.x-u.x,o.y-u.y)<1.8){/* hlS: 자신도 회복 *//* 🩹 한 새가 1초에 받는 회복 상한 50% */if(o.hw!==sw){o.hw=sw;o.hq=0}const add=Math.min(o.bp.hp*(b.hlA||.06),o.bp.hp*.5-o.hq);if(add>0){o.hq+=add;o.hp=Math.max(o.hp,Math.min(o.mh||o.bp.hp,o.hp+add))}}})}}
+   if(b.heal){u.ht=(u.ht||0)+dt;if(u.ht>=(b.hlT||1)){u.ht=0;const sw=Math.floor(S.t);p.units.forEach(o=>{if((o!==u||b.hlS)&&o.hp>0&&Math.hypot(o.x-u.x,o.y-u.y)<1.8){/* hlS: 자신도 회복 *//* 🩹 한 새가 1초에 받는 회복 상한 50% */if(o.hw!==sw){o.hw=sw;o.hq=0}const add=Math.min(o.bp.hp*(b.hlA||.06)*(S.t<(o.hcT||0)?.25:1)/* 🌫️ v20.9 독안개 풍차에 맞으면 4초 동안 회복 75% 감소 */,o.bp.hp*.5-o.hq);if(add>0){o.hq+=add;o.hp=Math.max(o.hp,Math.min(o.mh||o.bp.hp,o.hp+add))}}})}}
    if(b.peck||b.zap){u.pk-=dt;if(u.pk<=0){const R2=b.peck?1.3:1.8;let near=null,nd=R2;
      for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(!t||!t.bp.d)continue;const d=Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y);
       if(d<=R2){if(b.zap)t.dis=2;else if(d<nd){nd=d;near=t}}}
