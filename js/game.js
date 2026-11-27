@@ -63,7 +63,7 @@ const U=[
 {id:'eagle',n:'제왕독수리',c:850,hp:1860,sp:1,t:'A',dm:4,inc:52,wig:1,ic:'🦅',col:0x6b4f3a,x:'가발 날리기: 체력 절반이 되면 가발이 날아가고, 번쩍이는 머리에 근처 타워가 2초 눈부심(공격 멈춤)'},
 {id:'phoenix',mat:'fire',n:'불사조',c:1300,hp:1950,sp:1.4,t:'A',dm:6,inc:85,revive:1,tech:'fire',ic:'🔥',col:0xf97316,x:'한 번 부활'},
 {id:'humbee',n:'벌새',c:360,hp:125,sp:1.9,t:'G',dm:1,inc:19,count:6,cntR:[5,7],swarm:1,ic:'🐝',col:0xfacc15,x:'5~7마리 떼 · 너무 작아서 강타형 타워(공격 간격 1.5초 이상)의 피해를 절반만 받아요'},
-{id:'starling',n:'찌르레기 5형제',c:1400,hp:2200,sp:1.4,t:'A',dm:6,inc:85,robo:5,ic:'🤖',col:0x4a3f7a,talk:['짹짹 합체! 찌르봇 출격!','파츠 갑옷 단단하지?','한 방은 하나도 안 아파~'],x:'평소엔 5형제가 합체한 로봇 찌르봇: 한 마리만 노리는 공격(한 방 타워 등) 피해 -40%, 광역·연쇄·전깃줄 피해 +30% · 쓰러지면 💥 5형제로 분리돼 사방으로 흩어져 날아가요(각자 7대 맞으면 쓰러짐, 빠름)'},
+{id:'starling',n:'찌르레기 5형제',c:1600,hp:2200,sp:1.4,t:'A',dm:6,inc:85,robo:5,ic:'🤖',col:0x4a3f7a,talk:['짹짹 합체! 찌르봇 출격!','파츠 갑옷 단단하지?','한 방은 하나도 안 아파~'],x:'평소엔 5형제가 합체한 로봇 찌르봇: 한 마리만 노리는 공격(한 방 타워 등) 피해 -40%, 광역·연쇄·전깃줄 피해 +30% · 쓰러지면 💥 5형제로 분리돼 사방으로 흩어져 날아가요(각자 7대 맞으면 쓰러짐, 빠름)'},
 {id:'starbro0',hidden:1,bro:0,hits:7,n:'찌르레기 짹레드',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['리더는 투구부터 챙긴다! …앞이 안 보여!','형 먼저 간다!'],x:'찌르봇 머리 담당 형제(분열하면 나와요)'},
 {id:'starbro1',hidden:1,bro:1,hits:7,n:'찌르레기 짹블루',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['몸통 담당인데 몸통이 제일 작아졌어…','후퇴! 각자 집으로!'],x:'찌르봇 몸통 담당 형제(분열하면 나와요)'},
 {id:'starbro2',hidden:1,bro:2,hits:7,n:'찌르레기 짹옐로',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['주먹이 나보다 무거운 건 비밀이야.','주먹밥 먹으러 간다~'],x:'찌르봇 오른팔 담당 형제(분열하면 나와요)'},
@@ -166,7 +166,7 @@ thunderbird:['정전 천둥새','지나가면 타워 전원이 나가요. 관리
 eagle:['대머리 독수리','대머리가 아니라 흰머리래요. 본인 주장이에요.'],
 phoenix:['부활절 불사조','한 번 죽는 건 그냥 준비운동이에요.'],
 humbee:['벌인 척 벌새','벌 옷 입고 위장 취업한 벌새 떼. 본인들도 벌인지 새인지 헷갈려요. 너무 작고 빨라서 느린 대포로는 맞히기 어려워요. 꿀은 안 줘요.','벌새 떼'],
-starling:['합체! 찌르봇','찌르레기 5형제가 합체한 1400G짜리 하늘 로봇. 투구·가슴판·주먹·방패·부츠가 다 형제들이라 한 방 공격은 갑옷이 막아 줘요. 머리 위 점 5개가 깜빡이면 곧 분리! 쓰러지면 쾅! 5형제가 각자 파츠를 등에 메고 사방으로 흩어져요. 형제들은 아무리 센 공격도 한 대는 한 대 — 7대 맞으면 기절해요(머리 위 하트 7개). 광역 공격엔 이음매가 약해요.','찌르봇'],
+starling:['합체! 찌르봇','찌르레기 5형제가 합체한 1600G짜리 하늘 로봇. 투구·가슴판·주먹·방패·부츠가 다 형제들이라 한 방 공격은 갑옷이 막아 줘요. 머리 위 점 5개가 깜빡이면 곧 분리! 쓰러지면 쾅! 5형제가 각자 파츠를 등에 메고 사방으로 흩어져요. 형제들은 아무리 센 공격도 한 대는 한 대 — 7대 맞으면 기절해요(머리 위 하트 7개). 광역 공격엔 이음매가 약해요.','찌르봇'],
 pelican:['만원 버스 펠리컨','부리 주머니에 승객을 꽉꽉 태운 하늘 버스. 격추되면 승객들이 "여기서 내릴게요!" 하고 우르르 쏟아져요.','만원 펠리컨'],
 demcrane:['철거반장 두루미','구청에서 나왔습니다. 허가 안 받은 타워는 부리로 번쩍 들어서 치워 버려요. 안전모는 필수!','철거 두루미'],
 archaeo:['1억 5천만 년 만의 외출 시조새','박물관 화석에서 깨어난 할아버지 새. 요즘 타워가 신기해서 자꾸 쳐다보다가, 많이 맞으면 돌 껍질이 깨지고 진짜 모습으로 깨어나요.','시조새'],
@@ -828,8 +828,8 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;recTick();
    if(b.heal){u.ht=(u.ht||0)+dt;if(u.ht>=(b.hlT||1)){u.ht=0;const sw=Math.floor(S.t);p.units.forEach(o=>{if((o!==u||b.hlS)&&o.hp>0&&Math.hypot(o.x-u.x,o.y-u.y)<1.8){/* hlS: 자신도 회복 *//* 🩹 한 새가 1초에 받는 회복 상한 50% */if(o.hw!==sw){o.hw=sw;o.hq=0}const add=Math.min(o.bp.hp*(b.hlA||.06)*(S.t<(o.hcT||0)?.25:1)/* 🌫️ v20.9 독안개 풍차에 맞으면 4초 동안 회복 75% 감소 */,o.bp.hp*.5-o.hq);if(add>0){o.hq+=add;o.hp=Math.max(o.hp,Math.min(o.mh||o.bp.hp,o.hp+add))}}})}}
    if(b.peck||b.zap){u.pk-=dt;if(u.pk<=0){const R2=b.peck?1.3:1.8;let near=null,nd=R2;
      for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(!t||!t.bp.d)continue;const d=Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y);
-      if(d<=R2){if(b.zap){if(ctrlHit(t,'zap',2))t.dis=Math.max(t.dis||0,2)}else if(d<nd&&ctrlFree(t,'peck')){nd=d;near=t}}}
-     if(near&&ctrlHit(near,'peck',2))near.dis=Math.max(near.dis||0,2);u.pk=b.peck?3:2.5}}
+      if(d<=R2){if(b.zap){if(ctrlHit(t,'zap',2))t.dis=Math.max(t.dis||0,2)}else if(d<nd){nd=d;near=t}}}
+     if(near)near.dis=Math.max(near.dis||0,2);/* 🪵 쪼기는 면역 없음(사용자 결정) */u.pk=b.peck?3:2.5}}
    if(b.sulk||b.poop||b.acid){/* 🦜 욕쟁이: 근처 타워 1.5초 삐짐 · 🐦 똥 폭격: 아래 타워 3초 느려짐 · 🦩 플라맹독: 4초마다 산성 침(타워 공격력 -30% 4초) */const key=b.sulk?'sk':b.acid?'ac':'pp';u[key]=(u[key]??1.2)-dt;if(u[key]<=0){u[key]=b.sulk?2.2:b.acid?4:2.5;const R2=b.sulk?1.8:b.acid?1.9:1.2;let nr=null,nd=R2;
      for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(!t||!t.bp.d||t.carrier||!ctrlFree(t,key))continue;const d=Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y);if(d<nd){nd=d;nr=t}}
      if(nr&&ctrlHit(nr,key,b.sulk?1.5:b.acid?4:3)){if(b.acid){nr.acid=S.t+4;nr.emo={i:'🤢',u:S.t+4};if(p.id===view&&!S.sim){artFx('smoke',{x:u.x,y:BH-u.y,r:.45,col:0x84cc16});popTxt(u,'퉤!')}}else if(b.sulk){nr.dis=Math.max(nr.dis||0,1.5);nr.emo={i:'💢',u:S.t+1.5}}else{nr.poop=S.t+3;if(p.id===view&&!S.sim)artFx('smoke',{x:u.x,y:BH-u.y,r:.35,col:0xffffff})}}}}
@@ -3428,7 +3428,7 @@ const DXTN={single:'단일',splash:'광역',chain:'연쇄',aura:'주변',dot:'�
 const dxTi=f=>`assets/ui/badges_t/${f}.webp`;
 function dxTb(t){const k=DXT[t.id];if(!k)return'';return `<div class="kb tb${k.split(',').length>2?' k3':''}">${k.split(',').slice(0,3).map(x=>`<img src="${dxTi(x)}" alt="${DXTN[x]}" title="${DXTN[x]}">`).join('')}</div>${dxTg(t.t||'AG')}`}
 function dxTLegend(){return `<div class="cd wide kleg"><div class="cn">🏷 타워 배지 안내 <small>(최대 3개)</small></div><div class="kl">${Object.keys(DXTN).map(x=>`<span><img src="${dxTi(x)}" alt="">${DXTN[x]}</span>`).join('')}</div><div class="kl"><span><img src="${dxBi('air')}" alt="">공중만</span><span><img src="${dxBi('ground')}" alt="">지상만</span><span><img src="${dxBi('air')}" alt=""><img src="${dxBi('ground')}" alt="">둘 다</span></div><div class="cf">단일·광역·연쇄·주변은 때리는 방식, 나머지는 맞은 새에게 생기는 일이에요. 특수는 덫·유인·감지·전깃줄이에요.</div></div>`}
-function dxLegend(){return `<div class="cd wide kleg"><div class="cn">🏷 배지 안내 <small>(여러 개 겹치면 최대 3개)</small></div><div class="kl">${Object.values(DXKN).map(([f,n])=>`<span><img src="${dxBi(f)}" alt="">${n}</span>`).join('')}<span><img src="${dxBi('air')}" alt="">공중</span><span><img src="${dxBi('ground')}" alt="">지상</span><span><img src="${dxBi('split')}" alt="">공중→지상</span></div><div class="cf">⏱ 타워는 제어가 끝난 뒤 1.5초 동안 같은 제어에 면역이에요(제어마다 따로).<br>빠름 속도 2↑ · 방해 타워를 멈추거나 약하게 · 방어 보호막·은신·회피 · 면역 상태이상 2가지↑ · 경제 탈출 시 인컴 · 떼 한 번에 여러 마리</div></div>`}
+function dxLegend(){return `<div class="cd wide kleg"><div class="cn">🏷 배지 안내 <small>(여러 개 겹치면 최대 3개)</small></div><div class="kl">${Object.values(DXKN).map(([f,n])=>`<span><img src="${dxBi(f)}" alt="">${n}</span>`).join('')}<span><img src="${dxBi('air')}" alt="">공중</span><span><img src="${dxBi('ground')}" alt="">지상</span><span><img src="${dxBi('split')}" alt="">공중→지상</span></div><div class="cf">⏱ 타워는 제어가 끝난 뒤 1.5초 동안 같은 제어에 면역이에요(제어마다 따로, 딱따구리 쪼기는 면역 없음).<br>빠름 속도 2↑ · 방해 타워를 멈추거나 약하게 · 방어 보호막·은신·회피 · 면역 상태이상 2가지↑ · 경제 탈출 시 인컴 · 떼 한 번에 여러 마리</div></div>`}
 /* 🩺 v21.9 도감 체력 = 게임에서 실제로 소환되는 체력(×보정·일반 모드·새별 보정) + 보호막 합계 */function dxHp(u){const hk=(BAL.hpK&&BAL.hpK[u.id])||1,m=((BAL.mode||{}).normal||{}).uh||1,h=Math.round((u.hp0??u.hp)*m*hk),sh=Math.round((u.sh0??(u.shield||0))*m*hk);return{h,sh}}
 function cardU(u){const k=tier(u.c),hp=dxHp(u);return `<div class="cd ${k}"><div class="ci" data-th="${dxTh(u)}">${dxImg('u_'+u.id)}<span class="tr ${k}">${TIERN[k]}</span>${dxBadge(u)}${dxKb(u)}</div><div class="cn">${u.ic} ${u.n}</div><div class="cf">${dxQ(u.fl)}</div>
  <div class="cs"><span>💰${u.c}G</span>${u.hits?`<span>💔${u.hits}번 맞으면 쓰러짐</span>`:`<span>❤️${hp.h+hp.sh}${hp.sh?` <small>(🛡${hp.sh} 포함)</small>`:''}${(u.count||1)>1?` <small>마리당 · ×${u.count}마리</small>`:''}</span>`}<span>${u.t==='A'?'🪶공중':'🦶지상'}</span><span>💨${u.sp}</span><span>📈인컴+${u.inc}</span><span>💥피해${u.dm}</span></div>${u.x?`<div class="cx">✨ ${u.x}</div>`:''}</div>`}
