@@ -11,9 +11,9 @@ const HK=['hbN','hbU','hbX','cS','cB','cK','cP'];
  const POOL=await pages[0].evaluate(()=>AIP.filter(a=>a.alpha&&!a.ret&&!a.labo).map(a=>({n:a.n,g:a.g,fav:a.fav||{},fl:a.fl||{}})));
  let st=fs.existsSync(SF)?JSON.parse(fs.readFileSync(SF)):null;
  if(!st){const B=POOL.find(x=>x.n===BASE)||(await pages[0].evaluate(n=>{const a=AIP.find(x=>x.n===n);return a&&{n:a.n,g:a.g,fav:a.fav||{},fl:a.fl||{}}},BASE));if(!B)throw new Error('BASE 없음');
-  const slots=[];/* BOOKS='C:2.5:1.5:3,D:1.5:3.5:3' = 설계도:주속성:보조속성:칸 수 (없으면 독바람 A·B) */const BK=(process.env.BOOKS||'A:4.5:3.5:4,B:4.5:3.5:4').split(',').map(s=>s.split(':'));let i=0;
-  for(const[bk,t1,t2,nn]of BK)for(let j=0;j<+nn;j++,i++){const g={...B.g,tech:+t1,tech2:+t2,hbT:bk==='B'?.8:.2,hbN:1,hbU:j%4<2?1:.3,hbX:j%2?.2:0,cS:Math.random()*2,cB:Math.random()*2,cK:Math.random()*2,cP:.5+Math.random()};
-   slots.push({k:bk+i,n:`알파 설계도 ${bk}${j+1}`,g,fav:B.fav,fl:{hb:1,hbk:bk},s:0,c:0})}
+  const slots=[];/* BOOKS='C:2.5:1.5:3,D:1.5:3.5:3' = 설계도:주속성:보조속성:칸 수 (없으면 독바람 A·B), 끝에 @기준 알파고 이름을 붙이면 그 유전자에서 출발 */const BK=(process.env.BOOKS||'A:4.5:3.5:4,B:4.5:3.5:4').split(',').map(s=>{const[h,bn]=s.split('@');return[...h.split(':'),bn]});let i=0;
+  for(const[bk,t1,t2,nn,bn]of BK)for(let j=0;j<+nn;j++,i++){const BB=bn?(POOL.find(x=>x.n===bn)||(await pages[0].evaluate(n=>{const a=AIP.find(x=>x.n===n);return a&&{n:a.n,g:a.g,fav:a.fav||{},fl:a.fl||{}}},bn))||B):B;const g={...BB.g,tech:+t1,tech2:+t2,hbT:bk==='B'?.8:.2,hbN:1,hbU:j%4<2?1:.3,hbX:j%2?.2:0,cS:Math.random()*2,cB:Math.random()*2,cK:Math.random()*2,cP:.5+Math.random()};
+   slots.push({k:bk+i,n:`알파 설계도 ${bk}${j+1}`,g,fav:BB.fav,fl:{hb:1,hbk:bk},s:0,c:0})}
   st={gen:0,games:0,slots,log:[]}}
  const save=()=>fs.writeFileSync(SF,JSON.stringify(st));
  for(let G=0;G<GENS;G++){const cand=[];st.slots.forEach((P,si)=>{cand.push({...P,si,gs:0,gc:0,w:0});cand.push({...P,g:mut(P.g,.1),si,gs:0,gc:0,w:0})});
