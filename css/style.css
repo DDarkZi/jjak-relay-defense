@@ -81,10 +81,10 @@ footer{background:#0f172a;border-top:1px solid #1e293b;width:100%;max-width:480p
 .mcard .mban em{font-style:normal;font:400 40px "Black Han Sans",system-ui;color:#fff;text-shadow:0 3px 0 #000}
 .mn .mban{background:linear-gradient(110deg,#dc2626 0 48%,#fff 48% 52%,#2563eb 52%)}
 .mr .mban{background:linear-gradient(110deg,#f97316,#fbbf24 50%,#b45309)}
-.mo .mban{background:linear-gradient(110deg,#0f766e,#22d3ee 50%,#1e3a8a);filter:grayscale(.5)}
+.mo .mban{height:auto;padding:0;background:radial-gradient(ellipse at 50% 50%,#797a9c,#4a4c80);filter:none}.mo .mban img{display:block;height:200px;width:auto;max-width:100%;object-fit:contain;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}/* 🌐 v21.6 8인 온라인 대전 카드: 8명 새 원형 그림 */
 .mcard b{display:block;font-size:22px;color:#fbbf24;text-shadow:0 2px 0 #000}.mcard small{display:block;font-size:12px;color:#e4e4e7;margin-top:2px}
 #mode .on{border-color:#22c55e;box-shadow:0 0 0 3px #22c55e,0 4px 0 #000}#mode .on::after{content:"✔";position:absolute;right:-6px;top:-10px;font-size:26px;color:#22c55e;text-shadow:0 2px 0 #000}
-#mode .lk{border-style:solid;opacity:1}.mo{opacity:.75}#mode .soon{position:absolute;right:10px;top:10px;font-style:normal;background:#f59e0b;color:#000;font-weight:800;font-size:11px;border-radius:8px;padding:2px 8px;border:2px solid #000}
+#mode .lk{border-style:solid;opacity:1}.mo{opacity:1}#mode .soon{position:absolute;right:10px;top:10px;font-style:normal;background:#f59e0b;color:#000;font-weight:800;font-size:11px;border-radius:8px;padding:2px 8px;border:2px solid #000}
 .mbox .card{margin:0;background:#1e1b4bcc;border-color:#000}.mbox .tmsg{margin:0}
 .mok{align-self:center;font-size:24px;padding:8px 0}
 .hbox{gap:8px}.hpv{height:210px;border-radius:14px;border:3px solid #000;background:radial-gradient(ellipse at 50% 40%,#4c3fa8,#1e1b4b 80%);overflow:hidden}
