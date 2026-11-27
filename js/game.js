@@ -76,7 +76,7 @@ const U=[
 {id:'crocbird',n:'악어새',c:1600,hp:3300,sp:.75,t:'G',dm:6,inc:110,rage:1,ic:'🐊',col:0xb8bec9,x:'악어를 타고 와요 · 체력이 35% 아래로 떨어지면 악어가 화나서 1.6배 빨라져요'},
 {id:'ostrich',n:'타조타이탄',c:1900,hp:4950,sp:.7,t:'G',dm:8,inc:130,ic:'🦩',col:0x292524,leap:8,x:'그랑 주떼: 8초마다 길을 따라 2칸 반을 훌쩍 점프 · 착지하면 주변 타워 0.6초 흔들림'},
 // ✨ 조합 새
-{id:'crane',combo:['fire','ice'],n:'냉온탕 두루미',c:650,hp:900,sp:1.4,t:'G',dm:3,inc:38,imm:['slow','burn'],heal:1,hlA:.03,hlT:1,hlS:1,ic:'🌡️',col:0xfecdd3,x:'화상·감속 면역 · 주변 아군·자신 치유(1초마다 3%)'},
+{id:'crane',combo:['fire','ice'],n:'냉온탕 두루미',c:650,hp:1260,sp:1.4,t:'G',dm:3,inc:38,imm:['slow','burn'],heal:1,hlA:.03,hlT:1,hlS:1,ic:'🌡️',col:0xfecdd3,x:'화상·감속 면역 · 주변 아군·자신 치유(1초마다 3%)'},
 {id:'plasmabird',combo:['fire','thunder'],n:'번개불새',c:900,hp:1215,sp:2.3,t:'A',dm:4,inc:55,zap:1,imm:['stun'],ic:'🌟',col:0xfb923c,x:'기절 면역 · 타워 마비 · 고속'},
 {id:'comet',combo:['fire','wind'],n:'혜성 매',c:700,hp:510,sp:3.6,t:'A',dm:3,inc:42,shield:425,imm:['kb'],ic:'☄️',col:0xf43f5e,x:'보호막(독·화상·감속 면역, ⚡번개에 약함) · 넉백 면역 · 초고속'},
 {id:'plague',combo:['fire','dark'],n:'역병 까마귀',c:600,hp:550,sp:1.8,t:'A',dm:3,inc:36,stealth:.75,split:2,ic:'🦠',col:0x5a7a2e,x:'3/4까지 은신 · 분열'},
