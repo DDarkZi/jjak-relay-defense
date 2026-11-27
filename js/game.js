@@ -45,25 +45,25 @@ const U=[
 {id:'rooster',n:'수탉',c:180,hp:218,sp:2.2,t:'G',dm:1,inc:9,ic:'🐔',col:0xf8fafc},
 {id:'pigeon',n:'비둘기',c:200,hp:182,sp:2.4,t:'A',dm:1,inc:10,ic:'🕊️',col:0x94a3b8},
 {id:'goose',n:'거위',c:220,hp:377,sp:1.2,t:'G',dm:1,inc:11,split:2,ic:'🦢',col:0xf5f5f4,x:'쓰러지면 다리 알 2개로 분열'},
-{id:'parrot',n:'앵무새',c:240,hp:170,sp:1.9,t:'A',dm:1,inc:11,ic:'🦜',col:0x43a047,sulk:1,talk:['이 삐-! 타워야!','삐-삐-! 비켜라!','니 미로 꼬라지 삐-!'],x:'욕쟁이: 2.2초마다 근처 타워 하나에 욕을 해서 1.5초 삐지게 해요(공격 멈춤)'},
-{id:'crow',n:'까마귀',c:260,hp:221,sp:1.9,t:'A',dm:1,inc:13,stealth:.5,ic:'🐦',col:0x4a4463,x:'진영 절반까지 은신'},
+{id:'parrot',n:'앵무새',c:240,hp:250,sp:1.9,t:'A',dm:1,inc:11,ic:'🦜',col:0x43a047,sulk:1,talk:['이 삐-! 타워야!','삐-삐-! 비켜라!','니 미로 꼬라지 삐-!'],x:'욕쟁이: 2.2초마다 근처 타워 하나에 욕을 해서 1.5초 삐지게 해요(공격 멈춤)'},
+{id:'crow',n:'까마귀',c:260,hp:270,sp:1.9,t:'A',dm:1,inc:13,stealth:.5,ic:'🐦',col:0x4a4463,x:'진영 절반까지 은신'},
 {id:'pirate',n:'북극해적갈매기',c:280,hp:341,sp:1.7,t:'A',dm:1,inc:12,steal:6,ic:'🏴‍☠️',col:0x6b5444,x:'탈출 시 내 인컴 +6'},
 {id:'duck',n:'청둥오리',c:300,hp:747,sp:1,t:'G',dm:3,inc:16,ic:'🦆',col:0x9a8f7e},
-{id:'woodpecker',n:'딱따구리',c:320,hp:450,sp:1.5,t:'G',dm:2,inc:16,peck:1,ic:'🪵',col:0x1f2937,x:'근처 타워를 쪼아 2초 마비'},
-{id:'seagull',n:'폭격갈매기',c:360,hp:320,sp:1.3,t:'A',dm:2,inc:20,poop:1,ic:'🕊️',col:0xe2e8f0,x:'똥 폭격: 2.5초마다 아래 타워에 똥 → 3초 동안 공격이 느려져요(×1.6)'},
-{id:'swan',n:'백조',c:380,hp:377,sp:1.3,t:'A',dm:2,inc:19,shield:580,ic:'🦢',col:0xffffff,x:'보호막(체력 400 추가) · 보호막 동안 독·화상·감속 면역 · ⚡번개에 약함'},
+{id:'woodpecker',n:'딱따구리',c:320,hp:540,sp:1.5,t:'G',dm:2,inc:16,peck:1,ic:'🪵',col:0x1f2937,x:'근처 타워를 쪼아 2초 마비'},
+{id:'seagull',n:'폭격갈매기',c:360,hp:415,sp:1.3,t:'A',dm:2,inc:20,poop:1,ic:'🕊️',col:0xe2e8f0,x:'똥 폭격: 2.5초마다 아래 타워에 똥 → 3초 동안 공격이 느려져요(×1.6)'},
+{id:'swan',n:'백조',c:380,hp:377,sp:1.3,t:'A',dm:2,inc:19,shield:580,ic:'🦢',col:0xffffff,x:'보호막 · 보호막 동안 독·화상·감속 면역 · ⚡번개에 약함'},
 {id:'penguin',n:'황제펭귄',c:400,hp:390,sp:1.2,t:'G',dm:1,inc:22,count:3,imm:['slow'],tech:'ice',ic:'🐧',col:0x3f4d6e,x:'3마리 무리 · 감속 면역'},
-{id:'flamingo',n:'플라맹독',c:540,hp:1200,sp:1.45,t:'G',dm:2,inc:30,acid:1,tech:'dark',ic:'🦩',col:0xf472b6,x:'4초마다 산성 침: 근처 타워 공격력 -30%(4초)'},/* 🦩 2026-11-17 흡혈박쥐새 대신(사용자 요청) */
+{id:'flamingo',n:'플라맹독',c:540,hp:1320,sp:1.45,t:'G',dm:2,inc:30,acid:1,tech:'dark',ic:'🦩',col:0xf472b6,x:'4초마다 산성 침: 근처 타워 공격력 -30%(4초)'},/* 🦩 2026-11-17 흡혈박쥐새 대신(사용자 요청) */
 {id:'peacock',n:'공작',c:460,hp:720,sp:1.1,t:'G',dm:2,inc:24,heal:1,hlA:.02,hlT:1,hlS:1,ic:'🦚',col:0x1d6fd8,x:'주변 아군·자신 치유(1초마다 2%)'},
 {id:'dodo',n:'도도새',c:500,hp:1400,sp:.8,t:'G',dm:4,inc:30,ic:'🦤',col:0x7a4e2d,talk:['죽지도 않고 또 왔네!','얼씨구씨구 들어간다~','절씨구씨구 들어간다~'],extinct:2,x:'멸종 거부: 쓰러지면 30% 확률로 체력 30%로 벌떡(최대 2번) · 각설이 타령'},
 {id:'falcon',n:'송골매',c:560,hp:504,sp:3.4,t:'A',dm:3,inc:30,dodge:.3,ic:'💨',col:0x78716c,x:'과속 매: 공격을 30% 피해요 · 🦉CCTV 범위에선 과속 단속(못 피함, 수비 쪽 벌금 +15G)'},
 {id:'albatross',n:'알바트로스',c:620,hp:770,sp:2.6,t:'A',dm:3,inc:36,imm:['kb'],tech:'wind',ic:'🌊',col:0xe0f2fe,x:'넉백 면역 · 고속'},
 {id:'owl',n:'올빼미',c:680,hp:700,sp:.85,t:'G',dm:3,inc:40,shield:900,coffee:1,ic:'🦉',col:0x8d6e4c,x:'야근 중(지상): 느리지만 보호막이 커요 · 4초마다 커피 한 모금 ☕ 보호막 25% 회복 · 보호막 동안 독·화상·감속 면역 · ⚡번개에 약함'},
-{id:'thunderbird',mat:'elec',n:'천둥새',c:700,hp:990,sp:1.8,t:'A',dm:3,inc:40,imm:['stun'],zap:1,tech:'thunder',ic:'⛈️',col:0x4338ca,x:'기절 면역 · 근처 타워 마비'},
-{id:'eagle',n:'제왕독수리',c:850,hp:1690,sp:1,t:'A',dm:4,inc:52,wig:1,ic:'🦅',col:0x6b4f3a,x:'가발 날리기: 체력 절반이 되면 가발이 날아가고, 번쩍이는 머리에 근처 타워가 2초 눈부심(공격 멈춤)'},
+{id:'thunderbird',mat:'elec',n:'천둥새',c:700,hp:1285,sp:1.8,t:'A',dm:3,inc:40,imm:['stun'],zap:1,tech:'thunder',ic:'⛈️',col:0x4338ca,x:'기절 면역 · 근처 타워 마비'},
+{id:'eagle',n:'제왕독수리',c:850,hp:1860,sp:1,t:'A',dm:4,inc:52,wig:1,ic:'🦅',col:0x6b4f3a,x:'가발 날리기: 체력 절반이 되면 가발이 날아가고, 번쩍이는 머리에 근처 타워가 2초 눈부심(공격 멈춤)'},
 {id:'phoenix',mat:'fire',n:'불사조',c:1300,hp:1950,sp:1.4,t:'A',dm:6,inc:85,revive:1,tech:'fire',ic:'🔥',col:0xf97316,x:'한 번 부활'},
 {id:'humbee',n:'벌새',c:360,hp:125,sp:1.9,t:'G',dm:1,inc:19,count:6,cntR:[5,7],swarm:1,ic:'🐝',col:0xfacc15,x:'5~7마리 떼 · 너무 작아서 강타형 타워(공격 간격 1.5초 이상)의 피해를 절반만 받아요'},
-{id:'starling',n:'찌르레기 5형제',c:1400,hp:1600,sp:1.4,t:'A',dm:6,inc:85,robo:5,ic:'🤖',col:0x4a3f7a,talk:['짹짹 합체! 찌르봇 출격!','파츠 갑옷 단단하지?','한 방은 하나도 안 아파~'],x:'평소엔 5형제가 합체한 로봇 찌르봇: 한 마리만 노리는 공격(한 방 타워 등) 피해 -40%, 광역·연쇄·전깃줄 피해 +30% · 쓰러지면 💥 5형제로 분리돼 사방으로 흩어져 날아가요(각자 7대 맞으면 쓰러짐, 빠름)'},
+{id:'starling',n:'찌르레기 5형제',c:1600,hp:2200,sp:1.0,t:'A',dm:6,inc:85,robo:5,ic:'🤖',col:0x4a3f7a,talk:['짹짹 합체! 찌르봇 출격!','파츠 갑옷 단단하지?','한 방은 하나도 안 아파~'],x:'평소엔 5형제가 합체한 로봇 찌르봇: 한 마리만 노리는 공격(한 방 타워 등) 피해 -40%, 광역·연쇄·전깃줄 피해 +30% · 쓰러지면 💥 5형제로 분리돼 사방으로 흩어져 날아가요(각자 7대 맞으면 쓰러짐, 빠름)'},
 {id:'starbro0',hidden:1,bro:0,hits:7,n:'찌르레기 짹레드',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['리더는 투구부터 챙긴다! …앞이 안 보여!','형 먼저 간다!'],x:'찌르봇 머리 담당 형제(분열하면 나와요)'},
 {id:'starbro1',hidden:1,bro:1,hits:7,n:'찌르레기 짹블루',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['몸통 담당인데 몸통이 제일 작아졌어…','후퇴! 각자 집으로!'],x:'찌르봇 몸통 담당 형제(분열하면 나와요)'},
 {id:'starbro2',hidden:1,bro:2,hits:7,n:'찌르레기 짹옐로',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['주먹이 나보다 무거운 건 비밀이야.','주먹밥 먹으러 간다~'],x:'찌르봇 오른팔 담당 형제(분열하면 나와요)'},
@@ -74,18 +74,18 @@ const U=[
 {id:'archaeo',n:'시조새',c:5500,hp:8600,sp:.75,t:'A',dm:21,inc:330,fossil:1,stone:1,ic:'🦖',col:0xa8a08f,talk:['요즘 타워는 처음 보네…','1억 5천만 년 만의 외출!','깃털… 내 깃털…'],x:'체력이 절반이 되면 화석이 깨지며 땅에 쿵! 착지해요(주변 타워 2초 기절). 그 뒤로는 공룡처럼 땅으로 달려요'},
 {id:'archaeo_g',hidden:1,n:'갓 깨어난 시조새',c:5500,hp:8600,sp:1.05,t:'G',dm:21,inc:0,stone:2,ic:'🦖',col:0x0f9488,x:'화석 껍질을 깨고 나와 공룡처럼 땅으로 달려요'},
 {id:'crocbird',n:'악어새',c:1600,hp:3300,sp:.75,t:'G',dm:6,inc:110,rage:1,ic:'🐊',col:0xb8bec9,x:'악어를 타고 와요 · 체력이 35% 아래로 떨어지면 악어가 화나서 1.6배 빨라져요'},
-{id:'ostrich',n:'타조타이탄',c:1900,hp:4500,sp:.7,t:'G',dm:8,inc:130,ic:'🦩',col:0x292524,leap:8,x:'그랑 주떼: 8초마다 길을 따라 2칸 반을 훌쩍 점프 · 착지하면 주변 타워 0.6초 흔들림'},
+{id:'ostrich',n:'타조타이탄',c:1900,hp:4950,sp:.7,t:'G',dm:8,inc:130,ic:'🦩',col:0x292524,leap:8,x:'그랑 주떼: 8초마다 길을 따라 2칸 반을 훌쩍 점프 · 착지하면 주변 타워 0.6초 흔들림'},
 // ✨ 조합 새
-{id:'crane',combo:['fire','ice'],n:'냉온탕 두루미',c:650,hp:900,sp:1.4,t:'G',dm:3,inc:38,imm:['slow','burn'],heal:1,hlA:.03,hlT:1,hlS:1,ic:'🌡️',col:0xfecdd3,x:'화상·감속 면역 · 주변 아군·자신 치유(1초마다 3%)'},
-{id:'plasmabird',combo:['fire','thunder'],n:'번개불새',c:900,hp:935,sp:2.3,t:'A',dm:4,inc:55,zap:1,imm:['stun'],ic:'🌟',col:0xfb923c,x:'기절 면역 · 타워 마비 · 고속'},
+{id:'crane',combo:['fire','ice'],n:'냉온탕 두루미',c:650,hp:1260,sp:1.4,t:'G',dm:3,inc:38,imm:['slow','burn'],heal:1,hlA:.03,hlT:1,hlS:1,ic:'🌡️',col:0xfecdd3,x:'화상·감속 면역 · 주변 아군·자신 치유(1초마다 3%)'},
+{id:'plasmabird',combo:['fire','thunder'],n:'번개불새',c:900,hp:1215,sp:2.3,t:'A',dm:4,inc:55,zap:1,imm:['stun'],ic:'🌟',col:0xfb923c,x:'기절 면역 · 타워 마비 · 고속'},
 {id:'comet',combo:['fire','wind'],n:'혜성 매',c:700,hp:510,sp:3.6,t:'A',dm:3,inc:42,shield:425,imm:['kb'],ic:'☄️',col:0xf43f5e,x:'보호막(독·화상·감속 면역, ⚡번개에 약함) · 넉백 면역 · 초고속'},
-{id:'plague',combo:['fire','dark'],n:'역병 까마귀',c:600,hp:300,sp:1.8,t:'A',dm:3,inc:36,stealth:.75,split:2,ic:'🦠',col:0x5a7a2e,x:'3/4까지 은신 · 분열'},
+{id:'plague',combo:['fire','dark'],n:'역병 까마귀',c:600,hp:550,sp:1.8,t:'A',dm:3,inc:36,stealth:.75,split:2,ic:'🦠',col:0x5a7a2e,x:'3/4까지 은신 · 분열'},
 {id:'auroraowl',combo:['ice','thunder'],n:'오로라 올빼미',c:850,hp:1105,sp:2,t:'A',dm:4,inc:50,imm:['stun','slow'],shield:340,ic:'🌠',col:0x93c5fd,x:'기절·감속 면역 · 보호막(독·화상 면역, ⚡번개에 약함)'},
 {id:'blizgull',combo:['ice','wind'],n:'눈보라 갈매기',c:600,hp:630,sp:2.2,t:'A',dm:3,inc:36,count:2,imm:['kb','slow'],ic:'⛄',col:0xf0fdfa,x:'2마리 · 넉백·감속 면역'},
 {id:'frostpeng',mat:'ice',combo:['ice','dark'],n:'빙독 펭귄',c:550,hp:352,sp:1.3,t:'G',dm:1,inc:33,count:4,imm:['slow','poison'],ic:'🥶',col:0x9a8fe8,x:'4마리 무리 · 감속·독 면역'},
 {id:'stormeagle',combo:['thunder','wind'],n:'폭풍 독수리',c:1000,hp:1530,sp:1.8,t:'A',dm:5,inc:62,imm:['stun','kb'],ic:'💫',col:0x6366f1,x:'기절·넉백 면역'},
-{id:'voltbat',mat:'elec',combo:['thunder','dark'],n:'전기 박쥐',c:750,hp:880,sp:1.9,t:'A',dm:3,inc:45,drain:3,zap:1,ic:'🔌',col:0x5f8f1f,x:'타워 마비 · 라이프 흡수 3'},
-{id:'ghostcrow',mat:'ghost',combo:['wind','dark'],n:'유령 까마귀',c:700,hp:488,sp:2.2,t:'A',dm:3,inc:42,stealth:.7,imm:['kb'],ic:'👻',col:0x94a3b8,x:'진영 70%까지 은신 · 넉백 면역'},
+{id:'voltbat',mat:'elec',combo:['thunder','dark'],n:'전기 박쥐',c:750,hp:1145,sp:1.9,t:'A',dm:3,inc:45,drain:3,zap:1,ic:'🔌',col:0x5f8f1f,x:'타워 마비 · 라이프 흡수 3'},
+{id:'ghostcrow',mat:'ghost',combo:['wind','dark'],n:'유령 까마귀',c:700,hp:745,sp:2.2,t:'A',dm:3,inc:42,stealth:.7,imm:['kb'],ic:'👻',col:0x94a3b8,x:'진영 70%까지 은신 · 넉백 면역'},
 // 🥚 수상한 알 연구소: 부화 병아리(상점에 없음, hidden) + 전설의 새(누적 100알 해금, secret)
 {id:'hatch_chick',hidden:1,n:'갓깬 삐약이',c:60,hp:200,sp:1.7,t:'G',dm:1,inc:0,ic:'🐣',col:0xfde68a,x:'알에서 막 깨어났어요'},
 {id:'hatch_fire',hidden:1,n:'맥반석 병아리',c:60,hp:260,sp:2,t:'G',dm:1,inc:0,imm:['burn'],ic:'🍳',col:0xfb923c,x:'화상 면역 · 빠름'},
@@ -95,7 +95,7 @@ const U=[
 {id:'hatch_dark',hidden:1,n:'뽀옹 병아리',c:60,hp:260,sp:1.7,t:'G',dm:1,inc:0,imm:['poison'],stealth:.8,ic:'💨',col:0xa3e635,x:'독 면역 · 냄새로 은신'},
 {id:'hatch_gold',hidden:1,n:'금수저 병아리',c:120,hp:280,sp:1.9,t:'G',dm:1,inc:0,steal:4,ic:'🌟',col:0xfacc15,x:'탈출하면 내 인컴 +4'},
 {id:'hatch_dino',hidden:1,n:'티라노 병아리',c:400,hp:2500,sp:.9,t:'G',dm:4,inc:0,ic:'🦖',col:0xea7f2e,x:'고대 유전자가 깨어났어요'},
-{id:'eggchief',secret:'chief',n:'알통 대장닭',c:1600,hp:1800,sp:.9,t:'G',dm:5,inc:110,lay:1,ic:'🎩',col:0xfef3c7,x:'걸으며 3초마다 수상한 알을 낳아요 (한 판에 알 100개 보내면 해금)'}];
+{id:'eggchief',secret:'chief',n:'알통 대장닭',c:1600,hp:3950,sp:.9,t:'G',dm:5,inc:110,lay:1,ic:'🎩',col:0xfef3c7,x:'걸으며 3초마다 수상한 알을 낳아요 (한 판에 알 100개 보내면 해금)'}];
 // ---------- 🏰 종족전: 오리지널 새 종족 4종 (전용 타워 2 + 전용 새 2 + 고유 특성) ----------
 const RACE={
  nest:{n:'둥지 연합',ic:'🏰',col:'#60a5fa',c3:0x60a5fa,tag:'균형 · 건설',
@@ -125,7 +125,7 @@ T.push(
  {id:'moonbow',race:'grove',n:'새벽 감성 저격수',c:300,d:220,r:5,cd:1.3,t:'A',ic:'🌛',col:0xc4b5fd,x:'초장거리 대공',fl:'“보름달이 뜨면 명중률이 두 배. (기분 탓)”'},
  {id:'thorn',race:'grove',n:'엉킨 이어폰 덩굴',c:200,d:10,r:2.8,cd:.8,splash:1.2,slow:1,ic:'🌿',col:0x22c55e,x:'광역 감속',fl:'“발에 감기면 풀리지 않아요. 풀인데도요.”'});
 U.push(
- {id:'knight',race:'nest',n:'근위 황새',c:420,hp:494,sp:1.2,t:'G',dm:2,inc:21,shield:390,over:1,ic:'🛡️',col:0xf1f5f9,x:'긴 다리로 타워를 성큼 넘어 직진(지상 판정) · 보호막(독·화상·감속 면역·⚡번개에 약함, 체력 300 추가)',fl:'“방패는 들었는데 아기는 어디 갔지?”'},
+ {id:'knight',race:'nest',n:'근위 황새',c:420,hp:494,sp:1.2,t:'G',dm:2,inc:21,shield:390,over:1,ic:'🛡️',col:0xf1f5f9,x:'긴 다리로 타워를 성큼 넘어 직진(지상 판정) · 보호막(독·화상·감속 면역·⚡번개에 약함)',fl:'“방패는 들었는데 아기는 어디 갔지?”'},
  {id:'priest',race:'nest',n:'치유 사제새',c:360,hp:384,sp:1.3,t:'G',dm:1,inc:18,heal:1,ic:'⛑️',col:0xfef9c3,x:'주변 아군 치유',fl:'“아프면 부리 벌려요. 아~ 하고.”'},
  {id:'berserk',race:'raptor',n:'광전사 독수리',c:520,hp:598,sp:2.7,t:'A',dm:3,inc:33,ic:'🪓',col:0xdc2626,x:'빠른 공중 돌격',fl:'“화나면 눈이 빨개져요. 원래 빨간 거였어요.”'},
  {id:'warturkey',race:'raptor',n:'전투 칠면조',c:430,hp:855,sp:1.45,t:'G',dm:3,inc:27,ic:'🍗',col:0xb45309,x:'단단한 지상 돌격대',fl:'“추수감사절을 피해 군대에 입대했어요.”'},
@@ -166,7 +166,7 @@ thunderbird:['정전 천둥새','지나가면 타워 전원이 나가요. 관리
 eagle:['대머리 독수리','대머리가 아니라 흰머리래요. 본인 주장이에요.'],
 phoenix:['부활절 불사조','한 번 죽는 건 그냥 준비운동이에요.'],
 humbee:['벌인 척 벌새','벌 옷 입고 위장 취업한 벌새 떼. 본인들도 벌인지 새인지 헷갈려요. 너무 작고 빨라서 느린 대포로는 맞히기 어려워요. 꿀은 안 줘요.','벌새 떼'],
-starling:['합체! 찌르봇','찌르레기 5형제가 합체한 1400G짜리 하늘 로봇. 투구·가슴판·주먹·방패·부츠가 다 형제들이라 한 방 공격은 갑옷이 막아 줘요. 머리 위 점 5개가 깜빡이면 곧 분리! 쓰러지면 쾅! 5형제가 각자 파츠를 등에 메고 사방으로 흩어져요. 형제들은 아무리 센 공격도 한 대는 한 대 — 7대 맞으면 기절해요(머리 위 하트 7개). 광역 공격엔 이음매가 약해요.','찌르봇'],
+starling:['합체! 찌르봇','찌르레기 5형제가 합체한 1600G짜리 하늘 로봇. 투구·가슴판·주먹·방패·부츠가 다 형제들이라 한 방 공격은 갑옷이 막아 줘요. 머리 위 점 5개가 깜빡이면 곧 분리! 쓰러지면 쾅! 5형제가 각자 파츠를 등에 메고 사방으로 흩어져요. 형제들은 아무리 센 공격도 한 대는 한 대 — 7대 맞으면 기절해요(머리 위 하트 7개). 광역 공격엔 이음매가 약해요.','찌르봇'],
 pelican:['만원 버스 펠리컨','부리 주머니에 승객을 꽉꽉 태운 하늘 버스. 격추되면 승객들이 "여기서 내릴게요!" 하고 우르르 쏟아져요.','만원 펠리컨'],
 demcrane:['철거반장 두루미','구청에서 나왔습니다. 허가 안 받은 타워는 부리로 번쩍 들어서 치워 버려요. 안전모는 필수!','철거 두루미'],
 archaeo:['1억 5천만 년 만의 외출 시조새','박물관 화석에서 깨어난 할아버지 새. 요즘 타워가 신기해서 자꾸 쳐다보다가, 많이 맞으면 돌 껍질이 깨지고 진짜 모습으로 깨어나요.','시조새'],
@@ -388,12 +388,16 @@ function addPois(u,pv,src){if(src==='miasma')u.hcT=S.t+BAL.pdur;u.pst=Math.min(B
 /* 💃 칼군무: 뭉친 찌르레기(해체 안 한 5마리 이상)는 한 마리만 노린 공격을 똑같이 나눠 맞음 */
 const flockOf=(p,h)=>p.units.filter(o=>o.bp.flock&&!o.solo&&o.hp>0&&Math.hypot(o.x-h.x,o.y-h.y)<2.2);
 function flockHit(p,h,d,zap){if(h.solo)return dmgU(h,d,zap);const g=flockOf(p,h);if(g.length<5)return dmgU(h,d,zap);let s=0;for(const o of g)s+=dmgU(o,d/g.length,zap);if(!S.sim&&p.id===view&&d>=80&&S.t-(p.fkP||-9)>1.2){p.fkP=S.t;popTxt(h,'💃칼군무 ÷'+g.length)}return s}
-/* zap: ⚡ 뇌전(번개) 공격은 보호막에 2배 */function dmgU(u,d,zap,k){if(u.bp.hits){/* 🐦 v20.6.3 5형제: 피해 크기와 상관없이 한 대=1(7대면 쓰러짐). 독·화상은 1초에 1대, 전깃줄은 0.5초에 1대 */if(!(d>0))return 0;if(k){const q='_h'+k;if(S.t-(u[q]??-9)<(k==='py'?.5:1))return 0;u[q]=S.t}const m=(u.mh||u.bp.hp)/u.bp.hits,a=Math.min(Math.max(0,u.hp),m);u.hp-=m;u.hit=.1;return a}if(u.amp>0)d*=1.35;const h0=Math.max(0,u.hp)+Math.max(0,u.sh||0),d0=d;if(u.sh>0){const k=zap?BAL.shz:1,a=Math.min(u.sh,d*k);u.sh-=a;d-=a/k;if(zap&&u.sh<=0)u.shb=1}u.hp-=d;u.hit=.1;return Math.min(h0,d0)}
+/* zap: ⚡ 뇌전(번개) 공격은 보호막에 2배 */function dmgU(u,d,zap,k){if(u.bp.hits){/* 🐦 v20.6.3 5형제: 피해 크기와 상관없이 한 대=1(7대면 쓰러짐). 독·화상은 1초에 1대, 전깃줄은 0.5초에 1대 */if(!(d>0))return 0;if(S.t-(u._hl??-9)<.3)return 0;u._hl=S.t;/* 🐦 v21.8 한 번 맞으면 0.3초는 다시 안 맞음(갈라지자마자 타워가 몰린 곳에서 순식간에 죽는 것 방지) */if(k){const q='_h'+k;if(S.t-(u[q]??-9)<(k==='py'?.5:1))return 0;u[q]=S.t}const m=(u.mh||u.bp.hp)/u.bp.hits,a=Math.min(Math.max(0,u.hp),m);u.hp-=m;u.hit=.1;return a}if(u.amp>0)d*=1.35;const h0=Math.max(0,u.hp)+Math.max(0,u.sh||0),d0=d;if(u.sh>0){const k=zap?BAL.shz:1,a=Math.min(u.sh,d*k);u.sh-=a;d-=a/k;if(zap&&u.sh<=0)u.shb=1}u.hp-=d;u.hit=.1;return Math.min(h0,d0)}
 /* 🏗 공사 고깔: 두루미가 타워를 이고 간 동안 원래 자리에 세워 둬요(그 칸은 여전히 막혀 있어요) */
 const CONE=new Map();function craneCone(t,x,y){if(!t){CONE.forEach((c,tt)=>{if(!tt.carrier||!c.on){Sc.remove(c.m);CONE.delete(tt)}else c.on=0});return}
  let c=CONE.get(t);if(!c){const g=new THREE.Group(),o=new THREE.Mesh(new THREE.ConeGeometry(.16,.42,10),new THREE.MeshStandardMaterial({color:0xf97316}));o.rotation.x=PI/2;o.position.z=.21;g.add(o);
   const w=new THREE.Mesh(new THREE.CylinderGeometry(.12,.135,.06,10),new THREE.MeshStandardMaterial({color:0xffffff}));w.rotation.x=PI/2;w.position.z=.2;g.add(w);Sc.add(g);c={m:g};CONE.set(t,c)}c.on=1;c.m.position.set(x,y,0)}
 /* 🏗 철거반장이 든 타워 내려놓기: Lv.2 이하면 두루미 근처 빈칸 중 미로·새 길을 막지 않는 곳으로, 아니면 제자리 */
+/* 🛡 v21.16 타워 제어 면역: 제어가 끝난 뒤 CTRL_IMM초 동안 '같은 이름의 제어'에 면역(제어마다 따로: 마비·쪼기·눈부심·착지 기절·흔들림·삐짐·똥·산성). 철거(두루미)는 제외 */
+const CTRL_IMM=1.5;
+function ctrlFree(t,k){return !(t.im&&S.t<(t.im[k]||0))}
+function ctrlHit(t,k,dur){const im=t.im||(t.im={});if(S.t<(im[k]||0)){if(!t.emo||S.t>=t.emo.u)t.emo={i:'🛡',u:S.t+.7};return false}im[k]=S.t+dur+CTRL_IMM;return true}
 function craneDrop(p,u,move){const c=u.carry;if(!c)return;u.carry=null;const t=c.t;t.carrier=null;t.dis=.6;if(!p.grid[c.oy]||p.grid[c.oy][c.ox]!==t)return;
  /* 🏗 내려놓기: 들고 있는 동안 원래 칸은 길로 열려 있었으니, 다시 놓을 때 길이 막히거나 새가 그 칸에 서 있으면 다른 빈칸으로 옮김 */
  const ok=()=>allOK(p.grid)&&p.units.every(o=>{if(o.bp.t!=='G')return true;const n=nearCell(o.x,o.y);return !!bfs(p.grid,n.x,n.y)}),busy=(x,y)=>p.units.some(o=>Math.hypot(o.x-cellX(x,y),o.y-cellY(y))<.6);
@@ -408,7 +412,7 @@ function craneDrop(p,u,move){const c=u.carry;if(!c)return;u.carry=null;const t=c
 /* 🦖 시조새 착지: 가장 가까운 빈칸에 내려와 지상형으로 바뀌고, 주변 타워 2초 기절 */
 function fossilLand(p,u){const cs=[];for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)if(!p.grid[y][x])cs.push([Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y),x,y]);cs.sort((a,b)=>a[0]-b[0]);
  for(const[,x,y]of cs.slice(0,12)){const np=bfs(p.grid,x,y);if(!np)continue;const ax=u.x,ay=u.y,r=u.hp/u.bp.hp;u.bp=UB.archaeo_g;u.hp=u.bp.hp*r;u.path=np;u.pi=0;u.gr=0;u.x=cellX(x,y);u.y=cellY(y);
-  p.grid.forEach((row,ty)=>row.forEach((t,tx)=>{if(t&&t.bp.d&&Math.hypot(cellX(tx,ty)-u.x,cellY(ty)-u.y)<1.8)t.dis=Math.max(t.dis||0,2)}));
+  p.grid.forEach((row,ty)=>row.forEach((t,tx)=>{if(t&&t.bp.d&&Math.hypot(cellX(tx,ty)-u.x,cellY(ty)-u.y)<1.8&&ctrlHit(t,'land',2))t.dis=Math.max(t.dis||0,2)}));
   if(p.id===view&&!S.sim){sfx('hatch',{to:'hatch_dino'});u.popT=S.t+.5;/* 1) 하늘의 돌 화석이 금 가며 깨짐 → 2) 내려온 칸에 뼈 화석 돌판 → 3) 그 위에서 깨어난 시조새 */if(PXS.has('nature/fossil-crack')){PXS.play('nature/fossil-crack',ax,BH-ay,.6,{fit:3})}else PXS.play('impacts/ground-slam',u.x,BH-u.y,0,{fit:3.6});artFx('smoke',{x:u.x,y:BH-u.y,r:1.8,col:0xd6c7a1});setTimeout(()=>artFx('hatch',{u}),500);if(p.id===0)toast('🦖 화석이 깨지고 시조새가 깨어났어요! · 주변 타워 2초 기절')}return}}
 function refreshPaths(p){p.units.forEach(u=>{if(u.bp.t!=='G')return;const c=nearCell(u.x,u.y),np=bfs(p.grid,c.x,c.y);if(np){u.path=np;u.pi=0}})}
 function toast(m){const e=$('toast');let pos='b';try{pos=SV.toastPos||'b'}catch(e){}if(pos==='off'&&S&&!S.sim&&$('game').style.display!=='none'){e.style.display='none';return}/* 📢 알림: 아래(기본)·위·끄기 — 게임판 첫 줄을 가리지 않게 */e.className=pos==='t'?'top':'bot';e.textContent=m;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2400)}
@@ -824,13 +828,13 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;recTick();
    if(b.heal){u.ht=(u.ht||0)+dt;if(u.ht>=(b.hlT||1)){u.ht=0;const sw=Math.floor(S.t);p.units.forEach(o=>{if((o!==u||b.hlS)&&o.hp>0&&Math.hypot(o.x-u.x,o.y-u.y)<1.8){/* hlS: 자신도 회복 *//* 🩹 한 새가 1초에 받는 회복 상한 50% */if(o.hw!==sw){o.hw=sw;o.hq=0}const add=Math.min(o.bp.hp*(b.hlA||.06)*(S.t<(o.hcT||0)?.25:1)/* 🌫️ v20.9 독안개 풍차에 맞으면 4초 동안 회복 75% 감소 */,o.bp.hp*.5-o.hq);if(add>0){o.hq+=add;o.hp=Math.max(o.hp,Math.min(o.mh||o.bp.hp,o.hp+add))}}})}}
    if(b.peck||b.zap){u.pk-=dt;if(u.pk<=0){const R2=b.peck?1.3:1.8;let near=null,nd=R2;
      for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(!t||!t.bp.d)continue;const d=Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y);
-      if(d<=R2){if(b.zap)t.dis=2;else if(d<nd){nd=d;near=t}}}
-     if(near)near.dis=2;u.pk=b.peck?3:2.5}}
+      if(d<=R2){if(b.zap){if(ctrlHit(t,'zap',2))t.dis=Math.max(t.dis||0,2)}else if(d<nd){nd=d;near=t}}}
+     if(near)near.dis=Math.max(near.dis||0,2);/* 🪵 쪼기는 면역 없음(사용자 결정) */u.pk=b.peck?3:2.5}}
    if(b.sulk||b.poop||b.acid){/* 🦜 욕쟁이: 근처 타워 1.5초 삐짐 · 🐦 똥 폭격: 아래 타워 3초 느려짐 · 🦩 플라맹독: 4초마다 산성 침(타워 공격력 -30% 4초) */const key=b.sulk?'sk':b.acid?'ac':'pp';u[key]=(u[key]??1.2)-dt;if(u[key]<=0){u[key]=b.sulk?2.2:b.acid?4:2.5;const R2=b.sulk?1.8:b.acid?1.9:1.2;let nr=null,nd=R2;
-     for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(!t||!t.bp.d||t.carrier)continue;const d=Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y);if(d<nd){nd=d;nr=t}}
-     if(nr){if(b.acid){nr.acid=S.t+4;nr.emo={i:'🤢',u:S.t+4};if(p.id===view&&!S.sim){artFx('smoke',{x:u.x,y:BH-u.y,r:.45,col:0x84cc16});popTxt(u,'퉤!')}}else if(b.sulk){nr.dis=Math.max(nr.dis||0,1.5);nr.emo={i:'💢',u:S.t+1.5}}else{nr.poop=S.t+3;if(p.id===view&&!S.sim)artFx('smoke',{x:u.x,y:BH-u.y,r:.35,col:0xffffff})}}}}
+     for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(!t||!t.bp.d||t.carrier||!ctrlFree(t,key))continue;const d=Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y);if(d<nd){nd=d;nr=t}}
+     if(nr&&ctrlHit(nr,key,b.sulk?1.5:b.acid?4:3)){if(b.acid){nr.acid=S.t+4;nr.emo={i:'🤢',u:S.t+4};if(p.id===view&&!S.sim){artFx('smoke',{x:u.x,y:BH-u.y,r:.45,col:0x84cc16});popTxt(u,'퉤!')}}else if(b.sulk){nr.dis=Math.max(nr.dis||0,1.5);nr.emo={i:'💢',u:S.t+1.5}}else{nr.poop=S.t+3;if(p.id===view&&!S.sim)artFx('smoke',{x:u.x,y:BH-u.y,r:.35,col:0xffffff})}}}}
    if(b.coffee&&u.sh<b.shield){u.cf=(u.cf??4)-dt;if(u.cf<=0){u.cf=4;u.sh=Math.min(b.shield,(u.sh||0)+b.shield*.25);/* ☕ 커피 한 모금 */if(p.id===view&&!S.sim)popTxt(u,'☕ 후루룩')}}
-   if(b.wig&&!u.wg&&u.hp<b.hp*.5){u.wg=1;u.wgfx=1;/* 🦅 가발 날리기: 번쩍이는 머리에 근처 타워 2초 눈부심 */for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(t&&t.bp.d&&Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y)<2){t.dis=Math.max(t.dis||0,2);t.emo={i:'😵',u:S.t+2}}}
+   if(b.wig&&!u.wg&&u.hp<b.hp*.5){u.wg=1;u.wgfx=1;/* 🦅 가발 날리기: 번쩍이는 머리에 근처 타워 2초 눈부심 */for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(t&&t.bp.d&&Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y)<2&&ctrlHit(t,'wig',2)){t.dis=Math.max(t.dis||0,2);t.emo={i:'😵',u:S.t+2}}}
     if(p.id===view&&!S.sim)popTxt(u,'✨ 번쩍!')}
    if(b.grab){u.gk=(u.gk===undefined?1.5:u.gk)-dt;/* 🏗 철거반장: 멈춰서 집고 → 4초 이고 걷기 → Lv.2 이하는 빈칸으로 옮기기(미로 안 막음), 아니면 제자리 */
     if(u.carry){u.carry.ct-=dt;if(u.carry.ct<=0){craneDrop(p,u,true);u.gk=6}}
@@ -842,7 +846,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;recTick();
    else if(u.fl>0){}else if(u.stun>0)u.stun-=dt;else{if(b.flock&&!u.solo){u.fk=(u.fk||0)-dt;if(u.fk<=0){u.fk=.5;if(flockOf(p,u).length<4){u.solo=1;u.ctr=0;if(!S.sim&&p.id===view&&S.t-(p.solT||-9)>3){p.solT=S.t;u.tkI=3;u.tkT=S.t+1.6}}}}let sp=b.sp*(u.spm||1)*(u.solo?1.3:1);if(u.slow>0){u.slow-=dt;sp*=.55}
     if(b.rage&&u.hp<b.hp*.35)sp*=1.6;
     if(b.leap){u.lp=(u.lp??2)-dt;if(u.lp<=0&&u.path&&u.pi<u.path.length-1){u.lp=b.leap;u.jt=.5}}
-    if(u.jt>0){u.jt-=dt;sp=Math.max(sp,5);if(u.jt<=0){u.jt=0;/* 🩰 착지: 주변 타워 1초 흔들림 */for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(t&&t.bp.d&&Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y)<1.5)t.dis=Math.max(t.dis||0,.6)}if(p.id===view&&!S.sim)PXS.play('impacts/ground-slam',u.x,BH-u.y,0,{fit:2})}}
+    if(u.jt>0){u.jt-=dt;sp=Math.max(sp,5);if(u.jt<=0){u.jt=0;/* 🩰 착지: 주변 타워 1초 흔들림 */for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const t=p.grid[y][x];if(t&&t.bp.d&&Math.hypot(cellX(x,y)-u.x,cellY(y)-u.y)<1.5&&ctrlHit(t,'shake',.6))t.dis=Math.max(t.dis||0,.6)}if(p.id===view&&!S.sim)PXS.play('impacts/ground-slam',u.x,BH-u.y,0,{fit:2})}}
     if(u.spr>0){const k=u.spr/.4;u.x+=u.bvx*k*dt;u.y=Math.max(cellY(0),u.y+u.bvy*k*dt);u.spr-=dt}else if(u.lx!=null&&Math.abs(u.lx-u.x)>.02){const d=u.lx-u.x;u.x+=Math.sign(d)*Math.min(Math.abs(d),2.2*dt)}if(u.spr!=null)u.x=Math.max(.35,Math.min(COLS+.15,u.x));/* 🐦 5형제 퍼지기 */
     if(b.t==='A'||b.over)u.y+=sp*dt*(b.over?BAL.ovs:.9);
     else if(u.path&&u.pi<u.path.length){const n=u.path[u.pi],tx=cellX(n.x,n.y),ty=cellY(n.y),d=Math.hypot(tx-u.x,ty-u.y),s=sp*dt;
@@ -852,7 +856,7 @@ function step(dt){const D=DIFF[diff];S.t+=dt;S.inc+=dt;recTick();
   robo.forEach(u=>{const n=u.bp.robo,LN=[0,-1.5,1.5,-3,3];for(let i=0;i<n;i++){const a=i*PI*2/n+PI/2,lx=Math.max(.6,Math.min(COLS-.1,u.x+LN[i]));spawnAt(p,UB['starbro'+i],u.owner,undefined,u.x,u.y,Object.assign({src:'starling',spr:.4,bvx:Math.cos(a)*3.2,bvy:Math.sin(a)*2.4,lx,tkN:i===0||i===3?2:3},u.tag?{tag:u.tag}:{}))}if(p.id===view&&!S.sim){PXS.play('explosions/plasma-explosion',u.x,BH-u.y,1.4,{fit:3.4});PXS.play('holy/feather-burst',u.x,BH-u.y,1.5,{fit:2,delay:.08,life:1.1});artFx('crit',{u});popTxt(u,'💥분리!')}if(!S.sim&&(p.id===view||p.id===0))sfx('robosplit',{mine:p.id===0})});/* 🤖 찌르봇 격추 → 5형제가 사방으로 흩어짐(회의 C 2026-11-25) */
   if(drop.length){const PAX=['chick','turkey','rooster','kiwi','goose','duck'];drop.forEach(u=>spawnAt(p,UB[PAX[Math.floor(Math.random()*PAX.length)]],u.owner,undefined,Math.max(.3,Math.min(COLS+.2,u.x+(Math.random()-.5)*1.4)),u.y+(Math.random()-.5)*.8,Object.assign({src:'pelican'},u.tag?{tag:u.tag}:{})));
    if(p.id===view&&!S.sim){toast('🚌 펠리컨 격추! 승객 새들이 우르르 쏟아져요');artFx('hatch',{u:drop[0]})}}
-  lay.forEach(u=>{spawnAt(p,UB.egg_legs,u.owner,undefined,u.x,u.y,{hatch:eggHasP(S.pl[u.owner],'hatch')?1:0});if(p.id===view){sfx('lay');artFx('lay',{u})}});
+  lay.forEach(u=>{if(dead)return;/* 🎩 v21.15 탈락한 사람의 판에서는 회장닭이 알을 낳지 않음 */const eu=spawnAt(p,UB.egg_legs,u.owner,undefined,u.x,u.y,{hatch:eggHasP(S.pl[u.owner],'hatch')?1:0});{/* 🥚 v21.11 회장닭이 낳는 알도 그 판의 알 체력 증가(보낸 알 1개마다 +1)를 받음 */const ow=S.pl[u.owner],eb=ow?Math.min(BAL.eggCap,((ow.id===0&&!ow.ai)?EGG.n:(ow.egg||0))*BAL.eggHp):0;if(eu&&eb){eu.hp+=eb;eu.mh=eu.hp;eu.eb=eb}}if(p.id===view){sfx('lay');artFx('lay',{u})}});
   if(dead)return;/* 💀 탈락한 판: 타워·CCTV·과자·독구름·전깃줄 모두 멈춤 */
   {const cc=[];p.grid.forEach((row,y)=>row.forEach((t,x)=>{if(t&&t.bp&&t.bp.cctv&&!(t.dis>0))cc.push([cellX(x,y),cellY(y),t.r])}));p.units.forEach(u=>{u.seen=u.bp.stealth&&cc.some(c=>Math.hypot(u.x-c[0],u.y-c[1])<=c[2]);if(u.bp.dodge){u.cam=cc.some(c=>Math.hypot(u.x-c[0],u.y-c[1])<=c[2]);if(u.cam&&!u.fined){u.fined=1;p.gold+=15;p.earn=(p.earn||0)+15;/* 📸 과속 단속 */if(p.id===view&&!S.sim)popTxt(u,'📸 과속 단속! +15G')}}})}
   if(p.snacks&&p.snacks.length)p.snacks=p.snacks.filter(s=>!s.e&&(s.life-=dt)>0);
@@ -3396,36 +3400,52 @@ function killBanner(b){if(!S||S.sim)return;const now=performance.now();if(now-(k
 const STARX={};function starTex(lv){if(STARX[lv])return STARX[lv];const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');x.beginPath();
  for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,r=i%2?26:58;x.lineTo(64+Math.cos(a)*r,68+Math.sin(a)*r)}x.closePath();x.fillStyle=lv>=4?'#ffd23f':'#fde047';x.lineWidth=10;x.strokeStyle='#111';x.stroke();x.fill();
  x.font='900 46px "Black Han Sans", sans-serif';x.textAlign='center';x.textBaseline='middle';x.lineWidth=9;x.strokeStyle='#111';x.strokeText(lv,64,74);x.fillStyle='#fff';x.fillText(lv,64,74);return STARX[lv]=new THREE.CanvasTexture(c)}
-function dxThumbs(){if(DXC.done)return;const r=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});r.setPixelRatio(2);r.setSize(200,200);
+function dxThumbs(part){if(DXC['done_'+part]||DXC['run_'+part])return;DXC['run_'+part]=1;/* 🚀 v21.9 도감 사진은 필요한 쪽만: 'u' 새 / 't' 타워·조합 */const r=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});r.setPixelRatio(2);r.setSize(200,200);
  const sc=new THREE.Scene();sc.add(new THREE.AmbientLight(0xffffff,.55));sc.add(new THREE.HemisphereLight(0xe0f2ff,0x6b5a3a,.6));const dl=new THREE.DirectionalLight(0xffffff,1);dl.position.set(3,-4,7);sc.add(dl);
  const cam=new THREE.PerspectiveCamera(30,1,.05,60);cam.up.set(0,0,1);
  const shotRaw=(m,key)=>shot(m,key,1);const shot=(m,key,raw)=>{if(!raw)artFx(key[0]==='u'?'bird':'tower',{m,b:key[0]==='u'?UB[key.slice(2)]:TB[key.slice(2)],dex:true});m.traverse(o=>{if(o.geometry&&o.geometry.type==='PlaneGeometry')o.visible=false});sc.add(m);m.updateMatrixWorld(true);
   const bx=new THREE.Box3();m.traverse(o=>{if(o.isMesh&&o.visible){if(!o.geometry.boundingBox)o.geometry.computeBoundingBox();bx.union(o.geometry.boundingBox.clone().applyMatrix4(o.matrixWorld))}});
   const c=bx.getCenter(new THREE.Vector3()),s=bx.getSize(new THREE.Vector3()),d=Math.max(s.x,s.y,s.z*1.2)*2.4+.25;
   cam.position.set(c.x+d*.3,c.y-d*.82,c.z+d*.5);cam.lookAt(c);r.render(sc,cam);DXC[key]=r.domElement.toDataURL();sc.remove(m);m.traverse(o=>{if(o.material)o.material.dispose()})};
- try{U.forEach(u=>{if((u.count||1)>1){const g=new THREE.Group(),n=Math.min(3,u.count),P=[[0,-.08,0],[-.45,.22,0],[.45,.22,0]];for(let i=0;i<n;i++){const m=birdMesh3(u,0x60a5fa);artFx('bird',{m,b:u,dex:true});if(u.flock&&!i){const cr=m.getObjectByName('propCrown');if(cr)cr.visible=true}/* 👑 도감: 가운데가 센터 */m.position.set(...P[i]);if(i){m.scale.multiplyScalar(.88);m.rotation.z=i===1?.35:-.35}g.add(m)}shotRaw(g,'u_'+u.id)}else shot(birdMesh3(u,0x60a5fa),'u_'+u.id)});T.forEach(t=>{for(let lv=1;lv<=(t.id==='wall'?1:4);lv++){const m=artFx('towerMesh',{b:t,lv})||towerMesh3(t);artFx('tower',{m,b:t,lv,dex:true});shotRaw(m,lv===1?'t_'+t.id:'t_'+t.id+'_'+lv)}})}catch(e){console.log(e)}
- r.dispose();if(r.forceContextLoss)r.forceContextLoss();DXC.done=1}
+ const tasks=[];try{if(part==='u')U.forEach(u=>tasks.push(()=>{if((u.count||1)>1){const g=new THREE.Group(),n=Math.min(3,u.count),P=[[0,-.08,0],[-.45,.22,0],[.45,.22,0]];for(let i=0;i<n;i++){const m=birdMesh3(u,0x60a5fa);artFx('bird',{m,b:u,dex:true});if(u.flock&&!i){const cr=m.getObjectByName('propCrown');if(cr)cr.visible=true}/* 👑 도감: 가운데가 센터 */m.position.set(...P[i]);if(i){m.scale.multiplyScalar(.88);m.rotation.z=i===1?.35:-.35}g.add(m)}shotRaw(g,'u_'+u.id)}else shot(birdMesh3(u,0x60a5fa),'u_'+u.id)}));else T.forEach(t=>tasks.push(()=>{for(let lv=1;lv<=(t.id==='wall'?1:4);lv++){const m=artFx('towerMesh',{b:t,lv})||towerMesh3(t);artFx('tower',{m,b:t,lv,dex:true});shotRaw(m,lv===1?'t_'+t.id:'t_'+t.id+'_'+lv)}}))}catch(e){console.log(e)}
+ /* 🚀 프레임마다 조금씩 찍고 사진이 준비되는 대로 카드에 채움(도감 열 때 멈추지 않음) */let ti=0;const stp=()=>{const t0=performance.now();try{while(ti<tasks.length&&performance.now()-t0<22)tasks[ti++]()}catch(e){console.log(e);ti++}dxFill();if(ti<tasks.length)requestAnimationFrame(stp);else{r.dispose();if(r.forceContextLoss)r.forceContextLoss();DXC['done_'+part]=1;dxFill()}};requestAnimationFrame(stp)}
+function dxFill(){document.querySelectorAll('#dexb [data-dk]').forEach(e=>{const k=e.dataset.dk;if(DXC[k]){const im=new Image();im.alt='';im.src=DXC[k];e.replaceWith(im)}})}
 const dxQ=f=>/^["“]/.test(f||'')?f:'“'+f+'”';const tier=c=>c>=1000?'lg':c>=500?'ep':c>=250?'rr':'cm',TIERN={cm:'일반',rr:'희귀',ep:'영웅',lg:'전설'};
 const dxBadge=x=>x.race?`<em>${RACE[x.race].ic} ${RACE[x.race].n} 전용</em>`:x.tech?`<em>${TECH[x.tech].ic} ${TECH[x.tech].n} 전용</em>`:x.combo?`<em>${x.combo.map(k=>TECH[k].ic).join('')} 조합</em>`:'';
 const DXTH={starling:'sky',starbro0:'sky',starbro1:'sky',starbro2:'sky',starbro3:'sky',starbro4:'sky',flamingo:'water',humbee:'meadow',pelican:'sky',crocbird:'water',penguin:'ice',frostpeng:'ice',blizgull:'ice',auroraowl:'aurora',dodo:'stage',phoenix:'fire',plasmabird:'fire',comet:'sky',swan:'water',duck:'water',seagull:'water',pirate:'ice',albatross:'sky',peacock:'stage',parrot:'stage',rooster:'stage',owl:'night',crow:'night',ghostcrow:'night',vampire:'night',plague:'night',voltbat:'storm',thunderbird:'storm',stormeagle:'storm',crane:'spa',falcon:'sky',eagle:'sky'};
 const dxTh=u=>DXTH[u.id]||(u.hidden||u.id==='egg_legs'?'lab':u.tech==='fire'?'fire':u.tech==='ice'?'ice':u.tech==='thunder'?'storm':u.tech==='wind'?'sky':u.tech==='dark'?'night':u.race?'stage':u.t==='A'?'sky':'meadow');
-const dxImg=k=>DXC[k]?`<img src="${DXC[k]}" alt="">`:'<i class="noimg">🐦</i>';
-function cardU(u){const k=tier(u.c);return `<div class="cd ${k}"><div class="ci" data-th="${dxTh(u)}">${dxImg('u_'+u.id)}<span class="tr ${k}">${TIERN[k]}</span>${dxBadge(u)}</div><div class="cn">${u.ic} ${u.n}</div><div class="cf">${dxQ(u.fl)}</div>
- <div class="cs"><span>💰${u.c}G</span><span>❤️${u.hp}</span><span>${u.t==='A'?'🪶공중':'🦶지상'}</span><span>💨${u.sp}</span><span>📈인컴+${u.inc}</span><span>💥피해${u.dm}</span></div>${u.x?`<div class="cx">✨ ${u.x}</div>`:''}</div>`}
+const dxImg=k=>DXC[k]?`<img src="${DXC[k]}" alt="">`:`<i class="noimg" data-dk="${k}">🐦</i>`;
+/* 🏷 v21.13 도감 분류 배지(최대 3개, 사용자와 정한 표) + 공중/지상 아이콘. N일반 F빠름(속도2↑) C방해(타워 제어) H회복 R부활·분열 S떼 D방어(보호막·은신·회피) E경제 I면역(상태이상 2종↑ 면역) */
+const DXK={kiwi:'N',chick:'N',turkey:'E',rooster:'F',pigeon:'F',goose:'R',parrot:'C',crow:'D',pirate:'E',duck:'N',woodpecker:'C',seagull:'C',humbee:'S',swan:'D',penguin:'S',peacock:'H',dodo:'R',flamingo:'C',frostpeng:'S,I',falcon:'F,D',plague:'R,D',blizgull:'S,F,I',albatross:'F',crane:'H,I',owl:'H,D',thunderbird:'C',comet:'F,D',ghostcrow:'F,D',voltbat:'C',eagle:'C',auroraowl:'F,D,I',plasmabird:'C,F',stormeagle:'I',phoenix:'R',starling:'R',crocbird:'N',eggchief:'R',ostrich:'C',pelican:'R',demcrane:'C',archaeo:'R,C'};
+const DXKN={N:['normal','일반'],F:['fast','빠름'],C:['ctrl','방해'],H:['heal','회복'],R:['revive','부활·분열'],S:['swarm','떼'],D:['defense','방어'],E:['econ','경제'],I:['immune','면역']};
+const dxBi=f=>`assets/ui/badges/${f}.webp`;
+function dxKb(u){const k=DXK[u.id];if(!k)return'';const c=k.split(',').slice(0,3),ag=u.id==='archaeo'?'split':u.t==='A'?'air':'ground';return `<div class="kb${c.length>2?' k3':''}">${c.map(x=>`<img src="${dxBi(DXKN[x][0])}" alt="${DXKN[x][1]}" title="${DXKN[x][1]}">`).join('')}</div>${dxTg(ag==='split'?'AG':u.t==='A'?'A':'G')}`}
+/* 🎯 v21.14 표적 아이콘: 공중=작은 날개, 지상=작은 발, 둘 다=나란히(새 카드의 시조새 포함) */
+function dxTg(t){const a=t.includes('A'),g=t.includes('G');return `<div class="tg">${a?`<img src="${dxBi('air')}" alt="공중" title="공중">`:''}${g?`<img src="${dxBi('ground')}" alt="지상" title="지상">`:''}</div>`}
+/* 🏗 v21.14 타워 분류 배지(육각형, 최대 3개): 공격 방식(단일·광역·연쇄·주변) + 효과(지속·감속·빙결·기절·넉백·부유·약화) + 특수(덫·유인·감지·전깃줄) */
+const DXT={egg:'single',air:'single',acorn:'single',sun:'single',snack:'spec',pylon:'spec',cctv:'spec',ember:'single,dot',ice:'single,slow',frost:'single,freeze',thunder:'single,stun',breeze:'single,kb',twister:'single,kb',wind:'single,float',net:'splash,slow',lava:'splash,dot',flu:'splash,dot',bliz:'aura,slow',static:'chain',storm:'chain,stun',flytrap:'spec,dot',acid:'splash,dot,weak',pyre:'splash,dot,weak',steam:'splash,dot,slow',plasma:'chain,dot',firestorm:'aura,dot,kb',aurora:'chain,freeze',whiteout:'aura,slow,kb',frostbane:'splash,dot,freeze',tempest:'chain,kb',venomvolt:'chain,dot,weak',miasma:'aura,dot,kb'};
+const DXTN={single:'단일',splash:'광역',chain:'연쇄',aura:'주변',dot:'지속',slow:'감속',freeze:'빙결',stun:'기절',kb:'넉백',float:'부유',weak:'약화',spec:'특수'};
+const dxTi=f=>`assets/ui/badges_t/${f}.webp`;
+function dxTb(t){const k=DXT[t.id];if(!k)return'';return `<div class="kb tb${k.split(',').length>2?' k3':''}">${k.split(',').slice(0,3).map(x=>`<img src="${dxTi(x)}" alt="${DXTN[x]}" title="${DXTN[x]}">`).join('')}</div>${dxTg(t.t||'AG')}`}
+function dxTLegend(){return `<div class="cd wide kleg"><div class="cn">🏷 타워 배지 안내 <small>(최대 3개)</small></div><div class="kl">${Object.keys(DXTN).map(x=>`<span><img src="${dxTi(x)}" alt="">${DXTN[x]}</span>`).join('')}</div><div class="kl"><span><img src="${dxBi('air')}" alt="">공중만</span><span><img src="${dxBi('ground')}" alt="">지상만</span><span><img src="${dxBi('air')}" alt=""><img src="${dxBi('ground')}" alt="">둘 다</span></div><div class="cf">단일·광역·연쇄·주변은 때리는 방식, 나머지는 맞은 새에게 생기는 일이에요. 특수는 덫·유인·감지·전깃줄이에요.</div></div>`}
+function dxLegend(){return `<div class="cd wide kleg"><div class="cn">🏷 배지 안내 <small>(여러 개 겹치면 최대 3개)</small></div><div class="kl">${Object.values(DXKN).map(([f,n])=>`<span><img src="${dxBi(f)}" alt="">${n}</span>`).join('')}<span><img src="${dxBi('air')}" alt="">공중</span><span><img src="${dxBi('ground')}" alt="">지상</span><span><img src="${dxBi('split')}" alt="">공중→지상</span></div><div class="cf">⏱ 타워는 제어가 끝난 뒤 1.5초 동안 같은 제어에 면역이에요(제어마다 따로, 딱따구리 쪼기는 면역 없음).<br>빠름 속도 2↑ · 방해 타워를 멈추거나 약하게 · 방어 보호막·은신·회피 · 면역 상태이상 2가지↑ · 경제 탈출 시 인컴 · 떼 한 번에 여러 마리</div></div>`}
+/* 🩺 v21.9 도감 체력 = 게임에서 실제로 소환되는 체력(×보정·일반 모드·새별 보정) + 보호막 합계 */function dxHp(u){const hk=(BAL.hpK&&BAL.hpK[u.id])||1,m=((BAL.mode||{}).normal||{}).uh||1,h=Math.round((u.hp0??u.hp)*m*hk),sh=Math.round((u.sh0??(u.shield||0))*m*hk);return{h,sh}}
+function cardU(u){const k=tier(u.c),hp=dxHp(u);return `<div class="cd ${k}"><div class="ci" data-th="${dxTh(u)}">${dxImg('u_'+u.id)}<span class="tr ${k}">${TIERN[k]}</span>${dxBadge(u)}${dxKb(u)}</div><div class="cn">${u.ic} ${u.n}</div><div class="cf">${dxQ(u.fl)}</div>
+ <div class="cs"><span>💰${u.c}G</span>${u.hits?`<span>💔${u.hits}번 맞으면 쓰러짐</span>`:`<span>❤️${hp.h+hp.sh}${hp.sh?` <small>(🛡${hp.sh} 포함)</small>`:''}${(u.count||1)>1?` <small>마리당 · ×${u.count}마리</small>`:''}</span>`}<span>${u.t==='A'?'🪶공중':'🦶지상'}</span><span>💨${u.sp}</span><span>📈인컴+${u.inc}</span><span>💥피해${u.dm}</span></div>${u.x?`<div class="cx">✨ ${u.x}</div>`:''}</div>`}
 /* 📖 v18.8 타워 도감 자세한 설명(속성값으로 자동) */function tDetail(t){if(!t.d)return'';const L=[],lv=`레벨업마다 공격력 ×1.6 · 사거리 +0.25`;
  L.push(t.chain?`⚡ <b>연쇄</b>: 맞힌 새에서 1.8칸 안 가장 가까운 새로 튕겨 최대 <b>${t.chain}마리</b> (2번째부터 피해 75%)`:t.self?`🌪 <b>주변 전체</b>: 타워 사거리(${t.r}칸) 안 새 <b>모두</b> (마리 수 제한 없음)`:t.splash?`💥 <b>범위</b>: 맞은 새 둘레 <b>${t.splash}칸</b> 안 새 <b>모두</b> (마리 수 제한 없음)`:t.trap?`🪴 <b>물기</b>: 머리 수(레벨, 최대 3)만큼 지상 새를 묶음`:`🎯 <b>한 마리</b>: 사거리 안에서 출구에 가장 가까운 새`);
  const E=[];if(t.poison)E.push(`☠️ 독 쌓기(최대 ${BAL.pmax}겹)`+((t.splash||t.self)?' · 독구름 2.5초':''));if(t.burn)E.push(`🔥 화상 ${BAL.bdur}초 · 쓰러지면 옆으로 번짐`);if(t.slow)E.push('🐌 감속 2.2초');if(t.freeze)E.push(`🧊 ${Math.round(t.freeze*100)}% 확률 빙결 1.2초`);if(t.stun)E.push(`💫 기절 ${t.stun}초`);if(t.kb)E.push('💨 뒤로 밀기');if(t.amp)E.push('🎯 약화: 받는 피해 +35%(4초)');if(t.bubble)E.push(`🫧 비눗방울 ${t.bubble}초`);if(t.tech==='thunder'||(t.combo&&t.combo.includes('thunder')))E.push(`⚡ 보호막에 ${BAL.shz}배`);
  if(E.length)L.push(E.join(' · '));if(t.rapid)L.push('⚡ 연사: 계속 쏘면 빨라짐(최대 +50%)');if(t.heavy)L.push('💥 강타: 3번째마다 치명타 ×2 + 최대체력 3% · 벌새 떼에겐 절반');L.push('⬆️ '+lv);
  return `<div class="cdet">${L.map(x=>`<div>${x}</div>`).join('')}</div>`}
 function cardT(t){const k=t.combo?'lg':t.race?'ep':t.tech?(t.c>=380?'ep':'rr'):'cm',tg=t.t==='A'?'공중만':t.t==='G'?'지상만':'공중+지상';
- return `<div class="cd ${k}"><div class="ci">${dxImg('t_'+t.id)}<span class="tr ${k}">${TIERN[k]}</span>${dxBadge(t)}</div><div class="cn">${t.ic} ${t.n}</div><div class="cf">${dxQ(t.fl)}</div>
+ return `<div class="cd ${k}"><div class="ci">${dxImg('t_'+t.id)}<span class="tr ${k}">${TIERN[k]}</span>${dxBadge(t)}${dxTb(t)}</div><div class="cn">${t.ic} ${t.n}</div><div class="cf">${dxQ(t.fl)}</div>
  <div class="cs"><span>💰${t.c}G</span>${t.d?`<span>⚔️${t.d}</span><span>🎯${t.r}</span><span>⏱${(1/t.cd).toFixed(1)}회/초</span><span>${tg}</span>`:t.cctv?`<span>👁 감지 ${t.r}칸</span><span>🔒 은신 목격 or 4분</span><span>최대 2개</span>`:t.snack?`<span>🍤 과자 ${t.snack}개/${t.cd}초</span><span>🎯${t.r}</span><span>공중 새 유인</span>`:'<span>🧱 길막 전용</span>'}</div>${t.x?`<div class="cx">✨ ${t.x}</div>`:''}${tDetail(t)}${t.id==='wall'?'':`<div class="evo">${t.lvn.slice(1).map((n,i)=>`<div><i>${dxImg('t_'+t.id+'_'+(i+2))}</i><b>${'🥚'.repeat(i+2)}</b><small>${n}</small></div>`).join('')}</div>`}</div>`}
 function cardC(c){const t=TB[c.t],u=UB[c.u],s=SKILL[c.t];
  return `<div class="cd wide lg"><div class="cn cbig">${c.ic} ${c.n} 조합</div><div class="cf">“${CFL[c.t]}”</div>
  <div class="cc"><div>${dxImg('t_'+t.id)}<b>${t.ic} ${t.n}</b><small>${t.x} · ${t.c}G</small></div><div>${dxImg('u_'+u.id)}<b>${u.ic} ${u.n}</b><small>${u.x} · ${u.c}G</small></div></div>
  <div class="sk">🌟 <b>${s.n}</b><br>${s.d}<br><small>재사용 ${s.cd}초 · 해금 ${SKC}G</small></div></div>`}
 function dxRender(){[...$('dext').children].forEach(b=>b.className=b.dataset.p===dxPage?'on':'');const H=(t,s)=>`<h3>${t}${s?` <small>${s}</small>`:''}</h3>`;let h='';
- if(dxPage==='u'){const nx=eggNext();h+=H('🥚 수상한 알 연구소',S?`이번 판에 보낸 알 ${EGG.n}개`+(nx?` · 다음 해금까지 ${nx.n-EGG.n}개`:' · 완전 해금!'):'한 판 안에서 알을 많이 보낼수록 해금돼요');
+ if(dxPage==='u'){const nx=eggNext();h+=dxLegend();h+=H('🥚 수상한 알 연구소',S?`이번 판에 보낸 알 ${EGG.n}개`+(nx?` · 다음 해금까지 ${nx.n-EGG.n}개`:' · 완전 해금!'):'한 판 안에서 알을 많이 보낼수록 해금돼요');
   h+=`<div class="cd wide ${nx?'rr':'lg'}"><div class="cn">🥚 수상한 알 ${EGG.n}개</div><div class="pbar"><i style="width:${Math.min(100,EGG.n/1.5)}%"></i>${EGGM.map(m=>`<b style="left:${Math.min(m.n/1.5,95)}%">${m.ic}</b>`).join('')}</div><div class="cf">“이번 판에서 보낸 알 수예요. 숫자가 찰 때마다 알이 이상해지고, 판이 끝나면 다시 0부터!”</div></div>`;
   EGGM.forEach(m=>{const ok=EGG.n>=m.n,u=m.u&&UB[m.u];h+=`<div class="cd ${ok?'lg':'lock'}"><div class="ci">${u?dxImg('u_'+u.id):`<i class="noimg">${m.ic}</i>`}<span class="tr ${ok?'lg':''}">🥚${m.n}</span></div><div class="cn">${m.ic} ${ok?m.t:'???'}</div><div class="cf">${ok?m.d:`한 판에 수상한 알 ${m.n}개를 보내면 열려요 (${EGG.n}/${m.n})`}</div></div>`});
   if(eggHas('hatch'))h+=H('🐣 부화 병아리','내 속성에 따라 달라져요')+U.filter(u=>u.hidden).filter(u=>(u.id!=='hatch_gold'||eggHas('gold'))&&(u.id!=='hatch_dino'||eggHas('dino'))).map(cardU).join('');
@@ -3433,22 +3453,23 @@ function dxRender(){[...$('dext').children].forEach(b=>b.className=b.dataset.p==
   h+=H('★ 특수 능력 새','지나가며 말썽을 부려요')+U.filter(u=>u.x&&!u.tech&&!u.combo&&!u.hidden&&!u.race&&(!u.secret||eggHas(u.secret))).map(cardU).join('');
   h+=H('🔮 속성 전용 새','그 속성을 골라야 해금')+U.filter(u=>u.tech).map(cardU).join('');
   h+=H('✨ 조합 새','속성 2개를 모두 골라야 해금')+U.filter(u=>u.combo).map(cardU).join('')+H('🏰 종족 전용 새','종족을 골라야 보낼 수 있어요')+U.filter(u=>u.race).map(cardU).join('')}
- else if(dxPage==='t'){h+=H('🏗 공용 타워','처음부터 지을 수 있어요')+T.filter(t=>!t.tech&&!t.combo&&!t.race).map(cardT).join('');
+ else if(dxPage==='t'){h+=dxTLegend();h+=H('🏗 공용 타워','처음부터 지을 수 있어요')+T.filter(t=>!t.tech&&!t.combo&&!t.race).map(cardT).join('');
   TK.forEach(k=>{h+=H(`${TECH[k].ic} ${TECH[k].n} 속성`,TECH[k].d)+T.filter(t=>t.tech===k).map(cardT).join('')});
   h+=H('✨ 조합 타워','두 속성을 모두 고르면 해금')+T.filter(t=>t.combo).map(cardT).join('')+H('🏰 종족 전용 타워','종족을 골라야 지을 수 있어요')+T.filter(t=>t.race).map(cardT).join('')}
  else if(dxPage==='r')h+=raceDex();else h+=H('✨ 속성 조합 도감',`10가지 조합 · 첫 속성 무료, 두 번째 ${TECH2C}G`)+COMBO.map(cardC).join('');
  $('dexb').innerHTML=h;$('dexb').scrollTop=0}
 function dxOpen(){dxPrev=S?paused:null;if(S){paused=true;$('pz').textContent='▶️'}$('dexm').style.display='flex';
- if(!DXC.done){$('dexb').innerHTML='<p class="m" style="grid-column:1/-1;text-align:center;padding:40px">🎨 새들이 사진 찍는 중…</p>';setTimeout(()=>{dxThumbs();dxRender()},30)}else dxRender()}
+ dxEnsure()}
+function dxEnsure(){dxRender();['u'].concat(dxPage==='u'?[]:['t']).forEach(dxThumbs)}
 function dxClose(){$('dexm').style.display='none';if(S&&dxPrev!==null){paused=dxPrev;$('pz').textContent=paused?'▶️':'⏸'}}
-$('dext').onclick=e=>{const p=e.target.dataset&&e.target.dataset.p;if(p){dxPage=p;dxRender()}};
+$('dext').onclick=e=>{const p=e.target.dataset&&e.target.dataset.p;if(p){dxPage=p;dxEnsure()}};
 $('dexx').onclick=dxClose;$('dxo').onclick=dxOpen;$('dxb').onclick=dxOpen;
 
 $('mm').addEventListener('pointerdown',e=>{if(!S)return;const r=$('mm').getBoundingClientRect(),dx=e.clientX-r.left-r.width/2,dy=e.clientY-r.top-r.height/2;
  if(Math.hypot(dx,dy)<8){if(!S.pl[0].alive)return toast('💀 내 진영은 탈락했어요');view=0;ui();return}let a=Math.atan2(dy,dx)+Math.PI/2;while(a<0)a+=Math.PI*2;{const v=(Math.floor(a/(Math.PI/4))%8-S.off+8)%8;if(!S.pl[v].alive)return toast('💀 탈락한 진영이에요');view=v}sel=null;insp=null;ui()});
 /* 🎮 v21.4 난이도 버튼: 단계 색·위험 게이지·우승 깃털 (게임 화면처럼) */$('dif').innerHTML=Object.keys(DIFF).map((k,i)=>{const nm=DIFF[k].n,sp=nm.indexOf(' '),ic=sp>0?nm.slice(0,sp):'',lb=sp>0?nm.slice(sp+1):nm,lv=Math.min(6,i+1),cw=({N:2,M:3,H:4,X:6,Z:10,A:15})[k];return `<button data-k="${k}" class="dk dk-${k}"><i><img src="assets/ui/diff/${k}.png" alt="" onerror="this.replaceWith(document.createTextNode('${ic}'))"></i><b>${lb}</b><span class="dm">${k==='L'?'🧪 실험':'<u>'+'■'.repeat(lv)+'</u>'+'■'.repeat(6-lv)}</span>${cw?`<em>🪶+${cw}</em>`:''}</button>`}).join('');
 function setDiff(k){LAB=k==='L';diff=LAB?'A':k;try{if(SV&&SV.diff!==k){SV.diff=k;svSave()}}catch(e){}[...$('dif').children].forEach(b=>b.classList.toggle('on',b.dataset.k===k));$('dd').textContent='💡 '+DIFF[k].d;/* LAB이면 diff는 A */lobUI()}
-$('dif').onclick=e=>{if(e.target.dataset.k)setDiff(e.target.dataset.k)};
+$('dif').onclick=e=>{const b=e.target.closest('button');if(b&&b.dataset.k){setDiff(b.dataset.k);if($('modem').style.display==='flex'){gameMode='normal';ovl('modem',0);tryStart()}/* 🎯 v21.4 모드 창에서 난이도를 누르면 바로 시작 */}};
 // ---------- 🪶 깃털 코인 · 모드 선택 · 종족 해금 ----------
 const SAVE_KEY='jjj_save_v1',MODE_COST=0,RACE_COST=30,COIN_WIN={N:2,M:3,H:4,X:6,Z:10,A:15};
 let SV={coins:0,modeOK:0,races:[],wins:0},gameMode='normal',raceView=null;
@@ -3593,7 +3614,7 @@ function lobLoop(now){requestAnimationFrame(lobLoop);const vis=$('title').style.
  try{lobMode==='plaza'?plazaFrame(t,dt):lobbyFrame(t)}catch(e){console.log(e)}}
 // UI
 function lobUI(){try{$('lwin').textContent=SV.wins||0;$('lhic').textContent=hInfo(SV.hero.id).ic;$('lnick').textContent=SV.hero.name;$('lname').textContent=SV.hero.name;
- $('lmodet').innerHTML=(gameMode==='race'?'🏰 종족 모드'+(SV.races.includes(raceSel)?' · '+RACE[raceSel].ic+RACE[raceSel].n:''):'🐥 일반 모드')+'<small class="lmd">난이도 '+DIFF[diff].n.split(' ').pop()+'</small>'}catch(e){}}
+ $('lmodet').innerHTML='난이도 바꾸기'+'<small class="lmd">지금 '+DIFF[diff].n.split(' ').pop()+'</small>'}catch(e){}}
 const ovl=(id,on)=>{$(id).style.display=on?'flex':'none'};
 function openMode(){ovl('modem',1);renderTitle()}
 function heroOpt(){const h=SV.hero,o=$('hopt');
