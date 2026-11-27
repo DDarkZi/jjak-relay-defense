@@ -3448,7 +3448,7 @@ $('mm').addEventListener('pointerdown',e=>{if(!S)return;const r=$('mm').getBound
  if(Math.hypot(dx,dy)<8){if(!S.pl[0].alive)return toast('💀 내 진영은 탈락했어요');view=0;ui();return}let a=Math.atan2(dy,dx)+Math.PI/2;while(a<0)a+=Math.PI*2;{const v=(Math.floor(a/(Math.PI/4))%8-S.off+8)%8;if(!S.pl[v].alive)return toast('💀 탈락한 진영이에요');view=v}sel=null;insp=null;ui()});
 $('dif').innerHTML=Object.keys(DIFF).map(k=>`<button data-k="${k}">${DIFF[k].n.replace(' ','<br>')}</button>`).join('');
 function setDiff(k){LAB=k==='L';diff=LAB?'A':k;try{if(SV&&SV.diff!==k){SV.diff=k;svSave()}}catch(e){}[...$('dif').children].forEach(b=>b.className=b.dataset.k===k?'on':'');$('dd').textContent='💡 '+DIFF[k].d;/* LAB이면 diff는 A */lobUI()}
-$('dif').onclick=e=>{if(e.target.dataset.k)setDiff(e.target.dataset.k)};
+$('dif').onclick=e=>{const b=e.target.closest('button');if(b&&b.dataset.k){setDiff(b.dataset.k);if($('modem').style.display==='flex'){gameMode='normal';ovl('modem',0);tryStart()}/* 🎯 v21.4 모드 창에서 난이도를 누르면 바로 시작 */}};
 // ---------- 🪶 깃털 코인 · 모드 선택 · 종족 해금 ----------
 const SAVE_KEY='jjj_save_v1',MODE_COST=0,RACE_COST=30,COIN_WIN={N:2,M:3,H:4,X:6,Z:10,A:15};
 let SV={coins:0,modeOK:0,races:[],wins:0},gameMode='normal',raceView=null;
@@ -3593,7 +3593,7 @@ function lobLoop(now){requestAnimationFrame(lobLoop);const vis=$('title').style.
  try{lobMode==='plaza'?plazaFrame(t,dt):lobbyFrame(t)}catch(e){console.log(e)}}
 // UI
 function lobUI(){try{$('lwin').textContent=SV.wins||0;$('lhic').textContent=hInfo(SV.hero.id).ic;$('lnick').textContent=SV.hero.name;$('lname').textContent=SV.hero.name;
- $('lmodet').innerHTML=(gameMode==='race'?'🏰 종족 모드'+(SV.races.includes(raceSel)?' · '+RACE[raceSel].ic+RACE[raceSel].n:''):'🐥 일반 모드')+'<small class="lmd">난이도 '+DIFF[diff].n.split(' ').pop()+'</small>'}catch(e){}}
+ $('lmodet').innerHTML='난이도 바꾸기'+'<small class="lmd">지금 '+DIFF[diff].n.split(' ').pop()+'</small>'}catch(e){}}
 const ovl=(id,on)=>{$(id).style.display=on?'flex':'none'};
 function openMode(){ovl('modem',1);renderTitle()}
 function heroOpt(){const h=SV.hero,o=$('hopt');
