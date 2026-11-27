@@ -41,8 +41,8 @@ const NET=(()=>{
   b.innerHTML=Object.keys(DIFF).map(x=>`<button data-k="${x}" class="${x===k?'on':''}"${host?'':' disabled'}>${DIFF[x].n.replace(' ','<br>')}</button>`).join('');
   $n('ndd').textContent=(host?'':'방장이 정해요 · ')+DIFF[k].d}
  function renderSlots(){renderDiff();const box=$n('nsl');if(!box)return;box.innerHTML='';for(let i=0;i<8;i++){const s=st.slots[i],d=document.createElement('div');d.className='nslot'+(s&&s.kind!=='ai'?' on':'')+(i===st.me?' me':'');
-   d.innerHTML=`<i>${i+1}</i><b></b><small></small>`;d.querySelector('b').textContent=s&&s.kind!=='ai'?`${s.ic} ${s.nick}`:`🤖 AI·${DIFF[st.role==='guest'?(st.diff||'N'):diff].n.split(' ').pop()}`;d.querySelector('small').textContent=s&&s.kind==='host'?'👑 방장':i===st.me?'나':'';box.append(d)}
-  const n=st.slots.filter(s=>s&&s.kind!=='ai').length;$n('ngo').style.display=st.role==='host'?'':'none';$n('ngo').textContent=`▶ 게임 시작 (${n}명 + AI ${8-n})`;
+   d.innerHTML=`<em class="nav" style="background-position:-${i*44}px 0"></em><b></b><small></small>`;/* 🎨 v21.7 자리 카드: 자리 색 새 얼굴 + 사람/AI 구분 */d.querySelector('b').textContent=s&&s.kind!=='ai'?`${s.ic} ${s.nick}`:`🤖 AI·${DIFF[st.role==='guest'?(st.diff||'N'):diff].n.split(' ').pop()}`;d.querySelector('small').textContent=s&&s.kind==='host'?'👑 방장':i===st.me?'나':s&&s.kind!=='ai'?'준비됨':'';box.append(d)}
+  const n=st.slots.filter(s=>s&&s.kind!=='ai').length;{const w=$n('nwait');if(w)w.textContent=`대기 중 ${n}/8`}$n('ngo').style.display=st.role==='host'?'':'none';$n('ngo').textContent=`▶ 게임 시작 (${n}명 + AI ${8-n})`;
   if(st.role==='guest')status('방장이 게임을 시작하기를 기다리는 중…')}
  function open(){ovl('netm',1);panel('a');status('');const q=new URLSearchParams(location.search).get('room');if(q&&!st.role){$n('ncode').value=q.toUpperCase();}
   const h=myHello();$n('nme').textContent=`${h.ic} ${h.nick}`}

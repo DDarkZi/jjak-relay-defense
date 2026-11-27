@@ -233,3 +233,4 @@
 - 11-27 v21.4 사용자 '메인화면·난이도 선택을 게임스럽게'(늘보 저장소에서 frontend-design·ui-ux-pro-max 스킬 넘겨받음, `.claude/skills/`): 난이도 `#dif` 버튼 = 단계 색(--c)·위험 게이지 ■×1~6·우승 깃털 칩(COIN_WIN)·3D 새 아이콘 `assets/ui/diff/{N,M,H,X,Z,A,L}.png`(dxThumbs 렌더 잘라냄, 못 불러오면 이모지) / 메인 메뉴 아이콘 = 제미나이 아이콘 타일 `assets/ui/menu/{plz,dxo,tipo,heroo,shopo}.png`(초록 배경 지움) / 플레이 버튼 반짝·두근 · 로비 육각 배경(움직임 줄이기 존중). CSS는 style.css 끝 'v20.3' 블록.
 - 11-27 v21.5 사용자 요청: 종족 모드·일반 모드 카드 숨김(DOM은 유지, RACE_OPEN 코드 그대로), 난이도 창에서 난이도 누르면 바로 start(tryStart). 로비 버튼 '난이도 바꾸기'. 8인 온라인 대전 카드는 유지(게임스러운 디자인 개편은 별도 요청).
 - 11-27 v21.6 8인 온라인 대전 카드 그림(제미나이 생성, 새 8마리 원형 `assets/ui/net8.webp`, 글씨·베타 배지는 코드). 컨테이너 캡처로 확인, 폰 확인 전이라 작업 브랜치에만 올림.
+- 11-27 v21.7 8인 대전 입장·대기실 화면(제미나이 시안 → `assets/ui/net_ring.webp`·`net_seats.webp`(PC 색 순서 8마리), CSS .nA/.nR/.nslot/.ngo, net.js renderSlots 카드·'대기 중 n/8'). 컨테이너 ?net=local 캡처로만 확인(폰·실제 2대 접속 미확인). 작업 브랜치만, main은 알회장·찌르봇 체력과 함께 반영 예정.

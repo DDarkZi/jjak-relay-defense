@@ -346,3 +346,16 @@ header button{min-width:44px;min-height:44px;font-size:18px;padding:2px 6px}
 .lmenu i img{width:66px;height:66px;filter:drop-shadow(0 3px 0 #0009)}
 .lmenu button:active{transform:translateY(3px)}.lmenu button:active i img{filter:drop-shadow(0 1px 0 #000)}
 .lmenu{gap:6px}.lmenu button{height:auto!important;overflow:visible}.lmenu b{margin-top:8px;display:block;line-height:1.2;font-size:14px;position:relative;z-index:1}
+
+/* 🌐 v21.7 8인 온라인 대전 화면(입장·대기실): 새 원형 그림 + 3D 버튼 + 자리 카드 */
+.nhd{position:relative;text-align:center;font-size:26px;color:#fde047;text-shadow:0 3px 0 #000,0 0 0 #000;-webkit-text-stroke:1px #000;paint-order:stroke fill}.nsoon{position:static;margin-left:8px;vertical-align:middle;font-size:12px;transform:rotate(-4deg);display:inline-block}
+.nA{display:flex;flex-direction:column;gap:6px}.nring{border-radius:14px;overflow:hidden;background:radial-gradient(ellipse at 50% 50%,#4a4c92,#26244f);display:flex;justify-content:center}.nring img{display:block;width:100%;max-width:340px;height:auto;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.nbig{font-size:26px!important;padding:12px 0 14px!important}
+#netm .hrow input{border:3px solid #000;border-radius:12px;background:#fff;color:#1c1917;font:400 18px "Black Han Sans",system-ui;text-align:center}#netm #njoin{background:linear-gradient(#60a5fa,#2563eb);color:#fff;border:3px solid #000;border-radius:12px;box-shadow:inset 0 -5px 0 #1d4ed8,0 4px 0 #000;font:400 18px "Black Han Sans",system-ui;padding:0 16px}
+.nR .ncd{font-size:30px}.nwait{margin:8px 0 0;text-align:center;font-weight:800;color:#e0e7ff;font-size:13px}
+.nsl{gap:8px!important}.nslot{flex-direction:column;gap:1px!important;padding:6px 6px 5px!important;border:3px solid #000!important;border-radius:14px!important;background:#6b7fb0aa!important;position:relative;text-align:center}
+.nslot i{display:none}.nslot .nav{display:block;width:44px;height:44px;background:url(../assets/ui/net_seats.webp) 0 0/352px 44px no-repeat;border-radius:12px;filter:grayscale(1) brightness(.7);opacity:.6}
+.nslot b{width:100%;font-size:12px!important;color:#e0e7ff!important}.nslot small{min-height:14px;font-size:10px!important;font-weight:800}
+.nslot.on{background:#f5efe0!important}.nslot.on .nav{filter:none;opacity:1}.nslot.on b{color:#1c1917!important}.nslot.on small{color:#fff;background:#16a34a;border-radius:99px;padding:0 8px;border:2px solid #000}
+.nslot.me{outline:3px solid #fde047!important;box-shadow:0 0 12px #fde047aa}.nslot.me small{background:#f59e0b;color:#1c1917}
+.ngo{position:sticky!important;bottom:4px;z-index:2;font-size:22px!important;background:linear-gradient(#a3e635,#16a34a)!important;color:#052e16!important;box-shadow:inset 0 -8px 0 #15803d,inset 0 4px 0 #fff8,0 6px 0 #000,0 0 18px #84cc16aa!important}
