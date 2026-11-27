@@ -340,3 +340,9 @@ header button{min-width:44px;min-height:44px;font-size:18px;padding:2px 6px}
 #dd{color:#e0e7ff!important;font-size:13px!important}
 #dif .dk i img{width:40px;height:40px;display:block;object-fit:contain;filter:drop-shadow(0 2px 0 #0008)}#dif .dk i{line-height:0}
 .lmenu i img{width:44px;height:44px;display:block;object-fit:contain;filter:drop-shadow(0 2px 0 #0009)}.lmenu i{line-height:0}
+
+/* v20.3: 메인 메뉴 = 제미나이 아이콘 타일(2026-11-25 사용자 "메인화면은 제미나이로") — 타일 자체가 버튼 */
+.lmenu button,.lmenu button:nth-child(n){width:70px;padding:0;background:none!important;border:0;box-shadow:none}
+.lmenu i img{width:66px;height:66px;filter:drop-shadow(0 3px 0 #0009)}
+.lmenu button:active{transform:translateY(3px)}.lmenu button:active i img{filter:drop-shadow(0 1px 0 #000)}
+.lmenu{gap:6px}.lmenu button{height:auto!important;overflow:visible}.lmenu b{margin-top:8px;display:block;line-height:1.2;font-size:14px;position:relative;z-index:1}
