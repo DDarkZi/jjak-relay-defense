@@ -63,7 +63,7 @@ const U=[
 {id:'eagle',n:'제왕독수리',c:850,hp:1690,sp:1,t:'A',dm:4,inc:52,wig:1,ic:'🦅',col:0x6b4f3a,x:'가발 날리기: 체력 절반이 되면 가발이 날아가고, 번쩍이는 머리에 근처 타워가 2초 눈부심(공격 멈춤)'},
 {id:'phoenix',mat:'fire',n:'불사조',c:1300,hp:1950,sp:1.4,t:'A',dm:6,inc:85,revive:1,tech:'fire',ic:'🔥',col:0xf97316,x:'한 번 부활'},
 {id:'humbee',n:'벌새',c:360,hp:125,sp:1.9,t:'G',dm:1,inc:19,count:6,cntR:[5,7],swarm:1,ic:'🐝',col:0xfacc15,x:'5~7마리 떼 · 너무 작아서 강타형 타워(공격 간격 1.5초 이상)의 피해를 절반만 받아요'},
-{id:'starling',n:'찌르레기 5형제',c:1400,hp:1600,sp:1.4,t:'A',dm:6,inc:85,robo:5,ic:'🤖',col:0x4a3f7a,talk:['짹짹 합체! 찌르봇 출격!','파츠 갑옷 단단하지?','한 방은 하나도 안 아파~'],x:'평소엔 5형제가 합체한 로봇 찌르봇: 한 마리만 노리는 공격(한 방 타워 등) 피해 -40%, 광역·연쇄·전깃줄 피해 +30% · 쓰러지면 💥 5형제로 분리돼 사방으로 흩어져 날아가요(각자 7대 맞으면 쓰러짐, 빠름)'},
+{id:'starling',n:'찌르레기 5형제',c:1400,hp:2200,sp:1.4,t:'A',dm:6,inc:85,robo:5,ic:'🤖',col:0x4a3f7a,talk:['짹짹 합체! 찌르봇 출격!','파츠 갑옷 단단하지?','한 방은 하나도 안 아파~'],x:'평소엔 5형제가 합체한 로봇 찌르봇: 한 마리만 노리는 공격(한 방 타워 등) 피해 -40%, 광역·연쇄·전깃줄 피해 +30% · 쓰러지면 💥 5형제로 분리돼 사방으로 흩어져 날아가요(각자 7대 맞으면 쓰러짐, 빠름)'},
 {id:'starbro0',hidden:1,bro:0,hits:7,n:'찌르레기 짹레드',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['리더는 투구부터 챙긴다! …앞이 안 보여!','형 먼저 간다!'],x:'찌르봇 머리 담당 형제(분열하면 나와요)'},
 {id:'starbro1',hidden:1,bro:1,hits:7,n:'찌르레기 짹블루',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['몸통 담당인데 몸통이 제일 작아졌어…','후퇴! 각자 집으로!'],x:'찌르봇 몸통 담당 형제(분열하면 나와요)'},
 {id:'starbro2',hidden:1,bro:2,hits:7,n:'찌르레기 짹옐로',c:96,hp:100,sp:2.2,t:'A',dm:1,inc:0,ic:'🐦',col:0x4a3f7a,talk:['주먹이 나보다 무거운 건 비밀이야.','주먹밥 먹으러 간다~'],x:'찌르봇 오른팔 담당 형제(분열하면 나와요)'},
@@ -95,7 +95,7 @@ const U=[
 {id:'hatch_dark',hidden:1,n:'뽀옹 병아리',c:60,hp:260,sp:1.7,t:'G',dm:1,inc:0,imm:['poison'],stealth:.8,ic:'💨',col:0xa3e635,x:'독 면역 · 냄새로 은신'},
 {id:'hatch_gold',hidden:1,n:'금수저 병아리',c:120,hp:280,sp:1.9,t:'G',dm:1,inc:0,steal:4,ic:'🌟',col:0xfacc15,x:'탈출하면 내 인컴 +4'},
 {id:'hatch_dino',hidden:1,n:'티라노 병아리',c:400,hp:2500,sp:.9,t:'G',dm:4,inc:0,ic:'🦖',col:0xea7f2e,x:'고대 유전자가 깨어났어요'},
-{id:'eggchief',secret:'chief',n:'알통 대장닭',c:1600,hp:1800,sp:.9,t:'G',dm:5,inc:110,lay:1,ic:'🎩',col:0xfef3c7,x:'걸으며 3초마다 수상한 알을 낳아요 (한 판에 알 100개 보내면 해금)'}];
+{id:'eggchief',secret:'chief',n:'알통 대장닭',c:1600,hp:3600,sp:.9,t:'G',dm:5,inc:110,lay:1,ic:'🎩',col:0xfef3c7,x:'걸으며 3초마다 수상한 알을 낳아요 (한 판에 알 100개 보내면 해금)'}];
 // ---------- 🏰 종족전: 오리지널 새 종족 4종 (전용 타워 2 + 전용 새 2 + 고유 특성) ----------
 const RACE={
  nest:{n:'둥지 연합',ic:'🏰',col:'#60a5fa',c3:0x60a5fa,tag:'균형 · 건설',
@@ -388,7 +388,7 @@ function addPois(u,pv,src){if(src==='miasma')u.hcT=S.t+BAL.pdur;u.pst=Math.min(B
 /* 💃 칼군무: 뭉친 찌르레기(해체 안 한 5마리 이상)는 한 마리만 노린 공격을 똑같이 나눠 맞음 */
 const flockOf=(p,h)=>p.units.filter(o=>o.bp.flock&&!o.solo&&o.hp>0&&Math.hypot(o.x-h.x,o.y-h.y)<2.2);
 function flockHit(p,h,d,zap){if(h.solo)return dmgU(h,d,zap);const g=flockOf(p,h);if(g.length<5)return dmgU(h,d,zap);let s=0;for(const o of g)s+=dmgU(o,d/g.length,zap);if(!S.sim&&p.id===view&&d>=80&&S.t-(p.fkP||-9)>1.2){p.fkP=S.t;popTxt(h,'💃칼군무 ÷'+g.length)}return s}
-/* zap: ⚡ 뇌전(번개) 공격은 보호막에 2배 */function dmgU(u,d,zap,k){if(u.bp.hits){/* 🐦 v20.6.3 5형제: 피해 크기와 상관없이 한 대=1(7대면 쓰러짐). 독·화상은 1초에 1대, 전깃줄은 0.5초에 1대 */if(!(d>0))return 0;if(k){const q='_h'+k;if(S.t-(u[q]??-9)<(k==='py'?.5:1))return 0;u[q]=S.t}const m=(u.mh||u.bp.hp)/u.bp.hits,a=Math.min(Math.max(0,u.hp),m);u.hp-=m;u.hit=.1;return a}if(u.amp>0)d*=1.35;const h0=Math.max(0,u.hp)+Math.max(0,u.sh||0),d0=d;if(u.sh>0){const k=zap?BAL.shz:1,a=Math.min(u.sh,d*k);u.sh-=a;d-=a/k;if(zap&&u.sh<=0)u.shb=1}u.hp-=d;u.hit=.1;return Math.min(h0,d0)}
+/* zap: ⚡ 뇌전(번개) 공격은 보호막에 2배 */function dmgU(u,d,zap,k){if(u.bp.hits){/* 🐦 v20.6.3 5형제: 피해 크기와 상관없이 한 대=1(7대면 쓰러짐). 독·화상은 1초에 1대, 전깃줄은 0.5초에 1대 */if(!(d>0))return 0;if(S.t-(u._hl??-9)<.3)return 0;u._hl=S.t;/* 🐦 v21.8 한 번 맞으면 0.3초는 다시 안 맞음(갈라지자마자 타워가 몰린 곳에서 순식간에 죽는 것 방지) */if(k){const q='_h'+k;if(S.t-(u[q]??-9)<(k==='py'?.5:1))return 0;u[q]=S.t}const m=(u.mh||u.bp.hp)/u.bp.hits,a=Math.min(Math.max(0,u.hp),m);u.hp-=m;u.hit=.1;return a}if(u.amp>0)d*=1.35;const h0=Math.max(0,u.hp)+Math.max(0,u.sh||0),d0=d;if(u.sh>0){const k=zap?BAL.shz:1,a=Math.min(u.sh,d*k);u.sh-=a;d-=a/k;if(zap&&u.sh<=0)u.shb=1}u.hp-=d;u.hit=.1;return Math.min(h0,d0)}
 /* 🏗 공사 고깔: 두루미가 타워를 이고 간 동안 원래 자리에 세워 둬요(그 칸은 여전히 막혀 있어요) */
 const CONE=new Map();function craneCone(t,x,y){if(!t){CONE.forEach((c,tt)=>{if(!tt.carrier||!c.on){Sc.remove(c.m);CONE.delete(tt)}else c.on=0});return}
  let c=CONE.get(t);if(!c){const g=new THREE.Group(),o=new THREE.Mesh(new THREE.ConeGeometry(.16,.42,10),new THREE.MeshStandardMaterial({color:0xf97316}));o.rotation.x=PI/2;o.position.z=.21;g.add(o);
